@@ -1,7 +1,7 @@
 function ChantList(){
     return (
         <div>
-            test11111
+            test222
         </div>
     )
 }
