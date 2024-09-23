@@ -52,6 +52,7 @@ function Home() {
       <div>
         <p>hi</p>
         <input type="button" value="post()으로 서버에 접속하여 제목, 글내용 얻어오기" onClick={getBbs} />
+        111
       </div>
     
   );
