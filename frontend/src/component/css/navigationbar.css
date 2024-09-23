@@ -1,0 +1,106 @@
+/* src/components/NavigationBar.css */
+.nav-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display:flex;
+    justify-content:center ;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px; 
+    z-index: 1; 
+    border-bottom-right-radius: 100px;
+    font-family: 'Material Symbols Outlined';
+  }
+
+  .nav1{
+    width: 25%; 
+    display:flex;
+    justify-content:center;  
+   
+  }
+
+  .Logo{
+    
+   width: 55px;  height: 50px;
+  }
+
+ 
+  
+  .nav2 {
+    width: 50%;
+    
+  }
+
+ .nav2 ul{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap:10%
+    
+  }
+  .nv-user{
+    /*로그인시 나오는 얼굴*/
+    width: 35px;
+   
+
+  }
+
+
+
+
+  .nav3{
+    width: 30%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    gap:10%;
+  
+
+    
+  }
+
+  .nav3 a{
+    text-decoration: none;
+    color: white;
+    font-size: 1.3rem;
+  }
+
+  
+ .search-icon{
+    color: white;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    margin:0 auto;
+  }
+
+  .search-icon:hover{
+    color:lightseagreen;
+  }
+
+  .nav-bar a:hover{
+    color: lightseagreen;
+  }
+  
+  
+  .nav-bar a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-size: 1.4rem;
+  }
+
+  .auth-button{
+    font-size: 1.3rem;
+  }
+
+  .search-icon-button{
+    background: rgba(0, 0, 0, 0.1);
+   width: 1px;
+   height: 1px;
+   text-align: center;
+   margin-top: -35px;
+   border:none;
+  }
+
