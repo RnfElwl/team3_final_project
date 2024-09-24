@@ -1,4 +1,107 @@
 /* src/components/NavigationBar.css */
+a {color: #fff; text-decoration: none; outline: none}
+ a:hover, a:active {text-decoration: none; color:#fff; background-color:#f59000;}
+input{
+  border-width: 0;
+}
+input:focus {
+  outline: none;
+}
+.home_nav{
+  position:fixed;
+  top: 0px;
+  left: 0px;
+  background-color: #141517;
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  height: 100vh;
+  z-index: 1;
+  padding: 12px 40px;
+}
+.home_nav .logo{
+  height: 32px;
+
+}
+.home_nav .tab{
+  margin-top: 30px;
+  width: 100%;
+
+}
+.home_nav .tab>div{
+  padding: 10px;
+}
+
+.nav_hide{
+  display: none;
+  transform: translateX(-150px);
+}
+.close_box{
+  position: fixed;
+  z-index: -1;
+  top: 0px;
+  left: 230px; 
+  width: 110vw;
+  height: 110vh;
+  background: rgba(0, 0, 0, 0.5);
+}
+.nav_show{
+  animation: slidenav 0.3s ease forwards;
+}
+@keyframes slidenav {
+  from{
+    transform: translateX(-200px);
+  }
+  to{
+    transform: translateX(0px);
+  }
+}
+.Header{
+  background-color: black;
+  width:100%;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 12px 40px;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.Header .left-info{
+  display: flex;
+  align-items: center;
+  color: white;
+}
+.Header .right-info{
+  display: flex;
+
+}
+.Header .right-info>*{
+  margin-left: 30px;
+}
+.Header .search{
+  display: flex;
+  align-items: center;
+  background-color: rgb(34, 34, 34);
+  padding: 5px 20px;
+  border-radius: 8px;
+}
+.Header .search input{
+  background-color: rgb(34, 34, 34);
+  color: white;
+}
+
+.Header .login_btn{
+  width: 60px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: black;
+}
+.Header .join_btn{
+  width: 70px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #00ff88;
+}
 .nav-bar {
     position: absolute;
     left: 0;

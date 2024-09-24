@@ -3,10 +3,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css';
 
-import Home from './pages/Home'
-import Layout from './pages/Layout'
-import MovieCategories from './pages/movies/MovieCategories'
-import MovieList from './pages/movies/MovieList';
+import Home from './pages/Home';
+import Layout from './pages/Layout';
+import MovieCategories from './pages/movies/MovieCategories';
+import ChatList from './pages/chat/ChatList.js';
+
 
 function App() {
   return (
@@ -14,8 +15,8 @@ function App() {
         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
+                <Route path='/chat' element={<ChatList/>}></Route>
                 <Route path='/categories' element={<MovieCategories/>}></Route>
-                <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
             </Route>
         </Routes>
     </BrowserRouter>
