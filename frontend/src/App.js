@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/Home';
 import Layout from './pages/Layout';
 import MovieCategories from './pages/movies/MovieCategories';
+import MovieList from './pages/movies/MovieList.js';
 import ChatList from './pages/chat/ChatList.js';
 import ChatTest from './pages/chat/ChatTest.js';
 
@@ -18,6 +19,7 @@ function App() {
                 <Route path='/chat' element={<ChatList/>}></Route>
                 <Route path='/chat/chattest' element={<ChatTest/>}></Route>
                 <Route path='/categories' element={<MovieCategories/>}></Route>
+                <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
             </Route>
         </Routes>
     </BrowserRouter>
