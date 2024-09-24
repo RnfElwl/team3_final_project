@@ -1,6 +1,7 @@
 import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 function ChantList(){
@@ -13,7 +14,7 @@ function ChantList(){
                     <div>1대1채팅</div>
                     <div>토론방</div>
                 </div>
-                <div></div>
+                <div><Link to={'chattest'}>채팅 테스트</Link></div>
                 <div className="chatList_list">
                 {
                     list.map(function(val, i){
