@@ -1,0 +1,30 @@
+.community_list {
+    background-color: white;
+}
+
+.list_header{
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+.my_image{
+    border-radius: 50px;
+    border: 1px solid gray;
+    width: 50px;
+    height: 50px;
+}
+.search{
+    height: 50px;
+    width: 200px;
+    border-radius: 20px;
+    background-color: gray;
+}
+.my_name{
+    width: 100px;
+}
+.alt{
+    font-size: 40px;
+}
+.write{
+    border-radius: 20px;
+}
