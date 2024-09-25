@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {List, Search} from 'react-bootstrap-icons';
 import './css/navigationbar.css';
 
@@ -13,6 +13,32 @@ function Header() {
   function showNav(){
     setNav(true);
   }
+  const location =useLocation();
+  const [isAdminPage, setIsAdminPage]=useState(false);
+
+  useEffect(()=>{
+    location.pathname === "/admin"
+    ? setIsAdminPage(true)
+    : setIsAdminPage(false);
+  }, [location.pathname]);
+
+  if(isAdminPage){
+    //관리자 헤더
+    return (
+      <>
+      <header className="Header">
+          <div className='admin_header'>
+             <div><img src=""/>관리자페이지</div>
+          </div>
+      </header>
+        <div className="admin_nav">
+          <div><Link to={'/admin'}>대쉬보드</Link></div>
+          <div><Link to={'/chat'}>헤더</Link></div>
+        </div>
+      </>
+    );
+  }else{
+  //통상 헤더
   return (
       <>
       <nav className={`home_nav ${nav?'nav_show':'nav_hide'}`}>
@@ -42,6 +68,7 @@ function Header() {
       </>
       );
   }
+}
   
 
 

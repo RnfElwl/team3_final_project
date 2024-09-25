@@ -53,7 +53,7 @@ function AdminTest() {
   };
 
   return (
-      <div>
+      <div className="adminBody">
         <p>관리자 페이지 테스트</p>
         <container id='chartarea'>
           <Bar data={data} options={options} width="300px" height="300px" />

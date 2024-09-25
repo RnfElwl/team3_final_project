@@ -1,9 +1,22 @@
 .App {
   text-align: center;
 }
-.Header{
-  display: none;
-}
 .footer{
   display: none;
+}
+/* 관리자페이지 헤더 부분 */
+.admin_header{
+  color:white;
+}
+.admin_nav a{
+  color:black;
+}
+.admin_nav{
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+
+}
+.adminBody{
+  margin-left: 200px;
 }
