@@ -24,7 +24,7 @@ function App() {
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
                 <Route path='/chat' element={<ChatList/>}></Route>
-                <Route path='/chat/chattest' element={<ChatTest/>}></Route>
+                <Route path='/chat/:chattest' element={<ChatTest/>}></Route>
                 <Route path='/categories' element={<MovieCategories/>}></Route>
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
                 <Route path='/community' element={<CommunityList/>}></Route>
