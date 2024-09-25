@@ -14,6 +14,9 @@ import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
 
+import AdminTest from './pages/admin/AdminTest'
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +31,8 @@ function App() {
                 <Route path='/community/communityWrtie' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
+                <Route path='/admin/' element={<AdminTest/>}/>
+
             </Route>
         </Routes>
     </BrowserRouter>
