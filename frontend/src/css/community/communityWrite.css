@@ -109,11 +109,12 @@
 }
 
 .communityWrite-container .search-button {
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 5px 15px;
+    background-color: #3498db;
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 20px;
 }
   
 .communityWrite-container .image-upload {
@@ -123,8 +124,13 @@
 
 .communityWrite-container .selected-place{
     display: flex;
+    margin-top: 20px;
 }
 
 .communityWrite-container .loca{
     font-weight: bold;
+}
+
+.communityWrite-container .location-input{
+  width: 250px;
 }
