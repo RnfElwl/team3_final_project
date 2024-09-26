@@ -8,11 +8,11 @@
     color: black;
   }
   
-  .communityWrite-header {
+  .communityWrite-container .communityWrite-header {
     text-align: center;
     padding-bottom: 20px;
   }
-  .communityWrite-form {
+  .communityWrite-container .communityWrite-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -22,7 +22,7 @@
     background-color: #fff;
   }
   
-  .communityWrite-title .title-input {
+  .communityWrite-container .communityWrite-title .title-input {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -30,19 +30,19 @@
     border-radius: 5px;
   }
   
-  .communityWrite-image .image-preview {
+  .communityWrite-container .communityWrite-image .image-preview {
     width: 100%;
     max-width: 300px;
     border-radius: 10px;
     margin-bottom: 10px;
   }
   
-  .communityWrite-image .image-upload {
+  .communityWrite-container .communityWrite-image .image-upload {
     display: block;
     margin-top: 10px;
   }
   
-  .communityWrite-content .content-input {
+  .communityWrite-container .communityWrite-content .content-input {
     width: 100%;
     padding: 15px;
     font-size: 16px;
@@ -52,38 +52,38 @@
   }
   
   
-  .communityWrite-section {
+  .communityWrite-container .communityWrite-section {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin: 20px 0;
   }
   
-  .communityWrite-item {
+  .communityWrite-container .communityWrite-item {
     border-bottom: 1px solid #eee;
     padding-bottom: 15px;
   }
   
-  .communityWrite-item h4 {
+  .communityWrite-container .communityWrite-item h4 {
     margin-bottom: 10px;
   }
   
-  .communityWrite-item label {
+  .communityWrite-container .communityWrite-item label {
     display: block;
     margin: 5px 0;
     font-size: 16px;
   }
   
-  input[type="radio"] {
+  .communityWrite-container input[type="radio"] {
     margin-right: 10px;
   }
   
   
-  .communityWrite-footer {
+  .communityWrite-container .communityWrite-footer {
     text-align: center;
   }
   
-  .share-button {
+  .communityWrite-container .share-button {
     background-color: #3498db;
     color: #fff;
     border: none;
@@ -94,21 +94,21 @@
     font-size: 16px;
   }
   
-  .share-button:hover {
+  .communityWrite-container .share-button:hover {
     background-color: #2980b9;
   }
 
-  .places-list {
+  .communityWrite-container .places-list {
     list-style: none;
     padding: 0;
 }
 
-.places-list li {
+.communityWrite-container .places-list li {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
-.search-button {
+.communityWrite-container .search-button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -116,15 +116,15 @@
     cursor: pointer;
 }
   
-.image-upload {
+.communityWrite-container .image-upload {
     width: 100%;
     margin-bottom: 20px;
 }
 
-.selected-place{
+.communityWrite-container .selected-place{
     display: flex;
 }
 
-.loca{
+.communityWrite-container .loca{
     font-weight: bold;
 }

@@ -2,29 +2,29 @@
     background-color: white;
 }
 
-.list_header{
+.community_list .list_header{
     height: 80px;
     display: flex;
     align-items: center;
 }
-.my_image{
+.community_list .my_image{
     border-radius: 50px;
     border: 1px solid gray;
     width: 50px;
     height: 50px;
 }
-.search{
+.community_list .search{
     height: 50px;
     width: 200px;
     border-radius: 20px;
     background-color: gray;
 }
-.my_name{
+.community_list .my_name{
     width: 100px;
 }
-.alt{
+.community_list .alt{
     font-size: 40px;
 }
-.write{
+.community_list .write{
     border-radius: 20px;
 }

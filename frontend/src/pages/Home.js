@@ -19,35 +19,37 @@ function Home() {
   }, [currentIndex]); // currentIndex가 변경될 때마다 효과 발생
 
   return (
-    <div className="container">
-      <div className="banner">
-        <div className="banner-images" style={{ display: 'flex', overflow: 'hidden' }}>
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Slide ${index}`}
-              className="banner-image"
-              style={{
-                minWidth: '100%',
-                transition: 'opacity 1s ease-in-out',
-                opacity: index === currentIndex ? 1 : 0, // 현재 인덱스가 아닌 경우는 투명하게
-                position: 'absolute', // 이미지를 겹쳐 놓기 위해 절대 위치 사용
-                top: 0,
-                left: 0,
-              }}
-            />
-          ))}
+    <div className='home'>
+      <div className="container">
+        <div className="banner">
+          <div className="banner-images" style={{ display: 'flex', overflow: 'hidden' }}>
+            {images.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Slide ${index}`}
+                className="banner-image"
+                style={{
+                  minWidth: '100%',
+                  transition: 'opacity 1s ease-in-out',
+                  opacity: index === currentIndex ? 1 : 0, // 현재 인덱스가 아닌 경우는 투명하게
+                  position: 'absolute', // 이미지를 겹쳐 놓기 위해 절대 위치 사용
+                  top: 0,
+                  left: 0,
+                }}
+              />
+            ))}
+          </div>
+          <div className="banner-indicators">
+            {images.map((_, index) => (
+              <span key={index} className={index === currentIndex ? 'active' : ''}>
+                ●
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="banner-indicators">
-          {images.map((_, index) => (
-            <span key={index} className={index === currentIndex ? 'active' : ''}>
-              ●
-            </span>
-          ))}
-        </div>
+        <MovieList /> {/* MovieList 컴포넌트 추가 */}
       </div>
-      <MovieList /> {/* MovieList 컴포넌트 추가 */}
     </div>
   );
 }
