@@ -2,10 +2,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    display: flex; /* Flexbox 사용 */
-    justify-content: center; /* 수평 중앙 정렬 */
     min-height: 100vh; /* 화면 높이에 맞추기 */
-    max-width: 1920px; /* 전체 화면 폭 */
     margin: 0 auto; /* 가운데 정렬 */
     background-color: black; 
     color: #fff;

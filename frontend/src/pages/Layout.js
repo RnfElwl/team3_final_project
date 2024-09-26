@@ -6,11 +6,11 @@ import { Outlet, Link } from 'react-router-dom';
 
 function Layout() {
   return (
-      <div id = "SceneNumber">
+      <>
         <Header/>
           <Outlet/>
         <Footer/>
-      </div>
+      </>
 
   );
 }
