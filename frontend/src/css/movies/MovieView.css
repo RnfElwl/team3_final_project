@@ -1,0 +1,95 @@
+.movie-view-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .movie-content {
+    width: 1200px;
+  }
+  
+  .movie-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .movie-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .movie-title h1 {
+    font-size: 36px;
+  }
+  
+  .movie-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .action-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* 보러가기 버튼 */
+  .watch-button-container {
+    text-align: right;
+    margin-top: 10px;
+  }
+  
+  .watch-btn {
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .watch-btn:hover {
+    background-color: #218838;
+  }
+  
+  .movie-info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    }
+  
+  .rating-info {
+    font-size: 18px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .star-icon {
+    color: #FFD700; /* 금색 */
+    margin-right: 5px;
+  }
+  
+  .info-details {
+    font-size: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .info-details span {
+    margin-right: 10px;
+  }
+  

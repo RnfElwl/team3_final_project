@@ -67,7 +67,7 @@ function MovieList() {
         <div className="row movie-list mt-4">
           {movies.map(movie => (
             <div key={movie.id} className="col-6 col-sm-4 col-md-2 mb-4">
-              <div className="movie-card h-100">
+              <div className="movie-card h-100" onClick={() => handleCardClick(movie.id)}>
                 <h5>{movie.title}</h5>
                 <p>{movie.description}</p>
               </div>
