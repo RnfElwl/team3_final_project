@@ -1,5 +1,5 @@
 import "../../css/community/communityWrite.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,10 @@ function CommunityWrite() {
     const [places, setPlaces] = useState([]); // 검색된 장소 리스트
     const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소 상태
     const [image, setImage] = useState(null); // 업로드된 이미지 상태
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [category, setCategory] = useState(0); // 카테고리 번호
+    const [privacy, setPrivacy] = useState(0); // 공개 대상 번호
 
     // Kakao Maps API를 활용한 장소 검색
     const handleSearch = () => {
@@ -44,6 +48,26 @@ function CommunityWrite() {
         }
     };
 
+    const handleSubmit = async () => {
+        try {
+            const postData = {
+                userid: "testUser",  // 실제 로그인된 유저의 ID로 변경해야 함
+                community_title: title,
+                community_content: content,
+                community_img: image,
+                community_writedate: new Date().toISOString(),
+                loc: selectedPlace ? selectedPlace.place_name : null,
+                category,
+                privacy
+            };
+            await axios.post('/api/community', postData);
+            alert('게시글이 성공적으로 등록되었습니다.');
+        } catch (error) {
+            console.error('게시글 등록 실패:', error);
+            alert('게시글 등록에 실패했습니다.');
+        }
+    };
+
     return (
         <div className="communityWrite-container">
             <div className="container">
@@ -56,6 +80,8 @@ function CommunityWrite() {
                         <input 
                         type="text" 
                         placeholder="제목을 입력하세요" 
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         className="title-input"
                         />
                     </div>
@@ -76,9 +102,11 @@ function CommunityWrite() {
                         <textarea 
                         placeholder="내용을 작성하세요..." 
                         className="content-input"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
                         ></textarea>
                     </div>
-                    </div>
+                </div>
                 <hr/>
                 
                 <div className="communityWrite-section">
@@ -86,16 +114,16 @@ function CommunityWrite() {
                     <div className="communityWrite-item">
                         <h4>📂 카테고리</h4>
                         <label>
-                        <input type="radio" name="category" value="영화" /> 영화
+                        <input type="radio" name="category" value={0} onChange={(e) => setCategory(e.target.value)} /> 영화
                         </label>
                         <label>
-                        <input type="radio" name="category" value="일상" /> 일상
+                        <input type="radio" name="category" value={1} onChange={(e) => setCategory(e.target.value)} /> 일상
                         </label>
                         <label>
-                        <input type="radio" name="category" value="자유" /> 자유
+                        <input type="radio" name="category" value={2} onChange={(e) => setCategory(e.target.value)} /> 자유
                         </label>
                         <label>
-                        <input type="radio" name="category" value="포스터" /> 포스터
+                        <input type="radio" name="category" value={3} onChange={(e) => setCategory(e.target.value)} /> 포스터
                         </label>
                     </div>
 
@@ -103,49 +131,49 @@ function CommunityWrite() {
                     <div className="communityWrite-item">
                         <h4>👥 공개 대상</h4>
                         <label>
-                        <input type="radio" name="audience" value="전체공개" /> 전체공개
+                        <input type="radio" name="audience" value={0} onChange={(e) => setPrivacy(e.target.value)} /> 전체공개
                         </label>
                         <label>
-                        <input type="radio" name="audience" value="팔로워공개" /> 팔로워공개
+                        <input type="radio" name="audience" value={1} onChange={(e) => setPrivacy(e.target.value)} /> 팔로워공개
                         </label>
                     </div>
 
                     <div className="communityWrite-section">
-                    {/* 위치 추가 */}
-                    <div className="communityWrite-item">
-                        <h4>📍 위치 추가</h4>
-                        <input 
-                            type="text" 
-                            placeholder="장소를 검색하세요" 
-                            value={searchKeyword}
-                            onChange={(e) => setSearchKeyword(e.target.value)} // 검색어 입력
-                            className="location-input"
-                        />
-                        <button onClick={handleSearch} className="search-button">검색</button>
+                        {/* 위치 추가 */}
+                        <div className="communityWrite-item">
+                            <h4>📍 위치 추가</h4>
+                            <input 
+                                type="text" 
+                                placeholder="장소를 검색하세요" 
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)} // 검색어 입력
+                                className="location-input"
+                            />
+                            <button onClick={handleSearch} className="search-button">검색</button>
 
-                        {/* 검색된 장소 리스트 표시 */}
-                        {places.length > 0 && (
-                            <ul className="places-list">
-                                {places.map((place) => (
-                                    <li key={place.id} onClick={() => handlePlaceSelect(place)}>
-                                        {place.place_name} ({place.address_name})
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                         {/* 선택된 장소 표시 */}
-                         {selectedPlace && (
-                            <div className="selected-place">
-                                <p className="loca">장소: {selectedPlace.place_name} ({selectedPlace.address_name})</p>
-                            </div>
-                        )}
+                            {/* 검색된 장소 리스트 표시 */}
+                            {places.length > 0 && (
+                                <ul className="places-list">
+                                    {places.map((place) => (
+                                        <li key={place.id} onClick={() => handlePlaceSelect(place)}>
+                                            {place.place_name} ({place.address_name})
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            {/* 선택된 장소 표시 */}
+                            {selectedPlace && (
+                                <div className="selected-place">
+                                    <p className="loca">장소: {selectedPlace.place_name} ({selectedPlace.address_name})</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
                 </div>
 
 
                 <div className="communityWrite-footer">
-                    <button className="share-button">공유</button>
+                    <button onClick={handleSubmit} className="share-button">공유</button>
                 </div>
             </div>
         </div>
