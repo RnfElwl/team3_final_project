@@ -13,8 +13,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin")
-@CrossOrigin(origins =  "*")
+@RequestMapping("/adminTest")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AdminController {
     @Autowired
     AdminService adminService;
