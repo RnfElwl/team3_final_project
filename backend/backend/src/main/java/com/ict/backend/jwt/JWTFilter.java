@@ -53,11 +53,11 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
 
-        String username = jwtUtil.getUserid(token);
+        String userid = jwtUtil.getUserid(token);
         String role = jwtUtil.getRole(token);
 
         MemberVO memberVO = new MemberVO();
-        memberVO.setUsername(username);
+        memberVO.setUserid(userid);
         memberVO.setUserpwd("temppassword");
         memberVO.setRole(role);
 

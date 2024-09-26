@@ -21,7 +21,10 @@ function ChantList(){
 
   }
     return (
-        <div className="container chatList">
+        <main className="chatList">
+
+        
+        <div className="container">
                 <div className="chat-search"><input type="text"/><Search size={30}/></div>
                 <div className="chat-tab">
                     <div>오픈채팅</div>
@@ -65,7 +68,8 @@ function ChantList(){
                 })
             }
             </div>
-                </div>
+        </div>
+        </main>
     );
 }
 

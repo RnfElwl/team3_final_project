@@ -4,8 +4,15 @@
   justify-content: center;
   align-items: center;
   background-color: black;
+  margin:0;
+  width: 100%;
 }
-
+.chatList .container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .chatList .chat-search{
   margin-top: 20px;
   display: flex;
@@ -32,14 +39,14 @@
 .chatList .chat_create{
   margin-left: auto;
   margin-right: 100px;
-  height: 20px;
+  height: 40px;
   padding: 10px;
   width: 100px;
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: aliceblue;
-  color: white;
+  color: black;
   text-align: center;
 }
 
@@ -61,10 +68,10 @@
 .chatList .menu_hide{
   display: none;
 }
-.chatList .room_window
+
 .chatList .room_menu>div{
-  height: 20px;
-  padding: 10px;
+  height: 40px;
+  padding: 10px 0;
 }
 .chatList .room_cancle{
   position: absolute;
@@ -96,8 +103,7 @@
 }
 
 .chatList .chatList_list{
-  width: 80%;
-  margin: 0 auto;
+  width: 100%;
   margin-top: 10px;
   display: grid;
   justify-content: center;
