@@ -15,6 +15,7 @@ import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
 import MovieView from './pages/movies/MovieView.js';
 import AdminTest from './pages/admin/AdminTest'
+import QNA from './pages/qna/QnA'      
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
                 <Route path='/community/communityView' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
+                <Route path='/qna' element={<QNA/>}></Route>
 
             </Route>
         </Routes>

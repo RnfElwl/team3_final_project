@@ -17,9 +17,12 @@ function ChantList(){
     setRoom(!room);
     setCreateType(event.target.dataset.chat);
   }
-  function createRoom(event){
+  async function createRoom(event){
     event.preventDefault();
+    console.log(event.target);
+    const result = await axios.post("http://localhost:9988/chatList", {
 
+    })
   }
     return (
         <main className="chatList">
