@@ -16,6 +16,8 @@ import CommunityEdit from './pages/community/CommunityEdit.js';
 // import MovieView from './pages/movies/MovieView.js';
 import AdminTest from './pages/admin/AdminTest'
 import QNA from './pages/qna/QnA'      
+import MyPage from './pages/mypage/MyPage';
+import LoginPage from './pages/mypage/LoginPage.js';
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
+                <Route path='/mypage' element={<MyPage/>}/>
+                <Route path='/loginpage' element={<LoginPage/>}/>
 
             </Route>
         </Routes>
