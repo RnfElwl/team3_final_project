@@ -13,7 +13,7 @@ import CommunityList from './pages/community/CommunityList.js';
 import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
-
+import MovieView from './pages/movies/MovieView.js';
 import AdminTest from './pages/admin/AdminTest'
 
 

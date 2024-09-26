@@ -2,6 +2,7 @@ import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 
 function ChantList(){
@@ -14,7 +15,7 @@ function ChantList(){
   }
   function toggleRoom(event){
     setRoom(!room);
-    console.log(event.target.dataset);
+    setCreateType(event.target.dataset.chat);
   }
   function createRoom(event){
     event.preventDefault();
@@ -44,11 +45,11 @@ function ChantList(){
                 <form className="room" onSubmit={createRoom}>
                         <div className="title">
                             <h2>방 제목</h2>
-                            <input  type="text"></input>
+                            <input type="text" />
                         </div>
                         <div>
                         <h2>썸네일</h2>
-                        <input type="file"></input>
+                        <input type="file"/>
                         </div>
                         <button type="submit">방만들기</button>
                 </form>
@@ -57,8 +58,6 @@ function ChantList(){
                 <div className="chatList_list">
                 {
                     list.map(function(val, i){
-
-                    console.log(i);
                     return (<div className="openchat chat_box">
                         <div className="chat_box-img">
                             <img src=""/>
