@@ -6,12 +6,6 @@
   background-color: black;
 }
 
-.chatList .container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 .chatList .chat-search{
   margin-top: 20px;
   display: flex;
@@ -84,16 +78,20 @@
   align-items: center;
 }
 .chatList .room{
+  color: black;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   border-radius: 30px;
   padding: 30px 40px;
   width: 500px;
   height: 400px;
   background-color: aliceblue;
 }
-.room_show{
+.chatList.room_show{
   display: flex;
 }
-.room_hide{
+.chatList .room_hide{
   display: none;
 }
 

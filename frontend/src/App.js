@@ -31,7 +31,7 @@ function App() {
                 <Route path='/community/communityWrtie' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
-                <Route path='/admin/' element={<AdminTest/>}/>
+                <Route path='/adminTest/' element={<AdminTest/>}/>
 
             </Route>
         </Routes>
