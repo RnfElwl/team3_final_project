@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 public class ChatListController {
     @PostMapping("/create")
     public String insertChatList(@RequestBody ChatListVO chatListVo){
-        System.out.println(chatListVo.toString());
         chatListVo.setChatlist_url(UUIDUtils.createType4UUID());
         chatListVo.setChatlist_headcount(1);
         SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(chatListVo.toString());
         return "";
     }
 }
