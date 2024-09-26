@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import './../../css/movies/MovieList.css';
 
 function MovieList() {
@@ -7,6 +7,7 @@ function MovieList() {
   const [movies, setMovies] = useState([]);
   const [categoryName, setCategoryName] = useState(''); // 선택된 카테고리 이름 저장
   const [otherCategories, setOtherCategories] = useState([]); // 다른 카테고리 저장
+  const navigate = useNavigate(); // useNavigate 사용
 
   useEffect(() => {
     // 더미 카테고리 데이터
@@ -42,6 +43,11 @@ function MovieList() {
 
     fetchMovies();
   }, [type, id]);
+
+  const handleCardClick = (movieId) => {
+    navigate(`/categories/${type}/${movieId}/view`); // 상세 페이지로 이동
+  };
+
 
   return (
     <div className="page-container">
