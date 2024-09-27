@@ -14,7 +14,9 @@ function AdminTest() {
   useEffect(()=>{
     const fetchData=async()=>{
     try{
-      const res=await axios.get('http://localhost:9988/admin/dashboard');
+      const res=await axios.get('http://localhost:9988/adminTest/dashboard',{
+        withCredentials:true,
+      });
       setInputData(res.data);
     }catch(e){
       console.log(e);
@@ -40,10 +42,11 @@ function AdminTest() {
   };
 
   const options = {
-    responsive: false,
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'top',
       },
       title: {
         display: true,
@@ -55,9 +58,20 @@ function AdminTest() {
   return (
       <div className="adminBody">
         <p>관리자 페이지 테스트</p>
-        <container id='chartarea'>
-          <Bar data={data} options={options} width="300px" height="300px" />
-        </container>
+        <div className="adminDashboard">
+          <div id='chartarea'>
+            1
+            <Bar data={data} options={options} minwidth="300px" height="300px"/>
+          </div>
+          <div id='chartarea'>
+            2
+            <Bar data={data} options={options} width="300px" height="300px" />
+          </div>
+          <div id='chartarea'>
+            3
+            <Bar data={data} options={options} width="300px" height="300px" />
+          </div>
+        </div>
       </div>
     
   );

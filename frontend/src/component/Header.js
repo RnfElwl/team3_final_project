@@ -17,7 +17,7 @@ function Header() {
   const [isAdminPage, setIsAdminPage]=useState(false);
 
   useEffect(()=>{
-    location.pathname === "/admin"
+    location.pathname === "/adminTest"
     ? setIsAdminPage(true)
     : setIsAdminPage(false);
   }, [location.pathname]);
@@ -32,8 +32,12 @@ function Header() {
           </div>
       </header>
         <div className="admin_nav">
-          <div><Link to={'/admin'}>대쉬보드</Link></div>
-          <div><Link to={'/chat'}>헤더</Link></div>
+          <div><Link to={'/adminTest'}>대쉬보드</Link></div>
+          <div><Link to={'#'}>사용자 관리</Link></div>
+          <div><Link to={'#'}>컨텐츠 관리</Link></div>
+          <div><Link to={'#'}>상품 관리</Link></div>
+          <div><Link to={'#'}>통계</Link></div>
+          <div><Link to={'#'}>신고 관리</Link></div>
         </div>
       </>
     );
@@ -48,6 +52,7 @@ function Header() {
         <div className='tab'>
           <div><Link to={'/categories'} onClick={closeNav}>카테고리</Link></div>
           <div><Link to={'/chat'} onClick={closeNav}>채팅</Link></div>
+          <div><Link to={'/qna'} onClick={closeNav}>QnA</Link></div>
         </div>
         <div className='close_box' onClick={closeNav}></div>
       </nav>

@@ -1,5 +1,8 @@
 package com.ict.backend.vo;
 
+import lombok.Data;
+
+@Data
 public class CommunityVO {
     public int community_no;
     public String userid;
