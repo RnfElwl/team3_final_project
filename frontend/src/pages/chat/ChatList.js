@@ -46,14 +46,12 @@ function ChantList(){
                 <div className="chat-tab">
                     <div>오픈채팅</div>
                     <div>1대1채팅</div>
-                    <div>토론방</div>
                 </div>
                 <div className="chat_create"  onClick={toggleMenu}>
                     <div className="create">방만들기</div>
                     <div className={`room_menu ${menu?'menu_show':'menu_hide'}`}>
                         <div onClick={toggleRoom} data-chat="1">오픈 채팅</div>
                         <div onClick={toggleRoom} data-chat="2">1대1채팅</div>
-                        <div onClick={toggleRoom} data-chat="3">토론방</div>
                     </div>
                 </div>
                 <div className={`room_window ${room?'room_show':'room_hide'}`}>
@@ -67,13 +65,13 @@ function ChantList(){
                         <h2>부제목</h2>
                         <input type="text" name="chat_content" value={formData.chat_content} onChange={setRoomFormData}/>
                         </div>
-                        {
-                            formData.chatlist_type==3 && 
-                                <div className="debate_img">
-                                    <h2>내가 보고 평가한 영화들</h2>
-                                    <input type="text" name="chat_content" value={formData.chatlist_img} onChange={setRoomFormData}/>
-                                </div>
-                        }
+                        
+
+                        <div className="debate_img">
+                            <h2>평가한 영화들</h2>
+                            <input type="text" name="chat_content" value={formData.chatlist_img} onChange={setRoomFormData}/>
+                        </div>
+                        
                         <button type="submit">방만들기</button>
                 </form>
                 </div>
