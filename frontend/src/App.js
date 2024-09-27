@@ -34,7 +34,7 @@ function App() {
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
                 <Route path="/categories/:type/:id/view" element={<MovieView />} />
                 <Route path='/community' element={<CommunityList/>}></Route>
-                <Route path='/community/communityWrtie' element={<CommunityWrite/>}></Route>
+                <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
