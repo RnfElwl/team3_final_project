@@ -5,19 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Home from './pages/Home';
 import Layout from './pages/Layout';
-//import MovieCategories from './pages/movies/MovieCategories.js';
-//import MovieList from './pages/movies/MovieList.js';
+import MovieCategories from './pages/movies/MovieCategories.js';
+import MovieList from './pages/movies/MovieList.js';
 import ChatList from './pages/chat/ChatList.js';
 import ChatTest from './pages/chat/ChatTest.js';
 import CommunityList from './pages/community/CommunityList.js';
 import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
-
-//import MovieView from './pages/movies/MovieView.js';
-
-// import MovieView from './pages/movies/MovieView.js';
-
 import AdminTest from './pages/admin/AdminTest'
 import QNA from './pages/qna/QnA'      
 import MyPage from './pages/mypage/MyPage';
@@ -33,10 +28,8 @@ function App() {
                 <Route path='/chat' element={<ChatList/>}></Route>
                 <Route path='/chat/:chatlist_url' element={<ChatTest/>}></Route>
 
-                {/* <Route path='/categories' element={<MovieCategories/>}></Route> */}
-                {/* <Route path="/categories/:type/:id" element={<MovieList/>} /> 동적 라우트 */}
-
                 <Route path='/categories' element={<MovieCategories/>}></Route>
+
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
 
                 {/* <Route path="/categories/:type/:id/view" element={<MovieView />} /> */}
