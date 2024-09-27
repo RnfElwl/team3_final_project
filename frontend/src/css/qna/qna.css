@@ -1,6 +1,7 @@
 .QnABody{
     margin: 0 auto;
     max-width: 1200px;
+    background-color: white;
 }
 @media(max-width:577px){
     .QnABody{
@@ -14,5 +15,5 @@
     background-color: #00ff88;
     color: white;
     border:none;
-    
+
 }
