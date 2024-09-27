@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Layout from './pages/Layout';
 import MovieCategories from './pages/movies/MovieCategories.js';
 import MovieList from './pages/movies/MovieList.js';
+import MovieView from './pages/movies/MovieView.js';
 import ChatList from './pages/chat/ChatList.js';
 import ChatTest from './pages/chat/ChatTest.js';
 import CommunityList from './pages/community/CommunityList.js';
