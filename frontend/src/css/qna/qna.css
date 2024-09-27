@@ -1,0 +1,18 @@
+.QnABody{
+    margin: 0 auto;
+    max-width: 1200px;
+}
+@media(max-width:577px){
+    .QnABody{
+        min-width: 577px;
+    }
+}
+.right-buttons{
+    text-align: right;
+}
+.right-buttons>button{
+    background-color: #00ff88;
+    color: white;
+    border:none;
+    
+}
