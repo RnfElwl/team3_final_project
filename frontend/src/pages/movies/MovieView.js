@@ -11,9 +11,6 @@ function MovieView() {
     // 탭 구분
     const [activeTab, setActiveTab] = useState('details'); 
 
-
-
-
     return (
         <div className="movie-view-container">
         <div className="movie-content">
@@ -111,12 +108,6 @@ function MovieView() {
             </div>
           )}
         </div>
-
-
-
-
-
-
 
 
         </div>
