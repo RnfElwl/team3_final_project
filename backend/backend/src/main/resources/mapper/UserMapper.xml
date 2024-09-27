@@ -4,17 +4,17 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.UserDAO">
     <select id = "test" resultType="com.ict.backend.vo.MemberVO">
-        select * from member limit 1
+        select * from user_tbl limit 1
     </select>
     <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">
-        SELECT * FROM member WHERE userid = #{userid}
+        SELECT * FROM user_tbl WHERE userid = #{userid}
     </select>
 
     <select id="existsByUserid" parameterType="String" resultType="Boolean">
-        SELECT EXISTS(SELECT 1 FROM member WHERE userid = #{userid})
+        SELECT EXISTS(SELECT 1 FROM user_tbl WHERE userid = #{userid})
     </select>
 
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO member(userid, userpwd, username, tel) VALUES(#{userid}, #{userpwd}, 'ttstst', '010-1111-1111')
+        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, '테스터', '테스터9999', '010-1111-1111')
     </insert>
 </mapper>

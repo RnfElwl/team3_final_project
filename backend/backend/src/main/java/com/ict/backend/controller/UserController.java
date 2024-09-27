@@ -31,6 +31,10 @@ public class UserController {
         System.out.println(userid);
         return null;
     }
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
 
 
 }
