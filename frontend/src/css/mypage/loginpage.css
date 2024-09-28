@@ -1,9 +1,16 @@
 .loginpage {
   max-width: 1920px;
+  height: 91vh;
+  background-image: url(../../img/login_back.jpg);
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0 auto;
 }
 .loginpage>.container{
+  margin-top: 20px;
   max-width: 1200px;
-  height: 80vh;
+  height: 90vh;
   border: 1px solid black;
   display: flex;
   align-content: center;
@@ -42,10 +49,12 @@
 }
 .loginsession form input[id="userid"]{
   border-radius: 4px 4px 0 0;
+  color : #d4d4d4;
 }
 .loginsession form input[type="password"]{
   border-top : 1px solid #d4d4d4;
   border-radius: 0 0 4px 4px;
+  color : #d4d4d4;
 }
 .loginsession form button{
   margin-top: 30px;

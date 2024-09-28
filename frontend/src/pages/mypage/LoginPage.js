@@ -8,16 +8,6 @@ function LoginPage() {
   const [userpwd, setUserpwd] = useState('');
 
   // login 함수 정의
-  // const login = async (loginData) => {
-  //   console.log(loginData);
-  
-  //   await axios.request({
-  //   url: 'http://localhost:9988/login',
-  //   method: 'post', // 원하는 메서드 (GET, POST, DELETE 등)
-  //   data: loginData // 요청 데이터
-  // })
-  // }
-  
   const login = async (loginData) => {
     try {
       console.log(loginData);
@@ -48,10 +38,6 @@ function LoginPage() {
     e.preventDefault(); // 페이지 리프레시 방지
 
     // loginData 생성
-    // const loginData = {
-    //   userid,
-    //   userpwd,
-    // };
     const loginData = new FormData();
     loginData.append("userid", userid);
     loginData.append("userpwd", userpwd);
@@ -77,7 +63,7 @@ function LoginPage() {
           </div>
           <form name="loginCheck" onSubmit={handleLogin}>
             <input
-              type="text" id="userid" value={userid} 
+              type="text" id="userid" value={userid} placeholder='아이디' 
               onChange={(e) => setUserid(e.target.value)}
             />
             <input

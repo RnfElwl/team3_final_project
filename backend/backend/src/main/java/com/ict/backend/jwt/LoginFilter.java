@@ -84,7 +84,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("username", username);
+        responseBody.put("userid", username);
         responseBody.put("refresh",refreshtoken);
 
         // ObjectMapper를 사용하여 Map을 JSON 문자열로 변환합니다.
