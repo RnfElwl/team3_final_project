@@ -1,80 +1,40 @@
-import { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import * as StompJs from '@stomp/stompjs';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Axios 라이브러리 임포트
 
-function ChatTest() {
-  const [chatList, setChatList] = useState([]);
-  const [chat, setChat] = useState('');
+const ChatTest = () => {
+  const [message, setMessage] = useState(''); // 입력할 메시지 상태
+    const [status, setStatus] = useState(''); // 서버 응답 상태
 
-  const { chatlist_url } = useParams();
-  const client = useRef({});
+    // 메시지 전송 함수
+    const sendMessage = async () => {
+        try {
+            // POST 요청을 통해 메시지 전송
+            const response = await axios.post(`http://localhost:5000/send_message/${encodeURIComponent(message)}`);
+            // 응답 상태 업데이트
+            setStatus(response.data.status);
+            setMessage(''); // 입력란 초기화
+        } catch (error) {
+            // 오류 발생 시 상태 업데이트
+            console.error('Error sending message:', error);
+            setStatus('Error sending message');
+        }
+    };
 
-  const connect = () => {
-    client.current = new StompJs.Client({
-      brokerURL: 'ws://localhost:9988/ws',
-      onConnect: () => {
-        console.log('success');
-        subscribe();
-      },
-    });
-    client.current.activate();
-  };
-
-  const publish = (chat) => {
-    if (!client.current.connected) return;
-
-    client.current.publish({
-      destination: '/pub/chat',
-      body: JSON.stringify({
-        chatlist_url: chatlist_url,
-        chat_content: chat,
-      }),
-    });
-
-    setChat('');
-  };
-
-  const subscribe = () => {
-    client.current.subscribe('/sub/chat/' + chatlist_url, (body) => {
-      const json_body = JSON.parse(body.body);
-      console.log(json_body)
-      setChatList((_chat_list) => [
-        ..._chat_list, json_body
-      ]);
-    });
-  };
-
-  const disconnect = () => {
-    client.current.deactivate();
-  };
-
-  const handleChange = (event) => { // 채팅 입력 시 state에 값 설정
-    setChat(event.target.value);
-  };
-
-  const handleSubmit = (event, chat) => { // 보내기 버튼 눌렀을 때 publish
-    event.preventDefault();
-
-    publish(chat);
-  };
-  
-  useEffect(() => {
-    connect();
-
-    return () => disconnect();
-  }, []); 
-
-  return (
-    <div>
-      <div className={'chat-list'}>{chatList}</div>
-      <form onSubmit={(event) => handleSubmit(event, chat)}>
+    return (
         <div>
-          <input type={'text'} name={'chatInput'} onChange={handleChange} value={chat} />
+            <h1>MQTT Chat</h1>
+            {/* 메시지 입력란 */}
+            <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)} // 입력 시 상태 업데이트
+            />
+            {/* 메시지 전송 버튼 */}
+            <button onClick={sendMessage}>Send Message</button>
+            {/* 서버 응답 상태 표시 */}
+            {status && <p>Status: {status}</p>}
         </div>
-        <input type={'submit'} value={'의견 보내기'} />
-      </form>
-    </div>
-  );
-}
+    );
+};
 
 export default ChatTest;
