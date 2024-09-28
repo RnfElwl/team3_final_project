@@ -17,3 +17,12 @@
     border:none;
 
 }
+.qna_ht_th{
+    display: flex;
+}
+.qna_ht{
+    color: red;
+}
+.qna.pagination{
+    justify-content: center;
+}

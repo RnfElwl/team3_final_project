@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import './../../css/qna/qna.css'
+import { AiFillLock } from "react-icons/ai";
 
 function QnA() {
     const [QnA, setQnA] = useState([]);
@@ -10,7 +11,6 @@ function QnA() {
         .then(response=>{
             console.log("test"+response.data);
             setQnA(response.data);
-            console.log(QnA);
         });
     },[]);
     useEffect(() => {
@@ -29,7 +29,7 @@ function QnA() {
                     <th>작성자</th>
                     <th>제목</th>
                     <th>등록일</th>
-                    <th>등록여부</th>
+                    <th>답변여부</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -38,9 +38,13 @@ function QnA() {
                                 <tr key={index}>
                                     <th>{item.qna_no}</th>
                                     <th>{item.userid}</th>
-                                    <th>{item.head_title==1 ? "[상품]":"[사이트]"}{item.qna_title}</th>
+                                    <th className="qna_ht_th">
+                                    {item.head_title==1 ? <div className="qna_ht">[상품]</div>:
+                                    (item.head_title==2 ? <div className="qna_ht">[사이트]</div>:
+                                    <div className="qna_ht">[기타]</div>)}
+                                    {item.privacy==0 ? item.qna_title:<div>비밀글입니다. <AiFillLock/></div>}</th>
                                     <th>{item.qna_writedate}</th>
-                                    <th>{item.qna_state==1 ? "처리후":"처리전"}</th>
+                                    <th>{item.qna_state==1 ? "답변됨":"답변 없음"}</th>
                                 </tr>
                             ))
                         ) : (
@@ -55,7 +59,7 @@ function QnA() {
         </div>
         </div>
 
-        <ul className="pagination">
+        <ul className="qna pagination">
             <li className="page-item"><a className="page-link" href="#">Previous</a></li>
             <li className="page-item"><a className="page-link" href="#">1</a></li>
             <li className="page-item"><a className="page-link" href="#">2</a></li>

@@ -15,7 +15,8 @@ import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
 import AdminTest from './pages/admin/AdminTest'
-import QNA from './pages/qna/QnA'      
+import QNA from './pages/qna/QnA'
+import QNAView from './pages/qna/QnAView.js'    
 import MyPage from './pages/mypage/MyPage';
 import LoginPage from './pages/mypage/LoginPage.js';
 
@@ -39,6 +40,7 @@ function App() {
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
+                <Route path='/qna/view' element={<QNAView/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/loginpage' element={<LoginPage/>}/>
 
