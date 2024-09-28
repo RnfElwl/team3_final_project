@@ -2,17 +2,19 @@ package com.ict.backend.controller;
 
 import com.ict.backend.dto.CustomUserDetails;
 import com.ict.backend.service.UserService;
+import com.ict.backend.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins =  "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     UserService userService;
@@ -34,6 +36,12 @@ public class UserController {
     @GetMapping("/test")
     public String test() {
         return "test";
+    }
+    @PostMapping("/te")
+    public String login() {
+        System.out.println("hi");
+        //System.out.println("test"+ vo);
+        return null;
     }
 
 

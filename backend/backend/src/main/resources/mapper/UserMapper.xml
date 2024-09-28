@@ -15,6 +15,6 @@
     </select>
 
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, '테스터', '테스터9999', '010-1111-1111')
+        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, '고구마', '고구마1234', '010-1111-1111')
     </insert>
 </mapper>

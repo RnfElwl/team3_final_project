@@ -15,10 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final Long accessExpiredMs;
@@ -38,6 +35,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
+            Enumeration<String> result = request.getParameterNames();
+            System.out.println("userid = "+request.getParameter("userid"));
+            System.out.println("ttt");
+            while(result.hasMoreElements()){
+                String key = result.nextElement();
+                String value = request.getParameter(key);
+                System.out.println("1"+key);
+                System.out.println("2"+value);
+            }
+
             String userid = request.getParameter("userid");
             String password = request.getParameter("userpwd");
             // String username = obtainUsername(request);

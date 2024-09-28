@@ -15,6 +15,7 @@ instance.interceptors.request.use(
                 config.headers['Authorization'] = `Bearer ${token}`;
             }
         }
+        console.log(config);
         return config;
     },
     error => Promise.reject(error)
@@ -49,31 +50,31 @@ const logout = () => {
     // 로컬 스토리지의 모든 항목을 비웁니다.
     localStorage.clear();
     // 로그인 페이지로 리다이렉트
-    navigate('/user/login');
+    window.location.href = '/user/login';
 };
 
 
 
 
 // 응답 인터셉터 추가
-instance.interceptors.response.use(
-    response => response, // 정상 응답
-    async (error) => {
-        const originalRequest = error.config;
+// instance.interceptors.response.use(
+//     response => response, // 정상 응답
+//     async (error) => {
+//         const originalRequest = error.config;
 
-        // 401 오류가 발생하고, 이미 재시도를 한 적이 없다면
-        if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true; // 재시도 했음을 표시
+//         // 401 오류가 발생하고, 이미 재시도를 한 적이 없다면
+//         if (error.response.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true; // 재시도 했음을 표시
 
-            // 토큰을 갱신하고 재시도
-            const newAccessToken = await refreshToken();
-            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+//             // 토큰을 갱신하고 재시도
+//             const newAccessToken = await refreshToken();
+//             originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
-            // 원래 요청을 다시 수행
-            return instance(originalRequest);
-        }
-        return Promise.reject(error);
-    }
-);
+//             // 원래 요청을 다시 수행
+//             return instance(originalRequest);
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
 export default instance;
