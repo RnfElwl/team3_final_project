@@ -66,6 +66,7 @@ dependencies {
 
 	// Spring Messaging (STOMP와 WebSocket을 사용하기 위함)
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.integration:spring-integration-mqtt:5.5.17'
 }
 
 tasks.named('test') {
