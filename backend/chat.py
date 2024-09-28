@@ -1,16 +1,22 @@
 import paho.mqtt.client as mqtt
 
 # MQTT 브로커 정보
-broker = 'localhost'  # 또는 브로커의 IP 주소
-port = 1883           # 또는 브로커의 포트
+broker = 'localhost'
+port = 1883
+username = '1234'  # 위에서 설정한 사용자 이름
+password = '1234'    # 위에서 설정한 비밀번호
+topic = 'chat/topic'
 
 # MQTT 클라이언트 설정
 client = mqtt.Client()
 
+# 사용자 인증 정보 설정
+client.username_pw_set(username, password)
+
 # 브로커에 연결 후 호출되는 콜백 함수
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    client.subscribe('chat/topic')  # 주제 구독
+    client.subscribe(topic)
 
 # 메시지가 수신될 때 호출되는 콜백 함수
 def on_message(client, userdata, msg):
@@ -21,19 +27,17 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 # 브로커에 연결
-try:
-    client.connect(broker, port, 60)
-except Exception as e:
-    print(f"Connection failed: {e}")
+client.connect(broker, port, 60)
 
 # 클라이언트 루프 시작
 client.loop_start()
 
-print("MQTT Chat Server is running...")
-
 try:
     while True:
-        pass  # 서버는 계속 실행됩니다.
+        message = input("Enter a message to send (or 'exit' to quit): ")
+        if message.lower() == 'exit':
+            break
+        client.publish(topic, message)
 
 except KeyboardInterrupt:
     print("Exiting...")

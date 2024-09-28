@@ -40,7 +40,7 @@ function App() {
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
-                <Route path='/qna/view' element={<QNAView/>}/>
+                <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
 
