@@ -5,7 +5,6 @@ import com.ict.backend.vo.CommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -26,5 +25,12 @@ public class CommunityController {
         System.out.println(vo.toString());
         service.createCommunity(vo);
         return vo;
+    }
+
+    //view
+    @GetMapping("/view/{community_no}")
+    public CommunityVO getCommunityView(@PathVariable("community_no") int community_no){
+        CommunityVO communityVO = service.getCommunityView(community_no);
+        return communityVO;
     }
 }

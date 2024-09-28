@@ -59,8 +59,8 @@ function CommunityList() {
 
                 {community.length > 0 ? (
                     community.map((communityItem) => (
-                        <div className="list" key={communityItem.no}>
-                            <Link to={`/community/communityView/${communityItem.no}`}>
+                        <div className="list" key={communityItem.community_no}>
+                            <Link to={`/community/communityView/${communityItem.community_no}`}>
                                 <div className="list_top">
                                     <img className="writer_image" src={communityItem.writerImage} alt="Writer" />
                                     <div className="writer_info">
@@ -80,11 +80,11 @@ function CommunityList() {
                                 </div>
 
                                 <div className="list_bottom">
-                                    <i className="like-icon" data-no={`${communityItem.no}`} style={{ fontStyle: 'normal' }}> ♡</i>
+                                    <i className="like-icon" data-no={`${communityItem.community_no}`} style={{ fontStyle: 'normal' }}> ♡</i>
                                     <span className="likeCount">{communityItem.likeHit}</span>
-                                    <i className="comment-icon" data-no={`${communityItem.no}`} style={{ fontStyle: 'normal' }}> 💬</i>
+                                    <i className="comment-icon" data-no={`${communityItem.community_no}`} style={{ fontStyle: 'normal' }}> 💬</i>
                                     <span className="commentCount">{communityItem.commentHit}</span>
-                                    <i className="bookmark-icon" data-no={`${communityItem.no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
+                                    <i className="bookmark-icon" data-no={`${communityItem.community_no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
                                 </div>
                             </Link>
                         </div>

@@ -22,4 +22,9 @@ public class CommunityServiceImpl implements CommunityService{
         return dao.createCommunity(vo);
     }
 
+    @Override
+    public CommunityVO getCommunityView(int community_no) {
+        return dao.getCommunityView(community_no);
+    }
+
 }

@@ -11,4 +11,6 @@ public interface CommunityDAO {
     //게시글 작성
     int createCommunity(CommunityVO vo);
 
+    //view
+    CommunityVO getCommunityView(int community_no);
 }

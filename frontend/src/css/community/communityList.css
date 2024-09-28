@@ -67,9 +67,9 @@ body{
     height: 60px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
     margin-right: 10px; /* 여백 */
-    margin-bottom: 20px;
+    
     border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
+    
 }
 
 .community_list .writer_info {
