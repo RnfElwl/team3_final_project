@@ -36,13 +36,13 @@ function App() {
                 <Route path="/categories/:type/:id/view" element={<MovieView />} />
                 <Route path='/community' element={<CommunityList/>}></Route>
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
-                <Route path='/community/communityView' element={<CommunityView/>}></Route>
+                <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit' element={<CommunityEdit/>}></Route>
                 <Route path='/adminTest/' element={<AdminTest/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view' element={<QNAView/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
-                <Route path='/loginpage' element={<LoginPage/>}/>
+                <Route path='/signin' element={<LoginPage/>}/>
 
             </Route>
         </Routes>

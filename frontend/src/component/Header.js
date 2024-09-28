@@ -66,7 +66,7 @@ function Header() {
             <div className='search'>
               <Search color={"black"} size={20}/><input  type="text" />
             </div>
-            <div className='login_btn'><Link to={'/login'}>로그인</Link></div>
+            <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
             <div className='join_btn'><Link to={'/join'}>회원가입</Link></div>  
           </div>
       </header>
