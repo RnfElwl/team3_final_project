@@ -8,6 +8,7 @@ public class QnAVO {
     public String userid;
     public String head_title;
     public String qna_title;
+    public String qna_content;
     public String qna_writedate;
     public int qna_state;
     public String qna_answer;

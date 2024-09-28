@@ -4,7 +4,14 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.QnADAO">
     <select id = "getQnAList" resultType="com.ict.backend.vo.QnAVO">
-        select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,privacy,qna_state,active_state
+        select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
+        privacy,qna_state,active_state
         from qna_tbl where active_state=1 or active_state=2;
+    </select>
+    <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
+        select qna_no, userid, head_title, qna_title,qna_content,
+        date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_answer,
+        answer_user, qna_answer_date, active_state
+        from qna_tbl where qna_no=#{qna_no}
     </select>
 </mapper>

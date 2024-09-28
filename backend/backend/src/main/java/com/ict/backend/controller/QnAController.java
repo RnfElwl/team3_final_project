@@ -20,15 +20,13 @@ public class QnAController {
 
     @GetMapping("/list")
     public ResponseEntity<List<QnAVO>> getQnAList(@ModelAttribute PagingVO pagingVO){
-        System.out.println("hi");
         List<QnAVO> result = qnaService.getQnAList(pagingVO);
-        System.out.println("result " + result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @GetMapping("/test")
-    public String test(){
-        System.out.println("hi");
-        return "hi";
+    @GetMapping("/view/{qna_no}")
+    public ResponseEntity<List<QnAVO>> getQnAList(@PathVariable int qna_no) {
+        List<QnAVO> result = qnaService.getQnAView(qna_no);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

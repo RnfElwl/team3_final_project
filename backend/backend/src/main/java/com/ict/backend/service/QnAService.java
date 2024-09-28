@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface QnAService {
     List<QnAVO> getQnAList(PagingVO pagingVO);
+    List<QnAVO> getQnAView(int qna_no);
 }
