@@ -1,0 +1,73 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.ict'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// jjwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+	compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
+
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// tomcat, jstl
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	compileOnly 'jakarta.servlet:jakarta.servlet-api'
+	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
+	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
+
+	// https://mvnrepository.com/artifact/javax.inject/javax.inject
+	implementation 'javax.inject:javax.inject:1'
+
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation 'org.json:json:20240303'
+	// Mybatis
+	// https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+	// JDBC
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.3.3'
+	// Eclipse Paho MQTT Client 의존성
+	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+
+	// Spring Messaging (STOMP와 WebSocket을 사용하기 위함)
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
