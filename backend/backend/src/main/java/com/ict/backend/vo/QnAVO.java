@@ -16,4 +16,5 @@ public class QnAVO {
     public String qna_answer_date;
     public int privacy;
     public int active_state;
+    public String qna_pwd;
 }

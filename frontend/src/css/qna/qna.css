@@ -24,6 +24,9 @@
 .qna_ht{
     color: red;
 }
+.qna_pwt{
+    cursor: pointer;
+}
 .qna.pagination{
     justify-content: center;
 
@@ -62,7 +65,7 @@
     border-radius: 8px;
     color:black;
 }
-.private-content input[type="text"] {
+.private-content input[type="password"] {
     padding: 5px;
     color:black;
     background-color: #e6e6e6;
