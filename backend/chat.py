@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)  # 모든 출처에서 접근을 허용
 
 # MQTT 브로커 정보
-broker = 'localhost'  # 로컬에서 실행할 경우 localhost 사용
+broker = '192.168.1.87'  # 로컬에서 실행할 경우 localhost 사용
 port = 1883           # MQTT 기본 포트
 topic = 'test/topic'  # 사용할 주제
 

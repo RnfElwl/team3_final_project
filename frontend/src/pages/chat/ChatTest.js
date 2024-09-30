@@ -1,38 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Axios 라이브러리 임포트
+import mqtt from 'mqtt';
 
 const ChatTest = () => {
-  const [message, setMessage] = useState(''); // 입력할 메시지 상태
-    const [status, setStatus] = useState(''); // 서버 응답 상태
+  const [client, setClient] = useState(null);
+    const [receivedMessages, setReceivedMessages] = useState([]);
+    const [messageToSend, setMessageToSend] = useState('');
 
-    // 메시지 전송 함수
-    const sendMessage = async () => {
-        try {
-            // POST 요청을 통해 메시지 전송
-            const response = await axios.post(`http://localhost:5000/send_message/${encodeURIComponent(message)}`);
-            // 응답 상태 업데이트
-            setStatus(response.data.status);
-            setMessage(''); // 입력란 초기화
-        } catch (error) {
-            // 오류 발생 시 상태 업데이트
-            console.error('Error sending message:', error);
-            setStatus('Error sending message');
+    useEffect(() => {
+        // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
+        const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
+
+        // 연결 성공 시
+        mqttClient.on('connect', () => {
+            console.log('Connected to MQTT Broker');
+            mqttClient.subscribe('test/topic', (err) => {
+                if (!err) {
+                    console.log('Subscribed to chat/topic');
+                }
+            });
+        });
+
+        // 메시지 수신 시
+        mqttClient.on('message', (topic, message) => {
+            console.log(message);
+        });
+
+        setClient(mqttClient);
+
+        // 컴포넌트가 언마운트될 때 연결 종료
+        return () => {
+            mqttClient.end();
+        };
+    }, []);
+
+    const handleSendMessage = () => {
+        if (client) {
+            // 메시지 발행 (해당 토픽에 메시지를 보냄)
+            client.publish('test/topic', '{mag: "test", user: "user1", room:"1234"}');
+            setMessageToSend(''); // 메시지 전송 후 입력창 초기화
         }
     };
 
     return (
         <div>
-            <h1>MQTT Chat</h1>
-            {/* 메시지 입력란 */}
+            <h1>MQTT Chat Application</h1>
             <input
                 type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)} // 입력 시 상태 업데이트
+                value={messageToSend}
+                onChange={(e) => setMessageToSend(e.target.value)}
+                placeholder="Type your message"
             />
-            {/* 메시지 전송 버튼 */}
-            <button onClick={sendMessage}>Send Message</button>
-            {/* 서버 응답 상태 표시 */}
-            {status && <p>Status: {status}</p>}
+            <button onClick={handleSendMessage}>Send</button>
+            <h2>Received Messages:</h2>
+            <ul>
+                {receivedMessages.map((msg, index) => (
+                    <li key={index}>{msg}</li>
+                ))}
+            </ul>
         </div>
     );
 };
