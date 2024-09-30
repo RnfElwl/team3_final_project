@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
+//import axios from "../../component/api/axiosApi";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './../../css/qna/qna.css';
 import { AiFillLock } from "react-icons/ai";
 import $ from "jquery";
+import ReactPaginate from 'react-paginate';
 
 function QnA() {
     const [QnA, setQnA] = useState([]);
     const [privatePost, setPrivatePost] = useState(null);
+    const [password, setPassword] = useState("");
+    const [isPasswordCheck, setIsPasswordCheck] = useState(false);
+    const navigate = useNavigate();
+    const tokenData=localStorage.getItem("token");
 
     useEffect(() => {
         axios.get('http://localhost:9988/qna/list')
             .then(response => {
                 setQnA(response.data);
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
             });
     }, []);
 
+
     const handlePrivateClick = (post) => {
         setPrivatePost(post);
+        setPassword("");
+        setIsPasswordCheck(false);
     };
 
     const closePrivateView = () => {
         setPrivatePost(null);
+    };
+
+        const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
     };
 
     $('.modal-wrap').click(function(e){
@@ -30,9 +46,33 @@ function QnA() {
         }
     });
 
-    return (
 
+    const handlePasswordSubmit = (e) => {
+        e.preventDefault();
+        if (privatePost && password === privatePost.qna_pwd) {
+            setIsPasswordCheck(true);
+            navigate(`/qna/view/${privatePost.qna_no}`);
+        } else {
+            alert("비밀번호가 틀렸습니다!");
+            setIsPasswordCheck(false);
+        }
+    };
+    function checkid() {
+        axios.get('http://localhost:9988/user/userinfo')
+        .then(response => {
+            console.log(response.data); // 응답 데이터 출력
+        })
+        .catch(error => {
+            console.error("데이터 로드 중 오류 발생:", error); // 오류 처리
+        });
+    }
+
+
+    
+
+    return (
         <div className="QnABody">
+    
             <div className="container mt-3">
                 <h1>질의응답(QnA)</h1>
                 <hr />
@@ -60,7 +100,7 @@ function QnA() {
                                         {item.privacy == 0 ? (
                                             <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
                                         ) : (
-                                            <div onClick={() => handlePrivateClick(item)}>
+                                            <div className="qna_pwt" onClick={() => handlePrivateClick(item)}>
                                                 비밀글입니다. <AiFillLock />
                                             </div>
                                         )}
@@ -76,28 +116,24 @@ function QnA() {
                         )}
                     </tbody>
                 </table>
-
+                
                 <div className="right-buttons">
-                    <button>등록하기</button>
+                    <button onClick = "checkid()">등록하기</button>
+                    <button onClick={checkid}>등록하기1</button>
                 </div>
             </div>
 
-            <ul className="qna pagination">
-                <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                <li className="page-item"><a className="page-link" href="#">1</a></li>
-                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                <li className="page-item"><a className="page-link" href="#">Next</a></li>
-            </ul>
-
             {privatePost && (
                 <div className="modal-wrap">
-                <div className="private-content">
+                <div className="private-content" onClick={(e) => e.stopPropagation()}>
                     <div>
                         <h3>비밀글 알림</h3>
                         <p>이 게시글은 비밀글입니다. 비밀번호를 입력해주세요.</p>
-                        <form>
-                            <input type="text" name="userpwd"/>
+                        <form className="qna_pwdCheckForm" onSubmit={handlePasswordSubmit}>
+                            <input id="qna_password" type="password" name="userpwd" maxLength='4'  value={password}
+                                onChange={handlePasswordChange}/>
+                            <button value="submit">입력</button>
+
                         </form>
                         <button onClick={closePrivateView}>닫기</button>
                     </div>
