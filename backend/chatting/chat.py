@@ -1,22 +1,34 @@
 from flask import Flask, request, jsonify
 import paho.mqtt.client as mqtt
-
-from query import connect_to_database, close_connection
-
+import json
+from query import connect_to_database, close_connection, insert_chat
+from mysql.connector import Error
 app = Flask(__name__)
 
 # 데이터베이스에 메시지 저장 함수
-def save_message_to_db(room_id, user, message):
+def save_message_to_db(room_id, userid, msg):
+    try:
+        con = connect_to_database()
+        cursor = con.cursor()
+        insert_chat(con, room_id, userid, msg)
+        cursor.close()
+        close_connection(con)
+    except Error as e:
+        print(f"Error: {e}")
+        return None
+
+
     print("db 메시지 추가 로직")
 
 # 메시지를 수신하는 MQTT 클라이언트 설정
 def on_message(client, userdata, msg):
     message_payload = msg.payload.decode()
     print(f"Received message: {message_payload}")
-    
-    # DB에 메시지 저장
-    room_id = msg.topic.split('/')[-1]  # 토픽에서 방 ID 추출
-    save_message_to_db(room_id, "goguma1234", message_payload)
+    data = json.loads(message_payload)
+    room_id = data['room']
+    userid = data['userid']
+    msg = data['msg']
+    save_message_to_db(room_id, userid, msg)
 
 # Flask API - 메시지 처리 및 DB 저장
 @app.route('/api/send_message', methods=['POST'])
@@ -27,7 +39,7 @@ def send_message():
     message = data['msg']
     
     # MQTT로 메시지 발행
-    mqtt_client.publish(f"test/topic/{room_id}", message)
+    #mqtt_client.publish(f"test/topic/{room_id}", message)
     
     # DB에 메시지 저장
     save_message_to_db(room_id, user, message)
@@ -37,7 +49,7 @@ def send_message():
 if __name__ == '__main__':
     mqtt_client = mqtt.Client()
     mqtt_client.on_message = on_message
-    mqtt_client.connect('localhost', 1883, 60)
+    mqtt_client.connect('192.168.1.87', 1883, 60)
     mqtt_client.subscribe('test/topic/#')  # 모든 방의 메시지 수신
     
     mqtt_client.loop_start()

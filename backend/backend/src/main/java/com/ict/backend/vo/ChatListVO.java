@@ -13,5 +13,6 @@ public class ChatListVO {
     private int chatlist_img;
     private String usernick;
     private String image_url;
+    private String userprofile;
 
 }
