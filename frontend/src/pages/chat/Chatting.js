@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import mqtt from 'mqtt';
 
-const ChatTest = () => {
+const Chatting = () => {
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
@@ -61,4 +61,4 @@ const ChatTest = () => {
     );
 };
 
-export default ChatTest;
+export default Chatting;

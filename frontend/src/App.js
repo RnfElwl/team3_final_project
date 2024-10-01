@@ -9,7 +9,7 @@ import MovieCategories from './pages/movies/MovieCategories.js';
 import MovieList from './pages/movies/MovieList.js';
 import MovieView from './pages/movies/MovieView.js';
 import ChatList from './pages/chat/ChatList.js';
-import ChatTest from './pages/chat/ChatTest.js';
+import Chatting from './pages/chat/Chatting.js';
 import CommunityList from './pages/community/CommunityList.js';
 import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
@@ -28,7 +28,7 @@ function App() {
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
                 <Route path='/chat' element={<ChatList/>}></Route>
-                <Route path='/chat/:chatlist_url' element={<ChatTest/>}></Route>
+                <Route path='/chat/:chatlist_url' element={<Chatting/>}></Route>
 
                 <Route path='/categories' element={<MovieCategories/>}></Route>
 
