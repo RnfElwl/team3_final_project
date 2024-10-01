@@ -13,4 +13,11 @@ public interface CommunityDAO {
 
     //view
     CommunityVO getCommunityView(int community_no);
+
+    void editCommunity(CommunityVO community);
+
+    void deleteCommentsByCommunityNo(int community_no);
+
+    void deleteCommunity(int community_no);
+
 }

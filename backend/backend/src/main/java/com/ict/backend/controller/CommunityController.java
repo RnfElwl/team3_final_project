@@ -33,4 +33,19 @@ public class CommunityController {
         CommunityVO communityVO = service.getCommunityView(community_no);
         return communityVO;
     }
+
+    //edit
+    @PutMapping("/edit/{community_no}")
+    public void editCommunity(@PathVariable int community_no, @RequestBody CommunityVO community){
+        community.setCommunity_no(community_no);
+        service.editCommunity(community);
+    }
+
+    //delete
+    @DeleteMapping("/{community_no}")
+    public void deleteCommunity(@PathVariable int community_no) {
+        // 댓글 삭제
+        service.deleteCommentsByCommunityNo(community_no); // 댓글 먼저 삭제
+        service.deleteCommunity(community_no);
+    }
 }

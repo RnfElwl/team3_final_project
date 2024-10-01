@@ -15,4 +15,21 @@
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
         SELECT * FROM community_tbl WHERE community_no = #{community_no}
     </select>
+    <update id="editCommunity" parameterType="com.ict.backend.vo.CommunityVO">
+        UPDATE community_tbl
+        SET community_content = #{community_content},
+        community_title = #{community_title},
+        community_img = #{community_img},
+        loc = #{loc},
+        privacy = #{privacy},
+        edit_date = NOW(),
+        userid = #{userid}
+        WHERE community_no = #{community_no}
+    </update>
+    <delete id="deleteCommentsByCommunityNo" parameterType="int">
+        DELETE FROM community_comment_tbl WHERE community_no = #{community_no}
+    </delete>
+    <delete id="deleteCommunity" parameterType="int">
+        delete from community_tbl where community_no = #{community_no}
+    </delete>
 </mapper>
