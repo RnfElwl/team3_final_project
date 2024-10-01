@@ -16,11 +16,12 @@
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
     justify-content: space-between;
+    
 }
 
 .community_view .writer_image {
-    width: 60px; /* 작성자 이미지 크기 */
-    height: 60px; /* 작성자 이미지 크기 */
+    width: 70px; /* 작성자 이미지 크기 */
+    height: 70px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
     margin-right: 10px; /* 여백 */
     margin-bottom: 20px;
@@ -29,23 +30,40 @@
 }
 
 .community_view .writer_info {
-    flex-grow: 1; /* 남은 공간 차지 */
     display: flex;
     justify-content: space-between;
+    align-items: flex-start; 
+    width: 100%;
 }
 
 .community_view .writer_name {
     font-weight: bold; /* 글씨 두껍게 */
-    margin-left: 10px;
+    color: #fff; /* 색상 */
     font-size: 1.2em;
-    align-self: flex-end; /* 개별적으로 밑으로 정렬 */
 }
 
 .community_view .writedate {
     color: #999; /* 색상 */
     font-size: 0.9em; /* 글자 크기 */
     padding-right: 30px;
-    padding-top: 15px;
+    padding-top: 25px;
+    margin-left: auto; /* 날짜를 오른쪽에 배치 */
+    white-space: nowrap; /* 날짜가 줄바꿈되지 않도록 함 */
+}
+
+.community_view .name_location {
+    display: flex;
+    flex-direction: column; /* 이름과 위치를 수직 정렬 */
+    align-items: flex-start;     /* 왼쪽 정렬 */
+}
+
+.community_view .writer_name, .community_view .location {
+    margin: 0;
+    margin-left: 10px;
+}
+
+.community_view .location{
+    font-size: 0.9em;
 }
 
 .community_view .action_button {
@@ -71,20 +89,25 @@
 
 .community_view .category {
     font-size: 12px;
-    background-color: #ccc; 
+    border: 1px solid #fff;
     width: 50px;
     height: 25px;
     font-size: 0.9em;
     border-radius: 50px;
     padding: 0; /* 여백 제거 */
     font-weight: bold;
-    color: #030303; /* 글자 색상 */
+    color: #fff;
     text-align: center;
     margin-top: 5px;
 }
 
 .community_view .community_title {
     font-size: 2em; /* 제목 크기 */
+    margin-left: 20px;
+}
+
+.community_view .category_title{
+    display: flex;
 }
 
 .community_view .community_img {
@@ -98,13 +121,17 @@
 }
 
 .community_view .community_content{
-    font-size:  1.8em;
+    font-size:  1.5em;
+    margin-top: 20px;
 }
 
 .community_view .view_bottom {
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
     margin-top: 10px; /* 여백 */
+    width: 1000px;
+    margin-left: auto; /* 자동 여백으로 좌우 중앙 정렬 */
+    margin-right: auto; /* 자동 여백으로 좌우 중앙 정렬 */
 }
 
 .community_view .like-icon,
@@ -211,4 +238,18 @@
     border-radius: 5px; /* 둥근 모서리 */
     cursor: pointer; /* 마우스 커서 스타일 */
     height: 40px;
+}
+
+.community_view .edit_button, .community_view  .delete_button{
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.community_view .edit_delete{
+    margin-left: auto;
 }

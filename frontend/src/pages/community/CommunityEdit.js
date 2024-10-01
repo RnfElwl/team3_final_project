@@ -17,6 +17,30 @@ function CommunityEdit() {
     // const userid = localStorage.getItem('userid'); // 로그인된 유저 ID
     const [comments, setComments] = useState([]); // 댓글 상태
 
+    // 게시글 데이터 가져오기
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9988/community/${community_no}`);
+                const postData = response.data;
+    
+                console.log("Fetched post data:", postData); // 데이터 로그 확인
+    
+                // 이전에 작성한 내용 세팅
+                setTitle(postData.community_title || ''); // 제목
+                setContent(postData.community_content || ''); // 내용
+                setImage(postData.community_img || ''); // 이미지
+                setSelectedPlace({ place_name: postData.loc || '', address_name: postData.address || '' }); // 장소
+                setCategory(postData.category || 0); // 카테고리
+                setPrivacy(postData.privacy || 0); // 공개 설정
+            } catch (error) {
+                console.error('게시글을 불러오는 데 실패했습니다:', error);
+            }
+        };
+    
+        fetchPost();
+    }, [community_no]);
+
     // Kakao Maps API를 활용한 장소 검색
     const handleSearch = () => {
         const ps = new window.kakao.maps.services.Places();

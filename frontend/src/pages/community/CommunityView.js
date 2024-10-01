@@ -12,6 +12,9 @@ function CommunityView(){
     const [replyComment, setReplyComment] = useState({}); // 대댓글 입력 상태
     const [replies, setReplies] = useState({}); // 각 댓글별 대댓글 목록
     const navigate = useNavigate();
+    const [liked, setLiked] = useState(false); // 좋아요 상태
+    const [likesCount, setLikesCount] = useState(0); // 좋아요 수
+
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -27,6 +30,23 @@ function CommunityView(){
             default:
                 return "기타";
         }
+    };
+
+    // 좋아요 처리
+    const handleLike = () => {
+        const likeData = {
+            community_no: parseInt(community_no),
+            userid: "test1234" // 현재 로그인된 사용자 ID
+        };
+
+        axios.post(`http://localhost:9988/community/like`, likeData)
+            .then(() => {
+                setLiked(!liked);
+                setLikesCount(liked ? likesCount - 1 : likesCount + 1); // 좋아요 수 업데이트
+            })
+            .catch(error => {
+                console.error("Error liking community:", error);
+            });
     };
 
     // 게시글 삭제
@@ -94,6 +114,9 @@ function CommunityView(){
                 });
         }
     };
+
+    // 댓글 수 계산
+    const commentCount = comments.length;
 
     const handleCommentUpdate = (comment) => {
         // 댓글 수정 로직
@@ -193,15 +216,21 @@ function CommunityView(){
                 <div className="view_top">
                     <img className="writer_image" src={community.writerImage} alt="Writer" />
                     <div className="writer_info">
-                        <p className="writer_name">{community.userid}</p>
+                        <div className="name_location">
+                            <p className="writer_name">{community.userid}</p>
+                            <p className="location">{community.loc}</p>
+                        </div>
                         <p className="writedate">{community.community_writedate}</p>
                     </div>
                     <input type="button" value="팔로우" className="action_button" />
                     <input type="button" value="신고" className="action_button" />
                 </div> 
+                <hr/>
                 <div className="view_middle">
-                    <div className="category">{getCategoryName(community.category)}</div>
-                    <h3 className="community_title">{community.community_title}</h3>
+                    <div className="category_title">
+                        <div className="category">{getCategoryName(community.category)}</div>
+                        <h3 className="community_title">{community.community_title}</h3>
+                    </div>
                     {community.community_img && (
                         <img className="community_img" src={community.community_img} alt="Uploaded" />
                     )}
@@ -209,20 +238,28 @@ function CommunityView(){
                 </div>
 
                 <div className="view_bottom">
-                    <i className="like-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> ♡</i>
-                    <span className="likeCount">{community.likeHit}</span>
+                    <i 
+                        className={`like-icon ${liked ? 'filled' : 'empty'}`} 
+                        onClick={handleLike}
+                        style={{ fontStyle: 'normal', cursor: 'pointer' }}
+                    >
+                        {liked ? '♥' : '♡'} {/* 채워진 하트 또는 빈 하트 */}
+                    </i>
+                    <span className="likeCount">{likesCount}</span>
                     <i className="comment-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 💬</i>
-                    <span className="commentCount">{community.commentHit}</span>
+                    <span className="commentCount">{commentCount}</span>
                     <i className="bookmark-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
+
+                    <div className="edit_delete">
+                        <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
+                        <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
+                    </div> 
                 </div>  
 
-                <div className="edit_delete">
-                    <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
-                    <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
-                </div> 
+                
 
                 <div className="comments_section">
-                    <h3>댓글</h3>
+                    <h3>댓글 ({commentCount})</h3>
                     <form onSubmit={handleCommentSubmit} className="commnet_form">
                         <input
                             className="inputform"

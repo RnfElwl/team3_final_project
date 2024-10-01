@@ -32,4 +32,15 @@
     <delete id="deleteCommunity" parameterType="int">
         delete from community_tbl where community_no = #{community_no}
     </delete>
+    <!-- 좋아요 추가 -->
+    <insert id="likeCommunity" parameterType="CommunityLikeVO">
+        INSERT INTO community_like_tbl (community_no, userid)
+        VALUES (#{community_no}, #{userid})
+    </insert>
+
+    <!-- 좋아요 수 조회 -->
+    <select id="getLikesCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM community_like_tbl
+        WHERE community_no = #{community_no}
+    </select>
 </mapper>

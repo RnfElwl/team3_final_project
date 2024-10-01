@@ -1,5 +1,6 @@
 package com.ict.backend.service;
 
+import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import java.util.List;
 
@@ -21,4 +22,7 @@ public interface CommunityService {
 
     void deleteCommunity(int community_no);
 
+    //like
+    void likeCommunity(CommunityLikeVO like);
+    int getLikesCount(int community_no);
 }

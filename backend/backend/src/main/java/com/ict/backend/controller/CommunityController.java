@@ -1,6 +1,7 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.service.CommunityService;
+import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +48,14 @@ public class CommunityController {
         // 댓글 삭제
         service.deleteCommentsByCommunityNo(community_no); // 댓글 먼저 삭제
         service.deleteCommunity(community_no);
+    }
+
+    //like
+    @PostMapping("/like")
+    public void likeCommunity(@RequestBody CommunityLikeVO like){
+        service.likeCommunity(like);
+    }
+    public int getLikesCount(@PathVariable int community_no){
+        return service.getLikesCount(community_no);
     }
 }

@@ -1,5 +1,6 @@
 package com.ict.backend.dao;
 
+import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface CommunityDAO {
 
     void deleteCommunity(int community_no);
 
+    void likeCommunity(CommunityLikeVO like);
+
+    int getLikesCount(int community_no);
 }

@@ -1,6 +1,7 @@
 package com.ict.backend.service;
 
 import com.ict.backend.dao.CommunityDAO;
+import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,16 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     public void deleteCommunity(int community_no) {
         dao.deleteCommunity(community_no);
+    }
+
+    @Override
+    public void likeCommunity(CommunityLikeVO like) {
+        dao.likeCommunity(like);
+    }
+
+    @Override
+    public int getLikesCount(int community_no) {
+        return dao.getLikesCount(community_no);
     }
 
 }
