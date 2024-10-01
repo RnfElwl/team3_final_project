@@ -1,13 +1,17 @@
 import "../../css/community/communityView.css";
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 function CommunityView(){
     const { community_no } = useParams(); // URL에서 community_no 가져오기
+    // const { comment_no } = useParams();
     const [community, setCommunity] = useState(null);
     const [comments, setComments] = useState([]); // 댓글 상태 추가
     const [newComment, setNewComment] = useState(""); // 새로운 댓글 입력 상태 추가
+    const [replyComment, setReplyComment] = useState({}); // 대댓글 입력 상태
+    const [replies, setReplies] = useState({}); // 각 댓글별 대댓글 목록
+    const navigate = useNavigate();
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -23,6 +27,25 @@ function CommunityView(){
             default:
                 return "기타";
         }
+    };
+
+    // 게시글 삭제
+    const handleDelete = () => {
+        if (window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
+            axios.delete(`http://localhost:9988/community/${community_no}`)
+                .then(() => {
+                    alert("게시글이 삭제되었습니다.");
+                    navigate("/community"); // 삭제 후 리스트 페이지로 이동
+                })
+                .catch(error => {
+                    console.error("게시글 삭제 중 오류가 발생했습니다.", error);
+                });
+        }
+    };
+
+    // 게시글 수정
+    const handleEdit = () => {
+        navigate(`/community/CommunityEdit/${community_no}`); // 수정 페이지로 이동
     };
 
     useEffect(() => {
@@ -105,6 +128,60 @@ function CommunityView(){
         }
     };
 
+    // // 댓글에 좋아요 처리
+    // const handleLikeComment = (comment_no) => {
+    //     axios.post(`http://localhost:9988/community/comments/like/${comment_no}`)
+    //         .then(() => {
+    //             setLikes({ ...likes, [comment_no]: likes[comment_no] + 1 });
+    //         })
+    //         .catch(error => {
+    //             console.error("Error liking comment:", error);
+    //         });
+    // };
+
+    useEffect(() => {
+
+        // 댓글별 대댓글 가져오기
+        comments.forEach(comment => {
+            axios.get(`http://localhost:9988/community/comments/reply/${comment.comment_no}`)
+                .then(response => {
+                    setReplies(prevReplies => ({
+                        ...prevReplies,
+                        [comment.comment_no]: response.data
+                    }));
+                })
+                .catch(error => {
+                    console.error(`Error fetching replies for comment ${comment.comment_no}:`, error);    
+                });
+        });
+    }, [comments]);
+
+    const handleReplyChange = (comment_no, value) => {
+        setReplyComment({ ...replyComment, [comment_no]: value });
+    };
+
+    const handleReplySubmit = (e, comment_no) => {
+        e.preventDefault();
+        const replyData = {
+            userid: "test1234",
+            community_no: parseInt(community_no),
+            parent_comment_no: comment_no,
+            comment_content: replyComment[comment_no],
+        };
+
+        axios.post(`http://localhost:9988/community/comments/reply`, replyData)
+            .then(response => {
+                setReplies(prevReplies => ({
+                    ...prevReplies,
+                    [comment_no]: [...(prevReplies[comment_no] || []), response.data]
+                }));
+                setReplyComment({ ...replyComment, [comment_no]: "" });
+            })
+            .catch(error => {
+                console.error("Error submitting reply:", error);
+            });
+    };
+
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -137,7 +214,12 @@ function CommunityView(){
                     <i className="comment-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 💬</i>
                     <span className="commentCount">{community.commentHit}</span>
                     <i className="bookmark-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
-                </div>   
+                </div>  
+
+                <div className="edit_delete">
+                    <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
+                    <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
+                </div> 
 
                 <div className="comments_section">
                     <h3>댓글</h3>
@@ -153,8 +235,8 @@ function CommunityView(){
                     </form>
 
                     <div className="comments_list">
-                        {comments.map((comment, index) => (
-                            <div key={index} className="comment_item">
+                        {comments.map((comment) => (
+                            <div key={comment.comment_no} className="comment_item">
                                 <div className="comment_top">
                                     <div className="comment_user">
                                         <img className="comment_writer_image" src={community.writerImage} />
@@ -164,12 +246,31 @@ function CommunityView(){
                                         <p className="comment_writedate">{comment.comment_writedate}</p>
                                         <button onClick={() => handleCommentUpdate(comment)}>수정</button>
                                         <button onClick={() => handleCommentDelete(comment.comment_no)}>삭제</button>
+                                        {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
                                     </div>
                                 </div>
                                 <div className="comment_info">
                                     <p className="comment_content">{comment.comment_content}</p>
-                                    
+                                    <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
+                                        <input
+                                            type="text"
+                                            value={replyComment[comment.comment_no] || ""}
+                                            onChange={(e) => handleReplyChange(comment.comment_no, e.target.value)}
+                                            placeholder="대댓글을 입력하세요"
+                                        />
+                                        <button type="submit">대댓글 남기기</button>
+                                    </form>
                                 </div>
+                                {/* 대댓글 리스트 표시 */}
+                                {replies[comment.comment_no] && replies[comment.comment_no].map((reply) => (
+                                    <div key={reply.comment_no} className="reply_item">
+                                        <div className="reply_top">
+                                            <p>{reply.userid}</p>
+                                            <p>{reply.comment_writedate}</p>
+                                        </div>
+                                        <p>{reply.comment_content}</p>
+                                    </div>
+                                ))}
                             </div>
                         ))}
                     </div>

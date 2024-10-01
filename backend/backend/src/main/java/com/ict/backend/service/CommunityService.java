@@ -13,4 +13,12 @@ public interface CommunityService {
 
     //view
     CommunityVO getCommunityView(int community_no);
+
+    //edit
+    void editCommunity(CommunityVO community);
+
+    void deleteCommentsByCommunityNo(int community_no);
+
+    void deleteCommunity(int community_no);
+
 }

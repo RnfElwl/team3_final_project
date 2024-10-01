@@ -27,4 +27,19 @@ public class CommunityServiceImpl implements CommunityService{
         return dao.getCommunityView(community_no);
     }
 
+    @Override
+    public void editCommunity(CommunityVO community) {
+        dao.editCommunity(community);
+    }
+
+    @Override
+    public void deleteCommentsByCommunityNo(int community_no) {
+        dao.deleteCommentsByCommunityNo(community_no);
+    }
+
+    @Override
+    public void deleteCommunity(int community_no) {
+        dao.deleteCommunity(community_no);
+    }
+
 }
