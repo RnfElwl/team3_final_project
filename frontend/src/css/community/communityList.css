@@ -1,0 +1,160 @@
+body{
+    background-color: black;
+}
+.community_list {
+    background-color: black; /* 배경색 */
+    max-width: 1920px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    
+}
+
+.community_list .container {
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    background-color: white; /* 컨테이너 배경색 */
+    
+    border-radius: 10px; /* 모서리 둥글게 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 */
+    padding: 20px; /* 여백 */
+}
+
+.community_list .list_header {
+    display: flex; /* 플렉스 레이아웃 */
+    justify-content: space-between; /* 공간 배분 */
+    align-items: center; /* 세로 정렬 */
+    margin-bottom: 20px;
+}
+
+.community_list .search {
+    width: 60%;
+    padding: 10px; /* 패딩 */
+    border: 1px solid #ccc; /* 테두리 */
+    border-radius: 30px; /* 모서리 둥글게 */
+}
+
+.community_list .alt {
+    margin-left: 20px; /* 알림 아이콘과의 여백 */
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.community_list .write {
+    padding: 10px 15px; /* 버튼 패딩 */
+    background-color: #838282; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 없음 */
+    border-radius: 30px; /* 모서리 둥글게 */
+    cursor: pointer; /* 커서 포인터 */
+}
+
+.community_list .list {
+    border-bottom: 1px solid #eaeaea; /* 구분선 */
+    padding: 15px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+}
+
+.community_list .list_top {
+    display: flex; /* 플렉스 레이아웃 */
+    align-items: center; /* 세로 정렬 */
+    justify-content: space-between;
+}
+
+.community_list .writer_image {
+    width: 60px; /* 작성자 이미지 크기 */
+    height: 60px; /* 작성자 이미지 크기 */
+    border-radius: 50%; /* 둥글게 */
+    margin-right: 10px; /* 여백 */
+    
+    border-bottom: 1px solid #ddd;
+    
+}
+
+.community_list .writer_info {
+    flex-grow: 1; /* 남은 공간 차지 */
+    display: flex;
+    justify-content: space-between;
+}
+
+.community_list .writer_name {
+    font-weight: bold; /* 글씨 두껍게 */
+    color: rgb(48, 46, 46); /* 색상 */
+    margin-left: 10px;
+    font-size: 1.2em;
+    align-self: flex-end; /* 개별적으로 밑으로 정렬 */
+}
+
+.community_list .writedate {
+    color: #999; /* 색상 */
+    font-size: 0.9em; /* 글자 크기 */
+    padding-right: 30px;
+    padding-top: 15px;
+}
+
+.community_list .action_button {
+    background-color: #f1f3f5;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.community_list .list_middle {
+    margin-top: 10px; /* 여백 */
+    display: flex;
+    gap: 30px; /* 내부 요소 간격 */
+}
+
+.community_list .category {
+    font-size: 12px;
+    background-color: #ccc; 
+    width: 50px;
+    height: 25px;
+    font-size: 0.9em;
+    border-radius: 50px;
+    padding: 0; /* 여백 제거 */
+    font-weight: bold;
+    color: #fff; /* 글자 색상 */
+    text-align: center;
+    margin-top: 5px;
+}
+
+.community_list .community_title {
+    font-size: 2em; /* 제목 크기 */
+    color: #555; /* 색상 */
+}
+
+.community_list .community_img {
+    width:200px;
+    /* height: 200px; */
+    height: auto; /* 자동 높이 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    margin-top: 10px; /* 여백 */
+    margin-left: auto;
+    
+}
+
+.community_list .list_bottom {
+    display: flex; /* 플렉스 레이아웃 */
+    align-items: center; /* 세로 정렬 */
+    margin-top: 10px; /* 여백 */
+}
+
+.community_list .like-icon,
+.community_list .comment-icon,
+.community_list .bookmark-icon {
+    margin-right: 10px; /* 아이콘 간 여백 */
+    cursor: pointer;
+    font-size: 20px;
+    color:#f70b0b;
+}
+.community_list .likeCount,
+.community_list .commentCount {
+    margin-right: 15px;
+    font-size: 14px;
+}

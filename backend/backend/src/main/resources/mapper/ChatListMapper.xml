@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.ChatListDAO">
+    <insert id="insertChatList" parameterType="com.ict.backend.vo.ChatListVO">
+        insert into chat_list_tbl values(#{chatlist_url}, #{chat_title}, #{userid}, #{chat_content}, ${chatlist_type}, ${chatlist_headcount}, ${chatlist_img})
+    </insert>
+</mapper>    

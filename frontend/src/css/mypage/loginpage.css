@@ -1,0 +1,64 @@
+.loginpage {
+  max-width: 1920px;
+  height: 91vh;
+  background-image: url(../../img/login_back.jpg);
+  /* background-size: cover; */
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0 auto;
+}
+.loginpage>.container{
+  margin-top: 20px;
+  max-width: 1200px;
+  height: 90vh;
+  border: 1px solid black;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.loginsession{
+  text-align: center;
+  width: 300px;
+  height: 300px;
+  /* border: 1px solid blue; */
+  /* background-color: rgba(0, 0, 0 , 0.7); */
+}
+.loginsession>div{
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+.loginsession>div>span{
+  color : #ddd;
+  font-size: 20px;
+  font-weight: bold;
+}
+.loginsession>div>a{
+  color : #fff !important;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -.4px;
+  opacity: .5;
+  padding: 4px 0 0;
+}
+.loginsession form input{
+  background-color: hsla(258, 5%, 61%, .2);
+  width: 100%;
+  padding: 10px 3%;
+}
+.loginsession form input[id="userid"]{
+  border-radius: 4px 4px 0 0;
+  color : #d4d4d4;
+}
+.loginsession form input[type="password"]{
+  border-top : 1px solid #d4d4d4;
+  border-radius: 0 0 4px 4px;
+  color : #d4d4d4;
+}
+.loginsession form button{
+  margin-top: 30px;
+  padding : 5px;
+  width: 100%;
+  border-radius: 40px;
+}

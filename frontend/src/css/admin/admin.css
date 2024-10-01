@@ -1,0 +1,55 @@
+.App {
+  text-align: center;
+}
+.footer{
+  display: none;
+}
+/* 관리자페이지 헤더 부분 */
+.admin_header{
+  color:white;
+}
+.admin_nav a{
+  color:white;
+  
+}
+.admin_nav{
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  background-color: black;
+  text-align: center;
+}
+.admin_nav div{
+  height: 50px;
+  line-height: 50px;
+}
+.adminBody{
+  max-width: 1920px;
+  padding-left: 210px;
+  margin: 0 auto;
+  color:black;
+  text-align: center;
+}
+.adminDashboard {
+  max-width: 1730px;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 화면이 작은 경우 레이아웃 변경 */
+@media (max-width: 1307px) {
+  .adminDashboard {
+    justify-content: center; /* 요소가 가운데로 정렬 */
+  }
+}
+  #chartarea{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    max-width: 450px;
+    min-width: 300px;
+    margin: 0 10px;
+  }

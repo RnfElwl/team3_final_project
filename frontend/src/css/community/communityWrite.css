@@ -1,0 +1,136 @@
+.communityWrite-container{
+    width: 1200px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    margin: 0 auto;
+    color: black;
+  }
+  
+  .communityWrite-container .communityWrite-header {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  .communityWrite-container .communityWrite-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+  }
+  
+  .communityWrite-container .communityWrite-title .title-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .communityWrite-container .communityWrite-image .image-preview {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .communityWrite-container .communityWrite-image .image-upload {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .communityWrite-container .communityWrite-content .content-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 150px;
+  }
+  
+  
+  .communityWrite-container .communityWrite-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  
+  .communityWrite-container .communityWrite-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+  }
+  
+  .communityWrite-container .communityWrite-item h4 {
+    margin-bottom: 10px;
+  }
+  
+  .communityWrite-container .communityWrite-item label {
+    display: block;
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .communityWrite-container input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  
+  .communityWrite-container .communityWrite-footer {
+    text-align: center;
+  }
+  
+  .communityWrite-container .share-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .communityWrite-container .share-button:hover {
+    background-color: #2980b9;
+  }
+
+  .communityWrite-container .places-list {
+    list-style: none;
+    padding: 0;
+}
+
+.communityWrite-container .places-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.communityWrite-container .search-button {
+    padding: 5px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+}
+  
+.communityWrite-container .image-upload {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.communityWrite-container .selected-place{
+    display: flex;
+    margin-top: 20px;
+}
+
+.communityWrite-container .loca{
+    font-weight: bold;
+}
+
+.communityWrite-container .location-input{
+  width: 250px;
+}

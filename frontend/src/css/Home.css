@@ -1,0 +1,93 @@
+.home body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh; /* 화면 높이에 맞추기 */
+    margin: 0 auto; /* 가운데 정렬 */
+    background-color: black; 
+    color: #fff;
+  }
+  
+  .home .container {
+    width: 1200px; /* 모든 컨테이너 폭 */
+    margin: 0 auto; /* 중앙 정렬 */
+  }
+  
+  .home .banner {
+    width: 100%; /* 컨테이너에 맞게 배너 너비 설정 */
+    height: 400px; /* 원하는 배너 높이 */
+    overflow: hidden; /* 슬라이드 이미지가 넘치지 않도록 */
+    position: relative; /* absolute 요소의 기준 */
+  }
+  
+  .home .banner-images {
+    display: flex;
+    width: 300%; /* 이미지가 3개일 경우 300% */
+    transition: transform 1s ease-in-out; /* 슬라이딩 애니메이션 */
+  }
+  
+  .home .banner-image {
+    width: 100%; /* 각 이미지가 100%의 너비를 차지 */
+    height: 400px; /* 이미지 높이 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 배너에 맞춤 */
+  }
+
+  .home .banner-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+  }
+  
+  .home .banner-indicators span {
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+    opacity: 0.5;
+    transition: opacity 0.3s; /* 부드러운 전환 효과 */
+  }
+  
+  .home .banner-indicators .active {
+    opacity: 1; /* 활성화된 인디케이터의 불투명도 */
+  }
+
+  /*  */
+
+  .home .movie-controls {
+    display: flex;
+    justify-content: space-between; /* 버튼을 양쪽으로 배치 */
+    align-items: center; /* 수직 정렬 */
+    margin: 20px 0; /* 버튼과 영화 리스트 사이 간격 */
+    opacity: 0; /* 기본적으로 숨김 */
+    transition: opacity 0.3s; /* 부드러운 전환 효과 */
+  }
+  
+  .home .movie-list:hover .movie-controls {
+    opacity: 1; /* 리스트에 호버할 때 버튼 보이기 */
+  }
+  
+  .home .movie-item {
+    flex: 0 0 16.66%; /* 각 영화 아이템 너비 */
+    text-align: center; /* 제목 중앙 정렬 */
+  }
+
+  .home .movie-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* 영화 아이템 간격을 동일하게 배치 */
+    gap: 10px; /* 영화 아이템 간의 간격을 10px로 설정 */
+  }
+
+  .home .movie-item img {
+    width: 100%; /* 이미지 너비를 100%로 설정 */
+    height: auto; /* 자동으로 높이를 조절 */
+    border-radius: 5px; /* 모서리 둥글게 */
+  }
+
+  .home .movie-list {
+    margin-top: 20px; /* 배너와 영화 리스트 사이의 간격 */
+  }
+
+  

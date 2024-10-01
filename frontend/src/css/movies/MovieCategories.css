@@ -1,0 +1,68 @@
+/* 페이지 전체 배경과 중앙 정렬을 위한 스타일 */
+.page-container {
+    background-color: #000; /* 배경 검정색 */
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start; /* 위쪽에 배치 */
+    align-items: flex-start;
+    padding-top: 40px; /* 위쪽 여백 조절 */
+}
+
+.content-container {
+    max-width: 1200px; /* 중앙 1200px */
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    color: #fff; /* 글씨 색상 흰색 */
+}
+
+  /* 링크 관련 스타일 */
+a.card-link {
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit; /* 링크 색상 상속 */
+}
+
+  /* 탭 스타일 */
+.nav-tabs .nav-link {
+color: #fff; /* 탭 기본 색상 */
+background-color: transparent;
+border: none;
+cursor: pointer;
+font-size: 18px;
+}
+
+.nav-tabs .nav-link.active {
+color: #f1c40f; /* 활성화된 탭 색상 */
+border-bottom: 2px solid #f1c40f;
+}
+
+/* 카드 스타일 */
+.card {
+background-color: #333; /* 카드 배경 */
+border: none;
+transition: transform 0.3s ease; /* hover 애니메이션 */
+}
+
+.card:hover {
+transform: scale(1.05); /* hover 시 카드 크기 커짐 */
+}
+
+/* 카드 내부 텍스트 스타일 */
+.card-title {
+color: #fff; /* 카드 제목 색상 */
+font-size: 18px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1200px) {
+.content-container {
+    padding: 10px;
+}
+}
+
+@media (max-width: 768px) {
+.card {
+    margin-bottom: 20px;
+}
+}
+
