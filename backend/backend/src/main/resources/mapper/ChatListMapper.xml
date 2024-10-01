@@ -6,4 +6,7 @@
     <insert id="insertChatList" parameterType="com.ict.backend.vo.ChatListVO">
         insert into chat_list_tbl values(#{chatlist_url}, #{chat_title}, #{userid}, #{chat_content}, ${chatlist_type}, ${chatlist_headcount}, ${chatlist_img})
     </insert>
+    <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
+        select chatlist_url, chat_title, ut.usernick, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1;
+    </select>
 </mapper>    

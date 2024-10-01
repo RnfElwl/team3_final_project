@@ -1,17 +1,30 @@
 import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
+//import axios from "axios";
+import axios from "../../component/api/axiosApi"
 
 
 function ChantList(){
-    const [list, setList] = useState([1,3,4,5,6]);
+    const [list, setList] = useState([]);
     const [menu, setMenu] = useState(false);
     const [room, setRoom] = useState(false);
     const [createType, setCreateType] = useState();
     const [formData, setFormData] = useState({});
-
+    
+    useEffect(() => {
+        setChatList();
+    }, []);
+    async function setChatList(){
+        const result = await axios.get("http://localhost:9988/chat/openChatList", {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          console.log(result.data);
+        setList(result.data);
+    }
     function setRoomFormData(event){
         let idField = event.target.name;
         let idValue = event.target.value;
@@ -80,10 +93,17 @@ function ChantList(){
                 {
                     list.map(function(val, i){
                     return (<div className="openchat chat_box">
+                        <Link to={`/chat/${val.chatlist_url}`}>
                         <div className="chat_box-img">
-                            <img src=""/>
+                            <img src={val.image_url}/>
                         </div>
-                        <div>{i}</div>
+                        <div>
+                            <div>
+                                {val.chat_title}
+                            </div>
+                            <div>{val.usernick}</div>
+                            </div>
+                        </Link>
                     </div>)
                 })
             }
