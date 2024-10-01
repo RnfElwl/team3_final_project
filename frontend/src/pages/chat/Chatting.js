@@ -7,7 +7,7 @@ const Chatting = () => {
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
-    const roomId = useParams();
+    const {chatlist_url } = useParams();
     useEffect(() => {
         // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
@@ -15,7 +15,7 @@ const Chatting = () => {
         // 연결 성공 시
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT Broker');
-            mqttClient.subscribe('test/topic/'+roomId+'', (err) => {
+            mqttClient.subscribe(`test/topic/${chatlist_url}`, (err) => {
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
@@ -38,7 +38,10 @@ const Chatting = () => {
     const handleSendMessage = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
-            client.publish('test/topic', JSON.stringify({mag: messageToSend, user: "goguma1234", room:roomId.chatlist_url}));
+            const data = {mag: messageToSend, user: "goguma1234", room:chatlist_url}
+            setReceivedMessages(p=>[...p, data])
+            
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화
         }
     };
@@ -48,8 +51,11 @@ const Chatting = () => {
             <h1>MQTT Chat Application</h1>
             <h2>Received Messages:</h2>
             <ul>
-                {receivedMessages.map((msg, index) => (
-                    <li key={index}>{msg}</li>
+                {receivedMessages.map((data, index) => (
+                    <>
+                    
+                    <li key={index}>{data.mag}</li>
+                    </>
                 ))}
             </ul>
             <div className='chatting_input'>

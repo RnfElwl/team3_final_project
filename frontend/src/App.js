@@ -19,6 +19,7 @@ import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'    
 import MyPage from './pages/mypage/MyPage';
 import LoginPage from './pages/mypage/LoginPage.js';
+import QNAWrite from './pages/qna/QnAWrite.js'
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                 <Route path='/adminTest/' element={<AdminTest/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
+                <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
 
