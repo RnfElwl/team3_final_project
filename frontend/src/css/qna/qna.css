@@ -1,22 +1,21 @@
-.QnABody{
+.QnABody, .QnAWriteBody{
     margin: 0 auto;
     max-width: 1200px;
     color: white;
     /* background-color: white; */
 }
 @media(max-width:577px){
-    .QnABody{
+    .QnABody, .QnAWriteBody{
         min-width: 577px;
     }
 }
 .right-buttons{
-    text-align: right;
+    text-align: center;
 }
 .right-buttons>button{
     background-color: #00ff88;
     color: white;
     border:none;
-
 }
 .qna_ht_th{
     display: flex;
@@ -27,21 +26,8 @@
 .qna_pwt{
     cursor: pointer;
 }
-.qna.pagination{
-    justify-content: center;
-
-}
-.qna.pagination a.link, .qna.pagination a:visited{
-    color:white;
-}
-.qna.pagination a:hover, .qna.pagination a:active{
-    color:black;
-}
-.qna.pagination {
-    --bs-pagination-bg:black;
-    --bs-pagination-border-color:#ddd;
-    --bs-pagination-active-bg:black;
-    --bs-pagination-focus-bg:#00ff88;
+.qna_pagination{
+    text-align: center;
 }
 .qna_ht_th a:link, .qna_ht_th a:hover,.qna_ht_th a:visited {
     color: white;

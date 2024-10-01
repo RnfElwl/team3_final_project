@@ -23,11 +23,17 @@ public class QnAController {
         List<QnAVO> result = qnaService.getQnAList(pagingVO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @GetMapping("/totalPages")
+    public int totalPages(@ModelAttribute PagingVO pagingVO){
+        int qnaTotalPages=qnaService.getTotalRecord(pagingVO);
+        return qnaTotalPages;
+    }
     @GetMapping("/view/{qna_no}")
     public ResponseEntity<List<QnAVO>> getQnAList(@PathVariable int qna_no) {
         List<QnAVO> result = qnaService.getQnAView(qna_no);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
 
 }

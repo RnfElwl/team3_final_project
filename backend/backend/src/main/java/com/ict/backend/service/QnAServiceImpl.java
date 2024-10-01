@@ -14,6 +14,11 @@ public class QnAServiceImpl implements QnAService{
     QnADAO dao;
 
     @Override
+    public int getTotalRecord(PagingVO pagingVO) {
+        return dao.getTotalRecord(pagingVO);
+    }
+
+    @Override
     public List<QnAVO> getQnAList(PagingVO pagingVO) {
         return dao.getQnAList(pagingVO);
     }

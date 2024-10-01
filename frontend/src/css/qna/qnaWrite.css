@@ -1,0 +1,28 @@
+.qna_titleArea{
+    width: 100%;
+    min-width: 600px;
+    display: flex;
+    margin: 0 auto; 
+}
+.qna_titleArea div{
+  margin-left: 10px;  
+}
+#qna_content{
+    margin: 10px auto;
+    min-width: 600px;
+    min-height: 400px;
+    width: 100%;
+}
+.QnAWriteform{
+    text-align: center;
+}
+.privacy-select{
+    text-align: left !important;
+}
+
+.right-buttons>button{
+    background-color: #00ff88;
+    color: white;
+    border:none;
+
+}

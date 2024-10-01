@@ -15,4 +15,7 @@
         answer_user, qna_answer_date, active_state
         from qna_tbl where qna_no=#{qna_no}
     </select>
+    <select id="getTotalRecord" resultType="int">
+        select count(qna_no) from qna_tbl where active_state=1 or active_state=2
+    </select>
 </mapper>

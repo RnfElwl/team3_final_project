@@ -31,7 +31,7 @@ public class UserController {
     public String getUserInfo() {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println(userid);
-        return null;
+        return userid;
     }
     @GetMapping("/test")
     public String test() {
