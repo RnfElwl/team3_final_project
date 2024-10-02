@@ -1,6 +1,7 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.service.ChatListService;
+import com.ict.backend.service.JoinService;
 import com.ict.backend.util.UUIDUtils;
 import com.ict.backend.vo.ChatListVO;
 import com.ict.backend.vo.ChatVO;
@@ -22,14 +23,16 @@ public class ChatListController {
     public ChatListController(ChatListService chatListService){
         this.chatListService = chatListService;
     }
-
     @PostMapping("/create")
     public String insertChatList(@RequestBody ChatListVO chatListVo){
-        chatListVo.setChatlist_url(UUIDUtils.createType4UUID());
+        String chatlist_url = UUIDUtils.createType4UUID();
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        chatListVo.setChatlist_url(chatlist_url);
         chatListVo.setChatlist_headcount(1);
-        chatListVo.setUserid(SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println(chatListVo.toString());
+
+        chatListVo.setUserid(userid);
         chatListService.insertChatList(chatListVo);
+        chatListService.insertChatEnter(chatlist_url, userid);
         return "";
     }
     @GetMapping("/openChatList")
@@ -39,5 +42,12 @@ public class ChatListController {
         System.out.println(list);
 
         return  list;
+    }
+    @GetMapping("/{chatlist_url}")
+    public List<ChatVO> selectChatContent(@PathVariable String chatlist_url){
+        System.out.println("-----------------");
+        List<ChatVO> list = chatListService.selectChatContent(chatlist_url);
+
+        return list;
     }
 }

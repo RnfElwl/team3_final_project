@@ -2,6 +2,7 @@ package com.ict.backend.controller;
 
 import com.ict.backend.dto.JoinDTO;
 import com.ict.backend.service.JoinService;
+import com.ict.backend.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,10 @@ public class JoinController {
         service.joinProcess(joinDTO);
 
         return "ok";
+    }
+    @GetMapping("/getUserData")
+    public MemberVO getUserData(String userid){
+        return service.findByUserid(userid);
     }
 
 }

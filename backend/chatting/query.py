@@ -25,7 +25,7 @@ def connect_to_database():
         print(f"Error: {e}")
         return None
 
-# 데이터베이스에서 데이터를 SELECT하는 함수
+# 데이터베이스에서 데이터를 Insert하는 함수
 def insert_chat(connection, room_id, user, message):
     try:
         cursor = connection.cursor(dictionary=True)  # 딕셔너리 형태로 결과 반환
@@ -39,8 +39,8 @@ def insert_chat(connection, room_id, user, message):
         for row in rows:
             print(row)                               # 결과 출력
     except Error as e:
-        print(f"Error executing SELECT query: {e}")
-
+        print(f"Error executing Insert query: {e}")
+ 
 # MySQL 연결 종료 함수
 def close_connection(connection):
     if connection.is_connected():
