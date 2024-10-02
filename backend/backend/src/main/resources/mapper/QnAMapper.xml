@@ -5,7 +5,7 @@
 <mapper namespace="com.ict.backend.dao.QnADAO">
     <select id = "getQnAList" resultType="com.ict.backend.vo.QnAVO">
         select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
-        privacy,qna_state,active_state,qna_pwd
+        privacyQ,qna_state,active_state,qna_pwd
         from qna_tbl where active_state=1 or active_state=2 order by qna_no desc
         limit ${onePageRecord} offset ${offset}
     </select>
@@ -18,4 +18,8 @@
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl where active_state=1 or active_state=2
     </select>
+    <insert id="qnaInsert">
+        insert into qna_tbl (userid, head_title, qna_title, qna_content, qna_state, qna_writedate, privacyQ, active_state, qna_pwd, qna_img)
+        values (#{userid}, #{head_title}, #{qna_title}, #{qna_content}, #{qna_state}, NOW(), #{privacyQ}, #{active_state}, #{qna_pwd}, #{qna_img})
+    </insert>
 </mapper>

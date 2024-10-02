@@ -1,23 +1,43 @@
 .qna_titleArea{
     width: 100%;
     min-width: 600px;
+    max-width: 600px;
     display: flex;
     margin: 0 auto; 
 }
 .qna_titleArea div{
   margin-left: 10px;  
 }
-#qna_content{
-    margin: 10px auto;
-    min-width: 600px;
+.qna_content{
+    margin: 20px auto;
+    max-width: 600px;
+    min-width: 200px;
     min-height: 400px;
     width: 100%;
 }
+@media (max-width: 768px) {
+    .qna_content {
+        margin: 15px; /* 좁은 화면에서 여백 조정 */
+        padding: 15px;
+        min-height: 300px; /* 최소 높이 줄이기 */
+    }
+}
+
+@media (max-width: 480px) {
+    .qna_content {
+        margin: 10px; /* 모바일에서 여백 최소화 */
+        padding: 10px;
+        min-width: 100%; /* 최소 너비를 100%로 확장하여 꽉 차도록 */
+    }
+}
 .QnAWriteform{
     text-align: center;
+    width: 100%;
 }
 .privacy-select{
     text-align: left !important;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .right-buttons>button{

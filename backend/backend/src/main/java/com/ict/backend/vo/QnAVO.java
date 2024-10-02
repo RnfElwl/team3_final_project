@@ -1,6 +1,9 @@
 package com.ict.backend.vo;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 public class QnAVO {
@@ -14,7 +17,8 @@ public class QnAVO {
     public String qna_answer;
     public String answer_user;
     public String qna_answer_date;
-    public int privacy;
+    public int privacyQ;
     public int active_state;
     public String qna_pwd;
+    public String qna_img;
 }

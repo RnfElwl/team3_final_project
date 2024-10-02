@@ -20,7 +20,7 @@ function QnA() {
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {
                 console.log("hi",response.data);
-                if(response.data == "anonymousUser"){
+                if(response.data === null && response.data ===''){
                     window.alert("로그인 시 이용할 수 있는 기능입니다.");
                     return false;
                 }
@@ -117,7 +117,7 @@ function QnA() {
                                         {item.head_title == 1 ? <div className="qna_ht">[상품]&nbsp;</div> :
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                                 <div className="qna_ht">[기타]&nbsp;</div>)}
-                                        {item.privacy == 0 ? (
+                                        {item.privacyQ == 0 ? (
                                             <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
                                         ) : (
                                             <div className="qna_pwt" onClick={() => handlePrivateClick(item)}>
