@@ -81,8 +81,9 @@ const Chatting = () => {
     }
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
-        const params = { userid: result.data};
-        const result2 = await axios.get('http://localhost:9988/user/userinfo', {params});
+        const params = {userid : result.data};
+        console.log(params);
+        const result2 = await axios.get('http://localhost:9988/getUserData', {params});
         userData = result2;
         console.log(userData);
     }
@@ -91,7 +92,7 @@ const Chatting = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
             
-            const data = {chat_content: messageToSend, userid: userid, chatlist_url} 
+            const data = {chat_content: messageToSend, userid: userData.userid , chatlist_url, usernick:userData.usernick, } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
         }
