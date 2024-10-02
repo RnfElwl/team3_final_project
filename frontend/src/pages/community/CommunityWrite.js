@@ -1,6 +1,7 @@
 import "../../css/community/communityWrite.css";
 import React, { useState } from 'react';
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../component/api/axiosApi';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 function CommunityWrite() {

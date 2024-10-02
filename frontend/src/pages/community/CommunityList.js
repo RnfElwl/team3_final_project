@@ -1,6 +1,7 @@
 import "../../css/community/communityList.css";
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
 
 function CommunityList() {
@@ -9,6 +10,11 @@ function CommunityList() {
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
     const [filteredCommunity, setFilteredCommunity] = useState([]); // 필터링된 커뮤니티 상태
     const categories = ["전체", "영화", "일상", "자유", "포스터"]; // 카테고리 목록에 "전체" 추가
+    const userid = localStorage.getItem('userid');
+    const userprofile = localStorage.getItem('userprofile');
+    const [liked, setLiked] = useState(false); // 좋아요 상태
+    const [likesCount, setLikesCount] = useState(0); // 좋아요 수
+    const [comments, setComments] = useState([]); // 댓글 상태 추가
 
     // 상위 3개 게시물
     const [topLikedPosts, setTopLikedPosts] = useState([]);
@@ -49,32 +55,7 @@ function CommunityList() {
             });
     }, []);
 
-    // 좋아요 처리
-    const handleLike = (community_no, liked) => {
-        const likeData = {
-            community_no: parseInt(community_no),
-            userid: "test1234" // 현재 로그인된 사용자 ID
-        };
-
-        axios.post(`http://localhost:9988/community/like`, likeData)
-            .then(() => {
-                setCommunity(prevCommunity =>
-                    prevCommunity.map(item =>
-                        item.community_no === community_no
-                            ? {
-                                ...item,
-                                liked: !liked, // 현재 좋아요 상태를 반전
-                                likesCount: liked ? item.likesCount - 1 : item.likesCount + 1 // 좋아요 수를 업데이트
-                            }
-                            : item
-                    )
-                );
-            })
-            .catch(error => {
-                console.error("Error liking community:", error);
-            });
-    };
-
+    // 검색창
     const handleSearchInputChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value); // 검색어 상태 업데이트
@@ -99,10 +80,55 @@ function CommunityList() {
         }
     };  
 
+    //북마크
+    const [bookmarked, setBookmarked] = useState(false);
+
+    const handleBookmarkToggle = () => {
+        setBookmarked(!bookmarked); // 북마크 상태 토글
+    };
+
+    // 댓글 수 계산
+    const commentCount = comments.length;
+
+    // 좋아요 처리
+    const handleLikeToggle = async () => {
+        // if (!userid) {
+        //     console.error('사용자가 로그인하지 않았습니다.');
+        //     return; // userid가 없으면 처리 중지
+        // }
+
+        try {
+            const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
+                params: { community_no, userid }
+            });
+            console.log("좋아요 결과"+isLikedResponse.data);
+            setLiked(isLikedResponse.data);
+            // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
+            
+            // if (isLiked) {
+            //     // 좋아요 삭제로
+            //     await axios.delete(`http://localhost:9988/community/unlike`, { params: { community_no, userid } });
+            // } else {
+            //     // 좋아요 추가
+            //     await axios.post(`http://localhost:9988/community/like`, { community_no, userid });
+            // }
+
+            // 좋아요 수 업데이트
+            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${community_no}`);
+            setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
+            console.log("좋아요 수"+likesCountResponse);
+            //setLiked(!isLiked); // 좋아요 상태 업데이트
+        } catch (error) {
+            console.error('좋아요 처리 실패:', error);
+        }
+    };
+
     return (
         <div className="community_list">
             <div className="container">
                 <div className="list_header">
+                    <img className="user_image" src={userprofile || '/default_profile.png'} alt="User Profile"/>
+                    <p className="user_name">{userid}</p>
                     <input 
                         className='search' 
                         type="text" 
@@ -120,7 +146,7 @@ function CommunityList() {
                     filteredCommunity.map((communityItem) => (
                         <div className="list" key={communityItem.community_no}>
                             <div className="list_top">
-                                <img className="writer_image" src={communityItem.writerImage} alt="Writer" />
+                                <img className="writer_image" src={communityItem.userprofile} alt="Writer" />
                                 <div className="writer_info">
                                     <div className="name_location">
                                         <p className="writer_name">{communityItem.userid}</p>
@@ -141,18 +167,25 @@ function CommunityList() {
                                 </div>
                             </Link>
                             <div className="list_bottom">
-                                <i
-                                    className={`like-icon ${communityItem.liked ? 'filled' : 'empty'}`}
-                                    onClick={() => handleLike(communityItem.community_no, communityItem.liked, communityItem.likesCount)}
-                                    style={{ fontStyle: 'normal', cursor: 'pointer' }}
-                                >
-                                    {communityItem.liked ? '♥' : '♡'}
-                                </i>
-                                <span className="likeCount">{isNaN(communityItem.likesCount) ? '0' : communityItem.likesCount}</span>
-
-                                <i className="comment-icon" data-no={`${communityItem.community_no}`} style={{ fontStyle: 'normal' }}> 💬</i>
-                                <span className="commentCount">{communityItem.commentCount}</span>
-                                <i className="bookmark-icon" data-no={`${communityItem.community_no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
+                                <i 
+                                    className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                                    onClick={handleLikeToggle}
+                                    style={{ 
+                                        color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
+                                        cursor: 'pointer' 
+                                    }}
+                                ></i>
+                                <span className="likeCount">{likesCount}</span>
+                                <i className="far fa-comment"></i>
+                                <span className="commentCount">{commentCount}</span>
+                                <i 
+                                    className={`fa-bookmark ${bookmarked ? 'fas' : 'far'}`}  // fas는 채워진 북마크, far는 빈 북마크
+                                    onClick={handleBookmarkToggle}// 북마크 상태를 토글하는 함수
+                                    style={{ 
+                                        color: bookmarked ? 'black' : 'black',  // 북마크 상태에 따라 색상 변경 (blue: 활성화, gray: 비활성화)
+                                        cursor: 'pointer' 
+                                    }}
+                                ></i>
                             </div>
                         </div>
                     ))
