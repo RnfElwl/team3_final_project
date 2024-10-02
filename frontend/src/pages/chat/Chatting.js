@@ -3,14 +3,15 @@ import "../../css/chat/chtting.css";
 import axios from '../../component/api/axiosApi.js';
 import mqtt from 'mqtt';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
+let userData = {}// 아이디 갖고오는거 못해서 더미로 일단 이거
 const Chatting = () => {
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
     const {chatlist_url } = useParams();
     const [isConnected, setIsConnected] = useState(false); // 연결 상태 확인용
-    let userData = {}// 아이디 갖고오는거 못해서 더미로 일단 이거
     let once = 0;
     const userid="";
     useEffect(() => {
@@ -40,7 +41,6 @@ const Chatting = () => {
         // 메시지 수신 시
         mqttClient.on('message', async (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
-            console.log(decoding);
             setReceivedMessages(p=>[...p, JSON.parse(decoding)])
         });
 
@@ -67,7 +67,6 @@ const Chatting = () => {
         return () => {
             mqttClient.end();
         };
-    
     }, []);
 
     
@@ -76,13 +75,11 @@ const Chatting = () => {
         data.map((d, i)=>{
             setReceivedMessages(p=>[...p, d])
         })
-        console.log(data);
 
     }
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
         const params = {userid : result.data};
-        console.log(params);
         const result2 = await axios.get('http://localhost:9988/getUserData', {params});
         userData = result2;
         console.log(userData);
@@ -91,8 +88,22 @@ const Chatting = () => {
     const handleSendMessage = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
-            
-            const data = {chat_content: messageToSend, userid: userData.userid , chatlist_url, usernick:userData.usernick, } 
+            const offset = new Date().getTimezoneOffset() * 60000;
+
+            let today = new Date(Date.now() - offset);
+            console.log(today);
+            const now = today.toISOString().replace('T', ' ').substring(0, 19);
+            console.log(userData.data);
+            const data = {
+                content_id: uuidv4(),
+                chat_content: messageToSend, 
+                userid: userData.data.userid, 
+                chatlist_url,
+                usernick:userData.data.usernick, 
+                userprofile: userData.data.userprofile,
+                chat_date: now,
+            } 
+            console.log(data);
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
         }

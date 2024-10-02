@@ -21,4 +21,5 @@ public class MemberVO {
     private String hobby;
     private String writedate;
     private String userprofile;
+    private String usernick;
 }
