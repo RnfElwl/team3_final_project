@@ -41,7 +41,6 @@ const Chatting = () => {
         // 메시지 수신 시
         mqttClient.on('message', async (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
-            console.log(decoding);
             setReceivedMessages(p=>[...p, JSON.parse(decoding)])
         });
 
@@ -89,10 +88,14 @@ const Chatting = () => {
     const handleSendMessage = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
-            let today = new Date();
+            const offset = new Date().getTimezoneOffset() * 60000;
+
+            let today = new Date(Date.now() - offset);
+            console.log(today);
             const now = today.toISOString().replace('T', ' ').substring(0, 19);
             console.log(userData.data);
             const data = {
+                content_id: uuidv4(),
                 chat_content: messageToSend, 
                 userid: userData.data.userid, 
                 chatlist_url,
