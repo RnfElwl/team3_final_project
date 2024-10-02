@@ -1,5 +1,5 @@
-//import axios from '../../component/api/axiosApi';
-import axios from 'axios';
+import axios from '../../component/api/axiosApi';
+//import axios from 'axios';
 import '../../css/mypage/loginpage.css';
 import { useState } from 'react';
 

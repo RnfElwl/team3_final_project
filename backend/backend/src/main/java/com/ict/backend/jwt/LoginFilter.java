@@ -3,6 +3,7 @@ package com.ict.backend.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ict.backend.dto.CustomUserDetails;
+import com.ict.backend.service.RefreshService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,11 +24,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private RefreshService refreshService;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshService refreshService) {
 
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.refreshService = refreshService;
         refreshExpiredMs = 86400000L;   // 1일로 설정
         accessExpiredMs = 60000L;   // 1분으로 설정
     }
@@ -77,7 +80,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(username, role, accessExpiredMs);
-        String refreshtoken = jwtUtil.createJwt(username, role, refreshExpiredMs);
+        String refreshtoken = jwtUtil.createJwt(username, role,refreshExpiredMs);
+        if(refreshService.checkRefresh(username)> 0){
+            refreshService.updateRefresh(username, refreshtoken, refreshExpiredMs/86400000);
+        }
+        else {
+            refreshService.saveRefresh(username, refreshtoken, refreshExpiredMs / 86400000);
+        }
         System.out.println("token = "+ token);
         response.addHeader("Authorization", "Bearer " + token);
         // 클라이언트가 Authorization 헤더를 읽을 수 있도록, 해당 헤더를 노출시킵니다.

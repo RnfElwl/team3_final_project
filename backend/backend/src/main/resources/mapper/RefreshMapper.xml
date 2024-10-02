@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.RefreshDAO">
+    <insert id="saveRefresh">
+        INSERT INTO refresh_tokens(userid, refresh_token, expires_at)
+        VALUES(#{param1}, #{param2}, DATE_ADD(NOW(), INTERVAL #{param3} DAY))
+    </insert>
+    <select id="checkRefresh" resultType="int">
+        select count(*) from refresh_tokens where userid = #{param1}
+    </select>
+    <update id="updateRefresh">
+        UPDATE refresh_tokens SET refresh_token = #{param2}, expires_at = DATE_ADD(NOW(), INTERVAL #{param3} DAY),
+        create_at = NOW() WHERE userid = #{param1}
+    </update>
+</mapper>

@@ -30,8 +30,13 @@ public class UserController {
     @GetMapping("/userinfo")
     public String getUserInfo() {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userid);
-        return userid;
+        if(userid.equals("anonymousUser")){
+            System.out.println("등록된 사용자가 없습니다.");
+            return null;
+        } else{
+            System.out.println(userid);
+            return userid;
+        }
     }
     @GetMapping("/test")
     public String test() {
