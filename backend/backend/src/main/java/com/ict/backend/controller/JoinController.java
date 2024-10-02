@@ -28,7 +28,6 @@ public class JoinController {
     }
     @GetMapping("/getUserData")
     public MemberVO getUserData(String userid){
-        System.out.println(userid+"-------------");
         return service.findByUserid(userid);
     }
 

@@ -26,12 +26,12 @@ def connect_to_database():
         return None
 
 # 데이터베이스에서 데이터를 Insert하는 함수
-def insert_chat(connection, room_id, user, message):
+def insert_chat(connection, content_id, room_id, userid, msg, date):
     try:
         cursor = connection.cursor(dictionary=True)  # 딕셔너리 형태로 결과 반환
-        print(room_id, user, message)
-        query = "insert into chat_content_tbl(chatlist_url, userid, chat_content) values(%s, %s, %s)"
-        value = (room_id, user, message)
+        print(content_id, room_id, userid, msg, date)
+        query = "insert into chat_content_tbl(content_id, chatlist_url, userid, chat_content, chat_date) values(%s, %s, %s, %s, %s)"
+        value = (content_id, room_id, userid, msg, date)
                  # 사용할 SELECT 쿼리문
         cursor.execute(query, value)    
         connection.commit()

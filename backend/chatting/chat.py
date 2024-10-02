@@ -6,11 +6,11 @@ from mysql.connector import Error
 app = Flask(__name__)
 #mosquitto -c mosquitto.conf -v
 # 데이터베이스에 메시지 저장 함수
-def save_message_to_db(room_id, userid, msg):
+def save_message_to_db(content_id, room_id, userid, msg, date):
     try:
         con = connect_to_database()
         cursor = con.cursor()
-        insert_chat(con, room_id, userid, msg)
+        insert_chat(con,content_id, room_id, userid, msg, date)
         cursor.close()
         close_connection(con)
     except Error as e:
@@ -25,14 +25,17 @@ def on_message(client, userdata, msg):
     message_payload = msg.payload.decode()
     print(f"Received message: {message_payload}")
     data = json.loads(message_payload)
-    room_id = data['room']
+    content_id = data['content_id']
+    chat_date = data['chat_date']
+    room_id = data['chatlist_url']
     userid = data['userid']
-    msg = data['msg']
-    save_message_to_db(room_id, userid, msg)
+    msg = data['chat_content']
+    save_message_to_db(content_id, room_id, userid, msg, chat_date)
 
 # Flask API - 메시지 처리 및 DB 저장
 @app.route('/api/send_message', methods=['POST'])
 def send_message():
+    
     data = request.get_json()
     room_id = data['room']
     user = data['user']

@@ -1,8 +1,85 @@
 .chatting_room{
     color: white;
+    display: flex;  
 }
-
+.chatting_room .chatting_box{
+    width: 60%;
+}
+.chatting_room .chatting_sub{
+    width: 40%;
+}
 .chatting_room .chatting_input{
     display: flex;
     width: 100%;
+}
+.chatting_room .myText,
+.chatting_room .anotherText{
+    display: flex;
+    align-items: center;
+    width: 52%;
+    margin: 7px 0;
+}
+.chatting_room .chat_profile{
+    margin: 10px;
+}
+.chatting_room .chat_profile > img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.chatting_room .myText{
+    text-align: right;
+    float: right;
+}
+.chatting_room .chatting_list{
+    height: 75vh;
+    overflow-y: scroll;
+    padding: 0 20px;
+}   
+.chatting_room .chatting_list::-webkit-scrollbar{
+
+}
+.chatting_room .chatting_list::-webkit-scrollbar-thumb{
+
+}
+.chatting_room .chatting_list::-webkit-scrollbar-track{
+
+}
+
+.chatting_room .chat_text{
+    margin: 0 5px;
+}
+.chatting_room .myText .chat_info{
+    display: flex;
+    justify-content: right;
+    align-items: end;
+    text-align: right;
+
+}
+
+.chatting_room .chat_text{
+    padding: 5px 10px;
+    min-height: 34px;
+    background-color: cadetblue;
+    border-radius: 5px;
+}
+.chatting_room .chat_date{
+    font-size: 0.95em;
+}
+
+.chatting_room .anotherText{
+    width: 50%;
+}
+.chatting_room .anotherText .chat_info{
+    display: flex;
+    justify-content: left;
+    align-items: end;
+    text-align: left;
+}
+.chatting_room ul{
+    margin: 0;
+}
+.chatting_room .chatting_input input{
+    width: 100%;
+    height: 40px;
 }
