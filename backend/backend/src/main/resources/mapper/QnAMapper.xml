@@ -5,18 +5,28 @@
 <mapper namespace="com.ict.backend.dao.QnADAO">
     <select id = "getQnAList" resultType="com.ict.backend.vo.QnAVO">
         select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
-        privacyQ,qna_state,active_state,qna_pwd
-        from qna_tbl where active_state=1 or active_state=2 order by qna_no desc
+        privacyQ,qna_state,active_state,qna_pwd from qna_tbl
+        where
+        <if test="searchWord!=null and searchWord!=''">
+            ${searchKey} like '%${searchWord}%' and
+        </if>
+        active_state IN (1, 2)
+        order by qna_no desc
         limit ${onePageRecord} offset ${offset}
     </select>
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
         select qna_no, userid, head_title, qna_title,qna_content,
-        date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_answer,
+        date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_state,qna_answer,
         answer_user, qna_answer_date, active_state
         from qna_tbl where qna_no=#{qna_no}
     </select>
     <select id="getTotalRecord" resultType="int">
-        select count(qna_no) from qna_tbl where active_state=1 or active_state=2
+        select count(qna_no) from qna_tbl
+        where
+        <if test="searchWord!=null and searchWord!=''">
+            ${searchKey} like '%${searchWord}%' and
+        </if>
+        active_state IN (1, 2)
     </select>
     <insert id="qnaInsert">
         insert into qna_tbl (userid, head_title, qna_title, qna_content, qna_state, qna_writedate, privacyQ, active_state, qna_pwd, qna_img)

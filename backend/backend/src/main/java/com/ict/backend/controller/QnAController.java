@@ -17,12 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/qna")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @Slf4j
 public class QnAController {
     @Autowired
@@ -32,16 +31,22 @@ public class QnAController {
     private String uploadDir;
     //글 목록 불러오기
     @GetMapping("/list")
-    public ResponseEntity<List<QnAVO>> getQnAList(@ModelAttribute PagingVO pagingVO){
+    public ResponseEntity<Map<String, Object>> getQnAList(@ModelAttribute PagingVO pagingVO) {
+        System.out.println("Input: " + pagingVO);
+        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
+        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+
         List<QnAVO> result = qnaService.getQnAList(pagingVO);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        int qnaTotalPages = qnaService.getTotalRecord(pagingVO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("qnaList", result);
+        resultMap.put("qnaTotalPages", qnaTotalPages);
+        System.out.println("Result: " + resultMap);
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
-    //총 페이지 수 구하기
-    @GetMapping("/totalPages")
-    public int totalPages(@ModelAttribute PagingVO pagingVO){
-        int qnaTotalPages=qnaService.getTotalRecord(pagingVO);
-        return qnaTotalPages;
-    }
+
     //뷰페이지 구하기
     @GetMapping("/view/{qna_no}")
     public ResponseEntity<List<QnAVO>> getQnAList(@PathVariable int qna_no) {
