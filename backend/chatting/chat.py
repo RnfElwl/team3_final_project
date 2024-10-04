@@ -4,6 +4,7 @@ import json
 from query import connect_to_database, close_connection, insert_chat
 from mysql.connector import Error
 app = Flask(__name__)
+#cd ../../Program Files/mosquitto
 #mosquitto -c mosquitto.conf -v
 # 데이터베이스에 메시지 저장 함수
 def save_message_to_db(content_id, room_id, userid, msg, date):

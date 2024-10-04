@@ -116,6 +116,7 @@ const Chatting = () => {
                 usernick:userData.data.usernick, 
                 userprofile: userData.data.userprofile,
                 chat_date: now,
+                chat_type: 1
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
@@ -175,9 +176,9 @@ const Chatting = () => {
                                         <div className='chat_date'>
                                         {(data.chat_date).substring(11, 16)}
                                         </div>
-                                        <div className='chat_read'>
+                                        {/* <div className='chat_read'>
                                             1
-                                        </div>
+                                        </div> */}
                                         <div className='chat_report'>
                                             <AiOutlineAlert size="35px"/>
                                         </div>
