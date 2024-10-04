@@ -11,4 +11,5 @@ public interface ChatListDAO {
     public List<ChatListVO> selectOpenChatList();
     public int insertChatEnter(String chatlist_url, String userid);
     public List<ChatVO> selectChatContent(String chatlist_url);
+
 }

@@ -13,4 +13,5 @@ public interface ChatListService {
     public List<ChatListVO> selectOpenChatList();
     public List<ChatVO> selectChatContent(String chatlist_url);
     public int insertChatEnter(String chatlist_url, String userid);
+
 }
