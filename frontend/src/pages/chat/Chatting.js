@@ -6,6 +6,13 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineAlert } from "react-icons/ai";
 const Chatting = () => {
+    const date = new Date(); // 현재 날짜
+    const options = {
+        year: 'numeric',
+        month: 'long', // 'short' 또는 '2-digit'으로 변경 가능
+        day: 'numeric',
+        weekday: 'long' // 요일
+    };
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
@@ -13,6 +20,8 @@ const Chatting = () => {
     const [isConnected, setIsConnected] = useState(false); // 연결 상태 확인용
     const [userData, setUserData] = useState({});
     const [myid, setMyid] = useState("");
+    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    const [report, setReport] = useState({});//폼에 있는 값들어있음
     let once = 0;
     const chatting_box = useRef(null);
     useEffect(() => {
@@ -132,61 +141,123 @@ const Chatting = () => {
     function scrollBottom(){
         chatting_box.current.scrollTop = chatting_box.current.scrollHeight+10000;
     }
+    function openReport(e){{/* 신고 기능 */}
+        const index  = e.target.dataset.id;
+         
+        setReport({
+            report_tblname: 3,
+            report_tbluuid:  receivedMessages[index].content_id,
+            reported_userid: receivedMessages[index].userid,
+            report_content: receivedMessages[index].chat_content,// 피신고자의 채팅 내용
+            i: index,
+        })
+        toggleReport();
+    }
+    function toggleReport(){{/* 신고 기능 */}
+        setReportShow(!reportShow);
+    }
+    function reportFormAdd(event){
+        let idField = event.target.name;
+        let idValue = event.target.value;
+        
+        setReport(p=>{return {...p, [idField]:idValue}});
+        console.log(report)
+    }
+    async function submitReport(e){{/* 신고 기능 */}
+        e.preventDefault();
+        const result = await axios.post("http://localhost:9988/report/submit", report, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          if(result.status==200){
+            toggleReport();
+          }
+    }
     return (
         <div className='container chatting_room'>
-            <div className='chatting_sub'>
+            {/* <div className='chatting_sub'>
                 gdgd
-            </div>
+            </div> */}
+            {/* 신고 기능 */}
+            <div className={`report_window ${reportShow ? 'report_show':'report_hide'}`}>
+                            <div className='report_close' onClick={toggleReport}></div>
+                            <form className="chatting_report" onSubmit={submitReport}>
+                                    <div className="title" >
+                                        <h2>신고하기</h2>
+                                        <div>
+                                            <input type="radio" name="report_type" value='0' onChange={reportFormAdd} /><span>욕설</span>
+                                            <input type="radio" name="report_type" value='1' onChange={reportFormAdd}/><span>스포일러</span>
+                                            <input type="radio" name="report_type" value='2' onChange={reportFormAdd}/><span>비매너 행위</span>
+                                            <input type="radio" name="report_type" value='3' onChange={reportFormAdd}/><span>기타</span>
+                                        </div>
+                                    </div>
+                                    <div className="sub_title">
+                                    <h2>상세내용</h2>
+                                    <textarea name="report_reason" onChange={reportFormAdd}>
+
+                                    </textarea>
+                                    </div>
+                                    <button type="submit">방만들기</button>
+                                </form>
+                        </div> 
             <div className='chatting_box'>
                 <h1>MQTT Chat Application</h1>
-                <div className='chatting_list' ref={chatting_box}>
+                <div className='chatting_list' ref={chatting_box}> 
                     {receivedMessages.map((data, index) => (
-                        <>
-                        {
+                        <>  
                         
-
-                        myid==data.userid?
-                        <div className='myText'>
-                            <div>
-                                {data.content_id}{data.userid}
-                                <div className='chat_usernick'>{data.usernick}</div>
-                                <div className='chat_info'>
-                                    <div className='chat_date'>
-                                        {(data.chat_date).substring(11, 16)}
-                                    </div>
-                                    <div className='chat_text'>
-                                        {data.chat_content}
-                                    </div>
-                                   
-                                </div>
-                            </div>
-                            <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
-                        </div>
-                        : 
-                        <div className='anotherText'>
-                            <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
-                            <div>
-                                {data.content_id}{data.userid}
-                                <div className='chat_usernick'>{data.usernick}</div>
-                                <div className='chat_info'>
-                                    <div className='chat_text'>
-                                        {data.chat_content}
-                                    </div>
-                                    <div className='chat_sub_info'>
-                                        <div className='chat_date'>
-                                        {(data.chat_date).substring(11, 16)}
+                        {
+                            
+                            {
+                                0: <div class="chatting_day">{new Date(data.chat_date).toLocaleDateString('ko-KR', options).replace(/ /g, '')}</div>,
+                                1:  
+                                    myid==data.userid?
+                                    <div className='myText'>
+                                        <div className='chat_text_box'>
+                                            <div className='chat_usernick'>{data.usernick}</div>
+                                            <div className='chat_info'>
+                                                <div className='chat_date'>
+                                                    {(data.chat_date).substring(11, 16)}
+                                                </div>
+                                                <div className='chat_text'>
+                                                    {data.chat_content}
+                                                </div>
+                                               
+                                            </div>
                                         </div>
-                                        {/* <div className='chat_read'>
-                                            1
-                                        </div> */}
-                                        <div className='chat_report'>
-                                            <AiOutlineAlert size="35px"/>
+                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                    </div>
+                                    : 
+                                    <div className='anotherText'>
+                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                        <div>
+                                            {data.content_id}{data.userid}
+                                            <div className='chat_usernick'>{data.usernick}</div>
+                                            <div className='chat_info' >
+                                                <div className='chat_text'>
+                                                    {data.chat_content}
+                                                </div>
+                                                <div className='chat_sub_info'>
+                                                    <div className='chat_date'>
+                                                    {(data.chat_date).substring(11, 16)}
+                                                    </div>
+                                                    {/* <div className='chat_read'>
+                                                        1
+                                                    </div> */}
+                                                    <div className='chat_report' >
+                                                        <AiOutlineAlert size="25px" data-id={index} onClick={openReport} />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                    ,
+                                2:  <div className='doorway'>{data.usernick} 님이 입장 하였습니다.</div>,
+                                3:  <div className='doorway'>{data.usernick} 님이 퇴장 하였습니다.</div>,
+                            }[data.chat_type]
                         }
+                        
                         </>
                     ))}
                 </div>
@@ -201,7 +272,7 @@ const Chatting = () => {
                     <button onClick={handleSendMessage}>Send</button>
                 </div>
             </div>
-
+                                
         </div>
     );
 };
