@@ -1,6 +1,7 @@
 import "../../css/community/communityEdit.css";
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../component/api/axiosApi';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function CommunityEdit() {
@@ -14,14 +15,14 @@ function CommunityEdit() {
     const [content, setContent] = useState('');
     const [category, setCategory] = useState(0); // 기본 카테고리 번호
     const [privacy, setPrivacy] = useState(0); // 기본 공개 대상 번호
-    // const userid = localStorage.getItem('userid'); // 로그인된 유저 ID
+    const userid = localStorage.getItem('userid');
     const [comments, setComments] = useState([]); // 댓글 상태
 
     // 게시글 데이터 가져오기
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axios.get(`http://localhost:9988/community/${community_no}`);
+                const response = await axios.get(`http://localhost:9988/community/view/${community_no}`);
                 const postData = response.data;
     
                 console.log("Fetched post data:", postData); // 데이터 로그 확인
@@ -90,7 +91,7 @@ function CommunityEdit() {
             }
 
             const postData = {
-                userid: 'test1234',  // 실제 로그인된 유저의 ID로 변경해야 함
+                userid: userid,  // 실제 로그인된 유저의 ID로 변경해야 함
                 community_title: title,
                 community_content: content,
                 community_img: image,
@@ -221,7 +222,7 @@ function CommunityEdit() {
                             {/* 선택된 장소 표시 */}
                             {selectedPlace && (
                                 <div className="selected-place">
-                                    <p className="loca">장소: {selectedPlace.place_name} ({selectedPlace.address_name})</p>
+                                    <p className="loca">장소: {selectedPlace.place_name}</p>
                                 </div>
                             )}
                         </div>

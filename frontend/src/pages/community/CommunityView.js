@@ -1,7 +1,10 @@
 import "../../css/community/communityView.css";
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../component/api/axiosApi';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.css';
+
 
 function CommunityView(){
     const { community_no } = useParams(); // URL에서 community_no 가져오기
@@ -14,6 +17,8 @@ function CommunityView(){
     const navigate = useNavigate();
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
+    const userid = localStorage.getItem('userid');
+    
 
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
@@ -31,22 +36,37 @@ function CommunityView(){
                 return "기타";
         }
     };
-
     // 좋아요 처리
-    const handleLike = () => {
-        const likeData = {
-            community_no: parseInt(community_no),
-            userid: "test1234" // 현재 로그인된 사용자 ID
-        };
+    const handleLikeToggle = async () => {
+        // if (!userid) {
+        //     console.error('사용자가 로그인하지 않았습니다.');
+        //     return; // userid가 없으면 처리 중지
+        // }
 
-        axios.post(`http://localhost:9988/community/like`, likeData)
-            .then(() => {
-                setLiked(!liked);
-                setLikesCount(liked ? likesCount - 1 : likesCount + 1); // 좋아요 수 업데이트
-            })
-            .catch(error => {
-                console.error("Error liking community:", error);
+        try {
+            const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
+                params: { community_no, userid }
             });
+            console.log("좋아요 결과"+isLikedResponse.data);
+            setLiked(isLikedResponse.data);
+            // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
+            
+            // if (isLiked) {
+            //     // 좋아요 삭제로
+            //     await axios.delete(`http://localhost:9988/community/unlike`, { params: { community_no, userid } });
+            // } else {
+            //     // 좋아요 추가
+            //     await axios.post(`http://localhost:9988/community/like`, { community_no, userid });
+            // }
+
+            // 좋아요 수 업데이트
+            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${community_no}`);
+            setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
+            console.log("좋아요 수"+likesCountResponse);
+            //setLiked(!isLiked); // 좋아요 상태 업데이트
+        } catch (error) {
+            console.error('좋아요 처리 실패:', error);
+        }
     };
 
     // 게시글 삭제
@@ -74,6 +94,8 @@ function CommunityView(){
             .then(response => {
                 console.log(response.data); // API 응답 로그
                 setCommunity(response.data); // community 상태 업데이트
+                setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
+                setLiked(response.data.liked); // 초기 좋아요 상태 설정
             })
             .catch(error => {
                 console.error("Error fetching community view:", error);
@@ -205,6 +227,12 @@ function CommunityView(){
             });
     };
 
+    const [bookmarked, setBookmarked] = useState(false);
+
+    const handleBookmarkToggle = () => {
+        setBookmarked(!bookmarked); // 북마크 상태 토글
+    };
+
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -214,7 +242,7 @@ function CommunityView(){
         <div className="community_view">
             <div className="container">
                 <div className="view_top">
-                    <img className="writer_image" src={community.writerImage} alt="Writer" />
+                    <img className="writer_image" src={community.userprofile} alt="Writer" />
                     <div className="writer_info">
                         <div className="name_location">
                             <p className="writer_name">{community.userid}</p>
@@ -239,16 +267,24 @@ function CommunityView(){
 
                 <div className="view_bottom">
                     <i 
-                        className={`like-icon ${liked ? 'filled' : 'empty'}`} 
-                        onClick={handleLike}
-                        style={{ fontStyle: 'normal', cursor: 'pointer' }}
-                    >
-                        {liked ? '♥' : '♡'} {/* 채워진 하트 또는 빈 하트 */}
-                    </i>
+                        className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                        onClick={handleLikeToggle}
+                        style={{ 
+                            color: liked ? 'red' : 'white',  // 좋아요 상태에 따라 하트 색상 변경
+                            cursor: 'pointer' 
+                        }}
+                    ></i>
                     <span className="likeCount">{likesCount}</span>
-                    <i className="comment-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 💬</i>
+                    <i className="far fa-comment"></i>
                     <span className="commentCount">{commentCount}</span>
-                    <i className="bookmark-icon" data-no={`${community.community_no}`} style={{ fontStyle: 'normal' }}> 🔖</i>
+                    <i 
+                        className={`fa-bookmark ${bookmarked ? 'fas' : 'far'}`}  // fas는 채워진 북마크, far는 빈 북마크
+                        onClick={handleBookmarkToggle}// 북마크 상태를 토글하는 함수
+                        style={{ 
+                            color: bookmarked ? 'white' : 'white',  // 북마크 상태에 따라 색상 변경 (blue: 활성화, gray: 비활성화)
+                            cursor: 'pointer' 
+                        }}
+                    ></i>
 
                     <div className="edit_delete">
                         <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>

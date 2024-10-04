@@ -11,7 +11,7 @@
   margin-top: 20px;
   max-width: 1200px;
   height: 90vh;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   display: flex;
   align-content: center;
   justify-content: center;
@@ -19,8 +19,12 @@
 }
 .loginsession{
   text-align: center;
-  width: 300px;
-  height: 300px;
+  display: block;
+  max-width: 300px;
+  max-height: 500px;
+  width: 100%;
+  height: auto;
+  /* height: 300px; */
   /* border: 1px solid blue; */
   /* background-color: rgba(0, 0, 0 , 0.7); */
 }
@@ -42,6 +46,11 @@
   opacity: .5;
   padding: 4px 0 0;
 }
+.loginsession form{
+  max-height: 250px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #fff;
+}
 .loginsession form input{
   background-color: hsla(258, 5%, 61%, .2);
   width: 100%;
@@ -61,4 +70,45 @@
   padding : 5px;
   width: 100%;
   border-radius: 40px;
+}
+#extra_info{
+  margin-top : 10px;
+  display: flex;
+  justify-content: space-between;
+}
+#social_login{
+  display: flex;
+  flex-direction: column;
+}
+#social_login span{
+  font-size: 12px;
+  font-weight: 400;
+  color : #fff;
+  opacity: .5;
+}
+#social_type{
+  display: flex;
+  justify-content: space-between;
+}
+#join_button{
+  display: flex;
+  align-items: center;
+}
+#join_button button:hover{
+  color : black !important;
+} 
+.social_icon{
+  background: none; /* 배경 제거 */
+  border: none;    /* 테두리 제거 */
+  padding: 0;      /* 여백 제거 */
+  cursor: pointer;  /* 커서 스타일 변경 */
+  width: 45px;
+  border: rgba(0, 0, 0, 0.7) 1px solid;
+  border-radius: 45%;
+}
+
+.social_icon img{
+  margin-top: 5px;
+  width: 100%;     /* 버튼 크기에 맞춤 (필요 시 조정) */
+  height: auto;    /* 비율 유지 */
 }

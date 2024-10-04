@@ -23,6 +23,12 @@ public interface CommunityService {
     void deleteCommunity(int community_no);
 
     //like
+    int isLiked(CommunityLikeVO like);
+
     void likeCommunity(CommunityLikeVO like);
+
+    void unlikeCommunity(CommunityLikeVO like);
+
     int getLikesCount(int community_no);
+
 }

@@ -5,15 +5,15 @@ import mqtt from 'mqtt';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-let userData = {}// 아이디 갖고오는거 못해서 더미로 일단 이거
 const Chatting = () => {
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
     const {chatlist_url } = useParams();
     const [isConnected, setIsConnected] = useState(false); // 연결 상태 확인용
+    const [userData, setUserData] = useState({});
+    const [myid, setMyid] = useState("");
     let once = 0;
-    const userid="";
     useEffect(() => {
         getUser()
         if(once == 0){
@@ -79,10 +79,11 @@ const Chatting = () => {
     }
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
+        setMyid(result.data);
+        console.log(myid)
         const params = {userid : result.data};
         const result2 = await axios.get('http://localhost:9988/getUserData', {params});
-        userData = result2;
-        console.log(userData);
+        setUserData(result2);
     }
 
     const handleSendMessage = () => {
@@ -91,9 +92,8 @@ const Chatting = () => {
             const offset = new Date().getTimezoneOffset() * 60000;
 
             let today = new Date(Date.now() - offset);
-            console.log(today);
+
             const now = today.toISOString().replace('T', ' ').substring(0, 19);
-            console.log(userData.data);
             const data = {
                 content_id: uuidv4(),
                 chat_content: messageToSend, 
@@ -103,69 +103,77 @@ const Chatting = () => {
                 userprofile: userData.data.userprofile,
                 chat_date: now,
             } 
-            console.log(data);
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
         }
     };
-
+    function pressKeyboard(e){
+        if(e.key==='Enter'){
+            handleSendMessage();
+        }
+        
+    }
     return (
         <div className='container chatting_room'>
-            <h1>MQTT Chat Application</h1>
-            <h2>Received Messages:</h2>
-            <ul>
-                {receivedMessages.map((data, index) => (
-                    <>
-                    {
-                    userid==data.userid?
-                    <div className='myText'>
-                        <div><img  src={`${data.userprofile}`}/></div>
-                        <div>
-                            {data.content_id}{data.userid}
-                            <div>{data.usernick}</div>
-                            <div>
-                                <div>
-                                    <div>
-                                        {data.chat_content}
-                                    </div>
-                                    <div>
-                                        {data.chat_date}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     : 
-                     <div className='anotherText'>
-                        <div><img  src={`${data.userprofile}`}/></div>
-                        <div>
-                            {data.content_id}{data.userid}
-                            <div>{data.usernick}</div>
-                            <div>
-                                <div>
-                                    <div>
-                                        {data.chat_content}
-                                    </div>
-                                    <div>
-                                        {data.chat_date}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                    </>
-                ))}
-            </ul>
-            <div className='chatting_input'>
-                <input
-                    type="text"
-                    value={messageToSend}
-                    onChange={(e) => setMessageToSend(e.target.value)}
-                    placeholder="Type your message"
-                    />
-                <button onClick={handleSendMessage}>Send</button>
+            <div className='chatting_sub'>
+                gdgd
             </div>
+            <div className='chatting_box'>
+                <h1>MQTT Chat Application</h1>
+                <ul className='chatting_list'>
+                    {receivedMessages.map((data, index) => (
+                        <>
+                        {
+                        
+                        myid==data.userid?
+                        <div className='myText'>
+                            <div>
+                                {data.content_id}{data.userid}
+                                <div className='chat_usernick'>{data.usernick}</div>
+                                <div className='chat_info'>
+                                    <div className='chat_date'>
+                                        {(data.chat_date).substring(11, 16)}
+                                    </div>
+                                    <div className='chat_text'>
+                                        {data.chat_content}
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                        </div>
+                        : 
+                        <div className='anotherText'>
+                            <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                            <div>
+                                {data.content_id}{data.userid}
+                                <div className='chat_usernick'>{data.usernick}</div>
+                                <div className='chat_info'>
+                                    <div className='chat_text'>
+                                        {data.chat_content}
+                                    </div>
+                                    <div className='chat_date'>
+                                    {(data.chat_date).substring(11, 16)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        </>
+                    ))}
+                </ul>
+                <div className='chatting_input'>
+                    <input
+                        type="text"
+                        value={messageToSend}
+                        onKeyDown={pressKeyboard}
+                        onChange={(e)=>setMessageToSend(e.target.value)}
+                        placeholder="Type your message"
+                        />
+                    <button onClick={handleSendMessage}>Send</button>
+                </div>
+            </div>
+
         </div>
     );
 };

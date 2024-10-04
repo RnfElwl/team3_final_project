@@ -39,13 +39,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             Enumeration<String> result = request.getParameterNames();
-            System.out.println("userid = "+request.getParameter("userid"));
-            System.out.println("ttt");
+//            System.out.println("userid = "+request.getParameter("userid"));
+//            System.out.println("ttt");
             while(result.hasMoreElements()){
                 String key = result.nextElement();
                 String value = request.getParameter(key);
-                System.out.println("1"+key);
-                System.out.println("2"+value);
+//                System.out.println("1"+key);
+//                System.out.println("2"+value);
             }
 
             String userid = request.getParameter("userid");

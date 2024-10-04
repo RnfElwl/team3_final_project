@@ -21,7 +21,12 @@ public interface CommunityDAO {
 
     void deleteCommunity(int community_no);
 
+    int isLiked(CommunityLikeVO like);
+
     void likeCommunity(CommunityLikeVO like);
 
+    void unlikeCommunity(CommunityLikeVO like);
+
     int getLikesCount(int community_no);
+
 }

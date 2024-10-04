@@ -14,6 +14,6 @@
         join user_tbl ut on ut.userid=cct.userid where cct.chatlist_url=#{param1} order by cct.chat_date;
     </select>
     <insert id="insertChatEnter">
-        insert ignore into chat_user_list(chatlist_url, userid) values(chatlist_url, usreid);
+        insert ignore into chat_user_list(chatlist_url, userid) values(#{param1}, #{param2});
     </insert>
 </mapper>    

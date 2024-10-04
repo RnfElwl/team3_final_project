@@ -8,7 +8,7 @@ public class ChatVO {
     private String userid;
     private String chat_content;
     private String chat_date;
-    private int content_id;
+    private String content_id;
     private String usernick;
     private String userprofile;
 }

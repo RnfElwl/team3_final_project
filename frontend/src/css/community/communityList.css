@@ -63,6 +63,20 @@ body {
     margin-bottom: 20px;
 }
 
+.community_list .user_image {
+    width: 60px; /* 작성자 이미지 크기 */
+    height: 60px; /* 작성자 이미지 크기 */
+    border-radius: 50%; /* 둥글게 */
+    margin-right: 10px; /* 여백 */
+    border: #555 1px solid;
+}
+
+.community_list .user_name {
+    font-weight: bold; /* 글씨 두껍게 */
+    color: rgb(48, 46, 46); /* 색상 */
+    font-size: 1.2em;
+}
+
 .community_list .search {
     width: 60%;
     padding: 10px; /* 패딩 */
@@ -189,13 +203,12 @@ body {
     margin-top: 10px; /* 여백 */
 }
 
-.community_list .like-icon,
-.community_list .comment-icon,
-.community_list .bookmark-icon {
+.community_list .fa-heart,
+.community_list .fa-comment,
+.community_list .fa-bookmark {
     margin-right: 10px; /* 아이콘 간 여백 */
     cursor: pointer;
     font-size: 20px;
-    color: #f70b0b;
 }
 
 .community_list .likeCount,

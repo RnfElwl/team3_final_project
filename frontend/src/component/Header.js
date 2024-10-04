@@ -53,6 +53,7 @@ function Header() {
           <div><Link to={'/categories'} onClick={closeNav}>카테고리</Link></div>
           <div><Link to={'/chat'} onClick={closeNav}>채팅</Link></div>
           <div><Link to={'/qna'} onClick={closeNav}>QnA</Link></div>
+          <div><Link to={'/community'} onClick={closeNav}>커뮤니티</Link></div>
         </div>
         <div className='close_box' onClick={closeNav}></div>
       </nav>
@@ -67,7 +68,8 @@ function Header() {
               <Search color={"black"} size={20}/><input  type="text" />
             </div>
             <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
-            <div className='join_btn'><Link to={'/join'}>회원가입</Link></div>  
+            <div className='join_btn'><Link to={'/join'}>회원가입</Link></div>
+            
           </div>
       </header>
       </>

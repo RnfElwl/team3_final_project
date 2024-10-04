@@ -44,8 +44,18 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
+    public int isLiked(CommunityLikeVO like) {
+        return dao.isLiked(like);
+    }
+
+    @Override
     public void likeCommunity(CommunityLikeVO like) {
         dao.likeCommunity(like);
+    }
+
+    @Override
+    public void unlikeCommunity(CommunityLikeVO like) {
+        dao.unlikeCommunity(like);
     }
 
     @Override

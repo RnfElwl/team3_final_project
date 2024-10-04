@@ -134,13 +134,13 @@
     margin-right: auto; /* 자동 여백으로 좌우 중앙 정렬 */
 }
 
-.community_view .like-icon,
-.community_view .comment-icon,
-.community_view .bookmark-icon {
+.community_view .fa-heart,
+.community_view .fa-comment,
+.community_view .fa-bookmark {
     margin-right: 10px; /* 아이콘 간 여백 */
     cursor: pointer;
     font-size: 30px;
-    color:#f70b0b;
+
 }
 .community_view .likeCount,
 .community_view .commentCount {

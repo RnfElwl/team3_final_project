@@ -13,14 +13,22 @@ function QnA() {
     const [nowPage, setNowPage] = useState(1);
     const [totalRecord, setTotalRecord] = useState(0);
     const [isPasswordCheck, setIsPasswordCheck] = useState(false);
+    const [searchKey, setSearchKey] =useState('qna_title');
+    const [searchWord, setSearchWord] = useState('');
     const navigate = useNavigate();
+
+    const totalPage = Math.ceil(totalRecord / 12);
+    const handlePageChange = (newPage) => {
+        setNowPage(newPage);
+    };
+
 
     // 서버 토큰 확인
     function checkid() {
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {
                 console.log("hi",response.data);
-                if(response.data == "anonymousUser"){
+                if(response.data === null || response.data ===''){
                     window.alert("로그인 시 이용할 수 있는 기능입니다.");
                     return false;
                 }
@@ -34,14 +42,32 @@ function QnA() {
 
     // 데이터 요청
     useEffect(() => {
-        axios.get(`http://localhost:9988/qna/list?nowPage=${nowPage}`)
+        //axios.get(`http://localhost:9988/qna/list?nowPage=${nowPage}`) 
+        axios.get(`http://localhost:9988/qna/list?nowPage=${nowPage}&searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
             .then(response => {
-                setQnA(response.data);
+                console.log(response.data);
+                setQnA(response.data.qnaList);
+                setTotalRecord(response.data.qnaTotalPages);
             })
             .catch(error => {
                 console.error("데이터 로드 중 오류 발생:", error);
             });
     }, [nowPage]);
+    
+    //검색 시 데이터 요청
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        setNowPage(1);  // 검색할 때 페이지를 1로 초기화
+        axios.get(`http://localhost:9988/qna/list?nowPage=1&searchKey=${searchKey}&searchWord=${searchWord}`)
+            .then(response => {
+                console.log(response.data);
+                setQnA(response.data.qnaList);
+                setTotalRecord(response.data.qnaTotalPages);
+            })
+            .catch(error => {
+                console.error("검색 중 오류 발생:", error);
+            });
+    };
 
     // 비밀글 모달
     const handlePrivateClick = (post) => {
@@ -75,22 +101,13 @@ function QnA() {
             setIsPasswordCheck(false);
         }
     };
-
-    // 페이징 처리
-    useEffect(() => {
-        axios.get('http://localhost:9988/qna/totalPages')
-            .then(response => {
-                setTotalRecord(response.data);
-            }).catch(error => {
-                console.error("총 페이지 로드 중 오류 발생", error);
-            });
-    }, []);
-
-    const totalPage = Math.ceil(totalRecord / 12); // 전체 페이지 수
-
-    const handlePageChange = (newPage) => {
-        setNowPage(newPage);
+    const handlesearchKeyChange = (e) => { //검색키 처리
+        setSearchKey(e.target.value);
     };
+    const handlesearchWordChange = (e) => { //검색 처리
+        setSearchWord(e.target.value);
+    };
+
 
     return (
         <div className="QnABody">
@@ -117,7 +134,7 @@ function QnA() {
                                         {item.head_title == 1 ? <div className="qna_ht">[상품]&nbsp;</div> :
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                                 <div className="qna_ht">[기타]&nbsp;</div>)}
-                                        {item.privacy == 0 ? (
+                                        {item.privacyQ == 0 ? (
                                             <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
                                         ) : (
                                             <div className="qna_pwt" onClick={() => handlePrivateClick(item)}>
@@ -159,28 +176,51 @@ function QnA() {
                     </div>
                 </div>
             )}
+            {/* 검색폼 */}
+            <div>
+                <form onSubmit={handleSearchSubmit}>
+                    <select
+                    name="searchKey"
+                    value={searchKey}
+                    onChange={handlesearchKeyChange}>
+                        <option value="qna_title">제목</option>
+                        <option value="qna_content">내용</option>
+                        <option value="userid">작성자</option>
+                    </select>
+                    <input
+                        type="text"
+                        name="searchWord"
+                        id="searchWord"
+                        onChange={handlesearchWordChange}/>
+                    <button type="submit">검색</button>
+                </form>
+            </div>
 
             {/* 페이지네이션 */}
             <div className="qna_pagination">
                 <button
                     onClick={() => handlePageChange(nowPage - 1)}
-                    disabled={nowPage === 1}>
+                    disabled={nowPage === 1 || totalPage===1}>
                     이전
                 </button>
 
-                {Array.from({ length: totalPage }, (_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        disabled={nowPage === index + 1}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
+                {totalPage === 1 ? (
+                    <button disabled>{1}</button>
+                ) : (
+                    Array.from({ length: totalPage }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            disabled={nowPage === index + 1}
+                        >
+                            {index + 1}
+                        </button>
+                    ))
+                )}
 
                 <button
                     onClick={() => handlePageChange(nowPage + 1)}
-                    disabled={nowPage === totalPage}>
+                    disabled={nowPage === totalPage || totalPage===1}>
                     다음
                 </button>
             </div>

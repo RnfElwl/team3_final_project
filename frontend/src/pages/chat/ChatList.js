@@ -42,13 +42,16 @@ function ChantList(){
     }
     async function createRoom(event){
         event.preventDefault();
-        
-        console.log(formData);
+
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
             }
           });
+          console.log(result)
+          if(result == 1){
+            setChatList();
+          }
     }
     return (
         <main className="chatList">
