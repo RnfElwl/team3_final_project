@@ -111,6 +111,7 @@ const Chatting = () => {
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
+            scrollBottom();
         }
     };
     function pressKeyboard(e){
@@ -120,7 +121,7 @@ const Chatting = () => {
         
     }
     function scrollBottom(){
-
+        chatting_box.current.scrollTop = chatting_box.current.scrollHeight;
     }
     return (
         <div className='container chatting_room'>
@@ -129,7 +130,7 @@ const Chatting = () => {
             </div>
             <div className='chatting_box'>
                 <h1>MQTT Chat Application</h1>
-                <div className='chatting_list'>
+                <div className='chatting_list' ref={chatting_box}>
                     {receivedMessages.map((data, index) => (
                         <>
                         {
