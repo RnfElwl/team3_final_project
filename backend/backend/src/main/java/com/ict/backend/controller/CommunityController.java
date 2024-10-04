@@ -35,7 +35,13 @@ public class CommunityController {
     @GetMapping("/view/{community_no}")
     public CommunityVO getCommunityView(@PathVariable("community_no") int community_no){
         CommunityVO communityVO = service.getCommunityView(community_no);
+        //조회수
+        service.increaseHit(community_no);
         return communityVO;
+    }
+    @GetMapping("/top-viewed-posts")
+    public List<CommunityVO> getTopViewedPosts() {
+        return service.getTopViewedPosts(); // 서비스에서 해당 쿼리 호출
     }
 
     //edit

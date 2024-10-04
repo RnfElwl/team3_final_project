@@ -14,6 +14,8 @@ public interface CommunityService {
 
     //view
     CommunityVO getCommunityView(int community_no);
+    void increaseHit(int community_no);
+    List<CommunityVO> getTopViewedPosts();
 
     //edit
     void editCommunity(CommunityVO community);

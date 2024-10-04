@@ -15,6 +15,16 @@
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
         SELECT * FROM community_tbl WHERE community_no = #{community_no}
     </select>
+    <update id="increaseHit" parameterType="com.ict.backend.vo.CommunityVO">
+        UPDATE community_tbl
+        SET hit = hit + 1
+        WHERE community_no = #{community_no}
+    </update>
+    <select id="getTopViewedPosts" resultType="com.ict.backend.vo.CommunityVO">
+        SELECT * FROM community_tbl
+        ORDER BY hit DESC
+        LIMIT 3
+    </select>
     <update id="editCommunity" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl
         SET community_content = #{community_content},

@@ -29,6 +29,16 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
+    public void increaseHit(int community_no) {
+        dao.increaseHit(community_no);
+    }
+
+    @Override
+    public List<CommunityVO> getTopViewedPosts() {
+        return dao.getTopViewedPosts();
+    }
+
+    @Override
     public void editCommunity(CommunityVO community) {
         dao.editCommunity(community);
     }

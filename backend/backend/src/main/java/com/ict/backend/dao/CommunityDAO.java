@@ -14,6 +14,8 @@ public interface CommunityDAO {
 
     //view
     CommunityVO getCommunityView(int community_no);
+    void increaseHit(int community_no);
+    List<CommunityVO> getTopViewedPosts();
 
     void editCommunity(CommunityVO community);
 

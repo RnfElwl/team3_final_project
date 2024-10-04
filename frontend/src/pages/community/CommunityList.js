@@ -10,15 +10,17 @@ function CommunityList() {
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
     const [filteredCommunity, setFilteredCommunity] = useState([]); // 필터링된 커뮤니티 상태
     const categories = ["전체", "영화", "일상", "자유", "포스터"]; // 카테고리 목록에 "전체" 추가
-    const userid = localStorage.getItem('userid');
+    const [userid, setUserId] = useState('');
+    //const userid = localStorage.getItem('userid');
     const userprofile = localStorage.getItem('userprofile');
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
     const [comments, setComments] = useState([]); // 댓글 상태 추가
+    const [hitCount, setHitCount] = useState(0);
 
     // 상위 3개 게시물
+    const [topViewedPosts, setTopViewedPosts] = useState([]);
     const [topLikedPosts, setTopLikedPosts] = useState([]);
-    const [topCommentedPosts, setTopCommentedPosts] = useState([]);
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -48,12 +50,22 @@ function CommunityList() {
                 const sortedByComments = [...response.data].sort((a, b) => b.commentCount - a.commentCount).slice(0, 3);
                 
                 setTopLikedPosts(sortedByLikes);
-                setTopCommentedPosts(sortedByComments);
 
             })
             .catch(error => {
                 console.error("Error fetching community list:", error);
             });
+
+        axios.get('http://localhost:9988/user/userinfo')
+            .then(response => {
+                //console.log("hi",response.data);
+                setUserId(response.data);
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
+            });
+        
+            
     }, []);
 
     useEffect(() => {
@@ -139,6 +151,19 @@ function CommunityList() {
         }
     };
 
+    useEffect(() => {
+        const fetchTopViewedPosts = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9988/community/top-viewed-posts`); // API 호출
+                setTopViewedPosts(response.data); // 데이터 저장
+            } catch (error) {
+                console.error('Error fetching top viewed posts:', error);
+            }
+        };
+
+        fetchTopViewedPosts();
+    }, []);
+
     return (
         <div className="community_list">
             <div className="container">
@@ -207,6 +232,9 @@ function CommunityList() {
                                 <span className="likeCount">{likesCount}</span>
                                 <i className="far fa-comment"></i>
                                 <span className="commentCount">{commentCount}</span>
+                                <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
+                                <span className="hitCount">{hitCount}</span>  {/* 조회수 출력 */}
+
                             </div>
                         </div>
                     ))
@@ -224,14 +252,13 @@ function CommunityList() {
                     ))}
                 </div>
                 
-                {/* 댓글 많은 게시물 Top 3 */}
+                {/* 조회수 많은 게시물 Top 3 */}
                 <div className="top_posts">
-                    <p>댓글 Top 3</p>
-                    {topCommentedPosts.map((post, index) => (
+                    <p>조회수 Top 3</p>
+                    {topViewedPosts.map((post, index) => (
                         <div key={post.community_no} className="top_post_item">
                             <Link to={`/community/communityView/${post.community_no}`}>
                                 <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                                {/* <span>{post.commentCount} 댓글</span> */}
                             </Link>
                         </div>
                     ))}
@@ -244,7 +271,6 @@ function CommunityList() {
                         <div key={post.community_no} className="top_post_item">
                             <Link to={`/community/communityView/${post.community_no}`}>
                                 <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                                {/* <span>{post.likesCount} 좋아요</span> */}
                             </Link>
                         </div>
                     ))}
