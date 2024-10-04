@@ -20,7 +20,7 @@ import QNAView from './pages/qna/QnAView.js'
 import MyPage from './pages/mypage/MyPage';
 import LoginPage from './pages/mypage/LoginPage.js';
 import QNAWrite from './pages/qna/QnAWrite.js'
-
+import QNAEdit from './pages/qna/QnAEdit.js' 
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
                 <Route path='/categories' element={<MovieCategories/>}></Route>
                 
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
-                <Route path="/categories/:type/:id/view" element={<MovieView />} />
+                <Route path="/categories/:type/:id/view/:movieCode" element={<MovieView />} />
                 <Route path='/community' element={<CommunityList/>}></Route>
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
@@ -43,6 +43,7 @@ function App() {
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
+                <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
 

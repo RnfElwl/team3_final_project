@@ -50,4 +50,9 @@ public class ChatListController {
 
         return list;
     }
+    @PostMapping("/userlistadd/{chatlist_url}")
+    public int insertChatUserList(@PathVariable String chatlist_url){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatListService.insertChatEnter(chatlist_url, userid);
+    }
 }

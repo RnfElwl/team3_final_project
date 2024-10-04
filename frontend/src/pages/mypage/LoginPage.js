@@ -73,7 +73,11 @@ function LoginPage() {
         <div className="loginsession">
           <div>
             <span>로그인</span>
-            <a href="#">비밀번호를 잊어버리셨나요?</a>
+            <div id = "find_idpw">
+              <a href = "#">아이디 찾기</a>
+              <a >/</a>
+              <a href= "#">비번 찾기</a>
+            </div>
           </div>
           <form name="loginCheck" onSubmit={handleLogin}>
             <input type="text" id="userid" value={userid} placeholder='아이디' 

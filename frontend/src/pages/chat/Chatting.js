@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import "../../css/chat/chtting.css";
 import axios from '../../component/api/axiosApi.js';
 import mqtt from 'mqtt';
@@ -14,6 +14,7 @@ const Chatting = () => {
     const [userData, setUserData] = useState({});
     const [myid, setMyid] = useState("");
     let once = 0;
+    const chatting_box = useRef(null);
     useEffect(() => {
         getUser()
         if(once == 0){
@@ -28,6 +29,7 @@ const Chatting = () => {
             console.log('Connected to MQTT Broker');
             mqttClient.subscribe(`test/topic/${chatlist_url}`, (err) => {
                 console.log("누군지 모르겠지만연결됨");
+                userListAdd();
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
@@ -77,6 +79,10 @@ const Chatting = () => {
         })
 
     }
+    async function userListAdd(){
+        const params = {chatlist_url};
+        const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
+    }
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
         setMyid(result.data);
@@ -105,6 +111,7 @@ const Chatting = () => {
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
+            scrollBottom();
         }
     };
     function pressKeyboard(e){
@@ -113,6 +120,9 @@ const Chatting = () => {
         }
         
     }
+    function scrollBottom(){
+        chatting_box.current.scrollTop = chatting_box.current.scrollHeight;
+    }
     return (
         <div className='container chatting_room'>
             <div className='chatting_sub'>
@@ -120,11 +130,12 @@ const Chatting = () => {
             </div>
             <div className='chatting_box'>
                 <h1>MQTT Chat Application</h1>
-                <ul className='chatting_list'>
+                <div className='chatting_list' ref={chatting_box}>
                     {receivedMessages.map((data, index) => (
                         <>
                         {
                         
+
                         myid==data.userid?
                         <div className='myText'>
                             <div>
@@ -152,8 +163,16 @@ const Chatting = () => {
                                     <div className='chat_text'>
                                         {data.chat_content}
                                     </div>
-                                    <div className='chat_date'>
-                                    {(data.chat_date).substring(11, 16)}
+                                    <div className='chat_sub_info'>
+                                        <div className='chat_date'>
+                                        {(data.chat_date).substring(11, 16)}
+                                        </div>
+                                        <div className='chat_read'>
+
+                                        </div>
+                                        <div className='chat_report'>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +180,7 @@ const Chatting = () => {
                         }
                         </>
                     ))}
-                </ul>
+                </div>
                 <div className='chatting_input'>
                     <input
                         type="text"
