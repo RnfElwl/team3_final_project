@@ -76,6 +76,8 @@ public class CommunityController {
     public int getLikesCount(@PathVariable int community_no) {
         return service.getLikesCount(community_no);
     }
+
+
 }
 //-------------------------------------좋아요 필요없어짐--------------------------------------------------------------------
     //like 추가

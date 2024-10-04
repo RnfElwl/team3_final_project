@@ -227,12 +227,6 @@ function CommunityView(){
             });
     };
 
-    const [bookmarked, setBookmarked] = useState(false);
-
-    const handleBookmarkToggle = () => {
-        setBookmarked(!bookmarked); // 북마크 상태 토글
-    };
-
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -277,14 +271,6 @@ function CommunityView(){
                     <span className="likeCount">{likesCount}</span>
                     <i className="far fa-comment"></i>
                     <span className="commentCount">{commentCount}</span>
-                    <i 
-                        className={`fa-bookmark ${bookmarked ? 'fas' : 'far'}`}  // fas는 채워진 북마크, far는 빈 북마크
-                        onClick={handleBookmarkToggle}// 북마크 상태를 토글하는 함수
-                        style={{ 
-                            color: bookmarked ? 'white' : 'white',  // 북마크 상태에 따라 색상 변경 (blue: 활성화, gray: 비활성화)
-                            cursor: 'pointer' 
-                        }}
-                    ></i>
 
                     <div className="edit_delete">
                         <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>

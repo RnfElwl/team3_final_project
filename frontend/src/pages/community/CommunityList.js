@@ -49,11 +49,37 @@ function CommunityList() {
                 
                 setTopLikedPosts(sortedByLikes);
                 setTopCommentedPosts(sortedByComments);
+
             })
             .catch(error => {
                 console.error("Error fetching community list:", error);
             });
     }, []);
+
+    useEffect(() => {
+        // 게시글 데이터 가져오기
+        axios.get(`http://localhost:9988/community/view/${community_no}`)
+            .then(response => {
+                console.log(response.data); // API 응답 로그
+                setCommunity(response.data); // community 상태 업데이트
+                setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
+                setLiked(response.data.liked); // 초기 좋아요 상태 설정
+            })
+            .catch(error => {
+                console.error("Error fetching community view:", error);
+            });
+        // 댓글 데이터 가져오기
+        axios.get(`http://localhost:9988/community/comments/${community_no}`)
+            .then(response => {
+                setComments(response.data); // 댓글 상태 업데이트
+            })
+            .catch(error => {
+                console.error("Error fetching comments:", error);
+            });    
+    }, [community_no]);
+
+    // 댓글 수 계산
+    const commentCount = comments.length;
 
     // 검색창
     const handleSearchInputChange = (e) => {
@@ -79,16 +105,6 @@ function CommunityList() {
             setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
         }
     };  
-
-    //북마크
-    const [bookmarked, setBookmarked] = useState(false);
-
-    const handleBookmarkToggle = () => {
-        setBookmarked(!bookmarked); // 북마크 상태 토글
-    };
-
-    // 댓글 수 계산
-    const commentCount = comments.length;
 
     // 좋아요 처리
     const handleLikeToggle = async () => {
@@ -129,13 +145,26 @@ function CommunityList() {
                 <div className="list_header">
                     <img className="user_image" src={userprofile || '/default_profile.png'} alt="User Profile"/>
                     <p className="user_name">{userid}</p>
-                    <input 
-                        className='search' 
-                        type="text" 
-                        placeholder="🔍 검색어를 입력하세요" 
-                        value={searchTerm}
-                        onChange={handleSearchInputChange} // 핸들러 연결
-                    />
+                    <div className="search" style={{ position: 'relative', width: '60%' }}>
+                        <i className="fas fa-search" style={{
+                            position: 'absolute',
+                            left: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#ccc',
+                            pointerEvents: 'none'
+                        }}></i>
+                        <input
+                            type="text"
+                            placeholder="검색어를 입력하세요"
+                            value={searchTerm}
+                            onChange={handleSearchInputChange}
+                            style={{
+                                paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
+                                width: '100%'
+                            }}
+                        />
+                    </div>
                     <Link to="/community/CommunityWrite">
                         <input className="write" type="button" value="글 작성하기" />
                     </Link>
@@ -178,14 +207,6 @@ function CommunityList() {
                                 <span className="likeCount">{likesCount}</span>
                                 <i className="far fa-comment"></i>
                                 <span className="commentCount">{commentCount}</span>
-                                <i 
-                                    className={`fa-bookmark ${bookmarked ? 'fas' : 'far'}`}  // fas는 채워진 북마크, far는 빈 북마크
-                                    onClick={handleBookmarkToggle}// 북마크 상태를 토글하는 함수
-                                    style={{ 
-                                        color: bookmarked ? 'black' : 'black',  // 북마크 상태에 따라 색상 변경 (blue: 활성화, gray: 비활성화)
-                                        cursor: 'pointer' 
-                                    }}
-                                ></i>
                             </div>
                         </div>
                     ))

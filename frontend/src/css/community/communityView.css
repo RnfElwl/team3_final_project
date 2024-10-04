@@ -135,8 +135,7 @@
 }
 
 .community_view .fa-heart,
-.community_view .fa-comment,
-.community_view .fa-bookmark {
+.community_view .fa-comment{
     margin-right: 10px; /* 아이콘 간 여백 */
     cursor: pointer;
     font-size: 30px;
