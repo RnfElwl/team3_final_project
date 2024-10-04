@@ -6,57 +6,34 @@ function MovieCategories() {
   const [activeTab, setActiveTab] = useState('genre');
 
   const genreCategories = [
-    { id: 1, name: 'Action' },
-    { id: 2, name: 'Comedy' },
-    { id: 3, name: 'Drama' },
-    { id: 4, name: 'Horror' },
-    { id: 5, name: 'Sci-Fi' },
-    { id: 6, name: 'Documentary' },
-    { id: 7, name: 'Thriller' },
-    { id: 8, name: 'Animation' },
-    { id: 9, name: 'Fantasy' },
-    { id: 10, name: 'Adventure' },
-    { id: 11, name: 'Romance' },
-    { id: 12, name: 'Mystery' },
+    { id: 'romance', name: 'Romance' },
+    { id: 'thriller', name: 'Thriller' },
+    { id: 'adventure', name: 'Adventure' },
+    { id: 'mystery', name: 'Mystery' },
   ];
 
   const yearCategories = [
-    { id: 1, name: '2020' },
-    { id: 2, name: '2021' },
-    { id: 3, name: '2022' },
-    { id: 4, name: '2023' },
-    { id: 5, name: '2024' },
-    { id: 6, name: '2025' },
-    { id: 7, name: '2026' },
-    { id: 8, name: '2027' },
-    { id: 9, name: '2028' },
-    { id: 10, name: '2029' },
-    { id: 11, name: '2030' },
-    { id: 12, name: '2031' },
+    { id: '2020', name: '2020s' },
+    { id: '2010', name: '2010s' },
+    { id: '1990', name: '1990s' },
+
   ];
 
-  const countryCategories = [
-    { id: 1, name: 'USA' },
-    { id: 2, name: 'UK' },
-    { id: 3, name: 'France' },
-    { id: 4, name: 'Germany' },
-    { id: 5, name: 'Japan' },
-    { id: 6, name: 'South Korea' },
-    { id: 7, name: 'India' },
-    { id: 8, name: 'Canada' },
-    { id: 9, name: 'Australia' },
-    { id: 10, name: 'Italy' },
-    { id: 11, name: 'Spain' },
-    { id: 12, name: 'Brazil' },
-  ];
+  const nationCategories = [
+    { id: 'canada', name: 'Canada' },
+    { id: 'france', name: 'France' },
+    { id: 'china', name: 'China' },
+    ];
 
-  let currentCategories;
+
+  // 현재 선택된 탭에 따라 표시할 카테고리 결정
+  let currentCategories = [];
   if (activeTab === 'genre') {
     currentCategories = genreCategories;
   } else if (activeTab === 'year') {
     currentCategories = yearCategories;
-  } else if (activeTab === 'country') {
-    currentCategories = countryCategories;
+  } else if (activeTab === 'nation') {
+    currentCategories = nationCategories;
   }
 
   return (
@@ -84,8 +61,8 @@ function MovieCategories() {
           </li>
           <li className="nav-item">
             <button
-              className={`nav-link ${activeTab === 'country' ? 'active' : ''}`}
-              onClick={() => setActiveTab('country')}
+              className={`nav-link ${activeTab === 'nation' ? 'active' : ''}`}
+              onClick={() => setActiveTab('nation')}
             >
               국가별
             </button>

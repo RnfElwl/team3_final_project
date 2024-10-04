@@ -1,75 +1,71 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import './../../css/movies/MovieList.css';
+import { Navigate, useParams } from 'react-router-dom';
+import './../../css/movies/MovieList.css'; // CSS 파일을 임포트
+
+
 
 function MovieList() {
-  const { type, id } = useParams(); // URL 파라미터에서 카테고리 정보 가져옴
-  const [movies, setMovies] = useState([]);
-  const [categoryName, setCategoryName] = useState(''); // 선택된 카테고리 이름 저장
-  const [otherCategories, setOtherCategories] = useState([]); // 다른 카테고리 저장
-  const navigate = useNavigate(); // useNavigate 사용
+  const { type, id } = useParams(); // URL 파라미터에서 type과 id 가져옴
+  const [movies, setMovies] = useState([]); // 영화 리스트 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
 
   useEffect(() => {
-    // 더미 카테고리 데이터
-    const categories = {
-      genre: ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Documentary'],
-      year: ['2020', '2021', '2022', '2023', '2024'],
-      country: ['USA', 'UK', 'France', 'Germany', 'Japan'],
-    };
-
-    // 현재 선택된 카테고리의 이름 설정
-    const currentCategory = categories[type][id - 1];
-    setCategoryName(currentCategory);
-
-    // 선택된 카테고리 외의 다른 카테고리 리스트 설정
-    const filteredCategories = categories[type].filter((_, index) => index + 1 !== parseInt(id));
-    setOtherCategories(filteredCategories);
-
-    // 영화 데이터를 더미로 설정 (API 호출로 대체 가능)
     const fetchMovies = async () => {
-      const dummyMovies = [
-        { id: 1, title: 'Movie 1', description: 'Description for movie 1' },
-        { id: 2, title: 'Movie 2', description: 'Description for movie 2' },
-        { id: 3, title: 'Movie 3', description: 'Description for movie 3' },
-        { id: 4, title: 'Movie 4', description: 'Description for movie 4' },
-        { id: 5, title: 'Movie 5', description: 'Description for movie 5' },
-        { id: 6, title: 'Movie 6', description: 'Description for movie 6' },
-        { id: 7, title: 'Movie 7', description: 'Description for movie 7' },
-        { id: 8, title: 'Movie 8', description: 'Description for movie 8' },
-        { id: 9, title: 'Movie 9', description: 'Description for movie 9' },
-      ];
-      setMovies(dummyMovies);
+      setLoading(true);
+      try {
+        let url = '';
+
+        // API URL 설정: genre, year, nation에 따른 분기 처리
+        if (type === 'genre') {
+          url = `http://localhost:9988/api/movies/genre/${id}`; // 장르별 영화 데이터
+        } else if (type === 'year') {
+          url = `http://localhost:9988/api/movies/year/${id}`; // 연도별 영화 데이터
+        } else if (type === 'nation') {
+          url = `http://localhost:9988/api/movies/nation/${id}`; // 국가별 영화 데이터
+        }
+
+        const response = await axios.get(url); // axios로 GET 요청
+        console.log('Fetched movies:', response.data); // 데이터를 콘솔에 출력
+        
+        setMovies(response.data); // 영화 데이터를 상태에 저장
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMovies();
   }, [type, id]);
 
+  // 영화 카드 클릭 시 상세 페이지로 이동하는 함수
   const handleCardClick = (movieId) => {
-    navigate(`/categories/${type}/${movieId}/view`); // 상세 페이지로 이동
+    Navigate(`/categories/${type}/${movieId}/view`); // 상세 페이지로 이동
   };
 
+  // 로딩 중일 때
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
+  // 영화 리스트 렌더링
   return (
-    <div className="page-container">
-      <div className="content-container">
-        <h2>{categoryName} 영화 목록</h2>
-
-        {/* 다른 카테고리로 이동할 수 있는 버튼들 */}
-        <div className="category-buttons">
-          {otherCategories.map((category, index) => (
-            <Link key={index} to={`/categories/${type}/${index + 1}`}>
-            <button className="category-btn">{category}</button>
-            </Link>
-          ))}
-        </div>
-
-        {/* 영화 리스트 */}
-        <div className="row movie-list mt-4">
-          {movies.map(movie => (
-            <div key={movie.id} className="col-6 col-sm-4 col-md-2 mb-4">
-              <div className="movie-card h-100" onClick={() => handleCardClick(movie.id)}>
-                <h5>{movie.title}</h5>
-                <p>{movie.description}</p>
+    <div className="movie-list-wrapper"> {/* 컨텐츠를 감싸는 중앙 배치용 div */}
+      <div className="movie-list-container">
+        <h2> {id} 영화 목록</h2>
+        <div className="row">
+          {movies.map((movie) => (
+            <div key={movie.movie_code} className="col-6 col-sm-4 col-md-2 mb-4">
+              <div 
+                className="movie-card"
+                onClick={() => handleCardClick(movie.movie_code)} // 영화 카드 클릭 시 이동
+                style={{ cursor: 'pointer' }} // 클릭할 수 있는 커서 스타일 추가
+                >
+                <img src={movie.movie_link} alt={movie.movie_kor} className="movie-poster" />
+                <div className="movie-info">
+                  <h5 className="movie-title">{movie.movie_kor}</h5>
+                  </div>
               </div>
             </div>
           ))}
