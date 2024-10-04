@@ -4,7 +4,7 @@ import axios from '../../component/api/axiosApi.js';
 import mqtt from 'mqtt';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
+import { AiOutlineAlert } from "react-icons/ai";
 const Chatting = () => {
   const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
@@ -71,6 +71,11 @@ const Chatting = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // 메시지가 변경될 때마다 실행
+        scrollBottom();
+      }, [receivedMessages]);
+
     
     async function setChatContent(){
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
@@ -80,8 +85,11 @@ const Chatting = () => {
 
     }
     async function userListAdd(){
-        const params = {chatlist_url};
         const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
+        console.log(data);
+        if(data==1){
+
+        }
     }
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
@@ -111,7 +119,7 @@ const Chatting = () => {
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
-            scrollBottom();
+            
         }
     };
     function pressKeyboard(e){
@@ -121,7 +129,7 @@ const Chatting = () => {
         
     }
     function scrollBottom(){
-        chatting_box.current.scrollTop = chatting_box.current.scrollHeight;
+        chatting_box.current.scrollTop = chatting_box.current.scrollHeight+10000;
     }
     return (
         <div className='container chatting_room'>
@@ -168,10 +176,10 @@ const Chatting = () => {
                                         {(data.chat_date).substring(11, 16)}
                                         </div>
                                         <div className='chat_read'>
-
+                                            1
                                         </div>
                                         <div className='chat_report'>
-
+                                            <AiOutlineAlert size="35px"/>
                                         </div>
                                     </div>
                                 </div>

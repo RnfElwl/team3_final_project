@@ -54,6 +54,7 @@ function Header() {
           <div><Link to={'/chat'} onClick={closeNav}>채팅</Link></div>
           <div><Link to={'/qna'} onClick={closeNav}>QnA</Link></div>
           <div><Link to={'/community'} onClick={closeNav}>커뮤니티</Link></div>
+          <div><Link to={'/recommend'} onClick={closeNav}>추천</Link></div>
         </div>
         <div className='close_box' onClick={closeNav}></div>
       </nav>
