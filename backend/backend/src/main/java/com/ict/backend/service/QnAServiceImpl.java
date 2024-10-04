@@ -32,4 +32,21 @@ public class QnAServiceImpl implements QnAService{
     public int qnaInsert(QnAVO qnaData) {
         return dao.qnaInsert(qnaData);
     }
+
+    @Override
+    public List<QnAVO> getQnAViewEdit(int qna_no) {
+        return dao.getQnAViewEdit(qna_no);
+    }
+
+    @Override
+    public void qnaUpdate(QnAVO editData) {
+
+    }
+
+    @Override
+    public void qnaDel(int qna_no, String userid) {
+
+    }
+
+
 }

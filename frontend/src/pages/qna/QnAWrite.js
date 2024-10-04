@@ -5,11 +5,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
 
 function QnAWrite(){
+    const navigate = useNavigate();
     const [userid, setUserid]=useState('');
-    const [privacyQ, setprivacyQ] = useState('0'); // 공개 여부
+    const [privacyQ, setPrivacyQ] = useState('0'); // 공개 여부
     const [qna_title, setQna_title] = useState(''); // 질문 제목
     const [qna_content, setQna_content] = useState(''); // 질문 내용
-    const [head_title, setHead_title] = useState(''); // 카테고리
+    const head_titleList = [
+        {value: "1", name:"상품"},
+        {value: "2", name:"사이트"},
+        {value: "3", name:"기타문의"}
+    ];
+    const [head_title, setHead_title]=useState("");
     const [qna_pwd, setQna_pwd] = useState(''); // 비밀글 설정 시 비밀번호
     const [qna_state] = useState(0); // 질문 상태 (디폴트 값)
     const [active_state]=useState(1);
@@ -28,14 +34,11 @@ function QnAWrite(){
     })
     }
 
-    const navigate = useNavigate();
-
     const handleprivacyQChange = (e) => {
-        setprivacyQ(e.target.value);
+        setPrivacyQ(e.target.value);
     };
 
-    const handleImageChange = (e) => {
-        
+    const handleImageChange = (e) => {    
         const files = Array.from(e.target.files); // FileList를 배열로 변환
         setQna_img(files); // 상태에 파일 저장
     
@@ -45,6 +48,7 @@ function QnAWrite(){
         });
     };
     const handleHeadTitleChange = (e) => {
+        console.log(head_title);
         setHead_title(e.target.value);
     };
     // 폼 제출 핸들러
@@ -66,8 +70,17 @@ function QnAWrite(){
             formData.append(`qna_img`, img);
         });
 
+        console.log('FormData 확인:');
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
+
         if (privacyQ === '1' && (qna_pwd.trim().length < 4)) {
             alert('비밀번호를 반드시 4자리로 입력하세요.');
+            return;
+        }
+        if (!head_title) {
+            alert("카테고리를 선택해주세요.");
             return;
         }
 
@@ -121,10 +134,12 @@ function QnAWrite(){
                             value={head_title}
                             onChange={handleHeadTitleChange}
                         >
-                            <option value='' disabled hidden>카테고리 선택</option>
-                            <option value='1'>상품</option>
-                            <option value='2'>사이트</option>
-                            <option value='3'>기타문의</option>
+                        <option value='' disabled hidden>카테고리 선택</option>
+                            {head_titleList.map((item)=>{
+                                return <option value={item.value} key={item.value}>
+                                    {item.name}
+                                </option>
+                            })}
                         </select>
                     </div>
                 </div>

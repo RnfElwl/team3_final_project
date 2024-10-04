@@ -63,7 +63,7 @@ public class QnAController {
             @RequestParam(required = false) String qna_pwd,
             @RequestParam int qna_state,
             @RequestParam int active_state,
-            @RequestParam("qna_img") MultipartFile[] qna_img
+            @RequestParam(value = "qna_img", required = false) MultipartFile[] qna_img
     ) {
         // 사용자 인증 확인
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -98,22 +98,25 @@ public class QnAController {
             qnaData.setActive_state(active_state);
 
             List<String> imgPaths = new ArrayList<>(); // 이미지 경로 목록 생성
+            if (qna_img == null || Arrays.stream(qna_img).allMatch(MultipartFile::isEmpty)) {
+                qnaData.setQna_img(null);  // 이미지가 없으면 null로 설정
+            } else {
+                for (MultipartFile img : qna_img) {
+                    if (!img.isEmpty()) {
+                        try {
+                            // 이미지 파일 이름 생성
+                            String fileName = System.currentTimeMillis() + "_" + img.getOriginalFilename();
+                            Path filePath = Paths.get(uploadDir, fileName);
 
-            for (MultipartFile img : qna_img) {
-                if (!img.isEmpty()) {
-                    try {
-                        // 이미지 파일 이름 생성
-                        String fileName = System.currentTimeMillis() + "_" + img.getOriginalFilename();
-                        Path filePath = Paths.get(uploadDir, fileName);
+                            // 이미지 파일 저장
+                            Files.copy(img.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                        // 이미지 파일 저장
-                        Files.copy(img.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                        // 이미지 경로를 리스트에 추가
-                        imgPaths.add(filePath.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return -1; // 파일 저장 실패 시 -1 반환
+                            // 이미지 경로를 리스트에 추가
+                            imgPaths.add(filePath.toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return -1; // 파일 저장 실패 시 -1 반환
+                        }
                     }
                 }
             }
@@ -124,6 +127,28 @@ public class QnAController {
             // DB에 QnA 데이터 저장
             return qnaService.qnaInsert(qnaData);
         }
+    }
+    //수정할 데이터 불러오기
+    @GetMapping("/viewEdit/{qna_no}")
+    public ResponseEntity<List<QnAVO>> getQnAViewEdit(@PathVariable int qna_no) {
+        List<QnAVO> result = qnaService.getQnAViewEdit(qna_no);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    //수정
+    @PostMapping("/viewEditOk/{qna_no}")
+    public void viewEdit(@PathVariable int qna_no, @RequestBody QnAVO editData){
+        String userid=SecurityContextHolder.getContext().getAuthentication().getName();
+        editData.setUserid(userid);
+        editData.setQna_no(qna_no);
+
+        qnaService.qnaUpdate(editData);
+    }
+    @GetMapping("/viewDel/{qna_no}")
+    public void viewDel(@PathVariable int qna_no){
+        //유저아이디 확인
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        //문의글 삭제
+        qnaService.qnaDel(qna_no,userid);
     }
 
 
