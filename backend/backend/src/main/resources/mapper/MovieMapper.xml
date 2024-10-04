@@ -19,12 +19,25 @@
         SELECT * FROM movie_data_tbl WHERE movie_nation = #{nation}
     </select>
 
+    <!-- 영화 코드를 기반으로 특정 영화의 상세 정보를 가져오는 쿼리 -->
+    <select id="getMovieByCode" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+        SELECT
+        movie_code,
+        movie_kor,
+        movie_eng,
+        movie_type,
+        movie_genre,
+        movie_nation,
+        movie_showtime,
+        opened_year,
+        movie_grade,
+        movie_directors,
+        movie_poster
+        FROM
+        movie_data_tbl
+        WHERE
+        movie_code = #{movieCode}
+    </select>
 
-
-
-    <!-- 특정 영화 정보를 ID로 조회하는 SQL 쿼리 -->
-    <!--<select id="getMovieById" parameterType="Integer" resultType="com.ict.backend.vo.MovieVO">
-        SELECT * FROM movies WHERE movie_no = #{movieId}
-    </select>-->
 
 </mapper>

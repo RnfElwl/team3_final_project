@@ -10,6 +10,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")  // React 서버 주소
 @RestController
 @RequestMapping("/api/movies")
+
 public class MovieController {
 
     @Autowired
@@ -34,18 +35,10 @@ public class MovieController {
         return movieService.getMoviesByNation(nation);
     }
 
-    // List페이지
+    @GetMapping("/{movieCode}")
+    public MovieVO getMovieByCode(@PathVariable String movieCode) {
+        return movieService.getMovieByCode(movieCode);
+    }
 
 
-
-
-
-
-
-
-    /*@GetMapping("/{id}")
-    public MovieVO getMovieById(@PathVariable("id") int movieId) {
-        // MovieService를 통해 특정 영화 정보를 가져옴
-        return movieService.getMovieById(movieId);
-    }*/
 }

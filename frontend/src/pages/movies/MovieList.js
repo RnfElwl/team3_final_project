@@ -1,14 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './../../css/movies/MovieList.css'; // CSS 파일을 임포트
-
-
 
 function MovieList() {
   const { type, id } = useParams(); // URL 파라미터에서 type과 id 가져옴
   const [movies, setMovies] = useState([]); // 영화 리스트 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
+  const navigate = useNavigate(); // Hook을 함수 컴포넌트 내부에서 호출
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -40,8 +39,8 @@ function MovieList() {
   }, [type, id]);
 
   // 영화 카드 클릭 시 상세 페이지로 이동하는 함수
-  const handleCardClick = (movieId) => {
-    Navigate(`/categories/${type}/${movieId}/view`); // 상세 페이지로 이동
+  const handleCardClick = (movieCode) => {
+    navigate(`/movies/view/${movieCode}`); // movieCode만 사용
   };
 
   // 로딩 중일 때
@@ -65,7 +64,7 @@ function MovieList() {
                 <img src={movie.movie_link} alt={movie.movie_kor} className="movie-poster" />
                 <div className="movie-info">
                   <h5 className="movie-title">{movie.movie_kor}</h5>
-                  </div>
+                </div>
               </div>
             </div>
           ))}

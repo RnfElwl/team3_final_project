@@ -28,6 +28,11 @@ public class MovieServiceImpl implements MovieService {
         return movieDAO.getMoviesByNation(nation);
     }
 
+    @Override
+    public MovieVO getMovieByCode(String movieCode) {
+        return movieDAO.getMovieByCode(movieCode);
+    }
+
 
 
 
