@@ -1,5 +1,5 @@
 import axios from '../../component/api/axiosApi';
-//import axios from 'axios';
+import axios2 from 'axios';
 import '../../css/mypage/loginpage.css';
 import { useState } from 'react';
 import kakaoIcon from '../../img/kakao_social.png';
@@ -66,6 +66,25 @@ function LoginPage() {
         console.error('Login failed:', error);
       });
   };
+  // 엑셀 다운받는 axios
+  const downloadExcelFile = async () => {
+    try {
+        const response = await axios.get('http://localhost:9988/movie_info', {
+            responseType: 'blob', // blob으로 응답을 받도록 설정
+        });
+
+        // blob 데이터를 사용하여 파일 생성
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'movies.xlsx'); // 다운로드할 파일 이름 설정
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // 링크 제거
+    } catch (error) {
+        console.error('Error downloading the file:', error);
+    }
+};
 
   return (
     <div className="loginpage">
@@ -99,7 +118,7 @@ function LoginPage() {
             <div id = "social_login">
               <span>다른방법으로 로그인</span>
               <div id = "social_type">
-                <button className = "social_icon">
+                <button className = "social_icon" onClick={downloadExcelFile}>
                   <img src={kakaoIcon} alt="Kakao" />
                 </button>
                 <button className = "social_icon">

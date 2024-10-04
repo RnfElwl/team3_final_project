@@ -36,7 +36,7 @@ function App() {
                 <Route path='/categories' element={<MovieCategories/>}></Route>
                 
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
-                <Route path="/categories/:type/:id/view/:movieCode" element={<MovieView />} />
+                <Route path="/movies/view/:movieCode" element={<MovieView />} />
                 <Route path='/community' element={<CommunityList/>}></Route>
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>

@@ -69,15 +69,17 @@ function Mypage() {
                         <thead>
                             <tr>
                                 <th class = "col-md-1">번호</th>
+                                <th class = "col-md-2">작성한 곳</th>
                                 <th class = "col-md-6">제목</th>
-                                <th class = "col-md-3">작성일</th>
-                                <th class = "col-md-2"></th>
+                                <th class = "col-md-2">작성일</th>
+                                <th class = "col-md-1"></th>
                                 
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>70</td>
+                                <td>커뮤니티</td>
                                 <td>베테랑 2 재미있음?</td>
                                 <td>2024-09-10</td>
                                 <th>
@@ -86,6 +88,7 @@ function Mypage() {
                             </tr>
                             <tr>
                                 <td>71</td>
+                                <td>커뮤니티</td>
                                 <td>탈출 보고옴</td>
                                 <td>2024-09-11</td>
                                 <th>
@@ -94,6 +97,7 @@ function Mypage() {
                             </tr>
                             <tr>
                                 <td>72</td>
+                                <td>커뮤니티</td>
                                 <td>안본 흑우</td>
                                 <td>2024-09-13</td>
                                 <th>
@@ -111,6 +115,51 @@ function Mypage() {
                         <a href = "#"> 더보기 {'>'}</a>
                     </div>
                     <div className = "content_info">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th class = "col-md-1">번호</th>
+                                <th class = "col-md-2">문의종류</th>
+                                <th class = "col-md-3">제목</th>
+                                <th class = "col-md-2">상태</th>
+                                <th class = "col-md-3">작성일</th>
+                                <th class = "col-md-1"></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>3</td>
+                                <td>서버 문의</td>
+                                <td>서버가 느려요</td>
+                                <td>처리 중</td>
+                                <td>2024-09-10</td>
+                                <th>
+                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>배송 문의</td>
+                                <td>택배 언제와요</td>
+                                <td>처리 완료</td>
+                                <td>2024-09-08</td>
+                                <th>
+                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>서버 문의</td>
+                                <td>얘 비매너에요</td>
+                                <td>처리 중</td>
+                                <td>2024-09-13</td>
+                                <th>
+                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
                 </div>
                 {/* 장바구니 */}

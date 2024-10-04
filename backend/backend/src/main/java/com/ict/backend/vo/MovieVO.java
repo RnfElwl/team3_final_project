@@ -10,12 +10,12 @@ public class MovieVO {
     private String movie_type;
     private String movie_genre;
     private String movie_nation;
+    private String movie_actors;
     private String movie_showtime;
     private String opened_year;
     private String movie_grade;
     private String movie_directors;
     private String movie_poster;
-    private String movie_date;
     private String movie_link;
 
 

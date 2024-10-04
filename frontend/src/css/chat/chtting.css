@@ -90,3 +90,17 @@
     width: 100%;
     height: 40px;
 }
+.chatting_room .chat_sub_info{
+    display: flex;
+    align-items: end;
+}
+.chatting_room .chat_report{
+    display: none;
+}
+
+.chatting_room .chat_sub_info:hover .chat_report{
+    display: block;
+}
+.chatting_room .chat_sub_info:hover .chat_date{
+    display: none;
+}
