@@ -23,7 +23,7 @@ import LoginPage from './pages/mypage/LoginPage.js';
 import QNAWrite from './pages/qna/QnAWrite.js'
 import QNAEdit from './pages/qna/QnAEdit.js' 
 import Recommend from './pages/recommend/Recommend.js';
-
+import EditInfo from './pages/mypage/EditInfo.js';
 
 function App() {
   return (
@@ -51,6 +51,7 @@ function App() {
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
+                <Route path = '/mypage/edit' element={<EditInfo/>}/>
 
             </Route>
         </Routes>
