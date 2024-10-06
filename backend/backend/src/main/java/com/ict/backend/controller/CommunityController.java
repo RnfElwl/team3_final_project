@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/community")
-@CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 포트를 명시
+//@CrossOrigin(origins = "http://localhost:3000") // 프론트엔드 포트를 명시
 public class CommunityController {
     @Autowired
     CommunityService service;

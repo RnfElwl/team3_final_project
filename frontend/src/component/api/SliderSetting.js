@@ -58,7 +58,54 @@ export const AdaptiveHeightSettings = {
   slidesToScroll: 7,
   adaptiveHeight: true,
   initialSlide: 0,
-  variableWidth: false
+  variableWidth: false,
+  responsive: [
+    {
+      breakpoint: 1561,
+      settings: {
+        slidesToShow: 6,
+        slidesToScroll: 6
+        
+      }
+    },
+    {
+      breakpoint: 1338,
+      settings: {
+        slidesToShow: 5,
+        slidesToScroll: 5
+        
+      }
+    },
+    {
+      breakpoint: 1115,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 4
+
+      }
+    },
+    {
+      breakpoint: 892,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3
+      }
+    },
+    {
+      breakpoint: 669,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+      }
+    },
+    {
+      breakpoint: 446,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+  ]
 };
 
 // 이미지 세팅
@@ -89,6 +136,10 @@ export const bookmarkSlides = [
 
 // userprofile용 세팅
 export const useprofileSlides = [
+  { imgSrc: profile, nick: "hi", userid: "1" },
+  { imgSrc: profile, nick: "bye", userid: "2" },
+  { imgSrc: profile, nick: "new", userid: "3" },
+  { imgSrc: poster1, nick: "last", userid: "4" },
   { imgSrc: profile, nick: "hi", userid: "1" },
   { imgSrc: profile, nick: "bye", userid: "2" },
   { imgSrc: profile, nick: "new", userid: "3" },

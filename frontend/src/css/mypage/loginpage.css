@@ -1,11 +1,29 @@
 .loginpage {
   max-width: 1920px;
   height: 91vh;
-  background-image: url(../../img/login_back.jpg);
+  /* background-image: url(../../img/login_1.jpg); */
   /* background-size: cover; */
   background-repeat: no-repeat;
   background-position: center;
   margin: 0 auto;
+}
+/* .Header{
+  background-color: transparent;
+}
+.Header .login_btn{
+  background-color: transparent;
+} */
+.login-background {
+  background: #fffc;
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  opacity: 0.2;
+  position: fixed;
+  top: 0;
+  transition: opacity 3s;
+  width: 100%;
+  z-index: -1;
 }
 .loginpage>.container{
   margin-top: 20px;
@@ -103,7 +121,7 @@
   padding: 0;      /* 여백 제거 */
   cursor: pointer;  /* 커서 스타일 변경 */
   width: 45px;
-  border: rgba(0, 0, 0, 0.7) 1px solid;
+  /* border: rgba(0, 0, 0, 0.7) 1px solid; */
   border-radius: 45%;
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../component/api/axiosApi';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Slider from "react-slick";
@@ -33,7 +34,7 @@ function Mypage() {
       const fetchData = async (tag) => {
         let url;
         if (tag === "Tag1") {
-          url = "http://localhost:9988/api/posts";  // 글 리스트 호출 URL
+          url = "http://localhost:9988/user/userinfo";  // 글 리스트 호출 URL
         } else if (tag === "Tag2") {
           url = "http://localhost:9988/api/comments";  // 댓글 리스트 호출 URL
         }
@@ -76,188 +77,189 @@ function Mypage() {
                         <button className="btn btn-secondary" onClick={() => alert("edit")}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>
                     </div>
                 </div>
-                {/* 시청기록 */}
-                <div className = "recent_watch">
-                    <div className = "content_title">
-                        <span>최근기록</span>
-                        <a href = "#"> 더보기 {'>'}</a>
+                <div className = "otherinfo">
+                    {/* 시청기록 */}
+                    <div className = "recent_watch">
+                        <div className = "content_title">
+                            <span>시청기록</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                            <Slider {...SliderSettings}>
+                            {recentSlides.map((slide, index) => (
+                                <div key={index}>
+                                <a href = {`/movies/view/${slide.movieCd}`}>
+                                <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
+                                </a>
+                                </div>
+                            ))}
+                            </Slider>
+                        </div>
                     </div>
-                    <div className = "content_info">
-                        <Slider {...SliderSettings}>
-                        {recentSlides.map((slide, index) => (
-                            <div key={index}>
-                            <a href = {`/movies/view/${slide.movieCd}`}>
-                            <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
-                            </a>
-                            </div>
-                        ))}
-                        </Slider>
+                    {/* 즐겨찾기 */}
+                    <div className = "bookmark">
+                        <div className = "content_title">
+                            <span>즐겨찾기</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                            <Slider {...SliderSettings}>
+                            {bookmarkSlides.map((slide, index) => (
+                                <div key={index}>
+                                <a href = {`/movies/view/${slide.movieCd}`}>
+                                <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
+                                </a>
+                                </div>
+                            ))}
+                            </Slider>
+                        </div>
                     </div>
-                </div>
-                {/* 즐겨찾기 */}
-                <div className = "bookmark">
-                    <div className = "content_title">
-                        <span>즐겨찾기</span>
-                        <a href = "#"> 더보기 {'>'}</a>
+                    {/* 즐찾 회원 */}
+                    <div className = "follower">
+                        <div className = "content_title">
+                            <span>팔로워</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                            <Slider {...AdaptiveHeightSettings}>
+                            {useprofileSlides.map((slide, index) => (
+                                <div key={index}>
+                                <a href = {`/userinfo/${slide.userid}`}>
+                                <img className="userprofile" src={slide.imgSrc} alt="프로필" />
+                                <p className="usernick">{slide.nick}</p>
+                                </a>
+                                </div>
+                            ))}
+                            </Slider>
+                        </div>
                     </div>
-                    <div className = "content_info">
-                        <Slider {...SliderSettings}>
-                        {bookmarkSlides.map((slide, index) => (
-                            <div key={index}>
-                            <a href = {`/movies/view/${slide.movieCd}`}>
-                            <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
-                            </a>
-                            </div>
-                        ))}
-                        </Slider>
+                    {/* 내가 쓴 글 */}
+                    <div className = "write">
+                        <div className = "content_title">
+                            <span>내가 쓴 글</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                            <ul style={{ display: 'inline-block', color : 'white' }}>
+                            <button className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => handleClickedTagName("Tag1")}>글</button>
+                            <button className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => handleClickedTagName("Tag2")}>댓글</button>
+                        </ul>
+                        <table className="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th className = "col-md-1">번호</th>
+                                    <th className = "col-md-2">작성한 곳</th>
+                                    <th className = "col-md-6">제목</th>
+                                    <th className = "col-md-2">작성일</th>
+                                    <th className = "col-md-1"></th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>70</td>
+                                    <td>커뮤니티</td>
+                                    <td>베테랑 2 재미있음?</td>
+                                    <td>2024-09-10</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>71</td>
+                                    <td>커뮤니티</td>
+                                    <td>탈출 보고옴</td>
+                                    <td>2024-09-11</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>72</td>
+                                    <td>커뮤니티</td>
+                                    <td>안본 흑우</td>
+                                    <td>2024-09-13</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
                     </div>
-                </div>
-                {/* 즐찾 회원 */}
-                <div className = "follower">
-                    <div className = "content_title">
-                        <span>팔로워</span>
-                        <a href = "#"> 더보기 {'>'}</a>
+                    {/* Q&A */}
+                    <div className = "qna">
+                        <div className = "content_title">
+                            <span>QnA</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                        <table className="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th className = "col-md-1">번호</th>
+                                    <th className = "col-md-2">문의종류</th>
+                                    <th className = "col-md-4" >제목</th>
+                                    <th className = "col-md-2">상태</th>
+                                    <th className = "col-md-2">작성일</th>
+                                    <th className = "col-md-1"></th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>3</td>
+                                    <td>서버 문의</td>
+                                    <td>서버가 느려요</td>
+                                    <td>처리 중</td>
+                                    <td>2024-09-10</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>배송 문의</td>
+                                    <td>택배 언제와요</td>
+                                    <td>처리 완료</td>
+                                    <td>2024-09-08</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>서버 문의</td>
+                                    <td>얘 비매너에요</td>
+                                    <td>처리 중</td>
+                                    <td>2024-09-13</td>
+                                    <th>
+                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
                     </div>
-                    <div className = "content_info">
-                        <Slider {...AdaptiveHeightSettings}>
-                        {useprofileSlides.map((slide, index) => (
-                            <div key={index}>
-                            <a href = {`/userinfo/${slide.userid}`}>
-                            <img className="userprofile" src={slide.imgSrc} alt="프로필" />
-                            <p className="usernick">{slide.nick}</p>
-                            </a>
-                            </div>
-                        ))}
-                        </Slider>
+                    {/* 장바구니 */}
+                    <div className = "cart">
+                        <div className = "content_title">
+                            <span>장바구니</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                        </div>
                     </div>
-                </div>
-                {/* 내가 쓴 글 */}
-                <div className = "write">
-                    <div className = "content_title">
-                        <span>내가 쓴 글</span>
-                        <a href = "#"> 더보기 {'>'}</a>
+                    {/* 배송내역 */}
+                    <div className = "delivery">
+                        <div className = "content_title">
+                            <span>배송내역</span>
+                            <a href = "#"> 더보기 {'>'}</a>
+                        </div>
+                        <div className = "content_info">
+                        </div>
                     </div>
-                    <div className = "content_info">
-                    <ul style={{ display: 'inline-block', color : 'white' }}>
-                    <button className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => handleClickedTagName("Tag1")}>글</button>
-                    <button className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => handleClickedTagName("Tag2")}>댓글</button>
-                    </ul>
-                    <table className="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th className = "col-md-1">번호</th>
-                                <th className = "col-md-2">작성한 곳</th>
-                                <th className = "col-md-6" style={{ textAlign: "center" }}>제목</th>
-                                <th className = "col-md-2">작성일</th>
-                                <th className = "col-md-1" style={{ textAlign: "center" }}></th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>70</td>
-                                <td>커뮤니티</td>
-                                <td>베테랑 2 재미있음?</td>
-                                <td>2024-09-10</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>71</td>
-                                <td>커뮤니티</td>
-                                <td>탈출 보고옴</td>
-                                <td>2024-09-11</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>72</td>
-                                <td>커뮤니티</td>
-                                <td>안본 흑우</td>
-                                <td>2024-09-13</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-                {/* Q&A */}
-                <div className = "qna">
-                    <div className = "content_title">
-                        <span>QnA</span>
-                        <a href = "#"> 더보기 {'>'}</a>
-                    </div>
-                    <div className = "content_info">
-                    <table className="table table-dark table-hover">
-                        <thead>
-                            <tr>
-                                <th className = "col-md-1">번호</th>
-                                <th className = "col-md-2">문의종류</th>
-                                <th className = "col-md-4" >제목</th>
-                                <th className = "col-md-2">상태</th>
-                                <th className = "col-md-2">작성일</th>
-                                <th className = "col-md-1"></th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>3</td>
-                                <td>서버 문의</td>
-                                <td>서버가 느려요</td>
-                                <td>처리 중</td>
-                                <td>2024-09-10</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>배송 문의</td>
-                                <td>택배 언제와요</td>
-                                <td>처리 완료</td>
-                                <td>2024-09-08</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>서버 문의</td>
-                                <td>얘 비매너에요</td>
-                                <td>처리 중</td>
-                                <td>2024-09-13</td>
-                                <th style={{ textAlign: "center" }}>
-                                    <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-                {/* 장바구니 */}
-                <div className = "cart">
-                    <div className = "content_title">
-                        <span>장바구니</span>
-                        <a href = "#"> 더보기 {'>'}</a>
-                    </div>
-                    <div className = "content_info">
-                    </div>
-                </div>
-                {/* 배송내역 */}
-                <div className = "delivery">
-                    <div className = "content_title">
-                        <span>배송내역</span>
-                        <a href = "#"> 더보기 {'>'}</a>
-                    </div>
-                    <div className = "content_info">
-                    </div>
-                </div>
-
+                </div>            
             </div>
         </div>
 
