@@ -137,18 +137,22 @@ public class QnAController {
     //수정
     @PostMapping("/viewEditOk/{qna_no}")
     public void viewEdit(@PathVariable int qna_no, @RequestBody QnAVO editData){
+        System.out.println("수정폼 도착 : " + editData);
         String userid=SecurityContextHolder.getContext().getAuthentication().getName();
         editData.setUserid(userid);
         editData.setQna_no(qna_no);
-
+        System.out.println("수정폼 set 후: " + editData);
         qnaService.qnaUpdate(editData);
+        System.out.println(editData);
+
     }
     @GetMapping("/viewDel/{qna_no}")
-    public void viewDel(@PathVariable int qna_no){
-        //유저아이디 확인
+    public void qnaViewDel(@PathVariable int qna_no){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+
         //문의글 삭제
         qnaService.qnaDel(qna_no,userid);
+        System.out.println("번호:"+qna_no+",유저아이디"+userid);
     }
 
 

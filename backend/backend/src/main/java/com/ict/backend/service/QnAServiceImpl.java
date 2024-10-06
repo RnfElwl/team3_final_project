@@ -40,12 +40,12 @@ public class QnAServiceImpl implements QnAService{
 
     @Override
     public void qnaUpdate(QnAVO editData) {
-
+        dao.qnaUpdate(editData);
     }
 
     @Override
     public void qnaDel(int qna_no, String userid) {
-
+        dao.qnaDel(qna_no, userid);
     }
 
 

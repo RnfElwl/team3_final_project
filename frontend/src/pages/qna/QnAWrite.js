@@ -75,12 +75,20 @@ function QnAWrite(){
             console.log(key, value);
         });
 
-        if (privacyQ === '1' && (qna_pwd.trim().length < 4)) {
-            alert('비밀번호를 반드시 4자리로 입력하세요.');
+        if(!qna_title){
+            alert("제목을 입력해주세요.");
+            return;
+        }
+        if(!qna_content){
+            alert("내용을 입력해주세요.");
             return;
         }
         if (!head_title) {
             alert("카테고리를 선택해주세요.");
+            return;
+        }
+        if (privacyQ === '1' && (qna_pwd.trim().length < 4)) {
+            alert('비밀번호를 반드시 4자리로 입력하세요.');
             return;
         }
 

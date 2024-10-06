@@ -16,7 +16,8 @@ import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
 import AdminTest from './pages/admin/AdminTest'
 import QNA from './pages/qna/QnA'
-import QNAView from './pages/qna/QnAView.js'    
+import QNAView from './pages/qna/QnAView.js'
+import MvShopping from './pages/shopping/MvShopping.js'    
 import MyPage from './pages/mypage/MyPage';
 import LoginPage from './pages/mypage/LoginPage.js';
 import QNAWrite from './pages/qna/QnAWrite.js'
@@ -46,6 +47,7 @@ function App() {
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
+                <Route path='/shop/' element={<MvShopping/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>

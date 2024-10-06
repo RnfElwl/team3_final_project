@@ -62,7 +62,11 @@ function QnAEdit(){
         }
         if(item?.privacyQ){
             setprivacyQ(item.privacyQ);
-            setPrepri(item.privacyQ);
+        }
+        if(item?.privacyQ!=1){
+            setQna_pwd('');
+        }else{
+            setQna_pwd(item.qna_pwd);
         }
         if(item?.qna_pwd){
             setQna_pwd(item.qna_pwd);
@@ -76,6 +80,7 @@ function QnAEdit(){
     //글 수정
     const handleSubmit = (e) => {
         e.preventDefault();
+      
     const formData={
         'qna_title':qna_title,
         'qna_content':qna_content,
@@ -103,10 +108,12 @@ function QnAEdit(){
         alert('비밀번호를 반드시 4자리로 입력하세요.');
         return;
     }
+    console.log("hihi");
+    //데이터 폼으로 보내기
     axios.post(`http://localhost:9988/qna/viewEditOk/${params}`, formData, {
-        headers: {
-            'Content-Type': 'application/json',
-        }
+        // headers: {
+        //     'Content-Type': 'application/json',
+        // }
     })
     .then(() => {
         console.log('수정 성공');

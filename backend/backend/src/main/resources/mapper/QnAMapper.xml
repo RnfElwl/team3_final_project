@@ -37,11 +37,14 @@
         from qna_tbl where qna_no=#{qna_no}
     </select>
     <update id="qnaUpdate">
-        update qna_tbl set qna_title=#{qna_title},qna_content=#{qna_content},privacyQ=#{privacyQ},active_state=#{active_state}
-        <if test="qna_pwd!=null and qna_pwd!=''">
-            ,qna_pwd=#{qna_pwd}
-        </if>
-         where qna_no=#{qna_no} and userid=#{userid}
+        update qna_tbl set
+        qna_title=#{qna_title},
+        qna_content=#{qna_content},
+        head_title=#{head_title},
+        privacyQ=#{privacyQ},
+        active_state=#{active_state},
+        qna_pwd=#{qna_pwd}
+        where qna_no=#{qna_no} and userid=#{userid}
     </update>
     <update id="qnaDel">
         update qna_tbl set active_state=0 where qna_no=#{qna_no} and userid=#{userid}
