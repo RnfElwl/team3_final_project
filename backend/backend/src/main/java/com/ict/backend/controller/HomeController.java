@@ -185,7 +185,6 @@ public class HomeController {
         movie.setMovie_showtime((String) movieInfo.get("showTm"));
         movie.setOpened_year((String) movieInfo.get("openDt"));
 
-
 //        movie.setActor(actorString); // 최종 결과를 movie 객체에 설정
 //        System.out.println(movie.getActor());
         // 여기서 디비에 넣기

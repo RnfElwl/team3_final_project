@@ -1,8 +1,8 @@
+import './../../css/qna/qna.css';
 import React, { useState, useEffect } from 'react';
 import axios from "../../component/api/axiosApi";
 // import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
-import './../../css/qna/qna.css';
 import { AiFillLock } from "react-icons/ai";
 import $ from "jquery";
 
@@ -23,7 +23,7 @@ function QnA() {
     };
 
 
-    // 서버 토큰 확인
+    // 서버 토큰 확인 및 글 등록
     function checkid() {
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {

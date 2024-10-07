@@ -23,12 +23,11 @@ function ChantList(){
             }
           });
           console.log(result.data);
-        setList(result.data);
+          setList(result.data);
     }
     function setRoomFormData(event){
         let idField = event.target.name;
         let idValue = event.target.value;
-
         setFormData(p=>{return {...p, [idField]:idValue}});
             
         console.log(formData);

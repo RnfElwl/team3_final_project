@@ -1,10 +1,11 @@
 import axios from '../../component/api/axiosApi';
-import axios2 from 'axios';
+//import axios from 'axios';
 import '../../css/mypage/loginpage.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import kakaoIcon from '../../img/kakao_social.png';
 import googleIcon from '../../img/google_social.png';
 import { validateLogin } from '../../component/Validation';
+import { downloadExcelFile } from '../../component/api/fileDownload';
 
 function LoginPage() {
   const [userid, setUserid] = useState('');
@@ -13,6 +14,7 @@ function LoginPage() {
 
   // login 함수 정의
   const login = async (loginData) => {
+    
     try {
       console.log(loginData);
       const response = await axios.post("http://localhost:9988/login", loginData);  // 로컬로 할시 본인 컴퓨터로 인식
@@ -66,25 +68,53 @@ function LoginPage() {
         console.error('Login failed:', error);
       });
   };
-  // 엑셀 다운받는 axios
-  const downloadExcelFile = async () => {
-    try {
-        const response = await axios.get('http://localhost:9988/movie_info', {
-            responseType: 'blob', // blob으로 응답을 받도록 설정
-        });
 
-        // blob 데이터를 사용하여 파일 생성
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'movies.xlsx'); // 다운로드할 파일 이름 설정
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link); // 링크 제거
-    } catch (error) {
-        console.error('Error downloading the file:', error);
+  const [backimage, setBackimage] = useState([]);
+
+  async function fetchUsers() {
+      try {
+          const response = await axios.get('http://localhost:9988/user/imageworking', {
+              responseType: 'blob', // 이미지 데이터를 blob 형태로 받기
+          });
+          const imageObjectURL = window.URL.createObjectURL(response.data);
+          console.log(imageObjectURL);
+          setBackimage(imageObjectURL);
+      } catch (error) {
+          console.error("Error fetching user data", error);
+      }
     }
-};
+
+  useEffect(() => {
+    fetchUsers();
+    // 컴포넌트가 처음 렌더링된 후 실행되는 코드
+    const element = document.getElementsByClassName('Header');
+    const loginButton = element[0].querySelector('.login_btn');
+    if (element.length > 0) {
+      element[0].style.backgroundColor = 'transparent'; // 첫 번째 요소의 배경색을 투명하게 설정
+      loginButton.style.backgroundColor = 'transparent';
+    }
+    return () => {
+      element[0].style.backgroundColor = 'black';
+      loginButton.style.backgroundColor = 'black';
+      setBackimage("null");
+    };
+}, []);
+  useEffect(() => {
+    const root = document.getElementById('root');
+    const img = document.createElement('img');
+    img.src = `${backimage}`; // 이미지 경로 설정
+    console.log(img, backimage);
+    img.className = 'login-background';
+    root.appendChild(img);
+    //console.log(img);
+    return () => {
+      // root에서 img 요소 제거
+      const imgToRemove = root.querySelector('img.login-background');
+      if (imgToRemove) {
+        root.removeChild(imgToRemove);
+      }
+    };
+  }, [backimage]);
 
   return (
     <div className="loginpage">

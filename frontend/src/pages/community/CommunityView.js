@@ -18,6 +18,7 @@ function CommunityView(){
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
     const userid = localStorage.getItem('userid');
+    const [hitCount, setHitCount] = useState(0); // 조회수 상태
     
 
 
@@ -95,7 +96,8 @@ function CommunityView(){
                 console.log(response.data); // API 응답 로그
                 setCommunity(response.data); // community 상태 업데이트
                 setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
-                setLiked(response.data.liked); // 초기 좋아요 상태 설정
+                //setLiked(response.data.liked);  초기 좋아요 상태 설정
+                setHitCount(response.data.hitCount);       // 조회수 설정
             })
             .catch(error => {
                 console.error("Error fetching community view:", error);
@@ -108,6 +110,14 @@ function CommunityView(){
             .catch(error => {
                 console.error("Error fetching comments:", error);
             });    
+        // 조회수 증가 API 호출
+        axios.post(`http://localhost:9988/community/increaseHit/${community_no}`)
+            .then(() => {
+                console.log("조회수 증가 완료");
+            })
+            .catch(error => {
+                console.error("Error increasing hit count:", error);
+            });
     }, [community_no]);
 
     const handleCommentChange = (e) => {
@@ -271,7 +281,8 @@ function CommunityView(){
                     <span className="likeCount">{likesCount}</span>
                     <i className="far fa-comment"></i>
                     <span className="commentCount">{commentCount}</span>
-
+                    <i className="far fa-eye"></i>  {/* 조회수 아이콘 (눈 모양) */}
+                    <span className="hitCount">{hitCount}</span>  {/* 조회수 */}
                     <div className="edit_delete">
                         <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
                         <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>

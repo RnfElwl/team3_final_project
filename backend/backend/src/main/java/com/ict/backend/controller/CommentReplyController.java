@@ -18,6 +18,7 @@ public class CommentReplyController {
     // 대댓글 작성 API
     @PostMapping
     public CommentReplyVO saveReply(@RequestBody CommentReplyVO reply) {
+        System.out.println(reply);
         service.saveReply(reply);
         return reply;
     }

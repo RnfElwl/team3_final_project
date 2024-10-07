@@ -16,7 +16,6 @@
 .chatting_room .anotherText{
     display: flex;
     align-items: center;
-    width: 65%;
     margin: 7px 0;
 }
 .chatting_room .chat_profile{
@@ -28,10 +27,13 @@
     border-radius: 50%;
 }
 .chatting_room .myText{
+    width: 100%;
     text-align: right;
-    float: right;
+    align-self: flex-end;
 }
 .chatting_room .chatting_list{
+    display: flex;
+    flex-direction: column;
     height: 75vh;
     overflow-y: auto;
     padding: 0 20px;
@@ -52,13 +54,16 @@
 .chatting_room .chatting_list::-webkit-scrollbar-thumb:hover {
     background: #555; /* 핸들 색상 변화 */
 }
-
+.chatting_room .myText .chat_text_box{
+    width: 100%;
+}
 .chatting_room .chat_text{
     margin: 0 5px;
 }
 .chatting_room .myText .chat_info{
     display: flex;
     justify-content: right;
+    margin-left: 50%;
     align-items: end;
     text-align: right;
 
@@ -94,13 +99,50 @@
     display: flex;
     align-items: end;
 }
-.chatting_room .chat_report{
+.chatting_room .anotherText .chat_report{
     display: none;
 }
 
-.chatting_room .chat_sub_info:hover .chat_report{
+.chatting_room .anotherText .chat_info:hover .chat_report{
     display: block;
 }
-.chatting_room .chat_sub_info:hover .chat_date{
+.chatting_room .anotherText .chat_info:hover .chat_date{
     display: none;
+}
+.chatting_room .doorway,
+.chatting_room .chatting_day{
+    align-self: center;
+}
+
+
+.chatting_room .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.chatting_room .report_show{
+    display: flex;
+}
+.chatting_room .report_hide{
+    display: none;
+}
+.chatting_room .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.chatting_room .report_window .chatting_report{
+    color: black;
+    background-color: aliceblue;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
 }

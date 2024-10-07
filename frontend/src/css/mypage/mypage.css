@@ -7,8 +7,9 @@
     margin: 0 auto;
 }
 .myPage>.container{
-    margin: 0;
-    max-width: 1920px;
+    margin: 0 auto;
+    /* max-width: 1920px; */
+    max-width: 1500px;
 }
 .info{
     background-color: #232323;
@@ -18,6 +19,11 @@
     display: flex;
     padding : 10px 0;
     margin: 30px 0;
+}
+.otherinfo{
+    width: 100%;
+    max-width: 1500px;
+    margin : 0 auto;
 }
 .info #profile{
     flex-grow: 2;
@@ -60,9 +66,107 @@
     justify-content: space-between;
     margin : 0 30px;
 }
+ /* 슬라이더 쓰는 content는 height 높게 */
+.recent_watch .content_info, .bookmark .content_info{
+    width: 90%;
+    height : 500px;
+    /* border : 1px gray solid; */
+    margin: 10px auto;
+}
+.follower .content_info{
+    width: 90%;
+    height : 150px;
+    margin: 10px auto;
+}
 .content_info{
     width: 90%;
     height : 300px;
-    border : 1px gray solid;
     margin: 10px auto;
 }
+.content_info  h3{
+    color : white;
+}
+.content_info div{
+    height: 100%;
+}
+
+/* 슬라이더 CSS */
+.slick-slide div div{
+    height: 100%;
+    width: 85% !important;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.slick-dots li.slick-active button:before{
+    color : white;
+}
+.slick-dots li button:before{
+    color : gray;
+}
+.slidPoster{ 
+    height: 100%;
+    width: 100%;
+    /* min-width : 300px; */
+    border-radius: 20px;
+}
+.slick-slide{
+    overflow: hidden;
+    
+}
+.slick-slide slick-active slick-current{
+    /* width: 95%; */
+}
+.slick-track{
+    margin-left: 20px;
+}
+.slick-slide img:hover{
+    /* object-fit:cover; */
+    transform:scale(1.1);
+    transition: transform .5s;
+}
+.slick-prev:before, .slick-next:before{
+    font-size: 30px;
+}
+.slick-next{
+    right :1px;
+}
+
+/* 사용자 프로필용 */
+.follower{
+    margin-bottom: 20px;
+}
+.follower .userprofile{
+    margin-top : 10px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.follower .usernick{
+    color : white;
+    text-align: center;
+    width: 115px;
+}
+.follower .slick-slide div div{
+    height: 100%;
+    width: 100% !important;
+    overflow: hidden;
+    margin-right:10px;
+}
+.follower .slick-track {
+    display: flex !important;
+    justify-content: flex-start !important;
+  }
+.follower .userprofile[src="empty"] {
+    display: none;
+  }
+
+  th .fa-2x{
+    font-size : 1.5em;
+  }
+
+
+.content_info .table-dark th, .content_info .table-dark td{
+    text-align: center;
+    background-color: transparent !important; /* 부모 요소의 배경색을 따름 */
+  }

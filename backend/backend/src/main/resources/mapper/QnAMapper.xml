@@ -17,7 +17,7 @@
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
         select qna_no, userid, head_title, qna_title,qna_content,
         date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_state,qna_answer,
-        answer_user, qna_answer_date, active_state
+        answer_user, qna_answer_date, active_state,privacyQ,qna_pwd
         from qna_tbl where qna_no=#{qna_no}
     </select>
     <select id="getTotalRecord" resultType="int">
@@ -32,4 +32,21 @@
         insert into qna_tbl (userid, head_title, qna_title, qna_content, qna_state, qna_writedate, privacyQ, active_state, qna_pwd, qna_img)
         values (#{userid}, #{head_title}, #{qna_title}, #{qna_content}, #{qna_state}, NOW(), #{privacyQ}, #{active_state}, #{qna_pwd}, #{qna_img})
     </insert>
+    <select id="getQnAViewEdit" resultType="com.ict.backend.vo.QnAVO">
+        select qna_no, head_title, qna_title,qna_content,qna_state,privacyQ,qna_pwd
+        from qna_tbl where qna_no=#{qna_no}
+    </select>
+    <update id="qnaUpdate">
+        update qna_tbl set
+        qna_title=#{qna_title},
+        qna_content=#{qna_content},
+        head_title=#{head_title},
+        privacyQ=#{privacyQ},
+        active_state=#{active_state},
+        qna_pwd=#{qna_pwd}
+        where qna_no=#{qna_no} and userid=#{userid}
+    </update>
+    <update id="qnaDel">
+        update qna_tbl set active_state=0 where qna_no=#{qna_no} and userid=#{userid}
+    </update>
 </mapper>

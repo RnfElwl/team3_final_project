@@ -1,0 +1,16 @@
+.editInfo {
+    max-width: 1920px;
+    height: 91vh;
+    margin: 0 auto;
+}
+.editInfo>.container{
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.editprofile{
+    margin: 30px auto;
+    width: 50%;
+    height : 700px;
+    border: 1px solid white;
+}
