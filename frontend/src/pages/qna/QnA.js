@@ -5,7 +5,7 @@ import axios from "../../component/api/axiosApi";
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillLock } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
-// import qnaBack from '../'
+import qnaBack from '../../img/qnaBack.png'
 import $ from "jquery";
 
 function QnA() {
@@ -114,7 +114,7 @@ function QnA() {
     return (
         <div className="QnABody">
             <div>
-                <img src="."/>
+                <img src={qnaBack} style={{width:'1200px', height:'500px'}}/>
             </div>
             <div className="container mt-3">
                 <h1>질의응답(QnA)</h1>
@@ -212,17 +212,17 @@ function QnA() {
 
             {/* 페이지네이션 */}
             <div className="qna_pagination">
-                <button
+                <button className="paging-btn"
                     onClick={() => handlePageChange(nowPage - 1)}
                     disabled={nowPage === 1 || totalPage===1}>
                     이전
                 </button>
 
                 {totalPage === 1 ? (
-                    <button disabled>{1}</button>
+                    <button className="paging-btn" disabled>{1}</button>
                 ) : (
                     Array.from({ length: totalPage }, (_, index) => (
-                        <button
+                        <button className="paging-btn"
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}
                             disabled={nowPage === index + 1}
@@ -232,7 +232,7 @@ function QnA() {
                     ))
                 )}
 
-                <button
+                <button className="paging-btn"
                     onClick={() => handlePageChange(nowPage + 1)}
                     disabled={nowPage === totalPage || totalPage===1}>
                     다음

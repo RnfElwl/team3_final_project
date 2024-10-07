@@ -1,5 +1,6 @@
 .QnABody, .QnAWriteBody{
     margin: 0 auto;
+    margin-bottom: 40px;
     max-width: 1200px;
     color:white;
 }
@@ -76,8 +77,8 @@
 .qna_pagination{
     text-align: center;
 }
-.qna_pagination button{
-    background-color: none;
+.paging-btn{
+    
 }
 
 /* 버튼css */
@@ -89,6 +90,7 @@
     color: white;
     border:none;
 }
+
 
 /* 모달 css */
 .private-content {
