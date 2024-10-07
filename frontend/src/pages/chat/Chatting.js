@@ -25,23 +25,27 @@ const Chatting = () => {
     let once = 0;
     const chatting_box = useRef(null);
     useEffect(() => {
-        getUser()
         if(once == 0){
             once = 1;
             setChatContent();
         }
-        // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
+        getUser()
+        
+        // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
 
         // 연결 성공 시
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT Broker');
             mqttClient.subscribe(`test/topic/${chatlist_url}`, (err) => {
                 console.log("누군지 모르겠지만연결됨");
-                userListAdd();
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
+                if(!mqttClient.connected){
+                    return;
+                }
+                userListAdd(mqttClient);
             });
         });
         // 연결이 끊어졌을 때
@@ -50,9 +54,11 @@ const Chatting = () => {
         
       });
         // 메시지 수신 시
-        mqttClient.on('message', async (topic, message) => {
+        mqttClient.on('message', (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
+            
             setReceivedMessages(p=>[...p, JSON.parse(decoding)])
+            
         });
 
         // 연결이 끊어졌을 때
@@ -73,42 +79,91 @@ const Chatting = () => {
         setIsConnected(false); // 연결 상태를 false로 설정
       });
         setClient(mqttClient);
-
+        
+        
+        
         // 컴포넌트가 언마운트될 때 연결 종료
         return () => {
             mqttClient.end();
         };
+        
     }, []);
-
+    
     useEffect(() => {
+        
         // 메시지가 변경될 때마다 실행
         scrollBottom();
-      }, [receivedMessages]);
+        dateMsgSend()
+        
+      }, [receivedMessages, client]);
 
+      async function dateMsgSend(){
+        if(receivedMessages.length >= 1){
+            const now = receivedMessages[receivedMessages.length -1].chat_date;
+            if(!client){
+                return ;
+            }
+            const info = {
+                chatlist_url,
+                chat_date: now,
+                chat_type: 0
+            }
+            if(receivedMessages.length <= 1){
+                console.log(receivedMessages)
+                const box = [info, receivedMessages[0]];
+                setReceivedMessages(box)
+                return ;
+            }
+            const lastDay = (receivedMessages[receivedMessages.length -2].chat_date).substring(0, 10);
+            if(lastDay!=now.substring(0, 10)){
+                setReceivedMessages(p=>[...p, info])
+            }
+        }
+    }
     
     async function setChatContent(){
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
-        data.map((d, i)=>{
-            setReceivedMessages(p=>[...p, d])
+        await data.map( async(d, i)=>{
+            await setReceivedMessages(p=>[...p, d])
         })
 
     }
-    async function userListAdd(){
-        const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
-        console.log(data);
-        if(data==1){
-
-        }
-    }
+    
     async function getUser(){
         const result = await axios.get('http://localhost:9988/user/userinfo');
         setMyid(result.data);
-        console.log(myid)
         const params = {userid : result.data};
         const result2 = await axios.get('http://localhost:9988/getUserData', {params});
-        setUserData(result2);
+        setUserData(result2)
     }
 
+    async function userListAdd(mqttClient){
+        if(mqttClient){
+            const result = await axios.get('http://localhost:9988/user/userinfo');
+            setMyid(result.data);
+            const params = {userid : result.data};
+            const result2 = await axios.get('http://localhost:9988/getUserData', {params});
+            const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
+            const offset = new Date().getTimezoneOffset() * 60000;
+            let today = new Date(Date.now() - offset);
+            const now = today.toISOString().replace('T', ' ').substring(0, 19);
+            const info = {  
+                chatlist_url,
+                usernick : result2.data.usernick, 
+                chat_date: now,
+                chat_type: 2
+            } 
+            
+            if(data == 1){
+
+                setReceivedMessages(receivedMessages)
+                
+                mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            }
+        }
+    }
+
+    
     const handleSendMessage = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
@@ -127,6 +182,8 @@ const Chatting = () => {
                 chat_date: now,
                 chat_type: 1
             } 
+
+            
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
             
@@ -142,14 +199,14 @@ const Chatting = () => {
         chatting_box.current.scrollTop = chatting_box.current.scrollHeight+10000;
     }
     function openReport(e){{/* 신고 기능 */}
-        const index  = e.target.dataset.id;
-         
+        const id = e.target.dataset.id;
+        const userid = e.target.dataset.userid;
+        const content = e.target.dataset.content;
         setReport({
             report_tblname: 3,
-            report_tbluuid:  receivedMessages[index].content_id,
-            reported_userid: receivedMessages[index].userid,
-            report_content: receivedMessages[index].chat_content,// 피신고자의 채팅 내용
-            i: index,
+            report_tbluuid:  id,
+            reported_userid: userid,
+            report_content: content,// 피신고자의 채팅 내용
         })
         toggleReport();
     }
@@ -161,7 +218,6 @@ const Chatting = () => {
         let idValue = event.target.value;
         
         setReport(p=>{return {...p, [idField]:idValue}});
-        console.log(report)
     }
     async function submitReport(e){{/* 신고 기능 */}
         e.preventDefault();
@@ -229,10 +285,9 @@ const Chatting = () => {
                                         <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
                                     </div>
                                     : 
-                                    <div className='anotherText'>
+                                    <div className='anotherText' data-id={index}>
                                         <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
                                         <div>
-                                            {data.content_id}{data.userid}
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >
                                                 <div className='chat_text'>
@@ -246,7 +301,7 @@ const Chatting = () => {
                                                         1
                                                     </div> */}
                                                     <div className='chat_report' >
-                                                        <AiOutlineAlert size="25px" data-id={index} onClick={openReport} />
+                                                        <AiOutlineAlert size="25px" data-id={data.content_id} data-userid={data.userid} data-content={data.chat_content} onClick={openReport} />
                                                     </div>
                                                 </div>
                                             </div>

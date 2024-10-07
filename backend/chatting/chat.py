@@ -26,12 +26,14 @@ def on_message(client, userdata, msg):
     message_payload = msg.payload.decode()
     print(f"Received message: {message_payload}")
     data = json.loads(message_payload)
-    content_id = data['content_id']
-    chat_date = data['chat_date']
-    room_id = data['chatlist_url']
-    userid = data['userid']
-    msg = data['chat_content']
-    save_message_to_db(content_id, room_id, userid, msg, chat_date)
+
+    if(data['chat_type']==1):
+        content_id = data['content_id']
+        chat_date = data['chat_date']
+        room_id = data['chatlist_url']
+        userid = data['userid']
+        msg = data['chat_content']
+        save_message_to_db(content_id, room_id, userid, msg, chat_date)
 
 # Flask API - 메시지 처리 및 DB 저장
 @app.route('/api/send_message', methods=['POST'])

@@ -11,21 +11,23 @@
     </select>
     <select id="selectChatContent" resultType="com.ict.backend.vo.ChatVO">
         SELECT
-        chatlist_url,
+        date_records.chatlist_url,
         NULL AS userid,
-        DATE(chat_date) AS chat_date,
+        DATE(date_records.chat_date) AS chat_date,
         null as userprofile,
         null as usernick,
         NULL AS chat_content,
         NULL AS content_id,
         0 AS chat_type
         FROM (
-        SELECT MIN(chat_date) AS chat_date, chatlist_url
-        FROM chat_content_tbl
-        where chatlist_url=#{param1}
-        GROUP BY DATE(chat_date)
-        )
-        AS date_records
+        SELECT MIN(dl.chat_date) AS chat_date, dl.chatlist_url
+        FROM (
+        select chatlist_url, first_conn as chat_date from chat_user_list
+        union all
+        select chatlist_url, chat_date from chat_content_tbl
+        ) as dl where dl.chatlist_url=#{param1}
+        GROUP BY DATE(dl.chat_date), dl.chatlist_url
+        ) as date_records
         UNION ALL
         select chatlist_url, ut.userid, first_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 2 as chat_type
         from chat_user_list cul
