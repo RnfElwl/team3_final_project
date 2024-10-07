@@ -89,7 +89,8 @@ public class UserController {
         System.out.println("hi");
             int randomNum = (int) (Math.random() * 4) + 1;
             String img = "login_" + randomNum + ".jpg"; // 랜덤 파일명 생성
-            Path filePath = Paths.get("D://team3_final_project/images/" + img);
+            Path filePath = Paths.get("images/" + img);
+            //Path filePath = Paths.get("D://team3_final_project/images/" + img);
             String filePathStr =filePath.toString();
             ResponseEntity<Resource> responseEntity = imageService.getImage(filePathStr);
             System.out.println(responseEntity.getBody());
@@ -104,8 +105,8 @@ public class UserController {
                 String imgUrl = imageService.uploadImage(file, "profile"); // 각 이미지 저장 후 경로 반환
                 //dbUploadService.upload(imgUrl, tableName); // DB에 경로 저장
                 System.out.println("imgurl : "+ imgUrl);
-                //String newImag = imageService.updateImage(file, "profile", "D:\\team3_final_project\\images\\profile\\poster2_1.png");
-                //System.out.println("newImag : " + newImag);
+                String newImag = imageService.updateImage(file, "profile", "images/profile/poster5_3.png");
+                System.out.println("newImag : " + newImag);
             }
             return ResponseEntity.ok().build(); // 성공 응답, 본문 없이
         } catch (Exception e) {

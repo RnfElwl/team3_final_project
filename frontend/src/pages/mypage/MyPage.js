@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/mypage.css';
 import profile from '../../img/profile.png';
+import { useNavigate } from 'react-router-dom';
 
 
 function Mypage() {
@@ -19,6 +20,8 @@ function Mypage() {
     // 글, 댓글 불러올거
     const [tagName, setTagName] = useState("Tag1");
     const [list, setList] = useState([]);
+
+    const navigate = useNavigate();
 
     // 데이터를 초기화하는 useEffect 추가
     useEffect(() => {
@@ -74,7 +77,7 @@ function Mypage() {
                         <p>이름 : <span>hong@hong.com</span></p>
                     </div>
                     <div id = "info_change">
-                        <button className="btn btn-secondary" onClick={() => alert("edit")}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>
+                        <button className="btn btn-secondary" onClick={() => navigate('/mypage/edit')}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>
                     </div>
                 </div>
                 <div className = "otherinfo">

@@ -1,6 +1,6 @@
 .editInfo {
     max-width: 1920px;
-    height: 91vh;
+    height: 90vh;
     margin: 0 auto;
 }
 .editInfo>.container{
@@ -11,6 +11,103 @@
 .editprofile{
     margin: 30px auto;
     width: 50%;
-    height : 700px;
-    border: 1px solid white;
+    /* height : 700px; */
+    /* border: 1px solid white; */
+    background-color: #232323;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+/* 프로필 사진, 정보창 비율 세팅 */
+#profile{
+    flex : 2;
+    display: flex;
+    justify-content: center;
+}
+#userinfo{
+    flex :8;
+}
+#profile img{
+    margin-top : 30px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+#profile img:hover {
+    cursor: pointer;
+}
+#profile form div{
+    display: none;
+}
+
+.information{
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    padding : 25px 40px 30px 40px;
+}
+#userinfo>.information div{
+    display: flex;
+    align-items: center;
+    padding :12px 0;
+    width: calc(100%);
+}
+.information>div>input[disabled]{
+    padding : 10px 0 !important;
+    background-color: #232323 !important;
+}
+#userinfo>.information span{
+    /* width: 140px; */
+    width: 200px;
+    /* margin-right: 10px; */
+    font-size: 14px;
+    font-weight: 700;
+    color: #a5a5a5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#userinfo>.information input{
+    font-size: 13px;
+    padding: 10px;
+    /* width: calc(70% - 22px); */
+    box-sizing: border-box;
+    border: 1px solid #2D2D2D;
+    border-radius: 4px;
+    background-color: #2D2D2D;
+    /*  */
+    width: 100%;
+    font-size: 15px;
+    letter-spacing: -0.9px;
+    color: #fff;
+    background-color: #2f2f2f;
+    border: none;
+    height: 42px !important;
+    line-height: 41px !important;
+    
+}
+.sub_button{
+    justify-content: center;
+}
+.sub_button button{
+    margin : 0 5px;
+    padding : 8px 30px;
+}
+.leave-button{
+    background-color: black;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.leave-button>button{
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 400;
+    color: #a5a5a5;
+    text-decoration: none;
+    border: none;
+    background: none;
+}
+.leave-button>button:hover{
+    color : rgba(168, 166, 166, 0.3);
+}
+

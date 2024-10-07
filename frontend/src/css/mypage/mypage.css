@@ -53,6 +53,7 @@
 }
 .info #userinfo>p{
     color : gray;
+    font-weight: 550;
 }
 .info #userinfo>p>span{
     color : white;

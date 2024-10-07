@@ -19,8 +19,10 @@ public class ImageServiceImpl implements ImageService {
     private final Path UPLOAD_DIR = Paths.get(currentDir, "images").normalize();
 
     public ResponseEntity<Resource> getImage(String imagePath) {
+        System.out.println(currentDir + imagePath);
         try {
-            Path filePath = Paths.get(imagePath);
+            Path filePath = Paths.get(currentDir, imagePath).normalize();
+            //Path filePath = Paths.get(currentDir + imagePath).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists() || resource.isReadable()) {
                 String extension = getFileExtension(imagePath);
@@ -43,17 +45,22 @@ public class ImageServiceImpl implements ImageService {
     }
 
     public String uploadImage(MultipartFile file, String folder) throws Exception {
-        Path path = UPLOAD_DIR.resolve(folder).resolve(file.getOriginalFilename()).normalize();
+        Path filepath = Paths.get("images", folder, file.getOriginalFilename()).normalize();
+        Path path = Paths.get(currentDir).resolve(filepath);
+        //Path path = UPLOAD_DIR.resolve(folder).resolve(file.getOriginalFilename()).normalize();
         //Path path = Paths.get(UPLOAD_DIR + "/"  + folder + "/" + file.getOriginalFilename());
 
         path = getUniqueFileName(path);
 
         Files.createDirectories(path.getParent()); // 디렉토리 생성
         Files.write(path, file.getBytes()); // 파일 저장
-        return path.toString(); // 저장된 이미지 경로 반환
+        String resultPath = filepath.toString().replace("\\", "/");
+        return resultPath;
+        //return path.toString(); // 저장된 이미지 경로 반환
     }
 
     public String updateImage(MultipartFile file, String folder, String existingFilePath) throws Exception {
+        existingFilePath = Paths.get(currentDir).resolve(existingFilePath).toString();
         // 기존 파일 삭제
         if (existingFilePath != null && !existingFilePath.isEmpty()) {
             deleteFile(existingFilePath);
@@ -62,7 +69,11 @@ public class ImageServiceImpl implements ImageService {
         // 새 파일 저장 경로
         String originalFilename = file.getOriginalFilename();
         //Path path = Paths.get(UPLOAD_DIR + "/" + folder + "/" + originalFilename);
-        Path path = UPLOAD_DIR.resolve(folder).resolve(file.getOriginalFilename()).normalize();
+        Path filepath = Paths.get("images", folder, originalFilename).normalize();
+        System.out.println("filepath : " + filepath);
+        Path path = Paths.get(currentDir).resolve(filepath);
+        System.out.println("update : " + path);
+        //Path path = UPLOAD_DIR.resolve(folder).resolve(file.getOriginalFilename()).normalize();
 
         // 중복 파일명 처리
         path = getUniqueFileName(path);
@@ -70,7 +81,9 @@ public class ImageServiceImpl implements ImageService {
         // 디렉토리 생성 및 파일 저장
         Files.createDirectories(path.getParent());
         Files.write(path, file.getBytes());
-        return path.toString(); // 저장된 이미지 경로 반환
+        String resultPath = filepath.toString().replace("\\", "/");
+        return resultPath;
+        //return path.toString(); // 저장된 이미지 경로 반환
     }
     private String getFileExtension(String filePath) {
         String extension = "";
