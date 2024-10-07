@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.1.88:9988';
+//const BASE_URL = 'http://192.168.1.88:9988';
 // Axios 인스턴스 생성
 const instance = axios.create({
     baseURL: "http://localhost:9988"
@@ -17,9 +17,9 @@ instance.interceptors.request.use(
                 config.headers['Authorization'] = `Bearer ${token}`;
             }
         }
-         if (config.url.startsWith('http://localhost:9988')) {
-             config.url = config.url.replace('http://localhost:9988', BASE_URL);
-         }
+        //  if (config.url.startsWith('http://localhost:9988')) {
+        //      config.url = config.url.replace('http://localhost:9988', BASE_URL);
+        //  }
         console.log("config = " + config);
         return config;
     },

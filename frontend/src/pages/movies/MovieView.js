@@ -134,7 +134,7 @@ const dummyReviews = [
               {/* 시놉시스 */}
               <div className="info-section">
                 <h3>시놉시스</h3>
-                <p>영화에 대한 간략한 내용이 여기에 표시됩니다.</p>
+                <p>{movie.movie_synops}</p>
               </div>
               
               {/* 장르 */}
@@ -157,11 +157,6 @@ const dummyReviews = [
                 <p>{movie.movie_directors}</p>
               </div>
 
-              {/* 추가 정보 */}
-              <div className="info-section">
-                <h3>추가 정보</h3>
-                <p>기타 내용이 여기에 표시됩니다.</p>
-              </div>
             </div>
         </div>
         <hr/>
