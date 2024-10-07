@@ -10,6 +10,7 @@ public interface MovieService {
     List<MovieVO> getMoviesByGenre(String genre);
     List<MovieVO> getMoviesByYear(String year);
     List<MovieVO> getMoviesByNation(String nation);
+    MovieVO getMovieByCode(String movieCode);
 
 
 

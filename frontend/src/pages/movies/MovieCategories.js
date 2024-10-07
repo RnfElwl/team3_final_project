@@ -6,10 +6,19 @@ function MovieCategories() {
   const [activeTab, setActiveTab] = useState('genre');
 
   const genreCategories = [
-    { id: 'romance', name: 'Romance' },
-    { id: 'thriller', name: 'Thriller' },
-    { id: 'adventure', name: 'Adventure' },
-    { id: 'mystery', name: 'Mystery' },
+    { id: '드라마', name: '드라마' },
+    { id: '액션', name: '액션' },
+    { id: '다큐멘터리', name: '다큐멘터리' },
+    { id: '애니메이션', name: '애니메이션' },
+    { id: '코미디', name: '코미디' },
+    { id: '범죄', name: '범죄' },
+    { id: '전쟁', name: '전쟁' },
+    { id: '공포(호러)/', name: '공포(호러)' },
+    { id: '가족', name: '가족' },
+    { id: '사극', name: '사극' },
+    { id: 'SF', name: 'SF' },
+    { id: '미스터리/스릴러', name: '미스터리/스릴러' },
+
   ];
 
   const yearCategories = [
@@ -20,9 +29,16 @@ function MovieCategories() {
   ];
 
   const nationCategories = [
-    { id: 'canada', name: 'Canada' },
-    { id: 'france', name: 'France' },
-    { id: 'china', name: 'China' },
+    { id: '한국', name: '한국' },
+    { id: '미국', name: '미국' },
+    { id: '영국', name: '영국' },
+    { id: '프랑스', name: '프랑스' },
+    { id: '스페인', name: '스페인' },
+    { id: '중국', name: '중국' },
+    { id: '일본', name: '일본' },
+    { id: '북유럽', name: '북유럽' },
+    { id: '남미', name: '남미' },
+    
     ];
 
 

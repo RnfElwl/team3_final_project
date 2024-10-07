@@ -46,7 +46,7 @@ public class HomeController {
     @GetMapping("/movie_info")
     public ResponseEntity<byte[]> getMovies() {
     //public ResponseEntity<List<MovieVO>> getMovies() {
-        String api = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key="+apikey+"&openStartDt=2020&openEndDt=2020&itemPerPage=3";
+        String api = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key="+apikey+"&openStartDt=1985&openEndDt=1995&itemPerPage=100&curPage=5";
 
         // JSON 응답을 Map으로 직접 변환
         Map<String, Object> response = restTemplate.getForObject(api, Map.class);
