@@ -2,9 +2,13 @@ package com.ict.backend.service;
 
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.PagingVO;
+
 import java.util.List;
 
 public interface CommunityService {
+
+//    int totalRecord(PagingVO pVO);
 
     // 게시글 리스트 조회 메서드
     List<CommunityVO> getCommunityList();

@@ -47,8 +47,7 @@ function CommunityList() {
                 
                 // 상위 3개 게시물 설정
                 const sortedByLikes = [...response.data].sort((a, b) => b.likesCount - a.likesCount).slice(0, 3);
-                const sortedByComments = [...response.data].sort((a, b) => b.commentCount - a.commentCount).slice(0, 3);
-                
+               
                 setTopLikedPosts(sortedByLikes);
 
             })
@@ -211,31 +210,34 @@ function CommunityList() {
                                 <input type="button" value="팔로우" className="action_button" />
                                 <input type="button" value="신고" className="action_button" />
                             </div>
-                            <Link to={`/community/communityView/${communityItem.community_no}`}>
-                                <div className="list_middle">
-                                    <div className="category">{getCategoryName(communityItem.category)}</div>
-                                    <h3 className="community_title">{communityItem.community_title}</h3>
-                                    {communityItem.community_img && (
-                                        <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
-                                    )}
+                            <div className="list_nn">
+                                <Link to={`/community/communityView/${communityItem.community_no}`}>
+                                    <div className="list_middle">
+                                        <div className="middle_head">
+                                            <div className="category">{getCategoryName(communityItem.category)}</div>
+                                            <h3 className="community_title">{communityItem.community_title}</h3>
+                                        </div>
+                                        {communityItem.community_img && (
+                                            <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
+                                        )}
+                                    </div>
+                                </Link>
+                                <div className="list_bottom">
+                                    <i 
+                                        className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                                        onClick={handleLikeToggle}
+                                        style={{ 
+                                            color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
+                                            cursor: 'pointer' 
+                                        }}
+                                    ></i>
+                                    <span className="likeCount">{likesCount}</span>
+                                    <i className="far fa-comment"></i>
+                                    <span className="commentCount">{commentCount}</span>
+                                    <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
+                                    <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
                                 </div>
-                            </Link>
-                            <div className="list_bottom">
-                                <i 
-                                    className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
-                                    onClick={handleLikeToggle}
-                                    style={{ 
-                                        color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
-                                        cursor: 'pointer' 
-                                    }}
-                                ></i>
-                                <span className="likeCount">{likesCount}</span>
-                                <i className="far fa-comment"></i>
-                                <span className="commentCount">{commentCount}</span>
-                                <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
-                                <span className="hitCount">{hitCount}</span>  {/* 조회수 출력 */}
-
-                            </div>
+                            </div>    
                         </div>
                     ))
                 ) : (

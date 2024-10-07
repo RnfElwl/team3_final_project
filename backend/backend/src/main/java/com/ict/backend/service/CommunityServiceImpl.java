@@ -3,6 +3,7 @@ package com.ict.backend.service;
 import com.ict.backend.dao.CommunityDAO;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.PagingVO;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;

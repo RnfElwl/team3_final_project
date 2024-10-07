@@ -128,21 +128,23 @@
 .community_view .view_bottom {
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
-    margin-top: 10px; /* 여백 */
+    margin-top: 20px; /* 여백 */
     width: 1000px;
     margin-left: auto; /* 자동 여백으로 좌우 중앙 정렬 */
     margin-right: auto; /* 자동 여백으로 좌우 중앙 정렬 */
 }
 
 .community_view .fa-heart,
-.community_view .fa-comment{
+.community_view .fa-comment,
+.community_view .fa-eye{
     margin-right: 10px; /* 아이콘 간 여백 */
     cursor: pointer;
     font-size: 30px;
 
 }
 .community_view .likeCount,
-.community_view .commentCount {
+.community_view .commentCount,
+.community_view .hitCount {
     margin-right: 15px;
     font-size: 14px;
 }
@@ -168,7 +170,7 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 600px;
+    width: 875px;
     /* height: 100px; */
 }
 

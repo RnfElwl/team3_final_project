@@ -111,9 +111,9 @@ function CommunityView(){
                 console.error("Error fetching comments:", error);
             });    
         // 조회수 증가 API 호출
-        axios.post(`http://localhost:9988/community/increaseHit/${community_no}`)
-            .then(() => {
-                console.log("조회수 증가 완료");
+        axios.get(`http://localhost:9988/community/view/${community_no}`)
+            .then(response => {
+                console.log("조회수 증가 완료", response.data);
             })
             .catch(error => {
                 console.error("Error increasing hit count:", error);
@@ -282,7 +282,8 @@ function CommunityView(){
                     <i className="far fa-comment"></i>
                     <span className="commentCount">{commentCount}</span>
                     <i className="far fa-eye"></i>  {/* 조회수 아이콘 (눈 모양) */}
-                    <span className="hitCount">{hitCount}</span>  {/* 조회수 */}
+                    <span className="hitCount">{community.hit}</span>  {/* 조회수 */}
+
                     <div className="edit_delete">
                         <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
                         <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
