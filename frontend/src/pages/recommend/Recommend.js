@@ -1,60 +1,85 @@
 import "../../css/recommend/Recommend.css";
 import React, { useState, useEffect } from 'react';
 import axios from '../../component/api/axiosApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-function Recommend(){
-    const { genre, year, nation } = useParams(); // URL 파라미터에서 genre, year, nation의 id 가져옴
+function Recommend() {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
-    const maxSelection = 10; // 최대 선택 가능한 개수
+    const minSelection = 10; // 최소 선택 가능한 개수
+    const [selectedStars, setSelectedStars] = useState({}); // 선택된 별점 상태
+    const navigate = useNavigate(); // useNavigate 훅 사용
 
-     // 선택된 조건 개수 계산
-     const selectedCount = [genre, year, nation].filter(Boolean).length;
-
+    // 데이터 가져오기
     useEffect(() => {
-        const fetchMovies = async () => {
-          setLoading(true);
-          try {
-            let url = `http://localhost:9988/api/movies`;
-                
-                // 선택한 조건에 따라 URL 파라미터 추가
-                if (genre) {
-                    url += `/genre/${genre}&`; // 장르별 영화 데이터
-                }
-                if (year) {
-                    url += `/year/${year}&`; // 연도별 영화 데이터
-                }
-                if (nation) {
-                    url += `/nation/${nation}&`; // 국가별 영화 데이터
-                }
-                
-                // 최종 URL이 올바른지 확인 (콘솔 출력)
-                console.log("Request URL:", url);
-
-                const response = await axios.get(url); // axios로 GET 요청
-                console.log('Fetched movies:', response.data); // 데이터를 콘솔에 출력
-                setMovies(response.data); // 영화 데이터를 상태에 저장
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9988/recommend/list`);
+                console.log(response.data);
+                setMovies(response.data); // 영화 데이터를 가져옴
+                setLoading(false); // 로딩 완료
             } catch (error) {
-                console.error('Error fetching movies:', error);
-            } finally {
-                setLoading(false);
+                console.error('Error fetching data:', error);
+                setLoading(false); // 에러 발생 시에도 로딩 종료
             }
         };
 
-        fetchMovies();
-    }, [genre, year, nation]);
+        fetchData(); // 컴포넌트가 마운트될 때 데이터 가져옴
+    }, []);
 
-    const handleStarClick = (movieId) => {
-        console.log(`Movie ${movieId} star clicked!`);
+    // 별 클릭 핸들러
+    const handleStarClick = (movieId, starIndex) => {
+        const selectedStarCount = starIndex + 1; // 선택한 별점 수
+
+        setSelectedStars(prevSelectedStars => {
+            const updatedStars = { ...prevSelectedStars, [movieId]: selectedStarCount };
+            console.log(`Movie ${movieId} selected ${selectedStarCount} stars.`);
+            return updatedStars;
+        });
+    };
+
+    // 선택된 별점 개수 계산
+    const selectedCount = Object.keys(selectedStars).length;
+
+    // 다음 버튼 클릭 핸들러
+    const handleNextClick = async () => {
+        // 서버로 POST 요청 보내기
+        const ratings = Object.entries(selectedStars).map(([movieId, starCount]) => ({
+            movieId,
+            starCount,
+        }));
+
+        try {
+            for (const { movieId, starCount } of ratings) {
+                // 별점 갯수만큼 서버로 데이터 전송
+                for (let i = 0; i < starCount; i++) {
+                    await axios.post(`http://localhost:9988/recommend/rate`, {
+                        movie_genre: movies.find(movie => movie.movie_code === movieId).movie_genre,
+                        count: 1, // 각 별점마다 count 1로 전송
+                    });
+                }
+            }
+            console.log('Sent ratings to the server:', ratings);
+            navigate('/'); // 처리 후 홈으로 이동
+        } catch (error) {
+            console.error('Error sending ratings:', error);
+        }
     };
 
     return (
         <div className="recommend">
             <div className="container">
                 <div className="recommend_header">
-                    <p className="choice">선택된 조건: {selectedCount}/{maxSelection}</p>
+                    <p className="choice">선택된 조건: {selectedCount}/{minSelection}</p>
+                    {/* 다음 버튼 */}
+                    <button 
+                        className={`next-button ${selectedCount >= minSelection ? 'enabled' : ''}`} 
+                        onClick={selectedCount >= minSelection ? handleNextClick : undefined}
+                        disabled={selectedCount < minSelection} // 조건에 따라 버튼 비활성화
+                    >
+                        다음
+                    </button>
                 </div>
                 <div className="recommend_list">
                     {loading ? (
@@ -62,20 +87,22 @@ function Recommend(){
                     ) : (
                         movies.map(movie => (
                             <div key={movie.movie_code} className="recommend_item">
-                                <img className="poster" src={movie.movie_link} alt={movie.title} />
+                                <img className="poster" src={movie.movie_link} alt={movie.movie_kor} />
                                 <div className="movie_info">
                                     <p className="movie_title">{movie.movie_kor}</p>
-                                    <p className="product_year">{movie.year}</p>
-                                    <p className="movie_genre">{movie.genre}</p>
-                                    <p className="movie_state">{movie.state}</p>
+                                    <div className="movie_datail">
+                                        <p className="movie_genre">{movie.movie_genre} · </p>
+                                        <p className="movie_state">{movie.movie_nation} · </p>
+                                        <p className="product_year">{movie.opened_year}</p>
+                                    </div>
                                 </div>
                                 <div className="rate">
                                     {[...Array(5)].map((_, index) => (
                                         <i 
                                             key={index} 
-                                            className="fa fa-star star-icon"
-                                            onClick={() => handleStarClick(movie.id)} 
-                                        />  
+                                            className={`fa fa-star star-icon ${selectedStars[movie.movie_code] > index ? 'selected' : ''}`}
+                                            onClick={() => handleStarClick(movie.movie_code, index)} 
+                                        />
                                     ))}
                                 </div>
                             </div>
