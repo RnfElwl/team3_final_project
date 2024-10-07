@@ -24,7 +24,7 @@
     padding: 10px 20px; /* 내부 여백 */
     background-color: white; /* 배경 색상 */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    z-index: 1000; /* 다른 요소 위에 표시 */
+    /*z-index: 1000;  다른 요소 위에 표시 */
     border-radius: 8px;
 }
 
