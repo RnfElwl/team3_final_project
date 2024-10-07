@@ -9,7 +9,9 @@ function Recommend() {
     const [loading, setLoading] = useState(true);
     const minSelection = 10; // 최소 선택 가능한 개수
     const [selectedStars, setSelectedStars] = useState({}); // 선택된 별점 상태
+    const [hoveredStars, setHoveredStars] = useState({});   // 호버 중인 별점 상태
     const navigate = useNavigate(); // useNavigate 훅 사용
+    
 
     // 데이터 가져오기
     useEffect(() => {
@@ -36,6 +38,22 @@ function Recommend() {
             const updatedStars = { ...prevSelectedStars, [movieId]: selectedStarCount };
             console.log(`Movie ${movieId} selected ${selectedStarCount} stars.`);
             return updatedStars;
+        });
+    };
+
+     // 마우스 호버 핸들러
+     const handleStarHover = (movieId, starIndex) => {
+        setHoveredStars(prevHoveredStars => {
+            const updatedHoveredStars = { ...prevHoveredStars, [movieId]: starIndex + 1 };
+            return updatedHoveredStars;
+        });
+    };
+
+    // 마우스가 별점에서 벗어났을 때
+    const handleStarMouseOut = (movieId) => {
+        setHoveredStars(prevHoveredStars => {
+            const updatedHoveredStars = { ...prevHoveredStars, [movieId]: 0 }; // 호버 해제 시 0으로 리셋
+            return updatedHoveredStars;
         });
     };
 
@@ -99,10 +117,13 @@ function Recommend() {
                                 <div className="rate">
                                     {[...Array(5)].map((_, index) => (
                                         <i 
-                                            key={index} 
-                                            className={`fa fa-star star-icon ${selectedStars[movie.movie_code] > index ? 'selected' : ''}`}
-                                            onClick={() => handleStarClick(movie.movie_code, index)} 
-                                        />
+                                        key={index} 
+                                        className={`fa fa-star star-icon ${hoveredStars[movie.movie_code] > index || selectedStars[movie.movie_code] > index ? 'selected' : ''}`}
+                                        onClick={() => handleStarClick(movie.movie_code, index)} 
+                                        onMouseEnter={() => handleStarHover(movie.movie_code, index)} 
+                                        onMouseLeave={() => handleStarMouseOut(movie.movie_code)}
+                                    />
+                                    
                                     ))}
                                 </div>
                             </div>
