@@ -3,6 +3,7 @@ import './../../css/qna/qnaWrite.css';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
+import useUnsavedChangesWarning from '../../component/useUnsavedChangesWarning';
 
 function QnAWrite(){
     const navigate = useNavigate();
@@ -20,9 +21,9 @@ function QnAWrite(){
     const [qna_state] = useState(0); // 질문 상태 (디폴트 값)
     const [active_state]=useState(1);
     const [qna_img, setQna_img] = useState([]);
+    // const [isDirty, setIsDirty] = useState(false);
 
     useEffect(() => checkId(),[])
-    
     function checkId(){
     axios.get('http://localhost:9988/user/userinfo')
     .then(response => {
@@ -33,11 +34,14 @@ function QnAWrite(){
         console.error('데이터 로드 중 오류 발생:', error);
     })
     }
+    //훅 사용: 경고 메시지 전달
+    // useUnsavedChangesWarning(isDirty, '변경사항이 저장되지 않았습니다. 정말 떠나시겠습니까?');
 
+    //비밀글 설정 핸들러
     const handleprivacyQChange = (e) => {
         setPrivacyQ(e.target.value);
     };
-
+    //이미지 설정 핸들러
     const handleImageChange = (e) => {    
         const files = Array.from(e.target.files); // FileList를 배열로 변환
         setQna_img(files); // 상태에 파일 저장
@@ -107,6 +111,7 @@ function QnAWrite(){
                 return false;
             } else {
                 console.log('질문이 성공적으로 등록되었습니다:', response.data);
+                // setIsDirty(false);
                 navigate(`/qna`);
             }
         })
@@ -124,7 +129,6 @@ function QnAWrite(){
                 <div className='qna_titleArea'>
                     <input type='hidden'
                         name='userid'
-                        onChange={(e) => setUserid(e.target.value)}
                         value={userid} />
                     <div>제목</div>
                     <div>
@@ -132,7 +136,10 @@ function QnAWrite(){
                             type='text'
                             className='qna_title'
                             value={qna_title}
-                            onChange={(e) => setQna_title(e.target.value)}
+                            onChange={(e) => {
+                                setQna_title(e.target.value)
+                                // setIsDirty(true);
+                            }}
                             placeholder='제목을 입력해 주세요' />
                     </div>
                     <div>
@@ -194,7 +201,9 @@ function QnAWrite(){
                 </div>
                 <input type='hidden' id='qna_state' value={qna_state} />
                 <div className='right-buttons'>
-                    <button type='submit'>등록</button>
+                    <button
+                        type='submit'
+                        >등록</button>
                 </div>
             </form>
         </div>

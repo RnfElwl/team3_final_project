@@ -15,8 +15,7 @@ function QnAEdit(){
 
     //수정할 데이터 객체들
     const [userid, setUserid]=useState('');
-    const [privacyQ, setprivacyQ] = useState('');
-    const [prepri, setPrepri]=useState('');
+    const [privacyQ, setprivacyQ] = useState(0);
     const [qna_title, setQna_title]=useState('');
     const [qna_content, setQna_content]=useState('');
     const head_titleList = [
@@ -24,17 +23,19 @@ function QnAEdit(){
         {value: "2", name:"사이트"},
         {value: "3", name:"기타문의"}
     ];
-    const [head_title, setHead_title]=useState("");
+    const [head_title, setHead_title]=useState(0);
+    const [preQpwd, setPreQpwd]=useState('');
     const [qna_pwd, setQna_pwd] = useState('');
-    const [qna_state, setQna_state] = useState('1');
-    const [active_state]=useState('2');
+    const [qna_state, setQna_state] = useState(1);
+    const [active_state]=useState(2);
 
     //데이터 불러오기
     useEffect(() => {
         axios.get(`http://localhost:9988/qna/viewEdit/${params}`)
             .then(response => {
                 setQnAEdit(response.data);     
-                console.log(response.data);      
+                console.log(response.data);
+                setPreQpwd(qna_pwd);      
             });
     }, [params]);
 
@@ -43,11 +44,23 @@ function QnAEdit(){
         console.log(head_title);
         setHead_title(e.target.value);
     };
+    //비밀번호 변경
+    const handleqnapwdChange = (e) =>{
+        setQna_pwd(e.target.value);
+    }
     //비밀글 설정 변경
     const handleprivacyQChange = (e) => {
         setprivacyQ(e.target.value);
-        console.log(privacyQ);
     };
+    //비밀글 설정에 따라 비밀번호 저장 및 초기화
+    useEffect(() => {
+        if (privacyQ === '0') {
+            setPreQpwd(qna_pwd);
+            setQna_pwd('');
+        } else if (privacyQ === '1') {
+            setQna_pwd(preQpwd);
+        }
+    }, [privacyQ]); 
         
     //데이터 호출하여 아이템 등록시 밸류로 설정
     useEffect(() => {
@@ -86,7 +99,7 @@ function QnAEdit(){
         'qna_content':qna_content,
         'head_title':head_title,
         'privacyQ':privacyQ,
-        'qna_pwd':privacyQ==='1' ? qna_pwd:null,
+        'qna_pwd': qna_pwd,
         'qna_state':qna_state,
         'active_state':active_state
     }
@@ -133,7 +146,7 @@ function QnAEdit(){
                 <h1>질의응답(QnA) 수정</h1>
                 <hr />
                 <form onSubmit={handleSubmit}>
-                    <div className="mt-3">
+                <div className="mt-3">
                     {/* 카테고리 */}
                     <label htmlFor="head_title" className="form-label">카테고리:</label>
                     <select
@@ -190,7 +203,7 @@ function QnAEdit(){
                                 placeholder='비밀번호를 설정하세요(숫자 4자리)'
                                 maxLength='4'
                                 value={qna_pwd}
-                                onChange={(e) => setQna_pwd(e.target.value)}
+                                onChange={handleqnapwdChange}
                             />
                         </div>
                     )}

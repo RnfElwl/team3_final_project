@@ -1,3 +1,7 @@
 .QnAViewBody{
     color:white;
 }
+td:nth-child(1){
+    min-width: 100px;
+    height: 20px;
+}

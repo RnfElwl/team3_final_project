@@ -4,6 +4,8 @@ import axios from "../../component/api/axiosApi";
 // import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillLock } from "react-icons/ai";
+import { FaSearch } from "react-icons/fa";
+// import qnaBack from '../'
 import $ from "jquery";
 
 function QnA() {
@@ -111,9 +113,39 @@ function QnA() {
 
     return (
         <div className="QnABody">
+            <div>
+                <img src="."/>
+            </div>
             <div className="container mt-3">
                 <h1>질의응답(QnA)</h1>
                 <hr />
+                <div className="totalRecord-info">
+                    <div className="tr-right-info">전체 문의글 <div>&nbsp;{totalRecord}</div></div>
+                    {/* 검색폼 */}
+                    <div className="searchForm">
+                        <form onSubmit={handleSearchSubmit}>
+                            <select
+                            className="qnaSearchSelect"
+                            name="searchKey"
+                            value={searchKey}
+                            onChange={handlesearchKeyChange}>
+                                <option value="qna_title">제목</option>
+                                <option value="qna_content">내용</option>
+                                <option value="userid">작성자</option>
+                            </select>
+                            <input
+                                type="text"
+                                name="searchWord"
+                                className="qnaSearchWord"
+                                onChange={handlesearchWordChange}
+                                placeholder="Search..."/>
+                            <FaSearch
+                                onClick={handleSearchSubmit}
+                                size="30px"
+                                style={{ cursor: 'pointer' }} />
+                        </form>
+                    </div>
+                </div>
                 <table className="table table-dark table-hover QnaTable">
                     <thead>
                         <tr>
@@ -129,7 +161,7 @@ function QnA() {
                             QnA.map((item, index) => (
                                 <tr key={index}>
                                     <th>{item.qna_no}</th>
-                                    <th>{item.userid}</th>
+                                    <th>{item.userid.substring(0,2)+item.userid.substring(2).replace(/./g, "*")}</th>
                                     <th className="qna_ht_th">
                                         {item.head_title == 1 ? <div className="qna_ht">[상품]&nbsp;</div> :
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
@@ -148,7 +180,7 @@ function QnA() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5">Loading...</td>
+                                <td colSpan="5">검색한 내용을 포함한 글이 존재하지 않습니다.</td>
                             </tr>
                         )}
                     </tbody>
@@ -176,25 +208,7 @@ function QnA() {
                     </div>
                 </div>
             )}
-            {/* 검색폼 */}
-            <div>
-                <form onSubmit={handleSearchSubmit}>
-                    <select
-                    name="searchKey"
-                    value={searchKey}
-                    onChange={handlesearchKeyChange}>
-                        <option value="qna_title">제목</option>
-                        <option value="qna_content">내용</option>
-                        <option value="userid">작성자</option>
-                    </select>
-                    <input
-                        type="text"
-                        name="searchWord"
-                        id="searchWord"
-                        onChange={handlesearchWordChange}/>
-                    <button type="submit">검색</button>
-                </form>
-            </div>
+          
 
             {/* 페이지네이션 */}
             <div className="qna_pagination">

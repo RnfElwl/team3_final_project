@@ -73,12 +73,36 @@ function QnAView() {
 
     return(
     <div className="QnAViewBody">
-        {item?.userid}<br/>
-        {item?.qna_no}<br/>
-        {item?.qna_writedate}<br/>
-        {item?.qna_title}<br/>
-        {item?.qna_content}<br/>
-        {item?.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{item?.qna_answer}</div> }
+        <table>
+            <tr>
+                <td>작성자</td>
+                <td>{item?.userid.substring(0,2)+item?.userid.substring(2).replace(/./g, "*")}</td>
+                <td>번호</td>
+                <td>{item?.qna_no}</td>
+            </tr>
+            <tr>
+                <td>작성일</td>
+                <td>{item?.qna_writedate}</td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td colspan="2">{item?.qna_title}</td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td colspan="2"> {item?.qna_content}</td>
+            </tr>
+        </table>
+        <hr/>답변
+        <table>
+            
+            <tr>
+                <td></td>
+                <td>{item?.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{item?.qna_answer}</div> }</td>
+            </tr>
+        </table>
+        <br/>
+       
     
     <AiOutlineAlert onClick={checkid} size="35px"/>
     {usersid === item?.userid ? (
