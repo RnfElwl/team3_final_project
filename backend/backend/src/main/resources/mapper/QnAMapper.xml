@@ -11,7 +11,7 @@
             ${searchKey} like '%${searchWord}%' and
         </if>
         active_state IN (1, 2)
-        order by qna_no desc
+        order by qna_writedate desc
         limit ${onePageRecord} offset ${offset}
     </select>
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AdminVO {
-    private String season;
-    private int acount;
+    private String qna_date;
+    private int qna_count;
 }

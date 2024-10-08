@@ -5,5 +5,7 @@ import com.ict.backend.vo.AdminVO;
 import java.util.List;
 
 public interface AdminDAO {
-    public List<AdminVO> adminDataSelectSeason();
+    public List<AdminVO> qnaDataSelectMonth();
+    public List<AdminVO> qnaDataSelectYear();
+    public List<AdminVO> qnaDataSelectDay();
 }
