@@ -15,11 +15,16 @@ function Header() {
   }
   const location =useLocation();
   const [isAdminPage, setIsAdminPage]=useState(false);
+  const [isChatting, setIsChatting] = useState(false);
 
   useEffect(()=>{
     location.pathname === "/adminTest"
     ? setIsAdminPage(true)
     : setIsAdminPage(false);
+
+    (location.pathname).substring(0, 9) === "/chatting"
+    ? setIsChatting(true)
+    : setIsChatting(false);
   }, [location.pathname]);
 
   if(isAdminPage){
@@ -41,7 +46,13 @@ function Header() {
         </div>
       </>
     );
-  }else{
+  }
+  else if(isChatting){
+    <>
+    
+    </>
+  }
+  else{
   //통상 헤더
   return (
       <>
@@ -69,7 +80,7 @@ function Header() {
               <Search color={"black"} size={20}/><input  type="text" />
             </div>
             <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
-            <div className='join_btn'><Link to={'/join'}>회원가입</Link></div>
+            <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>
             
           </div>
       </header>

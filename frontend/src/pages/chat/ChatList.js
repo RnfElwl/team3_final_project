@@ -57,7 +57,7 @@ function ChantList(){
         const popupWindow = window.open(
             'http://localhost:3000/chatting/'+url, // 열고자 하는 URL
             '_blank', // 새 창으로 열기
-            'width=600,height=400' // 팝업 창의 크기
+            'width=600,height=600' // 팝업 창의 크기
           );
     }
     return (
