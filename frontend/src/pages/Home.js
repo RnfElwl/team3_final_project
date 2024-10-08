@@ -123,7 +123,8 @@ function MovieList() {
             <div className="movie-grid"
               onMouseEnter={() => handleMouseEnter(index)} 
               onMouseLeave={handleMouseLeave}> 
-              <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 100}%)` }}>
+              <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 1200}px)` }}>
+              {/* <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 41}%)` }}> */}
                 {movies.map(movie => (
                   <div key={movie.movie_code} className="movie-item">
                     <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)}/>
