@@ -43,7 +43,7 @@ function App() {
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
-                <Route path='/admin/' element={<Admin/>}/>
+                <Route path='/admin' element={<Admin/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
