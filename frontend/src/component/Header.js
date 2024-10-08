@@ -18,7 +18,7 @@ function Header() {
   const [isChatting, setIsChatting] = useState(false);
 
   useEffect(()=>{
-    location.pathname === "/adminTest"
+    location.pathname === "/admin"
     ? setIsAdminPage(true)
     : setIsAdminPage(false);
 
@@ -37,7 +37,7 @@ function Header() {
           </div>
       </header>
         <div className="admin_nav">
-          <div><Link to={'/adminTest'}>대쉬보드</Link></div>
+          <div><Link to={'/admin'}>대쉬보드</Link></div>
           <div><Link to={'#'}>사용자 관리</Link></div>
           <div><Link to={'#'}>컨텐츠 관리</Link></div>
           <div><Link to={'#'}>상품 관리</Link></div>
