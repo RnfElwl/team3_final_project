@@ -33,7 +33,7 @@ function App() {
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
                 <Route path='/chat' element={<ChatList/>}></Route>
-                <Route path='/chat/:chatlist_url' element={<Chatting/>}></Route>
+                <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
 
                 <Route path='/categories' element={<MovieCategories/>}></Route>
                 
