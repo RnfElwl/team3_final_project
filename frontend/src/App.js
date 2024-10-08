@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import './App.css';
+import './App.css';
 
 import Home from './pages/Home';
 import Layout from './pages/Layout';
@@ -24,6 +24,7 @@ import QNAWrite from './pages/qna/QnAWrite.js'
 import QNAEdit from './pages/qna/QnAEdit.js' 
 import Recommend from './pages/recommend/Recommend.js';
 import EditInfo from './pages/mypage/EditInfo.js';
+import Signup from './pages/mypage/Signup.js'; 
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                 <Route path='/shop/' element={<MvShopping/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
+                <Route path = '/signup' element = {<Signup/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
 
