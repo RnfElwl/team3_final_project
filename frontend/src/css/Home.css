@@ -92,6 +92,13 @@
   height: 100%;
   object-fit: cover; /* 자동으로 높이를 조절 */
   border-radius: 5px; /* 모서리 둥글게 */
+  transition: transform 0.3s, box-shadow 0.3s; /* 애니메이션 효과 추가 */
+}
+
+/* 마우스 오버 시 효과 */
+.movie-item img:hover {
+  transform: scale(1.05); /* 약간 확대 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* 그림자 확대 */
 }
 
 .home .movie-list {
@@ -103,23 +110,13 @@
 
 .home .movie-list h3{
   color: #fff;
+  font-size: 1.3em;
+  padding-left: 10px;
 }
 
 .home .movie-slider {
   display: flex;
   transition: transform 0.5s ease;
-}
-
-.movie-card {
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  height: 300px; 
-  width: 100%;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
 }
 
 .home .buttonPrev {
