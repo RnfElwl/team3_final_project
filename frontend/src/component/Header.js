@@ -58,7 +58,7 @@ function Header() {
       <>
       <nav className={`home_nav ${nav?'nav_show':'nav_hide'}`}>
         <div className='logo'>
-          <img src=''/> 로고
+          <Link to={'/'}><div><img src=""/>로고</div></Link>
         </div>
         <div className='tab'>
           <div><Link to={'/categories'} onClick={closeNav}>카테고리</Link></div>
