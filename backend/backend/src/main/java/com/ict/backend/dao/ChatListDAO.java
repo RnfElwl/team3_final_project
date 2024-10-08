@@ -10,6 +10,6 @@ public interface ChatListDAO {
     public int insertChatList(ChatListVO chatListVO);
     public List<ChatListVO> selectOpenChatList();
     public int insertChatEnter(String chatlist_url, String userid);
-    public List<ChatVO> selectChatContent(String chatlist_url);
+    public List<ChatVO> selectChatContent(String chatlist_url, String userid);
 
 }

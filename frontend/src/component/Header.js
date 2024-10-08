@@ -61,7 +61,7 @@ function Header() {
       <header className="Header">
           <div className='left-info'>
             <List color={"white"} size={40} onClick={showNav}/>
-             <div><img src=""/>로고</div>
+            <Link to={'/'}><div><img src=""/>로고</div></Link>
           </div>
           
           <div className='right-info'>

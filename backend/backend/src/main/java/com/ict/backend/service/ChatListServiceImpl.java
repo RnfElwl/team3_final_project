@@ -23,8 +23,8 @@ public class ChatListServiceImpl implements ChatListService {
     public List<ChatListVO> selectOpenChatList(){
         return chatListDAO.selectOpenChatList();
     }
-    public List<ChatVO> selectChatContent(String chatlist_url){
-        return chatListDAO.selectChatContent(chatlist_url);
+    public List<ChatVO> selectChatContent(String chatlist_url, String userid){
+        return chatListDAO.selectChatContent(chatlist_url, userid);
     }
     public int insertChatEnter(String chatlist_url, String userid){
         return chatListDAO.insertChatEnter(chatlist_url, userid);

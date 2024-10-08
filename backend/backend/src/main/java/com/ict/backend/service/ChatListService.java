@@ -11,7 +11,7 @@ import java.util.List;
 public interface ChatListService {
     public int insertChatList(ChatListVO chatListVO);
     public List<ChatListVO> selectOpenChatList();
-    public List<ChatVO> selectChatContent(String chatlist_url);
+    public List<ChatVO> selectChatContent(String chatlist_url, String userid);
     public int insertChatEnter(String chatlist_url, String userid);
 
 }

@@ -109,14 +109,17 @@ const Chatting = () => {
                 chat_type: 0
             }
             if(receivedMessages.length <= 1){
-                console.log(receivedMessages)
                 const box = [info, receivedMessages[0]];
                 setReceivedMessages(box)
                 return ;
             }
             const lastDay = (receivedMessages[receivedMessages.length -2].chat_date).substring(0, 10);
             if(lastDay!=now.substring(0, 10)){
-                setReceivedMessages(p=>[...p, info])
+                const box = receivedMessages.slice(0, receivedMessages.length-1)
+                const lastBox = receivedMessages[receivedMessages.length-1]
+                box.push(info);
+                box.push(lastBox)
+                setReceivedMessages(box)
             }
         }
     }
@@ -231,7 +234,7 @@ const Chatting = () => {
           }
     }
     return (
-        <div className='container chatting_room'>
+        <div className='chatting_room'>
             {/* <div className='chatting_sub'>
                 gdgd
             </div> */}
@@ -258,7 +261,6 @@ const Chatting = () => {
                                 </form>
                         </div> 
             <div className='chatting_box'>
-                <h1>MQTT Chat Application</h1>
                 <div className='chatting_list' ref={chatting_box}> 
                     {receivedMessages.map((data, index) => (
                         <>  

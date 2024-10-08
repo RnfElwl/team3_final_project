@@ -3,7 +3,7 @@
     display: flex;  
 }
 .chatting_room .chatting_box{
-    width: 60%;
+    width: 100%;
 }
 .chatting_room .chatting_sub{
     width: 40%;
@@ -34,6 +34,7 @@
 .chatting_room .chatting_list{
     display: flex;
     flex-direction: column;
+    width: 100%;
     height: 75vh;
     overflow-y: auto;
     padding: 0 20px;

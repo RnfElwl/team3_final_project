@@ -10,6 +10,7 @@
         select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1;
     </select>
     <select id="selectChatContent" resultType="com.ict.backend.vo.ChatVO">
+        select * from(
         SELECT
         date_records.chatlist_url,
         NULL AS userid,
@@ -53,7 +54,9 @@
         chat_content_tbl cct
         join user_tbl ut on ut.userid=cct.userid
         where chatlist_url=#{param1}
-        ORDER BY chat_date;
+        ORDER BY chat_date
+        ) as rs where
+        (select cul.first_conn from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= rs.chat_date
     </select>
     <insert id="insertChatEnter">
         insert ignore into chat_user_list(chatlist_url, userid) values(#{param1}, #{param2});

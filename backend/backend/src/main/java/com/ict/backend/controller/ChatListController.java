@@ -46,7 +46,8 @@ public class ChatListController {
     @GetMapping("/{chatlist_url}")
     public List<ChatVO> selectChatContent(@PathVariable String chatlist_url){
         System.out.println("-----------------");
-        List<ChatVO> list = chatListService.selectChatContent(chatlist_url);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ChatVO> list = chatListService.selectChatContent(chatlist_url, userid);
 
         return list;
     }

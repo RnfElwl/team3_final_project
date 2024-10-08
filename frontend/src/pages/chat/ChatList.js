@@ -50,7 +50,15 @@ function ChantList(){
           console.log(result)
           if(result == 1){
             setChatList();
+            setRoom(!room);
           }
+    }
+    function openWindow(url){
+        const popupWindow = window.open(
+            'http://localhost:3000/chat/'+url, // 열고자 하는 URL
+            '_blank', // 새 창으로 열기
+            'width=600,height=400' // 팝업 창의 크기
+          );
     }
     return (
         <main className="chatList">
@@ -95,7 +103,8 @@ function ChantList(){
                 {
                     list.map(function(val, i){
                     return (<div className="openchat chat_box">
-                        <Link to={`/chat/${val.chatlist_url}`}>
+                        {/* <Link to={`/chat/${val.chatlist_url}`}> */}
+                        <div onClick={()=>openWindow(val.chatlist_url)}>
                         <div className="chat_box-img">
                             <img src={val.image_url}/>
                         </div>
@@ -105,7 +114,8 @@ function ChantList(){
                             </div>
                             <div>{val.usernick}</div>
                             </div>
-                        </Link>
+                        {/* </Link> */}
+                        </div>
                     </div>)
                 })
             }
