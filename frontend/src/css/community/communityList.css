@@ -32,7 +32,7 @@ body {
 .community_list .category_box {
     width: 200px; /* 카테고리 박스 너비 */
     height: 300px; /* 카테고리 박스 높이 */
-    border: 1px solid #ddd; /* 박스 테두리 */
+    border: none;
     border-radius: 10px;
     padding: 10px;
     display: flex;
@@ -43,9 +43,9 @@ body {
 }
 
 .community_list .category_box button {
-    width: 80%; /* 버튼 너비 */
+    width: 100%; /* 버튼 너비 */
     padding: 10px; /* 버튼 패딩 */
-    border: 1px solid #fff; /* 테두리 없음 */
+    border: 1px solid #fff; 
     border-radius: 20px; /* 모서리 둥글게 */
     background-color: black; /* 버튼 배경색 */
     color: white; /* 글자색 */
@@ -76,6 +76,7 @@ body {
     font-weight: bold; /* 글씨 두껍게 */
     color: rgb(48, 46, 46); /* 색상 */
     font-size: 1.2em;
+    margin-top: 16px;
 }
 
 .community_list .search {
@@ -239,16 +240,11 @@ body {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-around; /* 버튼 사이의 간격을 균등하게 배치 */
     margin-left: 10px; /* 리스트와의 간격 */
     color:#fff;
 }
 
-.community_list .top_posts h3 {
-    margin: 0; /* 마진 제거 */
-    font-size: 18px; /* 제목 크기 */
-}
 
 .community_list .top_posts div {
     margin: 5px 0; /* 항목 간 여백 */
@@ -261,4 +257,17 @@ body {
 
 .community_list .top_posts div a:hover {
     font-weight: bold;
+}
+
+.community_list .top_post_item p {
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+    max-width: 180px; /* 텍스트가 들어갈 최대 너비 설정 (조정 가능) */
+    font-size: 16px; /* 글자 크기 */
+}
+
+.community_list .top_posts h3{
+    text-align: center;
+    font-size: 20px;
 }

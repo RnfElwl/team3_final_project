@@ -241,7 +241,7 @@ function CommunityList() {
                         </div>
                     ))
                 ) : (
-                    <p>커뮤니티 글이 없습니다.</p> // 글이 없을 때 메시지
+                    <p style={{textAlign:"center", fontSize:"1.4em", paddingTop:"40px"}}>커뮤니티 글이 없습니다.</p> // 글이 없을 때 메시지
                 )}
             </div>
 
@@ -256,7 +256,7 @@ function CommunityList() {
                 
                 {/* 조회수 많은 게시물 Top 3 */}
                 <div className="top_posts">
-                    <p>조회수 Top 3</p>
+                    <h3>조회수 Top 3</h3>
                     {topViewedPosts.map((post, index) => (
                         <div key={post.community_no} className="top_post_item">
                             <Link to={`/community/communityView/${post.community_no}`}>
@@ -268,7 +268,7 @@ function CommunityList() {
 
                 {/* 좋아요 많은 게시물 Top 3 */}
                 <div className="top_posts">
-                    <p>좋아요 Top 3</p>
+                    <h3>좋아요 Top 3</h3>
                     {topLikedPosts.map((post, index) => (
                         <div key={post.community_no} className="top_post_item">
                             <Link to={`/community/communityView/${post.community_no}`}>
