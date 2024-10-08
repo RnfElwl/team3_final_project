@@ -15,11 +15,16 @@ function Header() {
   }
   const location =useLocation();
   const [isAdminPage, setIsAdminPage]=useState(false);
+  const [isChatting, setIsChatting] = useState(false);
 
   useEffect(()=>{
-    location.pathname === "/adminTest"
+    location.pathname === "/admin"
     ? setIsAdminPage(true)
     : setIsAdminPage(false);
+
+    (location.pathname).substring(0, 9) === "/chatting"
+    ? setIsChatting(true)
+    : setIsChatting(false);
   }, [location.pathname]);
 
   if(isAdminPage){
@@ -32,7 +37,7 @@ function Header() {
           </div>
       </header>
         <div className="admin_nav">
-          <div><Link to={'/adminTest'}>대쉬보드</Link></div>
+          <div><Link to={'/admin'}>대쉬보드</Link></div>
           <div><Link to={'#'}>사용자 관리</Link></div>
           <div><Link to={'#'}>컨텐츠 관리</Link></div>
           <div><Link to={'#'}>상품 관리</Link></div>
@@ -41,13 +46,19 @@ function Header() {
         </div>
       </>
     );
-  }else{
+  }
+  else if(isChatting){
+    <>
+    
+    </>
+  }
+  else{
   //통상 헤더
   return (
       <>
       <nav className={`home_nav ${nav?'nav_show':'nav_hide'}`}>
         <div className='logo'>
-          <img src=''/> 로고
+          <Link to={'/'}><div><img src=""/>로고</div></Link>
         </div>
         <div className='tab'>
           <div><Link to={'/categories'} onClick={closeNav}>카테고리</Link></div>
@@ -69,7 +80,7 @@ function Header() {
               <Search color={"black"} size={20}/><input  type="text" />
             </div>
             <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
-            <div className='join_btn'><Link to={'/join'}>회원가입</Link></div>
+            <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>
             
           </div>
       </header>

@@ -14,7 +14,7 @@ import CommunityList from './pages/community/CommunityList.js';
 import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
-import AdminTest from './pages/admin/AdminTest'
+import Admin from './pages/admin/Admin.js'
 import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'
 import MvShopping from './pages/shopping/MvShopping.js'    
@@ -33,7 +33,7 @@ function App() {
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
                 <Route path='/chat' element={<ChatList/>}></Route>
-                <Route path='/chat/:chatlist_url' element={<Chatting/>}></Route>
+                <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
 
                 <Route path='/categories' element={<MovieCategories/>}></Route>
                 
@@ -43,7 +43,7 @@ function App() {
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
-                <Route path='/adminTest/' element={<AdminTest/>}/>
+                <Route path='/admin' element={<Admin/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
