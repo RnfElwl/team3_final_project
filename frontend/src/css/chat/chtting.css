@@ -1,16 +1,23 @@
 .chatting_room{
     color: white;
-    display: flex;  
+    display: flex;
+    flex-direction: column;
 }
 .chatting_room .chatting_box{
     width: 100%;
+    height: 100vh;
 }
 .chatting_room .chatting_sub{
     width: 40%;
 }
 .chatting_room .chatting_input{
+    position: fixed;
+    bottom: 0px;
     display: flex;
     width: 100%;
+}
+.chatting_room .chatting_input2{
+    height: 40px;
 }
 .chatting_room .myText,
 .chatting_room .anotherText{
@@ -31,14 +38,19 @@
     text-align: right;
     align-self: flex-end;
 }
+.chatting_room:has(html)::-webkit-scrollbar{
+    display: none !important;
+}
 .chatting_room .chatting_list{
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 75vh;
+    height: calc(100vh - 110px);
     overflow-y: auto;
-    padding: 0 20px;
-}   
+}
+.chatting_room .room_title{
+    font-size: 19px;
+}
 .chatting_room .chatting_list::-webkit-scrollbar{
     width: 10px;
 }
@@ -66,7 +78,7 @@
     justify-content: right;
     margin-left: 50%;
     align-items: end;
-    text-align: right;
+    text-align: left;
 
 }
 
@@ -113,6 +125,77 @@
 .chatting_room .doorway,
 .chatting_room .chatting_day{
     align-self: center;
+}
+.chatting_room .chat_header{
+    position: fixed;
+    top:0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+    background-color: aqua;
+    padding: 15px 20px;
+}
+.chatting_room .user_count:hover{
+    color: #555;
+}
+.chatting_room header{
+    height: 70px;
+    padding: 15px 20px;
+    width: 100%;
+    background-color: gainsboro;
+}
+.chatting_room .schedule_icon{
+    position: relative;
+}
+.chatting_room .menu_list{
+    position: absolute;
+    width: 120px;
+    top: 30px;
+    left: -90px;
+    background-color: white;
+    color: gray;
+    
+}
+.chatting_room .menu_list>div{
+    padding: 5px 10px;
+    box-shadow: 0 0 1px rgb(0, 0, 0);
+}
+.chatting_room .menu_hide{
+    display: none;
+}
+.chatting_room .menu_show{
+    display: block;
+}
+.chatting_room .menu_list>div:hover{
+    background-color: #e0e0e0;
+}
+.chatting_room .user_count{
+    position: relative;
+}
+.chatting_room .user_list{
+    position:absolute;
+    width: 200px;
+    top: 24px;
+    background-color: #ffffff;
+    color: gray;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+
+.chatting_room .user_list::-webkit-scrollbar{
+    width: 8px;
+}
+
+.chatting_room .user_show{
+    display: block;
+}
+.chatting_room .user_hide{
+    display: none;
 }
 
 

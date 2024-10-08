@@ -5,6 +5,9 @@ import mqtt from 'mqtt';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineAlert } from "react-icons/ai";
+import { IoPerson, IoExitOutline  } from "react-icons/io5";
+import { FaCalendarCheck } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -13,25 +16,32 @@ const Chatting = () => {
         day: 'numeric',
         weekday: 'long' // 요일
     };
-  const [client, setClient] = useState(null);
+    const {chatlist_url } = useParams();// 채팅방 id
+    const [roomInfo, setRoomInfo]= useState({}); // 채팅방 정보
+    const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
-    const {chatlist_url } = useParams();
     const [isConnected, setIsConnected] = useState(false); // 연결 상태 확인용
     const [userData, setUserData] = useState({});
     const [myid, setMyid] = useState("");
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//폼에 있는 값들어있음
+    const [menu, setMenu] = useState(false);// 메뉴 태그 보일지 말지
+    const [userList, setUserList] = useState(false);//유저 리스트 태그 보일지 말지
+    const [memberList, setMemberList] = useState([]);// 채팅방 유저 정보 담는곳
     let once = 0;
     const chatting_box = useRef(null);
+    const menu_box = useRef(null);
     useEffect(() => {
+        document.body.style.overflow = 'hidden';
         if(once == 0){
             once = 1;
-            setChatContent();
+            setDefaultChat();
+            setDefaultMember();
         }
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
         getUser()
-        
+        getRoomInfo();
         // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
 
         // 연결 성공 시
@@ -96,8 +106,14 @@ const Chatting = () => {
         dateMsgSend()
         
       }, [receivedMessages, client]);
-
-      async function dateMsgSend(){
+      async function getRoomInfo(){
+        const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
+            chatlist_url
+        }});
+        console.log(result);
+        setRoomInfo(result.data);
+      }
+      async function dateMsgSend(){// 로컬 날짜 메시지 출력
         if(receivedMessages.length >= 1){
             const now = receivedMessages[receivedMessages.length -1].chat_date;
             if(!client){
@@ -124,15 +140,21 @@ const Chatting = () => {
         }
     }
     
-    async function setChatContent(){
+    async function setDefaultChat(){ // 채팅 기본 값 세팅
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
-        await data.map( async(d, i)=>{
-            await setReceivedMessages(p=>[...p, d])
-        })
-
+        
+        setReceivedMessages(data);
+        
+    }
+    async function setDefaultMember(){
+        const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
+            chatlist_url
+        }});
+        console.log(data);
+        setMemberList(data);
     }
     
-    async function getUser(){
+    async function getUser(){// 자기 정보 가져오기
         const result = await axios.get('http://localhost:9988/user/userinfo');
         setMyid(result.data);
         const params = {userid : result.data};
@@ -213,6 +235,10 @@ const Chatting = () => {
         })
         toggleReport();
     }
+    function userToggle(){
+        setUserList(!userList);
+        setMenu(false)
+    }
     function toggleReport(){{/* 신고 기능 */}
         setReportShow(!reportShow);
     }
@@ -233,11 +259,52 @@ const Chatting = () => {
             toggleReport();
           }
     }
+    function menuToggle(){
+        setMenu(!menu);
+        setUserList(false)
+    }
+
     return (
         <div className='chatting_room'>
-            {/* <div className='chatting_sub'>
-                gdgd
-            </div> */}
+            <header className='chat_header'> 
+                <div className='room_info'>
+                    <div className='room_title'>{roomInfo.chat_title}</div>
+                    <div className='user_count' title="유저 목록" onClick={userToggle}>
+                        <div>
+                        <IoPerson size="15px" ></IoPerson >{roomInfo.chatlist_headcount}
+                        </div>
+                        <div className={`user_list ${userList?'user_show':'user_hide'}`}>
+                            {
+                            memberList.map((data, index)=>(
+                                <>
+                                    <div>
+                                        <div><img src={`${data.userprofile}`}/></div>
+                                        <div>{data.usernick}</div>
+                                    </div>
+                                </>
+                            ))
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div className='schedule_icon' onClick={menuToggle}>
+                    <div>
+                        <GiHamburgerMenu size="30px"/>
+                    </div>
+                    <div className={`menu_list ${menu?'menu_show':'menu_hide'}`} ref={menu_box}>
+                        <div>
+                            <FaCalendarCheck />일정
+                        </div>
+                        <div>
+                            <IoExitOutline/> 방나가기
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <header>
+                공간 차지하는 용도
+            </header>
+
             {/* 신고 기능 */}
             <div className={`report_window ${reportShow ? 'report_show':'report_hide'}`}>
                             <div className='report_close' onClick={toggleReport}></div>
@@ -260,13 +327,11 @@ const Chatting = () => {
                                     <button type="submit">방만들기</button>
                                 </form>
                         </div> 
-            <div className='chatting_box'>
+            <div className='chatting_box' onClick={()=>{ setMenu(false); setUserList(false)}}>
                 <div className='chatting_list' ref={chatting_box}> 
                     {receivedMessages.map((data, index) => (
                         <>  
-                        
                         {
-                            
                             {
                                 0: <div class="chatting_day">{new Date(data.chat_date).toLocaleDateString('ko-KR', options).replace(/ /g, '')}</div>,
                                 1:  

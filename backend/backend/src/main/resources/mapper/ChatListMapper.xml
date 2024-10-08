@@ -65,4 +65,15 @@
     <insert id="insertChatEnter">
         insert ignore into chat_user_list(chatlist_url, userid) values(#{param1}, #{param2});
     </insert>
+    <select id="selectChatRoom">
+        select * from chat_list_tbl where chatlist_url=#{param1}
+    </select>
+    <select id="selectChatMember">
+        select chatlist_url, ut.userid, ut.userprofile, ut.usernick from chat_user_list cul
+        join user_tbl ut on ut.userid=cul.userid
+        where chatlist_url=#{param1}
+    </select>
+    <update id="updateChatHeadCount">
+        update chat_list_tbl set chatlist_headcount=chatlist_headcount+1 where chatlist_url=#{param1}
+    </update>
 </mapper>    

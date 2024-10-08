@@ -56,4 +56,18 @@ public class ChatListController {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         return chatListService.insertChatEnter(chatlist_url, userid);
     }
+    @GetMapping("/roominfo")
+    public ChatListVO selectRoomInfo(@RequestParam String chatlist_url){
+        return chatListService.selectChatRoom(chatlist_url);
+    }
+    @GetMapping("/member-list")
+    public List<ChatVO> selectChatMember(@RequestParam String chatlist_url){
+        System.out.println(chatlist_url);
+        return chatListService.selectChatMember(chatlist_url);
+    }
+    @PostMapping("/headcount")
+    public int updateChatHeadCount(@RequestBody String chatlist_url){
+        System.out.println(chatlist_url);
+        return chatListService.updateChatHeadCount(chatlist_url);
+    }
 }
