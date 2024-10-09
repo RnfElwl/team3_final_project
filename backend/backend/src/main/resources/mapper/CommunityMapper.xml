@@ -15,4 +15,52 @@
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
         SELECT * FROM community_tbl WHERE community_no = #{community_no}
     </select>
+    <update id="increaseHit" parameterType="com.ict.backend.vo.CommunityVO">
+        UPDATE community_tbl
+        SET hit = hit + 1
+        WHERE community_no = #{community_no}
+    </update>
+    <select id="getTopViewedPosts" resultType="com.ict.backend.vo.CommunityVO">
+        SELECT * FROM community_tbl
+        ORDER BY hit DESC
+        LIMIT 3
+    </select>
+    <update id="editCommunity" parameterType="com.ict.backend.vo.CommunityVO">
+        UPDATE community_tbl
+        SET community_content = #{community_content},
+        community_title = #{community_title},
+        community_img = #{community_img},
+        loc = #{loc},
+        privacy = #{privacy},
+        edit_date = NOW(),
+        edit_user = #{edit_user}
+        WHERE community_no = #{community_no}
+    </update>
+    <delete id="deleteCommentsByCommunityNo" parameterType="int">
+        DELETE FROM community_comment_tbl WHERE community_no = #{community_no}
+    </delete>
+    <delete id="deleteCommunity" parameterType="int">
+        delete from community_tbl where community_no = #{community_no}
+    </delete>
+    <!-- 좋아요 있는지 확인 -->
+    <select id="isLiked" parameterType="com.ict.backend.vo.CommunityLikeVO" resultType="int">
+        SELECT COUNT(*)
+        FROM community_like_tbl
+        WHERE community_no = #{community_no} AND userid = #{userid}
+    </select>
+    <!-- 좋아요 추가 -->
+    <insert id="likeCommunity" parameterType="CommunityLikeVO">
+        INSERT INTO community_like_tbl (community_no, userid)
+        VALUES (#{community_no}, #{userid})
+    </insert>
+    <!-- 좋아요 삭제 -->
+    <delete id="unlikeCommunity" parameterType="CommunityLikeVO">
+        DELETE FROM community_like_tbl
+        WHERE community_no = #{community_no} AND userid = #{userid}
+    </delete>
+    <!-- 좋아요 수 조회 -->
+    <select id="getLikesCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM community_like_tbl
+        WHERE community_no = #{community_no}
+    </select>
 </mapper>

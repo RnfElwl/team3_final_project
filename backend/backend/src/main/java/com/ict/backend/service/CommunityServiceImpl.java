@@ -1,7 +1,9 @@
 package com.ict.backend.service;
 
 import com.ict.backend.dao.CommunityDAO;
+import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.PagingVO;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -25,6 +27,51 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     public CommunityVO getCommunityView(int community_no) {
         return dao.getCommunityView(community_no);
+    }
+
+    @Override
+    public void increaseHit(int community_no) {
+        dao.increaseHit(community_no);
+    }
+
+    @Override
+    public List<CommunityVO> getTopViewedPosts() {
+        return dao.getTopViewedPosts();
+    }
+
+    @Override
+    public void editCommunity(CommunityVO community) {
+        dao.editCommunity(community);
+    }
+
+    @Override
+    public void deleteCommentsByCommunityNo(int community_no) {
+        dao.deleteCommentsByCommunityNo(community_no);
+    }
+
+    @Override
+    public void deleteCommunity(int community_no) {
+        dao.deleteCommunity(community_no);
+    }
+
+    @Override
+    public int isLiked(CommunityLikeVO like) {
+        return dao.isLiked(like);
+    }
+
+    @Override
+    public void likeCommunity(CommunityLikeVO like) {
+        dao.likeCommunity(like);
+    }
+
+    @Override
+    public void unlikeCommunity(CommunityLikeVO like) {
+        dao.unlikeCommunity(like);
+    }
+
+    @Override
+    public int getLikesCount(int community_no) {
+        return dao.getLikesCount(community_no);
     }
 
 }

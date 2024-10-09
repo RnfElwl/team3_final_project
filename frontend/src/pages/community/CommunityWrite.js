@@ -1,6 +1,7 @@
 import "../../css/community/communityWrite.css";
 import React, { useState } from 'react';
-import axios from "axios";
+// import axios from "axios";
+import axios from '../../component/api/axiosApi';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 function CommunityWrite() {
@@ -13,6 +14,7 @@ function CommunityWrite() {
     const [content, setContent] = useState('');
     const [category, setCategory] = useState(null); // 카테고리 번호
     const [privacy, setPrivacy] = useState(null); // 공개 대상 번호
+    const userid = localStorage.getItem('userid');
 
     // Kakao Maps API를 활용한 장소 검색
     const handleSearch = () => {
@@ -67,9 +69,15 @@ function CommunityWrite() {
             alert('공개 대상을 선택해주세요.');
             return;
         }
+        // if (!userid) {
+        //     alert('로그인이 필요합니다.');
+        //     navigate('/signin'); // 로그인이 필요한 페이지로 이동
+        //     return;
+        // }
+
         try {
             const postData = {
-                userid: "test1234",  // 실제 로그인된 유저의 ID로 변경해야 함
+                userid: userid,  // 실제 로그인된 유저의 ID로 변경해야 함
                 community_title: title,
                 community_content: content,
                 community_img: image,

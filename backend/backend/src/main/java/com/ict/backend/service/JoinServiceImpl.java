@@ -28,12 +28,14 @@ public class JoinServiceImpl implements JoinService {
         MemberVO memberVO = new MemberVO();
         memberVO.setUserid(joinDTO.getUserid());
 
-
         // 비밀번호 암호화
         String encodedPassword = bCryptPasswordEncoder.encode(joinDTO.getUserpwd());
         memberVO.setUserpwd(encodedPassword);  // 암호화된 비밀번호 저장
         //memberVO.setRole("ROLE_USER");
-
+        memberVO.setUsername(joinDTO.getUsername());
+        memberVO.setUsertel(joinDTO.getUsertel());
+        memberVO.setUsernick(joinDTO.getUsernick());
+        System.out.println(memberVO);
         // DAO를 통해 데이터베이스에 저장
         userDAO.saveUser(memberVO);
     }

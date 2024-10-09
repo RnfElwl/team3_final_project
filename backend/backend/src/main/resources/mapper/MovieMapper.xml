@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.MovieDAO">
+
+    <!-- 장르별 영화 리스트 가져오기 -->
+    <select id="getMoviesByGenre" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+        SELECT * FROM movie_data_tbl WHERE movie_genre = #{genre}
+    </select>
+
+    <!-- 연도별 영화 리스트 가져오기 -->
+    <select id="getMoviesByYear" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+        SELECT * FROM movie_data_tbl WHERE opened_year = #{year}
+    </select>
+
+    <!-- 국가별 영화 리스트 가져오기 -->
+    <select id="getMoviesByNation" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+        SELECT * FROM movie_data_tbl WHERE movie_nation = #{nation}
+    </select>
+
+    <!-- 영화 코드를 기반으로 특정 영화의 상세 정보를 가져오는 쿼리 -->
+    <select id="getMovieByCode" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+        SELECT
+        movie_code,
+        movie_kor,
+        movie_eng,
+        movie_type,
+        movie_genre,
+        movie_nation,
+        movie_showtime,
+        opened_year,
+        movie_grade,
+        movie_directors,
+        movie_poster
+        FROM
+        movie_data_tbl
+        WHERE
+        movie_code = #{movieCode}
+    </select>
+
+
+</mapper>

@@ -1,21 +1,33 @@
 import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
+//import axios from "axios";
+import axios from "../../component/api/axiosApi"
 
 
 function ChantList(){
-    const [list, setList] = useState([1,3,4,5,6]);
+    const [list, setList] = useState([]);
     const [menu, setMenu] = useState(false);
     const [room, setRoom] = useState(false);
     const [createType, setCreateType] = useState();
     const [formData, setFormData] = useState({});
-
+    
+    useEffect(() => {
+        setChatList();
+    }, []);
+    async function setChatList(){
+        const result = await axios.get("http://localhost:9988/chat/openChatList", {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          console.log(result.data);
+          setList(result.data);
+    }
     function setRoomFormData(event){
         let idField = event.target.name;
         let idValue = event.target.value;
-
         setFormData(p=>{return {...p, [idField]:idValue}});
             
         console.log(formData);
@@ -29,13 +41,24 @@ function ChantList(){
     }
     async function createRoom(event){
         event.preventDefault();
-        
-        console.log(formData);
+
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
             }
           });
+          console.log(result)
+          if(result == 1){
+            setChatList();
+            setRoom(!room);
+          }
+    }
+    function openWindow(url){
+        const popupWindow = window.open(
+            'http://localhost:3000/chatting/'+url, // 열고자 하는 URL
+            '_blank', // 새 창으로 열기
+            'width=500,height=800' // 팝업 창의 크기
+          );
     }
     return (
         <main className="chatList">
@@ -80,10 +103,19 @@ function ChantList(){
                 {
                     list.map(function(val, i){
                     return (<div className="openchat chat_box">
+                        {/* <Link to={`/chat/${val.chatlist_url}`}> */}
+                        <div onClick={()=>openWindow(val.chatlist_url)}>
                         <div className="chat_box-img">
-                            <img src=""/>
+                            <img src={val.image_url}/>
                         </div>
-                        <div>{i}</div>
+                        <div>
+                            <div>
+                                {val.chat_title}
+                            </div>
+                            <div>{val.usernick}</div>
+                            </div>
+                        {/* </Link> */}
+                        </div>
                     </div>)
                 })
             }

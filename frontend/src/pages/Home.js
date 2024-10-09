@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/Home.css';
+import axios from '../component/api/axiosApi';
+import '@fortawesome/fontawesome-free/css/all.css';
+import { useNavigate, useParams } from 'react-router-dom';
 import image1 from '../img/05.jpeg';
 import image2 from '../img/F04.jpeg';
 import image3 from '../img/j01.png';
@@ -12,15 +15,14 @@ function Home() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length); // 다음 이미지로 이동
-    }, 3000); // 3초 후에 다음 이미지로 이동
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
 
-    return () => clearTimeout(timeout); // 클린업 함수
-  }, [currentIndex]); // currentIndex가 변경될 때마다 효과 발생
+    return () => clearTimeout(timeout);
+  }, [currentIndex]);
 
   return (
     <div className='home'>
-      <div className="container">
         <div className="banner">
           <div className="banner-images" style={{ display: 'flex', overflow: 'hidden' }}>
             {images.map((image, index) => (
@@ -32,8 +34,8 @@ function Home() {
                 style={{
                   minWidth: '100%',
                   transition: 'opacity 1s ease-in-out',
-                  opacity: index === currentIndex ? 1 : 0, // 현재 인덱스가 아닌 경우는 투명하게
-                  position: 'absolute', // 이미지를 겹쳐 놓기 위해 절대 위치 사용
+                  opacity: index === currentIndex ? 1 : 0,
+                  position: 'absolute',
                   top: 0,
                   left: 0,
                 }}
@@ -48,100 +50,222 @@ function Home() {
             ))}
           </div>
         </div>
-        <MovieList /> {/* MovieList 컴포넌트 추가 */}
-      </div>
+        <MovieList />
     </div>
   );
 }
 
 function MovieList() {
   const [movies, setMovies] = useState([]);
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
-  const moviesPerPage = 6; // 한 페이지에 보여줄 영화 수
-  const [isHovered, setIsHovered] = useState(false); // 호버 상태 추가
+  const [currentMovieIndexes, setCurrentMovieIndexes] = useState(Array(8).fill(0)); // 각 리스트에 대한 인덱스 배열
+  const moviesPerPage = 6; 
+  const [hoveredListIndex, setHoveredListIndex] = useState(null); // 어떤 리스트에 마우스가 올라왔는지 저장
+  //const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Hook을 함수 컴포넌트 내부에서 호출
 
-  useEffect (() => {
-    // 데이터베이스에서 영화 데이터를 가져오는 함수 (예시로 하드코딩)
-    const fetchMovies = async () => {
-      // 실제 API 호출 예시
-      // const response = await axios.get('/api/movies');
-      // setMovies(response.data);
-
-      // 예시 하드코딩 데이터
-      const sampleMovies = [
-        { id: 1, title: '영화 1', image: 'https://via.placeholder.com/150' },
-        { id: 2, title: '영화 2', image: 'https://via.placeholder.com/150' },
-        { id: 3, title: '영화 3', image: 'https://via.placeholder.com/150' },
-        { id: 4, title: '영화 1', image: 'https://via.placeholder.com/150' },
-        { id: 5, title: '영화 2', image: 'https://via.placeholder.com/150' },
-        { id: 6, title: '영화 3', image: 'https://via.placeholder.com/150' },
-        { id: 7, title: '영화 1', image: 'https://via.placeholder.com/150' },
-        { id: 8, title: '영화 2', image: 'https://via.placeholder.com/150' },
-        { id: 9, title: '영화 3', image: 'https://via.placeholder.com/150' },
-        { id: 10, title: '영화 1', image: 'https://via.placeholder.com/150' },
-        { id: 11, title: '영화 3', image: 'https://via.placeholder.com/150' },
-        { id: 12, title: '영화 1', image: 'https://via.placeholder.com/150' }
-      ];
-      setMovies(sampleMovies);
+  // 데이터 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9988/recommend/list`);
+        console.log(response.data);
+        setMovies(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
     };
 
-    fetchMovies();
+    fetchData();
   }, []);
-  
-  // 영화 리스트의 현재 인덱스를 기준으로 보여줄 영화 리스트를 계산
-  const currentMovies = movies.slice(currentMovieIndex, currentMovieIndex + moviesPerPage);
 
-  const handleNext = () => {
-    if (currentMovieIndex + moviesPerPage < movies.length) {
-      setCurrentMovieIndex(currentMovieIndex + moviesPerPage);
+  const handlePrev = (index) => {
+    if (currentMovieIndexes[index] > 0) {
+      setCurrentMovieIndexes((prevIndexes) => {
+        const newIndexes = [...prevIndexes];
+        newIndexes[index] -= moviesPerPage;
+        return newIndexes;
+      });
     }
   };
 
-  const handlePrev = () => {
-    if (currentMovieIndex > 0) {
-      setCurrentMovieIndex(currentMovieIndex - moviesPerPage);
+  const handleNext = (index) => {
+    if (currentMovieIndexes[index] + moviesPerPage < movies.length) {
+      setCurrentMovieIndexes((prevIndexes) => {
+        const newIndexes = [...prevIndexes];
+        newIndexes[index] += moviesPerPage;
+        return newIndexes;
+      });
     }
+  };
+
+  const handleMouseEnter = (index) => {
+    setHoveredListIndex(index); // 마우스가 올라오면 해당 리스트 인덱스 저장
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredListIndex(null); // 마우스가 나가면 null로 설정
+  };
+
+  // 영화 카드 클릭 시 상세 페이지로 이동하는 함수
+  const handleCardClick = (movieCode) => {
+    navigate(`/movies/view/${movieCode}`); // movieCode만 사용
   };
 
   return (
     <div className="movie-list"> 
-      <h3>인기 Top10</h3>
-      <div className="movie-grid" style={{position: 'relative', display: 'flex', overflowX: 'hidden' }}
-        onMouseEnter={() => setIsHovered(true)} // 호버 상태 변경
-        onMouseLeave={() => setIsHovered(false)}> 
-        <div className="movie-slider" style={{ display: 'flex', transform: `translateX(-${(currentMovieIndex / moviesPerPage) * 100}%)`, transition: 'transform 0.5s ease' }}>
-          {movies.map(movie => (
-            <div key={movie.id} className="movie-item" style={{ flex: '0 0 16.66%', margin: '0 5px' }}>
-              <img src={movie.image} alt={movie.title} />
+      <div className='container'>
+      {['인기 TOP20', '기대작 TOP20', '리뷰가 많은 컨텐츠', '별점이 높은 컨텐츠', '새로 올라온 컨텐츠', '나이', '장르', '성별'].map((category, index) => (
+          <div key={index}>
+            <h3>{category}</h3>
+            <div className="movie-grid"
+              onMouseEnter={() => handleMouseEnter(index)} 
+              onMouseLeave={handleMouseLeave}> 
+              <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 1200}px)` }}>
+              {/* <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 41}%)` }}> */}
+                {movies.map(movie => (
+                  <div key={movie.movie_code} className="movie-item">
+                    <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)}/>
+                  </div>
+                ))}
+              </div>
+              <button 
+                onClick={() => handlePrev(index)} 
+                disabled={currentMovieIndexes[index] === 0} 
+                className='buttonPrev' 
+                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＜</button>
+              <button 
+                onClick={() => handleNext(index)} 
+                disabled={currentMovieIndexes[index] + moviesPerPage >= movies.length} 
+                className='buttonNext' 
+                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＞</button>
             </div>
-          ))}
-        </div>
-          {/* 버튼을 슬라이드 안에 배치 */}
-        <button onClick={handlePrev} disabled={currentMovieIndex === 0} style={{ 
-            position: 'absolute', 
-            left: '10px', 
-            top: '50%', 
-            transform: 'translateY(-50%)', 
-            display: isHovered ? 'block' : 'none', // 호버 시에만 보이도록
-            border: 'none',
-            backgroundColor: 'transparent', // 배경을 투명하게
-            color: 'white', // 버튼 텍스트 색상 설정
-            fontSize: '30px', // 글자 크기 조정
-            zIndex: 1 // 버튼을 가장 위로 표시
-          }}>＜</button>
-        <button onClick={handleNext} disabled={currentMovieIndex + moviesPerPage >= movies.length} style={{ 
-            position: 'absolute', 
-            right: '10px', 
-            top: '50%', 
-            transform: 'translateY(-50%)', 
-            display: isHovered ? 'block' : 'none', // 호버 시에만 보이도록
-            border: 'none',
-            backgroundColor: 'transparent', // 배경을 투명하게
-            color: 'white', // 버튼 텍스트 색상 설정
-            fontSize: '30px', // 글자 크기 조정
-            zIndex: 1 // 버튼을 가장 위로 표시
-          }}>＞</button>
+          </div>
+        ))}
         
+        {/* <h3>인기 TOP20</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[0] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(0)} disabled={currentMovieIndexes[0] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(0)} disabled={currentMovieIndexes[0] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>기대작 TOP20</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[1] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(1)} disabled={currentMovieIndexes[1] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(1)} disabled={currentMovieIndexes[1] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>리뷰가 많은 컨텐츠</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[2] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(2)} disabled={currentMovieIndexes[2] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(2)} disabled={currentMovieIndexes[2] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>별점이 높은 컨텐츠</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[3] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(3)} disabled={currentMovieIndexes[3] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(3)} disabled={currentMovieIndexes[3] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>새로 올라온 컨텐츠</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[4] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(4)} disabled={currentMovieIndexes[4] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(4)} disabled={currentMovieIndexes[4] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>나이</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[5] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(5)} disabled={currentMovieIndexes[5] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(5)} disabled={currentMovieIndexes[5] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>장르</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[6] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(6)} disabled={currentMovieIndexes[6] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(6)} disabled={currentMovieIndexes[6] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div>
+
+        <h3>성별</h3>
+        <div className="movie-grid"
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)}> 
+          <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[7] / moviesPerPage) * 100}%)` }}>
+            {movies.map(movie => (
+              <div key={movie.movie_code} className="movie-item">
+                <img src={movie.movie_link} alt={movie.title}/>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handlePrev(7)} disabled={currentMovieIndexes[7] === 0} className='buttonPrev' style={{ display: isHovered ? 'block' : 'none' }}>＜</button>
+          <button onClick={() => handleNext(7)} disabled={currentMovieIndexes[7] + moviesPerPage >= movies.length} className='buttonNext' style={{ display: isHovered ? 'block' : 'none' }}>＞</button>
+        </div> */}
+
       </div>
     </div>
   );

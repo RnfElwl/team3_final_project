@@ -12,8 +12,19 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     AdminDAO dao;
 
+
     @Override
-    public List<AdminVO> adminDataSelectSeason() {
-        return dao.adminDataSelectSeason();
+    public List<AdminVO> qnaDataSelectMonth() {
+        return dao.qnaDataSelectMonth();
+    }
+
+    @Override
+    public List<AdminVO> qnaDataSelectYear() {
+        return dao.qnaDataSelectYear();
+    }
+
+    @Override
+    public List<AdminVO> qnaDataSelectDay() {
+        return dao.qnaDataSelectDay();
     }
 }

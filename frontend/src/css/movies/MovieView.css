@@ -2,10 +2,12 @@
     display: flex;
     justify-content: center;
     padding: 20px;
+    background-color: black;
   }
   
   .movie-content {
     width: 1200px;
+    color: white;
   }
   
   .movie-image img {
@@ -17,8 +19,9 @@
   .movie-details {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-top: 20px;
+    flex-direction: column; /* 제목과 영화 정보를 세로로 정렬 */
   }
   
   .movie-title h1 {
@@ -26,8 +29,9 @@
   }
   
   .movie-actions {
+    margin-top: 20px; /* movie-info와 버튼들 사이에 여백 추가 */
     display: flex;
-    gap: 10px;
+    gap: 10px; /* 버튼들 간의 간격 */
   }
   
   .action-btn {
@@ -65,9 +69,7 @@
   }
   
   .movie-info {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
+    margin-top: 10px; /* 제목과 영화 정보 사이의 여백 */
     }
   
   .rating-info {
@@ -92,4 +94,144 @@
   .info-details span {
     margin-right: 10px;
   }
+
+  /* 리뷰 관련 */
+  .review-section {
+    margin-top: 30px;
+  }
+  
+  .review {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+  }
+  
+  .review-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .nickname {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .rating .star {
+    color: lightgray;
+    margin-right: 3px;
+  }
+  
+  .rating .star.active {
+    color: gold;
+  }
+  
+  .review-text {
+    margin-top: 5px;
+    color: #555;
+  }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between; /* 제목과 버튼을 양쪽 끝에 배치 */
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .write-review-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .write-review-btn:hover {
+    background-color: #45a049; /* 버튼 hover 시 색상 변경 */
+  }
+
+  /* 모달 창 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+  text-align: center;
+  color: black;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.star {
+  cursor: pointer;
+  font-size: 30px;
+  color: lightgray;
+}
+
+.star.active {
+  color: gold;
+}
+
+.review-input {
+  margin: 20px 0;
+}
+
+.review-input textarea {
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.submit-btn, .close-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.close-btn {
+  background-color: #f44336;
+  color: white;
+}
+  
+
+
   

@@ -1,14 +1,84 @@
-.QnABody{
+.QnABody, .QnAWriteBody{
     margin: 0 auto;
+    margin-bottom: 40px;
     max-width: 1200px;
-    color: white;
-    /* background-color: white; */
+    color:white;
 }
 @media(max-width:577px){
-    .QnABody{
+    .QnABody, .QnAWriteBody{
         min-width: 577px;
     }
 }
+/* 상단 info css */
+.totalRecord-info{
+    
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.tr-right-info{
+    display: flex;
+    font-size: 1.2em;
+}
+.tr-right-info div{
+    color:orange
+}
+/* 테이블 css */
+.QnaTable td, .QnaTable th{
+    background-color: transparent !important;
+    border-collapse : collapse !important;
+    font-size: 1em;
+    border-bottom: none;
+    text-align: center;
+}
+.QnaTable{
+    white-space:nowrap;
+    border-top: 3px solid gray;
+    border-bottom: 3px solid gray;
+}
+.QnaTable thead th{
+    font-size: 1.1em;
+    font-weight:bolder;
+}
+
+/* 게시글 제목 css */
+.qna_ht_th{
+    display: flex;
+}
+.qna_ht{
+    color: red;
+}
+.qna_ht_th a:link, .qna_ht_th a:hover,.qna_ht_th a:visited {
+    color: white;
+}
+.qna_pwt{
+    cursor: pointer;
+}
+
+/* 검색키 css */
+.qnaSearchSelect{
+    appearance: none;
+    width: 100px;
+    height: 35px;
+    font-size: 1em;
+    padding: 0 10px;
+    margin-right: 10px;
+    white-space:nowrap;
+
+}
+/* 검색창 css */
+.searchForm input[type="text"]{
+    height: 35px;
+    width: auto;
+    margin-right: 10px;
+}
+
+/* 페이지네이션 css */
+.qna_pagination{
+    text-align: center;
+}
+
+/* 버튼css */
 .right-buttons{
     text-align: right;
 }
@@ -16,36 +86,9 @@
     background-color: #00ff88;
     color: white;
     border:none;
+}
 
-}
-.qna_ht_th{
-    display: flex;
-}
-.qna_ht{
-    color: red;
-}
-.qna_pwt{
-    cursor: pointer;
-}
-.qna.pagination{
-    justify-content: center;
 
-}
-.qna.pagination a.link, .qna.pagination a:visited{
-    color:white;
-}
-.qna.pagination a:hover, .qna.pagination a:active{
-    color:black;
-}
-.qna.pagination {
-    --bs-pagination-bg:black;
-    --bs-pagination-border-color:#ddd;
-    --bs-pagination-active-bg:black;
-    --bs-pagination-focus-bg:#00ff88;
-}
-.qna_ht_th a:link, .qna_ht_th a:hover,.qna_ht_th a:visited {
-    color: white;
-}
 /* 모달 css */
 .private-content {
     position: fixed;

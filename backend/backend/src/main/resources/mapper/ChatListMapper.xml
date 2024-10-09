@@ -6,4 +6,74 @@
     <insert id="insertChatList" parameterType="com.ict.backend.vo.ChatListVO">
         insert into chat_list_tbl values(#{chatlist_url}, #{chat_title}, #{userid}, #{chat_content}, ${chatlist_type}, ${chatlist_headcount}, ${chatlist_img})
     </insert>
+    <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
+        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1;
+    </select>
+    <select id="selectChatContent" resultType="com.ict.backend.vo.ChatVO">
+        SELECT
+        date_records.chatlist_url,
+        NULL AS userid,
+        DATE(date_records.chat_date) AS chat_date,
+        null as userprofile,
+        null as usernick,
+        NULL AS chat_content,
+        NULL AS content_id,
+        0 AS chat_type
+        FROM (
+        SELECT MIN(dl.chat_date) AS chat_date, dl.chatlist_url
+        FROM (
+        select chatlist_url, first_conn as chat_date from chat_user_list
+        union all
+        select chatlist_url, chat_date from chat_content_tbl
+        ) as dl where dl.chatlist_url=#{param1}
+        GROUP BY DATE(dl.chat_date), dl.chatlist_url
+        ) as date_records
+        where
+        (select date(cul.first_conn) from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= date_records.chat_date
+        UNION ALL
+        select * from(
+
+        select chatlist_url, ut.userid, first_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 2 as chat_type
+        from chat_user_list cul
+        join user_tbl ut on ut.userid=cul.userid
+        where chatlist_url=#{param1}
+        UNION ALL
+        select chatlist_url, ut.userid, last_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 3 as chat_type
+        from chat_user_list cul
+        join user_tbl ut on ut.userid=cul.userid
+        where chatlist_url=#{param1}
+        and last_conn is not null
+        UNION ALL
+        SELECT
+        cct.chatlist_url,
+        ut.userid,
+        cct.chat_date,
+        ut.userprofile,
+        ut.usernick,
+        cct.chat_content,
+        cct.content_id,
+        1 AS chat_type
+        FROM
+        chat_content_tbl cct
+        join user_tbl ut on ut.userid=cct.userid
+        where chatlist_url=#{param1}
+        ORDER BY chat_date
+        ) as rs where
+        (select cul.first_conn from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= rs.chat_date
+        order by chat_date
+    </select>
+    <insert id="insertChatEnter">
+        insert ignore into chat_user_list(chatlist_url, userid) values(#{param1}, #{param2});
+    </insert>
+    <select id="selectChatRoom">
+        select * from chat_list_tbl where chatlist_url=#{param1}
+    </select>
+    <select id="selectChatMember">
+        select chatlist_url, ut.userid, ut.userprofile, ut.usernick from chat_user_list cul
+        join user_tbl ut on ut.userid=cul.userid
+        where chatlist_url=#{param1}
+    </select>
+    <update id="updateChatHeadCount">
+        update chat_list_tbl set chatlist_headcount=chatlist_headcount+1 where chatlist_url=#{param1}
+    </update>
 </mapper>    

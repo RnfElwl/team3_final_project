@@ -6,57 +6,50 @@ function MovieCategories() {
   const [activeTab, setActiveTab] = useState('genre');
 
   const genreCategories = [
-    { id: 1, name: 'Action' },
-    { id: 2, name: 'Comedy' },
-    { id: 3, name: 'Drama' },
-    { id: 4, name: 'Horror' },
-    { id: 5, name: 'Sci-Fi' },
-    { id: 6, name: 'Documentary' },
-    { id: 7, name: 'Thriller' },
-    { id: 8, name: 'Animation' },
-    { id: 9, name: 'Fantasy' },
-    { id: 10, name: 'Adventure' },
-    { id: 11, name: 'Romance' },
-    { id: 12, name: 'Mystery' },
+    { id: '드라마', name: '드라마' },
+    { id: '액션', name: '액션' },
+    { id: '다큐멘터리', name: '다큐멘터리' },
+    { id: '애니메이션', name: '애니메이션' },
+    { id: '코미디', name: '코미디' },
+    { id: '범죄', name: '범죄' },
+    { id: '전쟁', name: '전쟁' },
+    { id: '공포(호러)/', name: '공포(호러)' },
+    { id: '가족', name: '가족' },
+    { id: '사극', name: '사극' },
+    { id: 'SF', name: 'SF' },
+    { id: '미스터리/스릴러', name: '미스터리/스릴러' },
+
   ];
 
   const yearCategories = [
-    { id: 1, name: '2020' },
-    { id: 2, name: '2021' },
-    { id: 3, name: '2022' },
-    { id: 4, name: '2023' },
-    { id: 5, name: '2024' },
-    { id: 6, name: '2025' },
-    { id: 7, name: '2026' },
-    { id: 8, name: '2027' },
-    { id: 9, name: '2028' },
-    { id: 10, name: '2029' },
-    { id: 11, name: '2030' },
-    { id: 12, name: '2031' },
+    { id: '2020', name: '2020s' },
+    { id: '2010', name: '2010s' },
+    { id: '1990', name: '1990s' },
+
   ];
 
-  const countryCategories = [
-    { id: 1, name: 'USA' },
-    { id: 2, name: 'UK' },
-    { id: 3, name: 'France' },
-    { id: 4, name: 'Germany' },
-    { id: 5, name: 'Japan' },
-    { id: 6, name: 'South Korea' },
-    { id: 7, name: 'India' },
-    { id: 8, name: 'Canada' },
-    { id: 9, name: 'Australia' },
-    { id: 10, name: 'Italy' },
-    { id: 11, name: 'Spain' },
-    { id: 12, name: 'Brazil' },
-  ];
+  const nationCategories = [
+    { id: '한국', name: '한국' },
+    { id: '미국', name: '미국' },
+    { id: '영국', name: '영국' },
+    { id: '프랑스', name: '프랑스' },
+    { id: '스페인', name: '스페인' },
+    { id: '중국', name: '중국' },
+    { id: '일본', name: '일본' },
+    { id: '북유럽', name: '북유럽' },
+    { id: '남미', name: '남미' },
+    
+    ];
 
-  let currentCategories;
+
+  // 현재 선택된 탭에 따라 표시할 카테고리 결정
+  let currentCategories = [];
   if (activeTab === 'genre') {
     currentCategories = genreCategories;
   } else if (activeTab === 'year') {
     currentCategories = yearCategories;
-  } else if (activeTab === 'country') {
-    currentCategories = countryCategories;
+  } else if (activeTab === 'nation') {
+    currentCategories = nationCategories;
   }
 
   return (
@@ -84,8 +77,8 @@ function MovieCategories() {
           </li>
           <li className="nav-item">
             <button
-              className={`nav-link ${activeTab === 'country' ? 'active' : ''}`}
-              onClick={() => setActiveTab('country')}
+              className={`nav-link ${activeTab === 'nation' ? 'active' : ''}`}
+              onClick={() => setActiveTab('nation')}
             >
               국가별
             </button>
