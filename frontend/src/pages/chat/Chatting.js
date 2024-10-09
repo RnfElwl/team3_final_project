@@ -5,9 +5,10 @@ import mqtt from 'mqtt';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineAlert } from "react-icons/ai";
-import { IoPerson, IoExitOutline  } from "react-icons/io5";
+import { IoPerson, IoExitOutline, IoCloseSharp  } from "react-icons/io5";
 import { FaCalendarCheck } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import ReportModal from '../../component/api/ReportModal.js';
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -16,8 +17,8 @@ const Chatting = () => {
         day: 'numeric',
         weekday: 'long' // 요일
     };
-    const {chatlist_url } = useParams();// 채팅방 id
-    const [roomInfo, setRoomInfo]= useState({}); // 채팅방 정보
+    const {chatlist_url } = useParams();// 채팅방 id 
+    const [roomInfo, setRoomInfo]= useState({}); // 채팅방 정보 
     const [client, setClient] = useState(null);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [messageToSend, setMessageToSend] = useState('');
@@ -25,10 +26,12 @@ const Chatting = () => {
     const [userData, setUserData] = useState({});
     const [myid, setMyid] = useState("");
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
-    const [report, setReport] = useState({});//폼에 있는 값들어있음
+    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [menu, setMenu] = useState(false);// 메뉴 태그 보일지 말지
     const [userList, setUserList] = useState(false);//유저 리스트 태그 보일지 말지
     const [memberList, setMemberList] = useState([]);// 채팅방 유저 정보 담는곳
+    const [scheduleShow, setScheduleShow] = useState(false);
+    const [scheduleCreate, setScheduleCreate] = useState(false);
     let once = 0;
     const chatting_box = useRef(null);
     const menu_box = useRef(null);
@@ -235,33 +238,22 @@ const Chatting = () => {
         })
         toggleReport();
     }
+    function toggleReport(){{/* 신고 기능 */}
+        setReportShow(!reportShow);
+    }
     function userToggle(){
         setUserList(!userList);
         setMenu(false)
     }
-    function toggleReport(){{/* 신고 기능 */}
-        setReportShow(!reportShow);
-    }
-    function reportFormAdd(event){
-        let idField = event.target.name;
-        let idValue = event.target.value;
-        
-        setReport(p=>{return {...p, [idField]:idValue}});
-    }
-    async function submitReport(e){{/* 신고 기능 */}
-        e.preventDefault();
-        const result = await axios.post("http://localhost:9988/report/submit", report, {
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-          if(result.status==200){
-            toggleReport();
-          }
-    }
+
     function menuToggle(){
         setMenu(!menu);
         setUserList(false)
+    }
+    function scheduleToggle(){
+        console.log("HIHIHIIHIHIHIH")
+        setMenu(false);
+        setScheduleShow(!scheduleShow);
     }
 
     return (
@@ -287,12 +279,15 @@ const Chatting = () => {
                         </div>
                     </div>
                 </div>
-                <div className='schedule_icon' onClick={menuToggle}>
-                    <div>
+                <div className='schedule_icon'>
+                    <div onClick={menuToggle} className={`${scheduleShow?'schedule_hide':'schedule_show'}`}>
                         <GiHamburgerMenu size="30px"/>
                     </div>
+                    <div className={`${scheduleShow?'schedule_show':'schedule_hide'}`} onClick={()=>setScheduleShow(false)}>
+                        <IoCloseSharp size="40px"/>
+                    </div>
                     <div className={`menu_list ${menu?'menu_show':'menu_hide'}`} ref={menu_box}>
-                        <div>
+                        <div onClick={scheduleToggle}>
                             <FaCalendarCheck />일정
                         </div>
                         <div>
@@ -306,27 +301,49 @@ const Chatting = () => {
             </header>
 
             {/* 신고 기능 */}
-            <div className={`report_window ${reportShow ? 'report_show':'report_hide'}`}>
-                            <div className='report_close' onClick={toggleReport}></div>
-                            <form className="chatting_report" onSubmit={submitReport}>
-                                    <div className="title" >
-                                        <h2>신고하기</h2>
-                                        <div>
-                                            <input type="radio" name="report_type" value='0' onChange={reportFormAdd} /><span>욕설</span>
-                                            <input type="radio" name="report_type" value='1' onChange={reportFormAdd}/><span>스포일러</span>
-                                            <input type="radio" name="report_type" value='2' onChange={reportFormAdd}/><span>비매너 행위</span>
-                                            <input type="radio" name="report_type" value='3' onChange={reportFormAdd}/><span>기타</span>
-                                        </div>
-                                    </div>
-                                    <div className="sub_title">
-                                    <h2>상세내용</h2>
-                                    <textarea name="report_reason" onChange={reportFormAdd}>
-
-                                    </textarea>
-                                    </div>
-                                    <button type="submit">방만들기</button>
-                                </form>
-                        </div> 
+            <ReportModal    
+                reportShow={reportShow}// 모달창 보이기 여부
+                toggleReport={toggleReport} // 모달창 열고닫기 함수
+                report={report}// 신고 데이터 변수
+                setReport={setReport} // 신고 데이터 변수 세팅
+            />
+            <div className={`schedule_create ${scheduleCreate?'schedule_create_show':'schedule_create_hide'}`}>
+                    <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
+                    <form className='schedule_create_form'>
+                        <h2>일정 만들기</h2>
+                        <div>
+                            <input type='date'/>
+                            <input type="time"/>
+                        </div>
+                        <button type='submit'>일정 생성</button>
+                    </form>
+                </div>
+            <div  className={`schedule_box ${scheduleShow?'schedule_show':'schedule_hide'}`}
+                onClick={()=>{ setMenu(false); setUserList(false)}} >
+                
+                <div className='schedule_btn' onClick={()=>setScheduleCreate(true)}>
+                    일정 만들기
+                </div>
+                <div className='schedule_list'>
+                    <div>현재 일정</div>
+                    <div className='schedule'>
+                        <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                        <div className='schedule_info'>
+                            <div className='schedule_title'>베테랑 같이 볼사람</div>
+                            <div className='schedule_member'>참여인원, 본인 참여 여뷰</div>
+                            <div className='schedule_date'>일정 날짜</div>
+                        </div>
+                        <div className='schedule_voting'>
+                            <div>참여</div>
+                            <div>불참</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div>과거 일정</div>
+                </div>
+            </div>
+            
             <div className='chatting_box' onClick={()=>{ setMenu(false); setUserList(false)}}>
                 <div className='chatting_list' ref={chatting_box}> 
                     {receivedMessages.map((data, index) => (
