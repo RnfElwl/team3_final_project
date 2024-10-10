@@ -7,33 +7,89 @@
         SELECT MONTH(qna_writedate) AS qna_date, COUNT(qna_title) AS qna_count
         FROM qna_tbl
         WHERE YEAR(qna_writedate) = YEAR(CURDATE())
-        GROUP BY MONTH(qna_writedate);
+        GROUP BY MONTH(qna_writedate)
     </select>
     <select id = "qnaDataSelectYear" resultType="com.ict.backend.vo.AdminVO">
         SELECT YEAR(qna_writedate) AS 'qna_date', COUNT(qna_title) AS 'qna_count'
         FROM qna_tbl
         WHERE YEAR(qna_writedate) BETWEEN YEAR(NOW()) - 7 AND YEAR(NOW())
-        GROUP BY YEAR(qna_writedate);
+        GROUP BY YEAR(qna_writedate)
     </select>
     <select id = "qnaDataSelectDay" resultType="com.ict.backend.vo.AdminVO">
-        SELECT
-        DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY), '%y.%m.%d') AS qna_date,
-        COUNT(q.qna_title) AS qna_count
-        FROM
-        (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
-        SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL
-        SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL
-        SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL
-        SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL
-        SELECT 21 UNION ALL SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL
-        SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
-        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) n
-        LEFT JOIN
-        qna_tbl q ON DATE(q.qna_writedate) = DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY)
-        WHERE
-        DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY)
-        BETWEEN DATE(NOW() - INTERVAL 7 DAY) AND CURDATE()
-        GROUP BY qna_date
-        ORDER BY qna_date
+        select
+        date_format(date_add(curdate(), interval -7 + n.n day), '%y.%m.%d') as qna_date,
+        count(q.qna_title) as qna_count
+        from
+        (select 1 as n union all select 2 union all select 3 union all select 4 union all
+        select 5 union all select 6 union all select 7 union all select 8 union all
+        select 9 union all select 10 union all select 11 union all select 12 union all
+        select 13 union all select 14 union all select 15 union all select 16 union all
+        select 17 union all select 18 union all select 19 union all select 20 union all
+        select 21 union all select 22 union all select 23 union all select 24 union all
+        select 25 union all select 26 union all select 27 union all select 28 union all
+        select 29 union all select 30 union all select 31) n
+        left join
+        qna_tbl q on date(q.qna_writedate) = date_add(curdate(), interval -7 + n.n day)
+        where
+        date_add(curdate(), interval -7 + n.n day)
+        between date(now() - interval 7 day) and curdate()
+        group by qna_date
+        order by qna_date;
+    </select>
+    <select id = "communityDataSelectMonth" resultType="com.ict.backend.vo.AdminVO">
+        SELECT MONTH(community_writedate) AS community_date, COUNT(community_title) AS community_count
+        FROM community_tbl
+        WHERE YEAR(community_writedate) = YEAR(CURDATE())
+        GROUP BY MONTH(community_writedate)
+    </select>
+    <select id = "communityDataSelectYear" resultType="com.ict.backend.vo.AdminVO">
+        with years as (
+        select year(now()) as year union all
+        select year(now()) - 1 union all
+        select year(now()) - 2 union all
+        select year(now()) - 3
+        )
+        select y.year as 'community_date',
+        coalesce(count(c.community_title), 0) as 'community_count'
+        from years y
+        left join community_tbl c
+        on year(c.community_writedate) = y.year
+        group by y.year
+        order by y.year;
+    </select>
+    <select id = "communityDataSelectDay" resultType="com.ict.backend.vo.AdminVO">
+        select
+        date_format(date_add(curdate(), interval -7 + n.n day), '%y.%m.%d') as community_date,
+        count(c.community_title) as community_count
+        from
+        (select 1 as n union all select 2 union all select 3 union all select 4 union all
+        select 5 union all select 6 union all select 7 union all select 8 union all
+        select 9 union all select 10 union all select 11 union all select 12 union all
+        select 13 union all select 14 union all select 15 union all select 16 union all
+        select 17 union all select 18 union all select 19 union all select 20 union all
+        select 21 union all select 22 union all select 23 union all select 24 union all
+        select 25 union all select 26 union all select 27 union all select 28 union all
+        select 29 union all select 30 union all select 31) n
+        left join
+        community_tbl c on date(c.community_writedate) = date_add(curdate(), interval -7 + n.n day)
+        where
+        date_add(curdate(), interval -7 + n.n day)
+        between date(now() - interval 7 day) and curdate()
+        group by community_date
+        order by community_date;
+    </select>
+    <select id="qnaSearch" resultType="com.ict.backend.vo.AdminVO">
+        select date(qna_writedate) as 'qna_date', count(qna_title) as 'qna_count'
+        from qna_tbl
+        where date(qna_writedate) between STR_TO_DATE(#{start_qnaDate}, '%Y-%m-%d')
+        and STR_TO_DATE(#{end_qnaDate}, '%Y-%m-%d')
+        group by date(qna_writedate);
+    </select>
+    <select id="comSearch" resultType="com.ict.backend.vo.AdminVO">
+        select date(community_writedate) as 'community_date', count(community_title) as 'community_count'
+        from community_tbl
+        where date(community_writedate) between STR_TO_DATE(#{start_comDate}, '%Y-%m-%d')
+        and STR_TO_DATE(#{end_comDate}, '%Y-%m-%d')
+        group by date(community_writedate);
     </select>
 </mapper>
