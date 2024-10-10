@@ -38,7 +38,6 @@ def on_message(client, userdata, msg):
 # Flask API - 메시지 처리 및 DB 저장
 @app.route('/api/send_message', methods=['POST'])
 def send_message():
-    
     data = request.get_json()
     room_id = data['room']
     user = data['user']

@@ -13,4 +13,7 @@
         values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, #{report_tbluuid}, ${report_type}, #{report_reason});
     </if>
 </insert>
+    <select id="selectBlockUuid">
+
+    </select>
 </mapper>

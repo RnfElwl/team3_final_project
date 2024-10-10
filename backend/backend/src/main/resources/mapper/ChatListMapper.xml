@@ -76,4 +76,10 @@
     <update id="updateChatHeadCount">
         update chat_list_tbl set chatlist_headcount=chatlist_headcount+1 where chatlist_url=#{param1}
     </update>
-</mapper>    
+    <insert id="insertSchedule">
+            insert into schedule_tbl values(#{schedule_id}, #{chatlist_url},#{schedule_title}, #{schedule_date}, #{schedule_deadline}, #{userid}, #{schedule_addr})
+    </insert>
+    <select id="selectScheduleList">
+        select * from schedule_tbl
+    </select>
+</mapper>

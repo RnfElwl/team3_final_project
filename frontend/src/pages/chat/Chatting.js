@@ -32,6 +32,11 @@ const Chatting = () => {
     const [memberList, setMemberList] = useState([]);// 채팅방 유저 정보 담는곳
     const [scheduleShow, setScheduleShow] = useState(false);
     const [scheduleCreate, setScheduleCreate] = useState(false);
+    const [today, setToday] = useState(new Date());
+    const [scheduleForm, setScheduleForm] = useState({chatlist_url});
+    const [scheduleList, setScheduleList] = useState([]);// 일정 리스트 
+    const [newTag, setNewTag] = useState([]);
+    const [oldTag, setOldTag] = useState([]);
     let once = 0;
     const chatting_box = useRef(null);
     const menu_box = useRef(null);
@@ -41,6 +46,7 @@ const Chatting = () => {
             once = 1;
             setDefaultChat();
             setDefaultMember();
+            setDefaultSchdule();
         }
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
         getUser()
@@ -149,6 +155,12 @@ const Chatting = () => {
         setReceivedMessages(data);
         
     }
+
+    async function setDefaultSchdule(){
+        const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
+        console.log(data);
+        setScheduleList(data);
+    }
     async function setDefaultMember(){
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
             chatlist_url
@@ -181,16 +193,33 @@ const Chatting = () => {
                 chat_date: now,
                 chat_type: 2
             } 
-            
             if(data == 1){
-
+                console.log(data, typeof(data), data == 1)
+                const result3 = await axios.post("http://localhost:9988/chat/headcount", chatlist_url, {
+                    headers: {
+                      'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                    }
+                  });
+                if(result3.data == 1){
+                    getRoomInfo();
+                }
                 setReceivedMessages(receivedMessages)
                 
                 mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
             }
         }
     }
-
+    useEffect(() => {
+        // 매초마다 실행되는 함수
+        const interval = setInterval(() => {
+          console.log("Current value:", today); // 변수 확인
+          setToday(new Date());
+          console.log(today);
+        }, 1000); // 1000ms = 1초
+    
+        // 컴포넌트가 언마운트될 때 setInterval을 정리
+        return () => clearInterval(interval);
+      }, [today]); // `value`가 변경될 때마다 이 effect가 실행됨
     
     const handleSendMessage = () => {
         if (client) {
@@ -251,11 +280,54 @@ const Chatting = () => {
         setUserList(false)
     }
     function scheduleToggle(){
-        console.log("HIHIHIIHIHIHIH")
         setMenu(false);
         setScheduleShow(!scheduleShow);
     }
+    async function scheduleCreateSubmit(e){
+        e.preventDefault();
+        const result = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
+        console.log(scheduleForm);
+        setScheduleCreate(false);
 
+    }
+    function scheduleFormAdd(event){
+        let idField = event.target.name;
+        let idValue = event.target.value;
+        setScheduleForm(p=>{return {...p, [idField]:idValue}});
+    }
+    function schedule_list_tag(){
+        scheduleList.map((data, index)=>{
+
+            if((new Date(data.schedule_date).getTime() -  today.getTime())>=0){
+                setNewTag(p=>[...p, <div className='schedule'>최신
+                    <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                    <div className='schedule_info'>
+                        <div className='schedule_title'>{data.schedule_title}</div>
+                        <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                        <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                        <div className='schedule_addr'>{data.schedule_addr}</div>
+                    </div>
+                    <div className='schedule_voting'>
+                        <div>참여</div>
+                        <div>불참</div>
+                    </div>
+                </div>])
+            }
+            else{
+                setOldTag(p=>[...p, <div className='schedule'>과거
+                    <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                    <div className='schedule_info'>
+                        <div className='schedule_title'>{data.schedule_title}</div>
+                        <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                        <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                        <div className='schedule_addr'>{data.schedule_addr}</div>
+                    </div>
+                    <div className='schedule_voting'>
+                    </div>
+                </div>])
+            }
+        })
+    }
     return (
         <div className='chatting_room'>
             <header className='chat_header'> 
@@ -308,16 +380,19 @@ const Chatting = () => {
                 setReport={setReport} // 신고 데이터 변수 세팅
             />
             <div className={`schedule_create ${scheduleCreate?'schedule_create_show':'schedule_create_hide'}`}>
-                    <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
-                    <form className='schedule_create_form'>
-                        <h2>일정 만들기</h2>
-                        <div>
-                            <input type='date'/>
-                            <input type="time"/>
-                        </div>
-                        <button type='submit'>일정 생성</button>
-                    </form>
-                </div>
+                <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
+                <form className='schedule_create_form' onSubmit={scheduleCreateSubmit}>
+                    <h2>일정 만들기</h2>
+                    <div>
+                        제목 <input type="text" name="schedule_title" onChange={scheduleFormAdd}/>
+                        날짜 <input type='date' name="day" onChange={scheduleFormAdd}/>
+                        시간 <input type="time" name="time" onChange={scheduleFormAdd}/>
+                        설명 <input tpye="text" name="schedule_addr" onChange={scheduleFormAdd}/>
+                    </div>
+                    <button type='submit'>일정 생성</button>
+                </form>
+            </div>
+
             <div  className={`schedule_box ${scheduleShow?'schedule_show':'schedule_hide'}`}
                 onClick={()=>{ setMenu(false); setUserList(false)}} >
                 
@@ -325,13 +400,52 @@ const Chatting = () => {
                     일정 만들기
                 </div>
                 <div className='schedule_list'>
+                    <div>최신</div>
+                {
+                    scheduleList.map((data, index)=>(
+                            <>
+                            {(new Date(data.schedule_date).getTime() -  today.getTime())>=0?(
+                            <div className='schedule'>최신
+                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                                <div className='schedule_info'>
+                                    <div className='schedule_title'>{data.schedule_title}</div>
+                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_addr'>{data.schedule_addr}</div>
+                                </div>
+                                <div className='schedule_voting'>
+                                    <div>참여</div>
+                                    <div>불참</div>
+                                </div>
+                            </div>
+                            ):
+                            (
+                            <div className='schedule'>과거
+                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                                <div className='schedule_info'>
+                                    <div className='schedule_title'>{data.schedule_title}</div>
+                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_addr'>{data.schedule_addr}</div>
+                                </div>
+                                <div className='schedule_voting'>
+                                </div>
+                            </div>)
+                                }
+                            </>
+
+                    ))
+                    }
+</div>
+                <div className='schedule_list'>
                     <div>현재 일정</div>
                     <div className='schedule'>
                         <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                         <div className='schedule_info'>
                             <div className='schedule_title'>베테랑 같이 볼사람</div>
-                            <div className='schedule_member'>참여인원, 본인 참여 여뷰</div>
-                            <div className='schedule_date'>일정 날짜</div>
+                            <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] 2024-10-20 14:30</div>
+                            <div className='schedule_date'>2024-10-20 14:30</div>
+                            <div className='schedule_addr'>안만나고 여기 사이트에서 각자 보죠</div>
                         </div>
                         <div className='schedule_voting'>
                             <div>참여</div>
@@ -339,7 +453,7 @@ const Chatting = () => {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className='schedule_list'>
                     <div>과거 일정</div>
                 </div>
             </div>
