@@ -9,9 +9,22 @@
         SELECT * FROM movie_data_tbl WHERE movie_genre = #{genre}
     </select>
 
-    <!-- 연도별 영화 리스트 가져오기 -->
-    <select id="getMoviesByYear" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
-        SELECT * FROM movie_data_tbl WHERE opened_year = #{year}
+    <!-- 연도별 범위에 따른 영화 리스트 가져오기 -->
+    <select id="getMoviesByYearRange" parameterType="map" resultType="MovieVO">
+        SELECT * FROM movie_data_tbl
+        WHERE
+        <if test="yearRange == '2024'">
+            opened_year = '2024'
+        </if>
+        <if test="yearRange == '2020'">
+            opened_year BETWEEN '2020' AND '2023'
+        </if>
+        <if test="yearRange == '2010'">
+            opened_year BETWEEN '2010' AND '2019'
+        </if>
+        <if test="yearRange == '1990'">
+            opened_year BETWEEN '1990' AND '1999'
+        </if>
     </select>
 
     <!-- 국가별 영화 리스트 가져오기 -->
@@ -32,7 +45,9 @@
         opened_year,
         movie_grade,
         movie_directors,
-        movie_poster
+        movie_poster,
+        movie_synops,
+        movie_casts
         FROM
         movie_data_tbl
         WHERE

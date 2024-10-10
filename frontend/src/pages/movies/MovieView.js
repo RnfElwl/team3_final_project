@@ -148,7 +148,7 @@ const dummyReviews = [
               {/* 출연진 */}
               <div className="info-section">
                 <h3>출연진</h3>
-                <p>배우1, 배우2, 배우3</p>
+                <p>{movie.movie_casts}</p>
               </div>
 
               {/* 감독 */}

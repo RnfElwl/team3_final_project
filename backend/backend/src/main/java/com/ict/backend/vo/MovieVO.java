@@ -18,6 +18,7 @@ public class MovieVO {
     private String movie_poster;
     private String movie_link;
     private String movie_synops;
+    private String movie_casts;
 
 
 

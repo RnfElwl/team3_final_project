@@ -10,8 +10,12 @@ import java.util.List;
 @Service
 public class MovieServiceImpl implements MovieService {
 
+    private final MovieDAO movieDAO;
+
     @Autowired
-    private MovieDAO movieDAO;
+    public MovieServiceImpl(MovieDAO movieDAO) {
+        this.movieDAO = movieDAO;
+    }
 
     @Override
     public List<MovieVO> getMoviesByGenre(String genre) {
@@ -19,8 +23,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieVO> getMoviesByYear(String year) {
-        return movieDAO.getMoviesByYear(year);
+    public List<MovieVO> getMoviesByYearRange(String yearRange) {
+        return movieDAO.getMoviesByYearRange(yearRange);
     }
 
     @Override
@@ -32,6 +36,8 @@ public class MovieServiceImpl implements MovieService {
     public MovieVO getMovieByCode(String movieCode) {
         return movieDAO.getMovieByCode(movieCode);
     }
+
+
 
 
 
