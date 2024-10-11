@@ -5,16 +5,15 @@ body {
 
 .community_list {
     background-color: black; /* 배경색 */
-   max-width: 1200px;
+    max-width: 1200px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     display: flex; /* 리스트와 카테고리 박스를 나란히 배치 */
 }
 
 .community_list .container {
-    flex: 1; /* 가변적 크기 */
-    max-width: 950px; /* 최대 너비 설정 변경 */
-    min-width: 600px;
+    max-width: 950px; 
+    min-width: 820px;
     margin: 0 auto; /* 중앙 정렬 */
     background-color: white; /* 컨테이너 배경색 */
     border-radius: 10px; /* 모서리 둥글게 */
@@ -22,40 +21,7 @@ body {
     padding: 20px; /* 여백 */
 }
 
-.community_list .categories_and_top_posts{
-    position: sticky; /* 스크롤 시 고정 */
-    top: 0; /* 화면 상단에 고정 */
-    width: 200px; 
-    height: 800px; 
-}
-
-.community_list .category_box {
-    width: 200px; /* 카테고리 박스 너비 */
-    height: 300px; /* 카테고리 박스 높이 */
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around; /* 버튼 사이의 간격을 균등하게 배치 */
-    margin-left: 10px; /* 리스트와의 간격 */
-}
-
-.community_list .category_box button {
-    width: 100%; /* 버튼 너비 */
-    padding: 10px; /* 버튼 패딩 */
-    border: 1px solid #fff; 
-    border-radius: 20px; /* 모서리 둥글게 */
-    background-color: black; /* 버튼 배경색 */
-    color: white; /* 글자색 */
-    font-weight: bold; /* 글자 두껍게 */
-    cursor: pointer; /* 커서 포인터 */
-}
-
-.community_list .category_box button:hover {
-    background-color: #666; /* 버튼 호버 시 색상 변경 */
-}
+/* 맨위에 */
 
 .community_list .list_header {
     display: flex; /* 플렉스 레이아웃 */
@@ -68,7 +34,6 @@ body {
     width: 60px; /* 작성자 이미지 크기 */
     height: 60px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
-    margin-right: 10px; /* 여백 */
     border: #555 1px solid;
 }
 
@@ -95,61 +60,93 @@ body {
     cursor: pointer; /* 커서 포인터 */
 }
 
-.community_list .list {
-    border-bottom: 1px solid #eaeaea; /* 구분선 */
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
+/* 이미지 */
+
+.community_list .list{
+    display: flex;
     padding-bottom: 20px;
+    padding: 20px 0;
+    /* max-width: 950px;
+    min-width: 850px; */
+}
+
+.community_list .image_box{
+    width: 300px; /* 이미지 박스의 고정 너비 */
+    height: 210px; /* 이미지 비율 유지 */
+    margin-right: 20px; /* 이미지와 나머지 요소 간의 간격 */
+}
+
+.community_list .community_img {
+    width: 100%; /* 이미지가 박스에 맞게 */
+    height: 100%; /* 이미지 비율 유지 */ 
+    border-radius: 4px; /* 모서리 둥글게 */
+}
+
+/* 내용 */
+
+.community_list .content {
+    flex: 1; /* 이미지 옆에 배치 */
+    padding-left: 20px; /* 이미지와 간격을 두기 위해 여백 추가 */
+    max-width: 650px;
+    min-width: 450px;
+    height: 180px;
+    margin-top: 20px;
 }
 
 .community_list .list_top {
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
-    justify-content: space-between;
-}
-
-.community_list .writer_image {
-    width: 60px; /* 작성자 이미지 크기 */
-    height: 60px; /* 작성자 이미지 크기 */
-    border-radius: 50%; /* 둥글게 */
-    margin-right: 10px; /* 여백 */
-}
-
-.community_list .writer_info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
+    /* justify-content: space-between; */
+    /* max-width: 750px;
+    min-width: 550px; */
     width: 100%;
 }
 
-.community_list .name_location {
-    display: flex;
-    /* align-items: flex-start; 왼쪽 정렬 */
+.community_list .writer_image {
+    width: 50px; /* 작성자 이미지 크기 */
+    height: 50px; /* 작성자 이미지 크기 */
+    border-radius: 50%; /* 둥글게 */
+    margin-right: 10px; /* 여백 */
+    border: #555 1px solid;
 }
 
-.community_list .writer_name, .community_list .location {
-    margin: 0;
-    margin-left: 10px;
+.community_list .writer_info {
+    align-items: flex-end; 
+    width: 250px;
+}
+
+.community_list .list_info {
+    display: flex;
+    align-items: flex-start; /* 왼쪽 정렬 */
 }
 
 .community_list .writer_name {
     font-weight: bold; /* 글씨 두껍게 */
     color: rgb(48, 46, 46); /* 색상 */
-    font-size: 1.2em;
+    font-size: 1em;
+    margin: 0;
+    margin-left: 10px;
 }
 
-.community_list .location {
+.community_list .writedate, .community_list .location {
     color: #999; /* 색상 */
-    font-size: 0.9em; /* 글자 크기 */
-}
-
-.community_list .writedate {
-    color: #999; /* 색상 */
-    font-size: 0.9em; /* 글자 크기 */
-    padding-right: 15px;
-    padding-top: 15px;
-    margin-left: auto; /* 날짜를 오른쪽에 배치 */
+    font-size: 0.8em; /* 글자 크기 */
+    padding-left: 10px;
     white-space: nowrap; /* 날짜가 줄바꿈되지 않도록 함 */
+    margin-bottom: 0;
+}
+
+.community_list .location::before{
+    content: "· "; /* 구분자 추가 */
+    color: #999; /* 구분자 색상 */
+}
+
+.community_list .action_button_container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽으로 정렬 */
+    align-items: center;
+    margin-left: auto; /* 자동 여백 추가로 오른쪽으로 이동 */
+    margin-top: 10px;
 }
 
 .community_list .action_button {
@@ -160,61 +157,50 @@ body {
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 5px;
+    margin-right: 5px;
+    
 }
 
 .community_list .list_middle {
     margin-top: 10px; /* 여백 */
-    gap: 30px; /* 내부 요소 간격 */
-}
-
-.community_list .middle_head{
+    gap: 10px; /* 내부 요소 간격 */
     display: flex;
 }
 
 .community_list .category {
-    background-color: #ccc; 
-    width: 50px;
-    height: 25px;
     font-size: 0.9em;
-    border-radius: 50px;
     font-weight: bold;
-    color: #fff; /* 글자 색상 */
-    text-align: center;
-    flex-shrink: 0; /* 카테고리 크기 고정 */
+    color: #77767683; /* 글자 색상 */
+    margin-top: 15px;
 }
 
 .community_list .community_title {
-    flex-grow: 1;
-    margin-left: 10px;
-    word-wrap: break-word; /* 제목이 길면 줄바꿈 */
-    white-space: normal; /* 제목이 너무 길 때 줄바꿈을 허용 */
-    width: 580px;
-}
-
-.community_list .list_nn{
-    display: flex;
-    justify-content: space-between;
-}
-.community_list .community_title {
-    font-size: 1.6em; /* 제목 크기 */
-    color: rgb(68, 68, 68); /* 색상 */
-    padding-left: 10px;
+    margin: 15px 10px;
+    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+    width: 350px;
+    font-size: 1.2em; /* 제목 크기 */
+    color: #111010c2; /* 색상 */
     font-weight: bold;
-}
-
-.community_list .community_img {
-    width: 160px;
-    height: 120px; 
-    border-radius: 4px; /* 모서리 둥글게 */
 }
 
 .community_list .list_bottom {
     display: flex; /* 플렉스 레이아웃 */
-    justify-content: flex-end;
-    /* padding-top: 130px; */
-    padding-bottom: 0;
-    margin-top: auto; /* 위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
+    justify-content: space-between;
+    margin-top: 30px;
+    /*margin-top: auto;  위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
+    border-top: 1px solid #ccc; /* 위에 얇은 선 추가 */
+    padding: 10px 0; /* 위아래 패딩 추가 */
+
+}
+
+.community_list .left_info {
+    display: flex; /* 왼쪽 정보 컨테이너도 플렉스 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+.community_list .right_info {
+    display: flex; /* 오른쪽 좋아요 컨테이너 */
+    align-items: center; /* 세로 중앙 정렬 */
 }
 
 .community_list .fa-heart,
@@ -232,12 +218,7 @@ body {
     font-size: 14px;
 }
 
-.community_list .location {
-    color: #555;
-    font-size: 0.9em;
-    margin-top: 6px;
-}
-
+/* 옆에 있는거 */
 .community_list .top_posts {
     margin-top: 20px; /* 상단 여백 */
     width: 200px; /* 카테고리 박스 너비 */
@@ -310,4 +291,39 @@ body {
     padding: 50px;
     z-index: 2;
     border-radius: 10px;
+}
+
+.community_list .categories_and_top_posts{
+    position: sticky; /* 스크롤 시 고정 */
+    top: 0; /* 화면 상단에 고정 */
+    width: 200px; 
+    height: 800px; 
+}
+
+.community_list .category_box {
+    width: 200px; /* 카테고리 박스 너비 */
+    height: 300px; /* 카테고리 박스 높이 */
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around; /* 버튼 사이의 간격을 균등하게 배치 */
+    margin-left: 10px; /* 리스트와의 간격 */
+}
+
+.community_list .category_box button {
+    width: 100%; /* 버튼 너비 */
+    padding: 10px; /* 버튼 패딩 */
+    border: 1px solid #fff; 
+    border-radius: 20px; /* 모서리 둥글게 */
+    background-color: black; /* 버튼 배경색 */
+    color: white; /* 글자색 */
+    font-weight: bold; /* 글자 두껍게 */
+    cursor: pointer; /* 커서 포인터 */
+}
+
+.community_list .category_box button:hover {
+    background-color: #666; /* 버튼 호버 시 색상 변경 */
 }

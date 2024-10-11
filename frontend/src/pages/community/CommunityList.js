@@ -221,8 +221,7 @@ function CommunityList() {
                 console.error("Error fetching user info:", error);
             });
     }, []);
-
-
+    
     return (
         <div className="community_list">
             <div className="container">
@@ -253,66 +252,74 @@ function CommunityList() {
                         <input className="write" type="button" value="글 작성하기" />
                     </Link>
                 </div>
-                <hr />
 
                 {filteredCommunity.length > 0 ? (
                     filteredCommunity.map((communityItem) => (
                         <div className="list" key={communityItem.community_no}>
-                            <div className="list_top">
-                                <img className="writer_image" src={communityItem.userprofile} alt="Writer" />
-                                <div className="writer_info">
-                                    <div className="name_location">
+                            <Link to={`/community/communityView/${communityItem.community_no}`}>
+                                <div className="image_box">
+                                    {communityItem.community_img && (
+                                        <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
+                                    )}
+                                </div> 
+                            </Link>  
+                            <div className="content"> 
+                                <div className="list_top">
+                                    <img className="writer_image" src={communityItem.userprofile} alt="Writer" />
+                                    <div className="writer_info">
                                         <p className="writer_name">{communityItem.userid}</p>
-                                        <p className="location">{communityItem.loc}</p>
+                                        <div className="list_info">
+                                            <p className="writedate">{communityItem.community_writedate}</p>
+                                            <p className="location">{communityItem.loc}</p>
+                                        </div>
                                     </div>
-                                    <p className="writedate">{communityItem.community_writedate}</p>
+                                    <div className="action_button_container">
+                                        {userid !== communityItem.userid && (
+                                            <>
+                                                <input type="button" value="팔로우" className="action_button" />
+                                                <input type="button" value="신고" className="action_button" 
+                                                    onClick={(e) => openReport(e)} 
+                                                    data-id={community.community_no}
+                                                    data-userid={community.userid}
+                                                    data-content={community.community_title} 
+                                                />
+                                            </>
+                                        )}
+                                    </div>
+                                    <ReportModal    
+                                        reportShow={reportShow}// 모달창 보이기 여부
+                                        toggleReport={toggleReport} // 모달창 열고닫기 함수
+                                        report={report}// 신고 데이터 변수
+                                        setReport={setReport} // 신고 데이터 변수 세팅
+                                    />
                                 </div>
-                                {userid !== communityItem.userid && (
-                                    <>
-                                        <input type="button" value="팔로우" className="action_button" />
-                                        <input type="button" value="신고" className="action_button" 
-                                            onClick={(e) => openReport(e)} 
-                                            data-id={community.community_no}
-                                            data-userid={community.userid}
-                                            data-content={community.community_title} 
-                                        />
-                                    </>
-                                )}
-                                <ReportModal    
-                                    reportShow={reportShow}// 모달창 보이기 여부
-                                    toggleReport={toggleReport} // 모달창 열고닫기 함수
-                                    report={report}// 신고 데이터 변수
-                                    setReport={setReport} // 신고 데이터 변수 세팅
-                                />
-                            </div>
-                            <div className="list_nn">
+
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>
                                     <div className="list_middle">
-                                        <div className="middle_head">
-                                            <div className="category">{getCategoryName(communityItem.category)}</div>
-                                            <h3 className="community_title">{communityItem.community_title}</h3>
-                                        </div>
-                                        {communityItem.community_img && (
-                                            <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
-                                        )}
+                                        <div className="category">{getCategoryName(communityItem.category)} |</div>
+                                        <h3 className="community_title">{communityItem.community_title}</h3>
                                     </div>
                                 </Link>
                                 <div className="list_bottom">
-                                    <i 
-                                        className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
-                                        onClick={handleLikeToggle}
-                                        style={{ 
-                                            color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
-                                            cursor: 'pointer' 
-                                        }}
-                                    ></i>
-                                    <span className="likeCount">{likesCount}</span>
-                                    <i className="far fa-comment"></i>
-                                    <span className="commentCount">{communityItem.commentCount}</span>
-                                    <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
-                                    <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
-                                </div>
-                            </div>    
+                                    <div className="left_info">
+                                        <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
+                                        <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
+                                        <i className="far fa-comment"></i>
+                                        <span className="commentCount">{communityItem.commentCount}</span>
+                                    </div>
+                                    <div className="right_info">
+                                        <i 
+                                            className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                                            onClick={handleLikeToggle}
+                                            style={{ 
+                                                color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
+                                                cursor: 'pointer' 
+                                            }}
+                                        ></i>
+                                        <span className="likeCount">{likesCount}</span>
+                                    </div>
+                                </div> 
+                            </div>  
                         </div>
                     ))
                 ) : (
