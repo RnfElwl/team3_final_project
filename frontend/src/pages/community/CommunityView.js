@@ -1,9 +1,10 @@
 import "../../css/community/communityView.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
+import ReportModal from '../../component/api/ReportModal.js';
 
 
 function CommunityView(){
@@ -18,8 +19,13 @@ function CommunityView(){
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
     const userid = localStorage.getItem('userid');
-    const [hitCount, setHitCount] = useState(0); // 조회수 상태
-    
+    //const [hitCount, setHitCount] = useState(0); // 조회수 상태
+    const isInitialRender = useRef(true); //1번만 호출 
+
+    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [isUserFetched, setIsUserFetched] = useState(false);
 
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
@@ -90,34 +96,43 @@ function CommunityView(){
     };
 
     useEffect(() => {
-        // 게시글 데이터 가져오기
-        axios.get(`http://localhost:9988/community/view/${community_no}`)
-            .then(response => {
-                console.log(response.data); // API 응답 로그
-                setCommunity(response.data); // community 상태 업데이트
-                setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
-                //setLiked(response.data.liked);  초기 좋아요 상태 설정
-                setHitCount(response.data.hitCount);       // 조회수 설정
-            })
-            .catch(error => {
-                console.error("Error fetching community view:", error);
-            });
-        // 댓글 데이터 가져오기
-        axios.get(`http://localhost:9988/community/comments/${community_no}`)
-            .then(response => {
-                setComments(response.data); // 댓글 상태 업데이트
-            })
-            .catch(error => {
-                console.error("Error fetching comments:", error);
-            });    
-        // 조회수 증가 API 호출
-        axios.get(`http://localhost:9988/community/view/${community_no}`)
-            .then(response => {
-                console.log("조회수 증가 완료", response.data);
-            })
-            .catch(error => {
-                console.error("Error increasing hit count:", error);
-            });
+        // 페이지가 처음 로드될 때만 실행되도록 조건 설정
+        if (isInitialRender.current) {
+            isInitialRender.current = false; // 첫 번째 렌더링 이후로는 실행 안되도록 설정
+            // 게시글 데이터 가져오기
+            axios.get(`http://localhost:9988/community/view/${community_no}`)
+                .then(response => {
+                    console.log(response.data); // API 응답 로그
+                    setCommunity(response.data); // community 상태 업데이트
+                    setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
+                    //setLiked(response.data.liked);  초기 좋아요 상태 설정
+                    //setHitCount(response.data.hitCount);        조회수 설정
+                    
+                })
+                .catch(error => {
+                    console.error("Error fetching community view:", error);
+                });
+            // 댓글 데이터 가져오기
+            axios.get(`http://localhost:9988/community/comments/${community_no}`)
+                .then(response => {
+                    setComments(response.data); // 댓글 상태 업데이트
+                })
+                .catch(error => {
+                    console.error("Error fetching comments:", error);
+                });    
+            // 조회수 증가 로직
+            const increaseHitCount = async () => {
+                try {
+                    await axios.put(`http://localhost:9988/community/hit/${community_no}`); // 조회수 증가 API 호출
+                    console.log("조회수 증가 완료");
+                } catch (error) {
+                    console.error("Error increasing hit count:", error);
+                }
+            };
+
+            // 조회수 증가는 페이지가 처음 로드될 때 한 번만 실행
+            increaseHitCount();
+        }
     }, [community_no]);
 
     const handleCommentChange = (e) => {
@@ -237,6 +252,38 @@ function CommunityView(){
             });
     };
 
+    function openReport(e){{/* 신고 기능 */}
+        const id = e.target.dataset.id;
+        const userid = e.target.dataset.userid;
+        const content = e.target.dataset.content;
+        setReport({
+            report_tblname: 2, // 본인 테이블에 따라 다름
+            report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+            reported_userid: userid, // 피신고자id
+            report_content: content,// 피신고자의 채팅 내용
+        })
+        toggleReport();
+    }
+
+    // 모달창 열고 닫기 함수
+    const toggleReport = () => {
+        setReportShow(!reportShow);
+    };
+
+    useEffect(() => {
+        if (!isUserFetched) { // 사용자가 이미 불러와지지 않았다면
+            axios.get(`http://localhost:9988/user/userinfo`)
+                .then((response) => {
+                    const userid = response.data; // 응답 구조에 맞게 수정
+                    setLoggedInUserId(userid);
+                    setIsUserFetched(true); // 사용자 정보 불러오기 완료
+                })
+                .catch((error) => {
+                    console.error("Error fetching user info:", error);
+                });
+        }
+    }, [isUserFetched]); // isUserFetched가 변경될 때마다 호출
+   
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -254,8 +301,24 @@ function CommunityView(){
                         </div>
                         <p className="writedate">{community.community_writedate}</p>
                     </div>
-                    <input type="button" value="팔로우" className="action_button" />
-                    <input type="button" value="신고" className="action_button" />
+                    {loggedInUserId !== null && loggedInUserId !== community.userid && (
+                        <>
+                        <input type="button" value="팔로우" className="action_button" />
+                        <input type="button" value="신고" className="action_button" 
+                            onClick={(e) => openReport(e)} 
+                            data-id={community.community_no}
+                            data-userid={community.userid}
+                            data-content={community.community_title} 
+                        />
+                    </>
+                )}
+                    <ReportModal    
+                        reportShow={reportShow}// 모달창 보이기 여부
+                        toggleReport={toggleReport} // 모달창 열고닫기 함수
+                        report={report}// 신고 데이터 변수
+                        setReport={setReport} // 신고 데이터 변수 세팅
+                        //setDefaultList={setDefaultChat} // list다시 select
+                    />
                 </div> 
                 <hr/>
                 <div className="view_middle">

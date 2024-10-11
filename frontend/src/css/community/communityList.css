@@ -146,7 +146,7 @@ body {
 .community_list .writedate {
     color: #999; /* 색상 */
     font-size: 0.9em; /* 글자 크기 */
-    padding-right: 30px;
+    padding-right: 15px;
     padding-top: 15px;
     margin-left: auto; /* 날짜를 오른쪽에 배치 */
     white-space: nowrap; /* 날짜가 줄바꿈되지 않도록 함 */
@@ -173,17 +173,23 @@ body {
 }
 
 .community_list .category {
-    font-size: 12px;
     background-color: #ccc; 
     width: 50px;
     height: 25px;
     font-size: 0.9em;
     border-radius: 50px;
-    padding: 0; /* 여백 제거 */
     font-weight: bold;
     color: #fff; /* 글자 색상 */
     text-align: center;
-    margin-top: 5px;
+    flex-shrink: 0; /* 카테고리 크기 고정 */
+}
+
+.community_list .community_title {
+    flex-grow: 1;
+    margin-left: 10px;
+    word-wrap: break-word; /* 제목이 길면 줄바꿈 */
+    white-space: normal; /* 제목이 너무 길 때 줄바꿈을 허용 */
+    width: 580px;
 }
 
 .community_list .list_nn{
@@ -205,9 +211,10 @@ body {
 
 .community_list .list_bottom {
     display: flex; /* 플렉스 레이아웃 */
-    margin-top: 10px; /* 여백 */
     justify-content: flex-end;
-    padding-top: 130px;
+    /* padding-top: 130px; */
+    padding-bottom: 0;
+    margin-top: auto; /* 위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
 }
 
 .community_list .fa-heart,
@@ -270,4 +277,37 @@ body {
 .community_list .top_posts h3{
     text-align: center;
     font-size: 20px;
+}
+
+/* 신고 */
+.community_list .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.community_list .report_show{
+    display: flex;
+}
+.community_list .report_hide{
+    display: none;
+}
+.community_list .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.community_list .report_window .chatting_report{
+    color: black;
+    background-color: aliceblue;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
 }

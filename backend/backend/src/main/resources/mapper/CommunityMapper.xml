@@ -5,7 +5,8 @@
 <mapper namespace="com.ict.backend.dao.CommunityDAO">
     <!-- 게시글 리스트 조회 쿼리 -->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl
+        SELECT * FROM community_tbl cct
+        where cct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)
         ORDER BY community_writedate DESC
     </select>
     <insert id = "createCommunity" parameterType="com.ict.backend.vo.CommunityVO">

@@ -24,9 +24,7 @@
     height: 70px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
     margin-right: 10px; /* 여백 */
-    margin-bottom: 20px;
     border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
 }
 
 .community_view .writer_info {
@@ -40,6 +38,7 @@
     font-weight: bold; /* 글씨 두껍게 */
     color: #fff; /* 색상 */
     font-size: 1.2em;
+    padding-top: 20px;
 }
 
 .community_view .writedate {
@@ -69,7 +68,7 @@
 .community_view .action_button {
     background-color: #f1f3f5;
     border: none;
-    padding: 5px 10px;
+    padding: 7px 10px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: bold;
@@ -253,4 +252,36 @@
 
 .community_view .edit_delete{
     margin-left: auto;
+}
+
+.community_view .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.community_view .report_show{
+    display: flex;
+}
+.community_view .report_hide{
+    display: none;
+}
+.community_view .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.community_view .report_window .chatting_report{
+    color: black;
+    background-color: aliceblue;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
 }

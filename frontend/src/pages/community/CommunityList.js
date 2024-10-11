@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
+import ReportModal from '../../component/api/ReportModal.js';
 
 function CommunityList() {
     const { community_no } = useParams(); // URL에서 community_no 가져오기
@@ -15,12 +16,14 @@ function CommunityList() {
     const userprofile = localStorage.getItem('userprofile');
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
-    const [comments, setComments] = useState([]); // 댓글 상태 추가
-    const [hitCount, setHitCount] = useState(0);
 
-    // 상위 3개 게시물
     const [topViewedPosts, setTopViewedPosts] = useState([]);
-    const [topLikedPosts, setTopLikedPosts] = useState([]);
+    const [topLikedPosts, setTopLikedPosts] = useState([]);// 상위 3개 게시물
+    const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
+
+    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -45,9 +48,20 @@ function CommunityList() {
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
                 
+                // 카테고리별 게시물 수 계산
+                const counts = response.data.reduce((acc, item) => {
+                    const category = getCategoryName(item.category);
+                    acc[category] = (acc[category] || 0) + 1;
+                    return acc;
+                }, {});
+
+                // 전체 카테고리 수 설정
+                counts["전체"] = response.data.length;
+
+                setCategoryCounts(counts);
+
                 // 상위 3개 게시물 설정
                 const sortedByLikes = [...response.data].sort((a, b) => b.likesCount - a.likesCount).slice(0, 3);
-               
                 setTopLikedPosts(sortedByLikes);
 
             })
@@ -78,19 +92,34 @@ function CommunityList() {
             })
             .catch(error => {
                 console.error("Error fetching community view:", error);
-            });
-        // 댓글 데이터 가져오기
-        axios.get(`http://localhost:9988/community/comments/${community_no}`)
-            .then(response => {
-                setComments(response.data); // 댓글 상태 업데이트
-            })
-            .catch(error => {
-                console.error("Error fetching comments:", error);
-            });    
+            }); 
     }, [community_no]);
 
-    // 댓글 수 계산
-    const commentCount = comments.length;
+    useEffect(() => {
+        const fetchCommentsCount = async (community_no) => {
+            try {
+                const response = await axios.get(`http://localhost:9988/community/comments/${community_no}`);
+                return response.data.length; // 댓글 수 반환
+            } catch (error) {
+                console.error(`Error fetching comments count for post ${community_no}:`, error);
+                return 0;
+            }
+        };
+    
+        const fetchAllCommentsCounts = async () => {
+            const counts = await Promise.all(
+                community.map(async (communityItem) => {
+                    const count = await fetchCommentsCount(communityItem.community_no);
+                    return { ...communityItem, commentCount: count };
+                })
+            );
+            setFilteredCommunity(counts); // 댓글 수를 포함한 상태로 업데이트
+        };
+    
+        if (community.length > 0) {
+            fetchAllCommentsCounts();
+        }
+    }, [community]);
 
     // 검색창
     const handleSearchInputChange = (e) => {
@@ -163,6 +192,37 @@ function CommunityList() {
         fetchTopViewedPosts();
     }, []);
 
+    function openReport(e){{/* 신고 기능 */}
+        const id = e.target.dataset.id;
+        const userid = e.target.dataset.userid;
+        const content = e.target.dataset.content;
+        setReport({
+            report_tblname: 2, // 본인 테이블에 따라 다름
+            report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+            reported_userid: userid, // 피신고자id
+            report_content: content,// 피신고자의 채팅 내용
+        })
+        toggleReport();
+    }
+
+    // 모달창 열고 닫기 함수
+    const toggleReport = () => {
+        setReportShow(!reportShow);
+    };
+
+    useEffect(() => {
+        axios.get(`http://localhost:9988/user/userinfo`)
+            .then((response) => {
+                // API의 응답에서 데이터 추출
+                const userid = response.data; // userId 값을 변수에 저장
+                setLoggedInUserId(userid);
+            })
+            .catch((error) => {
+                console.error("Error fetching user info:", error);
+            });
+    }, []);
+
+
     return (
         <div className="community_list">
             <div className="container">
@@ -207,8 +267,23 @@ function CommunityList() {
                                     </div>
                                     <p className="writedate">{communityItem.community_writedate}</p>
                                 </div>
-                                <input type="button" value="팔로우" className="action_button" />
-                                <input type="button" value="신고" className="action_button" />
+                                {userid !== communityItem.userid && (
+                                    <>
+                                        <input type="button" value="팔로우" className="action_button" />
+                                        <input type="button" value="신고" className="action_button" 
+                                            onClick={(e) => openReport(e)} 
+                                            data-id={community.community_no}
+                                            data-userid={community.userid}
+                                            data-content={community.community_title} 
+                                        />
+                                    </>
+                                )}
+                                <ReportModal    
+                                    reportShow={reportShow}// 모달창 보이기 여부
+                                    toggleReport={toggleReport} // 모달창 열고닫기 함수
+                                    report={report}// 신고 데이터 변수
+                                    setReport={setReport} // 신고 데이터 변수 세팅
+                                />
                             </div>
                             <div className="list_nn">
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>
@@ -233,7 +308,7 @@ function CommunityList() {
                                     ></i>
                                     <span className="likeCount">{likesCount}</span>
                                     <i className="far fa-comment"></i>
-                                    <span className="commentCount">{commentCount}</span>
+                                    <span className="commentCount">{communityItem.commentCount}</span>
                                     <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
                                     <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
                                 </div>
@@ -249,7 +324,7 @@ function CommunityList() {
                 <div className="category_box">
                     {categories.map(category => (
                         <button key={category} onClick={() => filterByCategory(category)}>
-                            {category}
+                            {category} ({categoryCounts[category] || 0}) {/* 카테고리별 게시물 수 표시 */}
                         </button>
                     ))}
                 </div>
