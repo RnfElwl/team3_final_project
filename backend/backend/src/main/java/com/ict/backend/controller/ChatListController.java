@@ -5,6 +5,7 @@ import com.ict.backend.service.JoinService;
 import com.ict.backend.util.UUIDUtils;
 import com.ict.backend.vo.ChatListVO;
 import com.ict.backend.vo.ChatVO;
+import com.ict.backend.vo.ScheduleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,7 +55,8 @@ public class ChatListController {
     @PostMapping("/userlistadd/{chatlist_url}")
     public int insertChatUserList(@PathVariable String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        return chatListService.insertChatEnter(chatlist_url, userid);
+        int result = chatListService.insertChatEnter(chatlist_url, userid);
+        return result;
     }
     @GetMapping("/roominfo")
     public ChatListVO selectRoomInfo(@RequestParam String chatlist_url){
@@ -62,12 +64,28 @@ public class ChatListController {
     }
     @GetMapping("/member-list")
     public List<ChatVO> selectChatMember(@RequestParam String chatlist_url){
-        System.out.println(chatlist_url);
         return chatListService.selectChatMember(chatlist_url);
     }
     @PostMapping("/headcount")
     public int updateChatHeadCount(@RequestBody String chatlist_url){
         System.out.println(chatlist_url);
         return chatListService.updateChatHeadCount(chatlist_url);
+    }
+    @PostMapping("/schedule/create")
+    public int insertSchedule(@RequestBody ScheduleVO scheduleVO){
+        String chatlist_url = UUIDUtils.createType4UUID();
+        scheduleVO.setSchedule_id(chatlist_url);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        scheduleVO.setUserid(userid);
+        String schedule_date = scheduleVO.getDay()+" "+scheduleVO.getTime();
+        scheduleVO.setSchedule_date(schedule_date);
+        scheduleVO.setSchedule_deadline(schedule_date);
+        System.out.println(scheduleVO.toString());
+
+        return chatListService.insertSchedule(scheduleVO);
+    }
+    @GetMapping("/schedule/list")
+    public List<ScheduleVO> selectScheduleList(@RequestParam String chatlist_url){
+        return chatListService.selectScheduleList(chatlist_url);
     }
 }

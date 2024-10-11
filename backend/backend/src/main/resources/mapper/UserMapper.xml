@@ -6,8 +6,14 @@
     <select id = "test" resultType="com.ict.backend.vo.MemberVO">
         select * from user_tbl limit 1
     </select>
+<!--    <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">-->
+<!--        SELECT * FROM user_tbl WHERE userid = #{userid}-->
+<!--    </select>-->
     <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">
-        SELECT * FROM user_tbl WHERE userid = #{userid}
+        SELECT u.*, CASE a.authority
+            WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role
+        FROM user_tbl u
+        left JOIN admin_grade_tbl a ON u.userid = a.userid where u.userid = #{userid};
     </select>
 
     <select id="existsByUserid" parameterType="String" resultType="Boolean">
@@ -17,4 +23,47 @@
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
         INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel})
     </insert>
+
+    <select id="usernickcheck" resultType="int">
+        select count(*) from user_tbl where usernick = #{param1}
+    </select>
+    <select id="useridcheck" resultType="int">
+        select count(*) from user_tbl where userid = #{param1}
+    </select>
+
+    <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail
+        FROM user_tbl
+        WHERE userid = #{userid}
+    </select>
+<!--    <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">-->
+<!--        SELECT-->
+<!--        userid, usernick, username, userbirth, usertel, useremail, useraddr, zipcode, addrdetail, image_url AS userprofile-->
+<!--        FROM user_tbl u-->
+<!--        JOIN image_tbl i ON u.userprofile = i.image_no-->
+<!--        WHERE u.userid = #{userid};-->
+<!--    </select>-->
+    <update id = "updateUserInfo">
+        UPDATE user_tbl SET
+        usernick = #{usernick}, userbirth = #{userbirth}, usertel = #{usertel}, useremail = #{useremail}, useraddr = #{useraddr}, zipcode = #{zipcode}, addrdetail = #{addrdetail}
+        where userid = #{userid}
+    </update>
+
+    <select id="userprofile" resultType="String">
+        SELECT i.image_url
+        FROM user_tbl u
+        LEFT JOIN image_tbl i ON u.userprofile = i.image_no
+        WHERE u.userid = #{userid};
+    </select>
+
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO image_tbl (image_url) VALUES (#{image_url})
+    </insert>
+    <update id="updateprofile">
+        UPDATE user_tbl SET userprofile = #{param1} WHERE userid = #{param2}
+    </update>
+    <update id = "updateimageurl">
+        UPDATE image_tbl set image_url = #{param1}
+    </update>
+
 </mapper>

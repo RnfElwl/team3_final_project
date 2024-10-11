@@ -4,6 +4,9 @@ import com.ict.backend.service.CommunityService;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,13 @@ public class CommunityController {
     CommunityService service;
 
     //list
+//    @GetMapping("/list")
+//    public Page<CommunityVO> getCommunityList(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return service.getCommunityList(pageable);
+//    }
     @GetMapping("/list")
     public List<CommunityVO> getCommunityList(){
         return service.getCommunityList();
@@ -32,15 +42,16 @@ public class CommunityController {
         return vo;
     }
 
+    // 조회수 증가를 위한 별도의 API 엔드포인트
+    @PutMapping("/hit/{community_no}")
+    public void increaseHit(@PathVariable("community_no") int community_no) {
+        service.increaseHit(community_no);
+    }
+
     //view
     @GetMapping("/view/{community_no}")
     public CommunityVO getCommunityView(@PathVariable("community_no") int community_no){
-        //조회수
-//        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        service.increaseHit(community_no);
-
         CommunityVO communityVO = service.getCommunityView(community_no);
-
         return communityVO;
     }
 

@@ -20,6 +20,45 @@ function Mypage() {
     // 글, 댓글 불러올거
     const [tagName, setTagName] = useState("Tag1");
     const [list, setList] = useState([]);
+    const [userInfo, setUserInfo] = useState({      // 초기 본인정보 끌어오기
+        usernick: '',
+        username: '',
+        usertel: '',
+        useremail: '',
+        useraddr: '',
+        addrdetail: '',
+        userprofile : ''
+    });
+    const [profileImageSrc, setProfileImageSrc] = useState('');
+    const defaultProfileImage = profile;
+
+    useEffect(() => {   // 제일 처음 사용자 이미지 값 불러오기
+        const fetchUserInfo = async () => {
+            try {
+                const response = await axios.get("http://localhost:9988/user/mypageinfo");
+                const userInfo = response.data;
+
+                const updatedUserInfo = {
+                ...userInfo,
+                };
+
+            setUserInfo(updatedUserInfo);
+            setProfileImageSrc(updatedUserInfo.userprofile || defaultProfileImage);
+            console.log(profileImageSrc);
+
+            console.log(updatedUserInfo);
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+        }
+    };
+
+    fetchUserInfo();
+    }, []);
+
+    const handleProfileImageError = () => {
+        setProfileImageSrc(defaultProfileImage); // 이미지 로드 실패 시 기본 이미지로 설정
+        console.log(profileImageSrc);
+    };
 
     const navigate = useNavigate();
 
@@ -67,14 +106,14 @@ function Mypage() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                     <div id = "profile">
-                        <img src = {profile} alt = "프로필"/>
-                        <span>사용자1님</span>
+                        <img src = {profileImageSrc} alt = {profile} onError={handleProfileImageError}/>
+                        <span>{userInfo.usernick}님</span>
                     </div>
                     <div id = "userinfo">
-                        <p>이름 : <span>홍길동</span></p>
-                        <p>주소 : <span>서울특별시 성동구 아차산로 113, 2층(성수동 2가, 삼전빌딩)</span></p>
-                        <p>전화번호 : <span>010-1234-1234</span></p>
-                        <p>이름 : <span>hong@hong.com</span></p>
+                        <p>이름 : <span>{userInfo.username}</span></p>
+                        <p>주소 : <span>{userInfo.useraddr} ({userInfo.addrdetail})</span></p>
+                        <p>전화번호 : <span>{userInfo.usertel}</span></p>
+                        <p>이름 : <span>{userInfo.username}</span></p>
                     </div>
                     <div id = "info_change">
                         <button className="btn btn-secondary" onClick={() => navigate('/mypage/edit')}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>

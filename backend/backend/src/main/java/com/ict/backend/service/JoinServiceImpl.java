@@ -54,4 +54,12 @@ public class JoinServiceImpl implements JoinService {
     public void saveUser(MemberVO user) {
         userDAO.saveUser(user);
     }
+    @Override
+    public int usernickcheck(String usernick){
+        return userDAO.usernickcheck(usernick);
+    }
+    @Override
+    public int useridcheck(String userid){
+        return userDAO.useridcheck(userid);
+    }
 }

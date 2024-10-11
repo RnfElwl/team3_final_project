@@ -56,7 +56,7 @@
         FROM
         chat_content_tbl cct
         join user_tbl ut on ut.userid=cct.userid
-        where chatlist_url=#{param1}
+        where chatlist_url=#{param1} and cct.content_id not in (select rt.report_tbluuid from report_tbl rt where rt.report_userid=#{param2} and rt.report_tblname=3)
         ORDER BY chat_date
         ) as rs where
         (select cul.first_conn from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= rs.chat_date
@@ -76,4 +76,10 @@
     <update id="updateChatHeadCount">
         update chat_list_tbl set chatlist_headcount=chatlist_headcount+1 where chatlist_url=#{param1}
     </update>
-</mapper>    
+    <insert id="insertSchedule">
+            insert into schedule_tbl values(#{schedule_id}, #{chatlist_url},#{schedule_title}, #{schedule_date}, #{schedule_deadline}, #{userid}, #{schedule_addr})
+    </insert>
+    <select id="selectScheduleList">
+        select * from schedule_tbl where chatlist_url=#{param1}
+    </select>
+</mapper>

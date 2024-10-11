@@ -67,6 +67,11 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
 	implementation 'org.apache.poi:poi-ooxml:5.3.0'
 
+	//페이징
+	// Spring Data JPA Starter
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Spring Boot Starter Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 
 

@@ -4,6 +4,8 @@ import com.ict.backend.dao.CommunityDAO;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import com.ict.backend.vo.PagingVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -14,10 +16,24 @@ public class CommunityServiceImpl implements CommunityService{
     @Inject
     CommunityDAO dao;
 
+//    @Override
+//    public Page<CommunityVO> getCommunityList(Pageable pageable) {
+//        return dao.getCommunityList(pageable);
+//    }
     @Override
     public List<CommunityVO> getCommunityList() {
         return dao.getCommunityList();
     }
+
+//    @Override
+//    public List<CommunityVO> getCommunityList(int size, int offset) {
+//        return dao.getCommunityList(size,offset);
+//    }
+//
+//    @Override
+//    public int getTotalCount() {
+//        return dao.getTotalCount();
+//    }
 
     @Override
     public int createCommunity(CommunityVO vo) {

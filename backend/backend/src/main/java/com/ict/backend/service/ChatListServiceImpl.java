@@ -3,6 +3,7 @@ package com.ict.backend.service;
 import com.ict.backend.dao.ChatListDAO;
 import com.ict.backend.vo.ChatListVO;
 import com.ict.backend.vo.ChatVO;
+import com.ict.backend.vo.ScheduleVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,11 @@ public class ChatListServiceImpl implements ChatListService {
     }
     public List<ChatVO> selectChatMember(String chatlist_url){
         return chatListDAO.selectChatMember(chatlist_url);
+    }
+    public int insertSchedule(ScheduleVO scheduleVO){
+        return chatListDAO.insertSchedule(scheduleVO);
+    }
+    public List<ScheduleVO> selectScheduleList(String chatlist_url){
+        return chatListDAO.selectScheduleList(chatlist_url);
     }
 }
