@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from '../../component/api/axiosApi.js';
 
-const ReportModal = ({ reportShow, toggleReport, report, setReport }) =>{
+const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultList}) =>{
 
     function reportFormAdd(event){
         let idField = event.target.name;
@@ -17,6 +17,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport }) =>{
           });
           if(result.status==200){
             toggleReport();
+            setDefaultList();//리스트 다시 조회하여서 비동기처리
           }
     }
 

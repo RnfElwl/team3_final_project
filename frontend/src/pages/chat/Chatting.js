@@ -266,6 +266,7 @@ const Chatting = () => {
             report_content: content,// 피신고자의 채팅 내용
         })
         toggleReport();
+        setDefaultChat();
     }
     function toggleReport(){{/* 신고 기능 */}
         setReportShow(!reportShow);
@@ -310,7 +311,6 @@ const Chatting = () => {
             }
             else{
                 oldList.push({
-                    schedule_id: data.schedule_id,
                     schedule_title: data.schedule_title,
                     schedule_date:data.schedule_date,
                     schedule_addr: data.schedule_addr,
@@ -371,6 +371,7 @@ const Chatting = () => {
                 toggleReport={toggleReport} // 모달창 열고닫기 함수
                 report={report}// 신고 데이터 변수
                 setReport={setReport} // 신고 데이터 변수 세팅
+                setDefaultList={setDefaultChat}
             />
             <div className={`schedule_create ${scheduleCreate?'schedule_create_show':'schedule_create_hide'}`}>
                 <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
