@@ -47,6 +47,7 @@ const Chatting = () => {
             setDefaultChat();
             setDefaultMember();
             setDefaultSchdule();
+            
         }
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
         getUser()
@@ -158,14 +159,13 @@ const Chatting = () => {
 
     async function setDefaultSchdule(){
         const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
-        console.log(data);
         setScheduleList(data);
+        schedule_list_tag();
     }
     async function setDefaultMember(){
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
             chatlist_url
         }});
-        console.log(data);
         setMemberList(data);
     }
     
@@ -214,7 +214,7 @@ const Chatting = () => {
         const interval = setInterval(() => {
           console.log("Current value:", today); // 변수 확인
           setToday(new Date());
-          console.log(today);
+          schedule_list_tag();
         }, 1000); // 1000ms = 1초
     
         // 컴포넌트가 언마운트될 때 setInterval을 정리
@@ -286,8 +286,8 @@ const Chatting = () => {
     async function scheduleCreateSubmit(e){
         e.preventDefault();
         const result = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
-        console.log(scheduleForm);
         setScheduleCreate(false);
+        setDefaultSchdule();
 
     }
     function scheduleFormAdd(event){
@@ -296,37 +296,30 @@ const Chatting = () => {
         setScheduleForm(p=>{return {...p, [idField]:idValue}});
     }
     function schedule_list_tag(){
+        const newList = [];
+        const oldList = [];
         scheduleList.map((data, index)=>{
-
             if((new Date(data.schedule_date).getTime() -  today.getTime())>=0){
-                setNewTag(p=>[...p, <div className='schedule'>최신
-                    <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
-                    <div className='schedule_info'>
-                        <div className='schedule_title'>{data.schedule_title}</div>
-                        <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
-                        <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
-                        <div className='schedule_addr'>{data.schedule_addr}</div>
-                    </div>
-                    <div className='schedule_voting'>
-                        <div>참여</div>
-                        <div>불참</div>
-                    </div>
-                </div>])
+                newList.push({
+                    schedule_id: data.schedule_id,
+                    schedule_title: data.schedule_title,
+                    schedule_date:data.schedule_date,
+                    schedule_addr: data.schedule_addr,
+                });
+                
             }
             else{
-                setOldTag(p=>[...p, <div className='schedule'>과거
-                    <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
-                    <div className='schedule_info'>
-                        <div className='schedule_title'>{data.schedule_title}</div>
-                        <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
-                        <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
-                        <div className='schedule_addr'>{data.schedule_addr}</div>
-                    </div>
-                    <div className='schedule_voting'>
-                    </div>
-                </div>])
+                oldList.push({
+                    schedule_id: data.schedule_id,
+                    schedule_title: data.schedule_title,
+                    schedule_date:data.schedule_date,
+                    schedule_addr: data.schedule_addr,
+                });
             }
         })
+        setNewTag(newList);
+        setOldTag(oldList);
+        //set넣지 말고 배열에 담아서 한번에 set하기
     }
     return (
         <div className='chatting_room'>
@@ -402,59 +395,39 @@ const Chatting = () => {
                 <div className='schedule_list'>
                     <div>최신</div>
                 {
-                    scheduleList.map((data, index)=>(
-                            <>
-                            {(new Date(data.schedule_date).getTime() -  today.getTime())>=0?(
-                            <div className='schedule'>최신
-                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
-                                <div className='schedule_info'>
-                                    <div className='schedule_title'>{data.schedule_title}</div>
-                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
-                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
-                                    <div className='schedule_addr'>{data.schedule_addr}</div>
-                                </div>
-                                <div className='schedule_voting'>
-                                    <div>참여</div>
-                                    <div>불참</div>
-                                </div>
-                            </div>
-                            ):
-                            (
-                            <div className='schedule'>과거
-                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
-                                <div className='schedule_info'>
-                                    <div className='schedule_title'>{data.schedule_title}</div>
-                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
-                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
-                                    <div className='schedule_addr'>{data.schedule_addr}</div>
-                                </div>
-                                <div className='schedule_voting'>
-                                </div>
-                            </div>)
-                                }
-                            </>
-
-                    ))
-                    }
-</div>
-                <div className='schedule_list'>
-                    <div>현재 일정</div>
-                    <div className='schedule'>
+                    newTag.map((data, index)=>(
+                        <div className='schedule'>
                         <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                         <div className='schedule_info'>
-                            <div className='schedule_title'>베테랑 같이 볼사람</div>
-                            <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] 2024-10-20 14:30</div>
-                            <div className='schedule_date'>2024-10-20 14:30</div>
-                            <div className='schedule_addr'>안만나고 여기 사이트에서 각자 보죠</div>
+                            <div className='schedule_title'>{data.schedule_title}</div>
+                            <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                            <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                            <div className='schedule_addr'>{data.schedule_addr}</div>
                         </div>
-                        <div className='schedule_voting'>
-                            <div>참여</div>
+                        <div className='schedule_voting' data-id={data.schedule_id}>
+                            <div >참여</div>
                             <div>불참</div>
                         </div>
                     </div>
-                </div>
-                <div className='schedule_list'>
-                    <div>과거 일정</div>
+                    ))
+
+                    }
+                    <div>예전</div>
+                    {
+                        oldTag.map((data, index)=>(
+                            <div className='schedule'>
+                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                                <div className='schedule_info'>
+                                    <div className='schedule_title'>{data.schedule_title}</div>
+                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_addr'>{data.schedule_addr}</div>
+                                </div>
+                                    <div className='schedule_voting'>
+                                    </div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             

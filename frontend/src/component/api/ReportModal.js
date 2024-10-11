@@ -39,7 +39,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport }) =>{
 
                 </textarea>
                 </div>
-                <button type="submit">방만들기</button>
+                <button type="submit">신고하기</button>
             </form>
     </div> 
     )
