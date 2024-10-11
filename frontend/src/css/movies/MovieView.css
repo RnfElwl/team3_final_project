@@ -1,33 +1,50 @@
+
+
+
 .movie-view-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: black;
+    padding-top: 20px;    
+    color: white;
+    max-width: 1200px;
+    margin: 0 auto; /* 가운데 정렬 */
   }
   
   .movie-content {
-    width: 1200px;
-    color: white;
+    
+    
   }
-  
-  .movie-image img {
-    width: 100%;
+
+  .contents-box{
+    display: flex;
+    gap: 20px; /* 이미지와 상세 정보 사이의 간격 */
+    max-width: 1200px;
+    margin: 0 auto; /* 가운데 정렬 */
+    color: white;
+
+  }
+
+    .movie-image img {
+    width: 360px;
     height: auto;
+    object-fit: cover; /* 이미지가 잘리지 않고 비율 유지 */
     border-radius: 8px;
+    margin: 20px;
   }
   
   .movie-details {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-top: 20px;
-    flex-direction: column; /* 제목과 영화 정보를 세로로 정렬 */
+    flex-direction: column;
+    
   }
   
   .movie-title h1 {
-    font-size: 36px;
+    font-size: 50px;
+    font-weight: bold;
+    
+    margin: 20px;
   }
-  
+  .movie-info{
+    font-size: 50px;
+  }
   .movie-actions {
     margin-top: 20px; /* movie-info와 버튼들 사이에 여백 추가 */
     display: flex;
@@ -73,7 +90,7 @@
     }
   
   .rating-info {
-    font-size: 18px;
+    font-size: 28px;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
@@ -89,11 +106,54 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    padding-bottom: 20px;
   }
   
   .info-details span {
     margin-right: 10px;
+    font-size: 20px;
   }
+  .info-synops{
+    background-color: #000000;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    font-size: 18px;
+    float: left;
+  }
+
+  .favorite-icon {
+    font-size: 40px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: #888; /* 기본 색상 */
+  }
+  
+  .favorite-icon.active {
+    color: #ff4757; /* 찜하기 상태일 때 빨간색 */
+  }
+  
+  .favorite-icon:hover {
+    color: #ff6b81; /* 호버 시 더 밝은 빨간색 */
+  }
+
+  .share-icon {
+    font-size: 40px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: #888; /* 기본 색상 */
+    margin-left: 15px; /* 찜하기 아이콘과 간격 */
+  }
+  
+  .share-icon:hover {
+    color: #007bff; /* 공유 아이콘 hover 시 색상 변경 */
+  }
+  
+  
+
+
+
+
+
 
   /* 리뷰 관련 */
   .review-section {

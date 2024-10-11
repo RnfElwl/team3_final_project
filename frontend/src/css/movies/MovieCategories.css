@@ -25,7 +25,7 @@ a.card-link {
   /* 탭 스타일 */
 .nav-tabs .nav-link {
 color: #fff; /* 탭 기본 색상 */
-background-color: transparent;
+/* background-color: transparent; */
 border: none;
 cursor: pointer;
 font-size: 18px;
@@ -38,7 +38,7 @@ border-bottom: 2px solid #f1c40f;
 
 /* 카드 스타일 */
 .card {
-background-color: #333; /* 카드 배경 */
+/* background-image: url("https://img.freepik.com/free-vector/watercolor-mint-background_23-2150238643.jpg?t=st=1728614442~exp=1728618042~hmac=1098098cc9adff8d05d35cb12c73935670ad79457a2421e69635aa38b6b11199&w=826"); */
 border: none;
 transition: transform 0.3s ease; /* hover 애니메이션 */
 }
@@ -49,7 +49,7 @@ transform: scale(1.05); /* hover 시 카드 크기 커짐 */
 
 /* 카드 내부 텍스트 스타일 */
 .card-title {
-color: #fff; /* 카드 제목 색상 */
+color: #464040; /* 카드 제목 색상 */
 font-size: 18px;
 }
 

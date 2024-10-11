@@ -45,7 +45,7 @@
         opened_year,
         movie_grade,
         movie_directors,
-        movie_poster,
+        movie_link,
         movie_synops,
         movie_casts
         FROM
