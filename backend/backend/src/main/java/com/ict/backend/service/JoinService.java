@@ -13,4 +13,9 @@ public interface JoinService {
 
    // 새로운 사용자 저장
    void saveUser(MemberVO user);
+
+   //사용자 중복 확인용
+   public int usernickcheck(String usernick);
+   public int useridcheck(String userid);
+
 }

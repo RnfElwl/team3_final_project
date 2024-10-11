@@ -31,4 +31,17 @@ public class JoinController {
         return service.findByUserid(userid);
     }
 
+    @GetMapping("/signup")
+    public String signup(){
+        System.out.println("hi");
+        return "hi";
+    }
+    @GetMapping("/nickcheck")
+    public int nickcheck(String usernick){
+        return service.usernickcheck(usernick);
+    }
+    @GetMapping("/idcheck")
+    public int idcheck(String userid){
+        return service.useridcheck(userid);
+    }
 }

@@ -27,7 +27,8 @@ public class CustomUserDetails implements UserDetails {
 
             @Override
             public String getAuthority() {
-
+                // 권한이 있는지 볼 때 사용함
+//                System.out.println(memberVO.getROLE_ADMIN()+ memberVO.getRole());
                 return memberVO.getRole();
             }
         });
@@ -43,7 +44,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-
         return memberVO.getUserid();
     }
 

@@ -22,7 +22,7 @@
 }
 .otherinfo{
     width: 100%;
-    max-width: 1500px;
+    max-width: 1200px;
     margin : 0 auto;
 }
 .info #profile{
@@ -70,7 +70,7 @@
  /* 슬라이더 쓰는 content는 height 높게 */
 .recent_watch .content_info, .bookmark .content_info{
     width: 90%;
-    height : 500px;
+    height : 350px;
     /* border : 1px gray solid; */
     margin: 10px auto;
 }

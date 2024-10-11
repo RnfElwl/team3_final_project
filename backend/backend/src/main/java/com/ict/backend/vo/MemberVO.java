@@ -10,16 +10,18 @@ import lombok.NoArgsConstructor;
 public class MemberVO {
     private String userid;
     private String userpwd;
-    private String role;
     private String username;
-    private String password;
-    private String email;
-    private String usertel;
-    private int zipcode;
-    private String address;
-    private String addrdetail;
-    private String hobby;
-    private String writedate;
-    private String userprofile;
     private String usernick;
+    private int zipcode;
+    private String useraddr;
+    private String addrdetail;
+    private String usertel;
+    private String useremail;
+    private String userbirth;
+    private String gender;
+    private String userprofile;
+    private String regiserdate;
+    private String role;
+    private String password;
+    private String ROLE_ADMIN;
 }

@@ -157,7 +157,7 @@ function LoginPage() {
               </div>
             </div>
             <div id = "join_button">
-              <button className="btn btn-outline-light text-dark text-white-50" onClick={() => window.location.href = '/singup'}>회원가입</button>
+              <button className="btn btn-outline-light text-dark text-white-50" onClick={() => window.location.href = '/signup'}>회원가입</button>
             </div>
           </div>
         </div>
