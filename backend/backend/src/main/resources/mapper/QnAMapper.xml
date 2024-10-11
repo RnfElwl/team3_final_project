@@ -49,4 +49,7 @@
     <update id="qnaDel">
         update qna_tbl set active_state=0 where qna_no=#{qna_no} and userid=#{userid}
     </update>
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO image_tbl (image_url) VALUES (#{image_url})
+    </insert>
 </mapper>

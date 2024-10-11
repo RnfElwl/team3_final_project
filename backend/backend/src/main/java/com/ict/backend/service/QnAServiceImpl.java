@@ -48,5 +48,11 @@ public class QnAServiceImpl implements QnAService{
         dao.qnaDel(qna_no, userid);
     }
 
+    @Override
+    public int uploadImage(String imageUrl) {
+
+        return dao.uploadImage(imageUrl);
+    }
+
 
 }

@@ -24,4 +24,5 @@ public class MemberVO {
     private String role;
     private String password;
     private String ROLE_ADMIN;
+    private int active_state;
 }

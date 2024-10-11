@@ -3,6 +3,7 @@ package com.ict.backend.controller;
 import com.ict.backend.service.AdminService;
 import com.ict.backend.vo.AdminDateVO;
 import com.ict.backend.vo.AdminVO;
+import com.ict.backend.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,24 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @GetMapping("/mindatas")
+    @GetMapping("/minDatas")
     public Map<String, Integer> admin_mindata(){
-      Map<String, Integer> minMap=new HashMap<>();
+        Map<String, Integer> minMap=new HashMap<>();
+      //오늘 가입한 인원수
+        int dailySub=adminService.dailySubscriberSelect();
+      //오늘 작성한 커뮤니티글 수
+        int dailyCom=adminService.dailyCommunitySelect();
+      //오늘 작성한 문의글 수
+        int dailyQna=adminService.dailyQnaSelect();
+      //오늘 신고 수
+        int dailyRep=adminService.dailyRepSelect();
 
-//      int dailySubscriber=adminService.dailySubscriberSelect();
+        minMap.put("dSubscriber",dailySub);
+        minMap.put("dCommunity",dailyCom);
+        minMap.put("dQna",dailyQna);
+        minMap.put("dRep",dailyRep);
 
+      System.out.println("Result: "+minMap);
       return minMap;
     };
     @GetMapping("/qna_dashboard/{qna_filter}")
@@ -86,4 +99,12 @@ public class AdminController {
 
         return adminService.comSearch(dateList);
     }
+    //멤버목록 확인
+    @GetMapping("/mem_dashboard")
+    public List<MemberVO> getMemberList(){
+        List<MemberVO> result=adminService.selectMemberMin();
+
+        return result;
+    }
+
 }

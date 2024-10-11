@@ -44,22 +44,31 @@
   margin-bottom: 40px;
 }
 .minDatas{
+  max-width: 1730px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   margin: 0 auto;
-  height: 90px;
+  min-height: 90px;
 }
 .minDataTitle{
-  margin-left: 5px;
   background-color: gray;
+  margin: 0 10px;
   padding:5px;
   border-radius: 2px;
   width: 300px;
+  min-width:160px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size: 1.2em;
 }
 .minDataBox{
-  height: 55px;
+  margin-top: 5px;
+  min-height: 55px;
   border-radius: 5px;
   background-color: white;
+  color: black;
+  line-height: 55px;
 }
 
 /* 화면이 작은 경우 레이아웃 변경 */
@@ -95,10 +104,23 @@ canvas{
   text-align: center;
   height: 350px;
   max-width: 450px;
-  min-width: 300px;
+  min-width: 450px;
   margin: 10px;
 }
-
 .simpBoardL{
   text-align: right;
+}
+.memListTopBox{
+  margin:10px 0;
+}
+.memTable{
+  background-color: rgba(52, 58, 64, 0.7);
+}
+
+.noFlexBox{
+  flex-wrap: nowrap;
+}
+
+.memCol{
+  margin-bottom: 5px;
 }

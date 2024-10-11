@@ -46,3 +46,12 @@
     border:none;
 
 }
+.preImageBar{
+    width: 600px;
+    margin: 10px auto;
+    text-align: left;
+}
+
+.preImg{
+    width: 300px;
+}

@@ -92,4 +92,28 @@
         and STR_TO_DATE(#{end_comDate}, '%Y-%m-%d')
         group by date(community_writedate);
     </select>
+    <select id="dailySubscriberSelect" resultType="int">
+        SELECT IFNULL(COUNT(userid), 0) as todayUCount
+        FROM user_tbl
+        WHERE DATE(regiserdate) = DATE(NOW())
+    </select>
+    <select id="dailyCommunitySelect" resultType="int">
+        select ifnull(count(community_title),0) as todayCCount
+        from community_tbl
+        where date(community_writedate)=date(now())
+    </select>
+    <select id="dailyQnaSelect" resultType="int">
+        select ifnull(count(qna_title),0) as todayQCount
+        from qna_tbl
+        where date(qna_writedate)=date(now())
+    </select>
+    <select id="dailyRepSelect" resultType="int">
+        select ifnull(count(report_userid),0) as todayRCount
+        from report_tbl
+        where date(report_date)=date(now())
+    </select>
+    <select id="selectMemberMin" resultType="com.ict.backend.vo.MemberVO">
+        select userid, username, DATE_FORMAT(regiserdate, '%y.%m.%d') AS regiserdate, active_state from user_tbl
+        order by regiserdate desc limit 8
+    </select>
 </mapper>

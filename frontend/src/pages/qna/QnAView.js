@@ -104,7 +104,7 @@ function QnAView() {
         <br/>
        
     
-    <AiOutlineAlert onClick={checkid} size="35px"/>
+    {usersid !== item?.userid ?(<AiOutlineAlert onClick={checkid} size="35px"/>):null}
     {usersid === item?.userid ? (
             <div><FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={qnaDelete}/></div>
         ) : null}

@@ -11,8 +11,10 @@ function AdminTest() {
   //DB 데이터
   const today = new Date();
   const todays_month=`${today.getMonth()+1}`;
+  const [inputMinData,setInputMinData]=useState([]);
   const [inputQnaData, setInputQnaData]=useState([]);
   const [inputComData, setInputComData]=useState([]);
+  const [inputMemData, setInputMemData]=useState([]);
   const [inputS_qnaData, setInputS_qnaData]=useState([]);
   const [inputS_comData, setInputS_comData]=useState([]);
   const [qna_filter, setQna_filter]=useState('년');
@@ -63,6 +65,23 @@ function AdminTest() {
   const handleEndComDateChange = (event) => {
     setEnd_comDate(event.target.value);
   };
+
+  //mindata 불러오기
+  useEffect(()=>{
+    if (error) return;
+    //최상단의 데이터들 출력
+    axios.get(`http://localhost:9988/admin/minDatas`)
+    .then(response=>{
+      console.log("미니데이터들:",response.data);
+      setInputMinData(response.data);
+      setError(false);
+
+    })
+    .catch(error=>{
+      console.error("검색 중 오류 발생:",error);
+      setError(true);
+    });
+  }, [error])
     
 
   //에러, 필터 값 변경시마다 QnA데이터 input 재실행
@@ -96,6 +115,21 @@ function AdminTest() {
         setError(true); // 오류가 발생하면 상태 변경
       });
   }, [error,community_filter]);
+
+  useEffect(()=>{
+    if(error) return;
+    axios.get(`http://localhost:9988/admin/mem_dashboard`)
+    .then(response => {
+      console.log(response.data);
+      setInputMemData(response.data);
+      setError(false); // 성공 시 오류 상태 초기화
+    })
+    .catch(err => {
+      console.error("검색 중 오류 발생:", err);
+      setError(true); // 오류가 발생하면 상태 변경
+    });
+}, [error]);
+
 
   //qna 날짜 검색 폼 submit event
   const handleQnADateSubmit=(e)=>{
@@ -416,16 +450,16 @@ if(qna_filter ==="년"){
       <h3 style={{ textAlign: "left" }}>Dashboard</h3>
       <div className="minDatas">
         <div className="minDataTitle">today's QnAs
-          <div className="minDataBox">content</div>
+          <div className="minDataBox">{inputMinData.dQna}</div>
         </div>
         <div className="minDataTitle">today's Communities
-          <div className="minDataBox">content</div>
+          <div className="minDataBox">{inputMinData.dCommunity}</div>
         </div>
-        <div className="minDataTitle">today's subscribers
-          <div className="minDataBox">content</div>
+        <div className="minDataTitle">today's Subscribers
+          <div className="minDataBox">{inputMinData.dSubscriber}</div>
         </div>
-        <div className="minDataTitle">today's Chats
-          <div className="minDataBox">content</div>
+        <div className="minDataTitle">today's Declaration
+          <div className="minDataBox">{inputMinData.dRep}</div>
         </div>
       </div>
       <div className="adminDashboard">
@@ -467,17 +501,35 @@ if(qna_filter ==="년"){
         </div>
         <div className='simpBoardArea'>
         <div className="simpBoardT">
-            QnA 게시글
+            멤버 목록
             <div className="simpBoardL">더보기▷</div>
           </div>
-            <div className="container">
-              <div className="row">
-                <div className="col-sm-1">No</div>
-                <div className="col-sm-6">제목</div>
-                <div className="col-sm-2">등록일</div>
-                <div className="col-sm-3">답변여부</div>
-              </div>
-            </div>
+          <table className="table memTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>가입일</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inputMemData.length > 0 ? (
+                inputMemData.map((item, index) => (
+                  <tr key={item.userid || index}>
+                    <td>{item.userid}</td>
+                    <td>{item.username}</td>
+                    <td>{item.regiserdate}</td>
+                    <td>{item.active_state === 1 ? "활성화" : "비활성화"}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">Loading...</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
         {/* 날짜 검색 qna 챠트 */}
         <div className='chartarea'>

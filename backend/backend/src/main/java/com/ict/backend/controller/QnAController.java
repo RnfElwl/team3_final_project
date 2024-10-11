@@ -1,6 +1,8 @@
 package com.ict.backend.controller;
 
+import com.ict.backend.service.ImageService;
 import com.ict.backend.service.QnAService;
+import com.ict.backend.service.UserService;
 import com.ict.backend.vo.PagingVO;
 import com.ict.backend.vo.QnAVO;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,10 @@ import java.util.*;
 public class QnAController {
     @Autowired
     QnAService qnaService;
+    @Autowired
+    ImageService imgService;
+    @Autowired
+    UserService userService;
 
     @Value("${upload.dir:D:/uploads}") // 기본 경로 설정
     private String uploadDir;
@@ -67,24 +73,30 @@ public class QnAController {
     ) {
         // 사용자 인증 확인
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        String no = "";
+        int result=0;
         if (userid == null) {
             System.out.println("등록되지 않은 사용자입니다.");
             return 3;
         } else if (userid.equals("anonymousUser")) {
             System.out.println("등록된 사용자가 없습니다.");
             return 2;
-        } else {
+        }  else {
             // uploads 폴더 경로 확인 및 생성
             try {
-                Path path = Paths.get(uploadDir);
-                if (!Files.exists(path)) {
-                    Files.createDirectories(path);
-                    System.out.println("uploads 폴더가 생성되었습니다: " + uploadDir);
+                for (MultipartFile file : qna_img) {
+
+                    String imgUrl = imgService.uploadImage(file, "qna"); // image_tbl에 이미지 넣기
+                    log.info("New profile image uploaded: {}", imgUrl);         // 이미지 주소값 확인
+                    int num = userService.uploadImage(imgUrl);                  // 이거는 좀 바꾸셔야함 이게 넣고 마지막에 들어간 image_no값을 리턴하는거거든
+                    log.info("no {}", num);                                      // image_no값 확인
+                    no = String.valueOf(num);
+                    //result = qnaService.updateprofile(no, qna_no);             // 똑바로 들어갔는지 확인 no = image_no/ userid = qna_no
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return -1; // 폴더 생성 실패 시 -1 반환
+            } catch (Exception e) {
+                System.out.println(e); // 오류 발생 시 응답
             }
+
 
             // QnAVO 객체 생성 및 속성 설정
             QnAVO qnaData = new QnAVO();
@@ -97,33 +109,9 @@ public class QnAController {
             qnaData.setQna_state(qna_state);
             qnaData.setActive_state(active_state);
 
-            List<String> imgPaths = new ArrayList<>(); // 이미지 경로 목록 생성
-            if (qna_img == null || Arrays.stream(qna_img).allMatch(MultipartFile::isEmpty)) {
-                qnaData.setQna_img(null);  // 이미지가 없으면 null로 설정
-            } else {
-                for (MultipartFile img : qna_img) {
-                    if (!img.isEmpty()) {
-                        try {
-                            // 이미지 파일 이름 생성
-                            String fileName = System.currentTimeMillis() + "_" + img.getOriginalFilename();
-                            Path filePath = Paths.get(uploadDir, fileName);
-
-                            // 이미지 파일 저장
-                            Files.copy(img.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                            // 이미지 경로를 리스트에 추가
-                            imgPaths.add(filePath.toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return -1; // 파일 저장 실패 시 -1 반환
-                        }
-                    }
-                }
-            }
-
             // QnAVO에 이미지 경로 목록 설정
-            qnaData.setQna_img(imgPaths.toString());
-
+            qnaData.setQna_img(no);
+            System.out.println(qnaData);
             // DB에 QnA 데이터 저장
             return qnaService.qnaInsert(qnaData);
         }
