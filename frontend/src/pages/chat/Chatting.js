@@ -37,6 +37,10 @@ const Chatting = () => {
     const [scheduleList, setScheduleList] = useState([]);// 일정 리스트 
     const [newTag, setNewTag] = useState([]);
     const [oldTag, setOldTag] = useState([]);
+    const [voteForm, setVoteForm]= useState({});
+    const [voteList, setVoteList] = useState([]);
+    const [voteUserWindow, setVoteUserWindow] = useState(false);
+    const [openExit, setOpenExit] = useState(false);
     let once = 0;
     const chatting_box = useRef(null);
     const menu_box = useRef(null);
@@ -76,8 +80,12 @@ const Chatting = () => {
         // 메시지 수신 시
         mqttClient.on('message', (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
-            
-            setReceivedMessages(p=>[...p, JSON.parse(decoding)])
+            console.log(decoding)
+            if(JSON.parse(decoding).chat_type==4){
+                setDefaultSchdule();
+            }else{
+                setReceivedMessages(p=>[...p, JSON.parse(decoding)])
+            }
             
         });
 
@@ -160,7 +168,7 @@ const Chatting = () => {
     async function setDefaultSchdule(){
         const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
         setScheduleList(data);
-        schedule_list_tag();
+        
     }
     async function setDefaultMember(){
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
@@ -220,7 +228,10 @@ const Chatting = () => {
         // 컴포넌트가 언마운트될 때 setInterval을 정리
         return () => clearInterval(interval);
       }, [today]); // `value`가 변경될 때마다 이 effect가 실행됨
-    
+    useEffect(()=>{
+        schedule_list_tag();
+        setToday(new Date());
+    }, [scheduleList])
     const handleSendMessage = () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
@@ -286,10 +297,14 @@ const Chatting = () => {
     }
     async function scheduleCreateSubmit(e){
         e.preventDefault();
-        const result = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
+        const {data} = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
         setScheduleCreate(false);
-        setDefaultSchdule();
-
+        if(data==1){
+            const info = {
+                chat_type: 4
+            } 
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+        }
     }
     function scheduleFormAdd(event){
         let idField = event.target.name;
@@ -301,11 +316,15 @@ const Chatting = () => {
         const oldList = [];
         scheduleList.map((data, index)=>{
             if((new Date(data.schedule_date).getTime() -  today.getTime())>=0){
+                console.log()
                 newList.push({
                     schedule_id: data.schedule_id,
                     schedule_title: data.schedule_title,
                     schedule_date:data.schedule_date,
                     schedule_addr: data.schedule_addr,
+                    yes:data.yes,
+                    no:data.no,
+                    user_vote: data.user_vote
                 });
                 
             }
@@ -314,6 +333,8 @@ const Chatting = () => {
                     schedule_title: data.schedule_title,
                     schedule_date:data.schedule_date,
                     schedule_addr: data.schedule_addr,
+                    yes:data.yes,
+                    no:data.no
                 });
             }
         })
@@ -321,8 +342,63 @@ const Chatting = () => {
         setOldTag(oldList);
         //set넣지 말고 배열에 담아서 한번에 set하기
     }
+    async function setScheduleVote(e){
+        e.preventDefault();
+        const {data} = await axios.post('http://localhost:9988/chat/schedule/voting', voteForm);
+        if(data==1){
+            const info = {
+                chat_type: 4
+            } 
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+        }
+    } 
+    async function setDefaultVote(id, value){
+        console.log(id, value)
+        const {data} = await axios.get("http://localhost:9988/chat/vote/list", {params:{
+            schedule_id: id,
+            vote_value: value
+        }});
+        if(data.length !=0){
+            setVoteUserWindow(true);
+            setVoteList(data);
+
+        }
+    }
+    async function exitRoom(){
+        const {data} = await axios.post("", {chatlist_url});
+
+        if(data==1){
+            const result = await axios.get('http://localhost:9988/user/userinfo');
+            setMyid(result.data);
+            const params = {userid : result.data};
+            const result2 = await axios.get('http://localhost:9988/getUserData', {params});
+            const offset = new Date().getTimezoneOffset() * 60000;
+            let today = new Date(Date.now() - offset);
+            const now = today.toISOString().replace('T', ' ').substring(0, 19);
+            const info = {  
+                chatlist_url,
+                usernick : result2.data.usernick, 
+                chat_date: now,
+                chat_type: 3
+            } 
+            
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+        }
+    }
     return (
         <div className='chatting_room'>
+            <div className={`exit_window ${openExit?'show':'hide'}`}>
+                <div className='vote_window_close'></div>
+                <div className='vote_user_box'>
+                    <div>
+                        정말 나가시겠습니까?
+                    </div>
+                    <div>
+                        <div onClick={exitRoom}>나가기</div>
+                        <div onClick={()=>setOpenExit(false)}>닫기</div>
+                    </div>
+                </div>
+            </div>
             <header className='chat_header'> 
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
@@ -355,7 +431,7 @@ const Chatting = () => {
                         <div onClick={scheduleToggle}>
                             <FaCalendarCheck />일정
                         </div>
-                        <div>
+                        <div onClick={()=>setOpenExit(true)}>
                             <IoExitOutline/> 방나가기
                         </div>
                     </div>
@@ -394,26 +470,59 @@ const Chatting = () => {
                     일정 만들기
                 </div>
                 <div className='schedule_list'>
-                    <div>최신</div>
+                    <div className={`voteWindow ${voteUserWindow?'show':'hide'}`}>
+                        <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
+                        <div className='vote_user_box'>
+                            {
+                                voteList.map((data, index)=>(
+                                <div className='vote_user_info'>
+                                    <div><img src={`${data.userprofile}`}/></div>
+                                    <div>{data.usernick}</div>
+                                </div>
+                                ))
+                            }
+                           
+                        </div>
+                    </div>
+                    <div>진행중</div>
                 {
                     newTag.map((data, index)=>(
                         <div className='schedule'>
                         <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                         <div className='schedule_info'>
                             <div className='schedule_title'>{data.schedule_title}</div>
-                            <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                            <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
                             <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
                             <div className='schedule_addr'>{data.schedule_addr}</div>
                         </div>
-                        <div className='schedule_voting' data-id={data.schedule_id}>
-                            <div >참여</div>
-                            <div>불참</div>
-                        </div>
+                                {data.user_vote==null?(<>
+                                    <form className='schedule_voting' onSubmit={setScheduleVote}>
+                                        <div className='voting_box'>
+                                            <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                            <button className='yes_vote vote_btn' type='submit' name='vote' onClick={()=>setVoteForm({vote_value:1, schedule_id: data.schedule_id})}>참여</button>
+                                        </div>
+                                        <div className='voting_box'>
+                                            <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                            <button className='no_vote vote_btn' type='submit' name='vote' onClick={()=>setVoteForm({vote_value:0, schedule_id: data.schedule_id})}>불참</button>
+                                        </div>
+                                    </form>
+                                </>):(<>
+                                    <div className={`schedule_voting ${data.user_vote}`}>
+                                        <div className='voting_box'>
+                                            <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                            <div className='yes_btn vote_btn'>참여</div>
+                                        </div>
+                                        <div className='voting_box'>
+                                            <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                            <div className='no_btn vote_btn'>불참</div>
+                                        </div>
+                                    </div>
+                                </>)}
                     </div>
                     ))
 
                     }
-                    <div>예전</div>
+                    <div>이전 목록</div>
                     {
                         oldTag.map((data, index)=>(
                             <div className='schedule'>
@@ -425,6 +534,15 @@ const Chatting = () => {
                                     <div className='schedule_addr'>{data.schedule_addr}</div>
                                 </div>
                                     <div className='schedule_voting'>
+                                        <div className='end_vote'>
+                                            <div>
+                                                <div className='vote_yes_user vote_user'><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                                <div className='vote_no_user vote_user'><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                            </div>
+                                            <div className='voting_box'>
+                                                <button>투표종료</button>
+                                            </div>
+                                        </div>
                                     </div>
                             </div>
                         ))

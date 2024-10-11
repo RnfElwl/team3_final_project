@@ -1,9 +1,7 @@
 package com.ict.backend.service;
 
 import com.ict.backend.dao.ChatListDAO;
-import com.ict.backend.vo.ChatListVO;
-import com.ict.backend.vo.ChatVO;
-import com.ict.backend.vo.ScheduleVO;
+import com.ict.backend.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +28,9 @@ public class ChatListServiceImpl implements ChatListService {
     public int insertChatEnter(String chatlist_url, String userid){
         return chatListDAO.insertChatEnter(chatlist_url, userid);
     }
+    public ChatListVO selectChatUser(String chatlist_url, String userid){
+        return chatListDAO.selectChatUser(chatlist_url, userid);
+    }
     public int updateChatHeadCount(String chatlist_url){
         return chatListDAO.updateChatHeadCount(chatlist_url);
     }
@@ -42,7 +43,13 @@ public class ChatListServiceImpl implements ChatListService {
     public int insertSchedule(ScheduleVO scheduleVO){
         return chatListDAO.insertSchedule(scheduleVO);
     }
-    public List<ScheduleVO> selectScheduleList(String chatlist_url){
-        return chatListDAO.selectScheduleList(chatlist_url);
+    public List<ScheduleVO> selectScheduleList(String chatlist_url, String userid){
+        return chatListDAO.selectScheduleList(chatlist_url, userid);
+    }
+    public int insertScheduleVoting(VotingVO votingVO){
+        return chatListDAO.insertScheduleVoting(votingVO);
+    }
+    public List<MemberVO> selectVoteList(VotingVO votingVO){
+        return chatListDAO.selectVoteList(votingVO);
     }
 }

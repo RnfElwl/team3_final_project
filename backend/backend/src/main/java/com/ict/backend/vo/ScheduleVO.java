@@ -13,4 +13,7 @@ public class ScheduleVO {
     private String schedule_addr;
     private String day;
     private String time;
+    private int yes;
+    private int no;
+    private String user_vote;
 }

@@ -224,7 +224,9 @@
     display: none;
 }
 .chatting_room .schedule_list{
-    margin-top: 50px;
+    
+    overflow: auto;
+    padding: 50px 0;
 }
 .chatting_room .schedule{
     display: flex;
@@ -237,13 +239,13 @@
     background-color: rgb(255, 146, 164);
 }
 
-.chatting_room .schedule>div:nth-child(1){
+.chatting_room .schedule>*:nth-child(1){
     width: 10%; 
 }
-.chatting_room .schedule>div:nth-child(2){
+.chatting_room .schedule>*:nth-child(2){
     width: 60%; 
 }
-.chatting_room .schedule>div:nth-child(3){
+.chatting_room .schedule>*:nth-child(3){
     width: 30%; 
 }
 .chatting_room .schedule_icon{
@@ -263,13 +265,57 @@
     align-items: center;
     height: 100%;
 }
-.chatting_room .schedule_voting>div{
+.chatting_room .show{
+    display: block;
+}
+.chatting_room .hide{
+
+}
+.chatting_room .schedule_voting .voting_box{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_user{
+    margin-right: 8px;
+}
+.chatting_room .vote_yes_user{
+    color: #d0effd;
+}
+.chatting_room .vote_no_user{
+    color: #fde0d0;
+}
+.chatting_room .end_vote{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_btn{
     width: 100px;
     padding: 5px;
     background-color: #555;
     display: flex;
     justify-content: center;
     border-radius: 50px;
+}
+.chatting_room .yes_vote:hover {
+    background-color: rgb(126, 201, 255) !important;
+}
+.chatting_room .no_vote:hover {
+    background-color: rgb(255, 175, 129) !important;
+}
+.chatting_room .yes .yes_btn{
+    background-color: rgb(126, 201, 255);
+}
+.chatting_room .no .no_btn{
+    background-color: rgb(255, 175, 129);
+}
+.chatting_room .schedule_voting .voting_box>button{
+    width: 100px;
+    padding: 5px;
+    background-color: #555;
+    display: flex;
+    justify-content: center;
+    border-radius: 50px;
+    border: 0;
 }
 .chatting_room .schedule_voting>div:nth-child(1){
 
@@ -311,6 +357,50 @@
     background-color: #88888870;
     z-index: 2;
 }
+
+.chatting_room .voteWindow{
+    position: absolute;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+}
+.chatting_room .vote_window_close{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #88888870;
+    z-index: 2;
+}
+.chatting_room .vote_user_box{
+    background-color: aliceblue;
+    padding: 50px;
+    z-index: 3;
+    color: #000;
+    overflow: auto;
+    
+}
+
+
+.chatting_room .exit_window{
+    position: absolute;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    z-index: 50;
+}
+.chatting_room .show{
+    display: flex;
+}
+.chatting_room .hide{
+    display: none;
+}
+
 
 /* 신고기능 css */
 .chatting_room .report_window{

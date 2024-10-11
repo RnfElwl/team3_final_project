@@ -3,9 +3,7 @@ package com.ict.backend.controller;
 import com.ict.backend.service.ChatListService;
 import com.ict.backend.service.JoinService;
 import com.ict.backend.util.UUIDUtils;
-import com.ict.backend.vo.ChatListVO;
-import com.ict.backend.vo.ChatVO;
-import com.ict.backend.vo.ScheduleVO;
+import com.ict.backend.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,6 +53,8 @@ public class ChatListController {
     @PostMapping("/userlistadd/{chatlist_url}")
     public int insertChatUserList(@PathVariable String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        ChatListVO
         int result = chatListService.insertChatEnter(chatlist_url, userid);
         return result;
     }
@@ -86,6 +86,19 @@ public class ChatListController {
     }
     @GetMapping("/schedule/list")
     public List<ScheduleVO> selectScheduleList(@RequestParam String chatlist_url){
-        return chatListService.selectScheduleList(chatlist_url);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatListService.selectScheduleList(chatlist_url, userid);
+    }
+    @PostMapping("/schedule/voting")
+    public int insertSchduleVoting(@RequestBody VotingVO votingVO){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        votingVO.setUserid(userid);
+        System.out.println(votingVO.toString());
+        return chatListService.insertScheduleVoting(votingVO);
+    }
+    @GetMapping("/vote/list")
+    public List<MemberVO> selectVoteList(VotingVO votingVO){
+        System.out.println(votingVO.toString());
+        return chatListService.selectVoteList(votingVO);
     }
 }

@@ -17,6 +17,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
           });
           if(result.status==200){
             toggleReport();
+            setReport();
             setDefaultList();//리스트 다시 조회하여서 비동기처리
           }
     }
