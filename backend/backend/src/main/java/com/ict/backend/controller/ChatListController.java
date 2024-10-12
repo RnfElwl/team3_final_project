@@ -105,10 +105,13 @@ public class ChatListController {
         return chatListService.selectVoteList(votingVO);
     }
     @PostMapping("/exit")
-    public int updateChatUserFlag(@RequestParam String chatlist_url){
-        chatListService.updateChat
-                
+    public int updateChatUserFlag(@RequestBody String chatlist_url){
 
-
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        int result = chatListService.updateChatUserExit(chatlist_url, userid);
+        if(result>=1){
+            chatListService.updateChatHeadCountExit(chatlist_url);
+        }
+        return result;
     }
 }

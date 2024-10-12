@@ -52,4 +52,10 @@ public class ChatListServiceImpl implements ChatListService {
     public List<MemberVO> selectVoteList(VotingVO votingVO){
         return chatListDAO.selectVoteList(votingVO);
     }
+    public int updateChatUserExit(String chatlist_url, String userid){
+        return chatListDAO.updateChatUserExit(chatlist_url, userid);
+    }
+    public int updateChatHeadCountExit(String chatlist_url){
+        return chatListDAO.updateChatHeadCountExit(chatlist_url);
+    }
 }

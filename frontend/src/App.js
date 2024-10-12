@@ -60,7 +60,6 @@ function App() {
                 <Route path = "/mypage/more" element={<SeeMore/>}/>
                 <Route path = "/mypage/bookmarked" element={<BookMarked/>}/>
                 <Route path = "/mypage/recentwatch" element={<RecentWatch/>}/>
-
             </Route>
         </Routes>
     </BrowserRouter>

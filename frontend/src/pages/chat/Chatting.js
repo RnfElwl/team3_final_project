@@ -365,9 +365,13 @@ const Chatting = () => {
         }
     }
     async function exitRoom(){
-        const {data} = await axios.post("http://localhost:9988/chat/exit", {chatlist_url});
+        const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
+            headers: {
+              'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+            }
+          });
 
-        if(data==1){
+        if(data>=1){
             const result = await axios.get('http://localhost:9988/user/userinfo');
             setMyid(result.data);
             const params = {userid : result.data};
@@ -383,6 +387,7 @@ const Chatting = () => {
             } 
             
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            window.close();
         }
     }
     return (
