@@ -201,10 +201,10 @@ function Signup() {
                                         <input type="text" name="username" value={formData.username} onChange={handleInputChange} placeholder='이름' />
                                         {errors.username && <div className="error-message">{errors.username}</div>}
                                         <div className="gen">
-                                            <div className={`gender-option ${formData.gender === '남성' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '남성' })} >
+                                            <div className={`gender-option ${formData.gender === '1' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '1' })} >
                                                 <label>남성</label>
                                             </div>
-                                            <div className={`gender-option ${formData.gender === '여성' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '여성' })} >
+                                            <div className={`gender-option ${formData.gender === '2' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '2' })} >
                                                 <label>여성</label>
                                             </div>
                                         </div>

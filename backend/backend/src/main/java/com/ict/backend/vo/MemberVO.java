@@ -12,7 +12,7 @@ public class MemberVO {
     private String userpwd;
     private String username;
     private String usernick;
-    private int zipcode;
+    private String zipcode;
     private String useraddr;
     private String addrdetail;
     private String usertel;

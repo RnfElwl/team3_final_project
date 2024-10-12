@@ -21,7 +21,7 @@ public class JoinController {
 
     @PostMapping("/join")
     public String joinProcess(JoinDTO joinDTO) {
-        log.info(joinDTO.toString());
+        log.info("joindto = {}", joinDTO.toString());
         service.joinProcess(joinDTO);
 
         return "ok";

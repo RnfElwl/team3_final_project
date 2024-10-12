@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Map;
 
 
 @Slf4j
@@ -175,6 +176,14 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return 0;
         }
     }
+    @PostMapping("/change-password")
+    public int changePassword(@RequestBody Map<String, String> requestBody) {
+        String userid = requestBody.get("userid");
+        String currentPassword = requestBody.get("currentPassword");
+        String newPassword = requestBody.get("newPassword");
+        System.out.println("userid = " +userid + " currentPassword = " + currentPassword + " newPassword = " + newPassword);
+        return userService.changepassword(userid, currentPassword, newPassword);
+    }
     // 사용자 프로필사진 업데이트
     @PostMapping("/uploadProfile")
     public ResponseEntity<Void> uploadProfile(@RequestParam("images") MultipartFile[] files) {
@@ -195,7 +204,9 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
                 } else {
                     imgUrl = imageService.updateImage(file, "profile", profileurl);
                     log.info("Profile image updated: {}", imgUrl);
-                    result = userService.updateimageurl(imgUrl);
+                    int profileno = userService.userprofileno(userid);
+                    System.out.println("profileno = " + profileno);
+                    result = userService.updateimageurl(imgUrl, profileno);
                 }
                 if (result == 0) {
                     log.error("Profile update failed for userid: {}", userid);

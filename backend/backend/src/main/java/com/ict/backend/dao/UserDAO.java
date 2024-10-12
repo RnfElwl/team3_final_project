@@ -20,6 +20,10 @@ public interface UserDAO {
     public MemberVO getUserInfo(String userid);
     // 사용자의 정보 업데이트
     public int updateUserInfo(MemberVO user);
+    // 사용자 비번 업데이트
+    public int changepassword(@Param("userid") String userid,
+                       @Param("userpwd") String userpwd,
+                       @Param("newpassword") String newpassword);
     // 사용자의 프로필 유무 판단
     public String userprofile(String userid);
     // 이미지Table에 업로드 후 사용자의 정보에 No 삽입
@@ -28,7 +32,8 @@ public interface UserDAO {
     void uploadImage(ImageVO imageVO);
 
     // 이미 있는 이미지에 url값 수정
-    public int updateimageurl(String imgurl);
+    public int updateimageurl(String imgurl, int profileno);
+    public int userprofileno(String userid);
     Integer getLastInsertedId();
 
     public int usernickcheck(String usernick);

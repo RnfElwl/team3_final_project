@@ -17,4 +17,21 @@ public class JoinDTO {
     private String useremail;
     private String gender;
     private String userbirth;
+
+    @Override
+    public String toString() {
+        return "JoinDTO{" +
+                "userid='" + userid + '\'' +
+                ", userpwd='" + userpwd + '\'' +
+                ", username='" + username + '\'' +
+                ", usernick='" + usernick + '\'' +
+                ", usertel='" + usertel + '\'' +
+                ", useremail='" + useremail + '\'' +
+                ", useraddr='" + useraddr + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", addrdetail='" + addrdetail + '\'' +
+                ", userbirth='" + userbirth + '\'' +
+                ", gender='" + gender + '\'' +
+                '}';
+    }
 }

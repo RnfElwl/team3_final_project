@@ -21,7 +21,7 @@
     </select>
 
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel})
+        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})
     </insert>
 
     <select id="usernickcheck" resultType="int">
@@ -32,7 +32,7 @@
     </select>
 
     <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
-        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender
         FROM user_tbl
         WHERE userid = #{userid}
     </select>
@@ -47,6 +47,10 @@
         UPDATE user_tbl SET
         usernick = #{usernick}, userbirth = #{userbirth}, usertel = #{usertel}, useremail = #{useremail}, useraddr = #{useraddr}, zipcode = #{zipcode}, addrdetail = #{addrdetail}
         where userid = #{userid}
+    </update>
+    <update id="changepassword">
+        UPDATE user_tbl SET
+        userpwd = #{newpassword} where userid = #{userid} AND userpwd = #{userpwd}
     </update>
 
     <select id="userprofile" resultType="String">
@@ -63,8 +67,11 @@
     <update id="updateprofile">
         UPDATE user_tbl SET userprofile = #{param1} WHERE userid = #{param2}
     </update>
+    <select id="userprofileno" resultType="int">
+        select userprofile from user_tbl  where userid = #{parma1}
+    </select>
     <update id = "updateimageurl">
-        UPDATE image_tbl set image_url = #{param1}
+        UPDATE image_tbl set image_url = #{param1} where image_no = #{param2}
     </update>
 
 </mapper>

@@ -22,7 +22,8 @@ function EditInfo() {
         useremail: '',
         useraddr: '',
         zipcode: '',
-        addrdetail: ''
+        addrdetail: '',
+        gender : ''
     });
     //초기 데이터 로딩
     useEffect(() => {
@@ -41,7 +42,8 @@ function EditInfo() {
                     useremail: userData.useremail || '',
                     useraddr: userData.useraddr || '',
                     zipcode: userData.zipcode || '',
-                    addrdetail: userData.addrdetail || ''
+                    addrdetail: userData.addrdetail || '',
+                    gender : userData.gender || ''
                 });
 
                 if (userData.imageUrl) {
@@ -127,12 +129,17 @@ function EditInfo() {
     };
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
+        const currentPassword = e.target.currentPassword.value;
         const newPassword = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
-    
         if (newPassword === confirmPassword) {
+            console.log("working");
             // 비밀번호 변경 API 호출
-            axios.post('http://localhost:9988/user/change-password', { userid: formData.userid, newPassword })
+            axios.post('http://localhost:9988/user/change-password', { 
+                    userid: formData.userid,
+                    currentPassword,
+                    newPassword 
+                })
                 .then(response => {
                     console.log('비밀번호가 변경되었습니다:', response.data);
                     setIsPasswordModalOpen(false); // 모달 닫기
@@ -177,19 +184,7 @@ function EditInfo() {
                                 <span style={{ width: "141.8px" }}>비밀번호</span> 
                                 <span style = {{color : "white"}} onClick={() => setIsPasswordModalOpen(true)}>비밀번호 변경하기{'>'}</span> 
                             </div>
-                                {isPasswordModalOpen && (
-                                        <Modal onClose={() => setIsPasswordModalOpen(false)} title="비밀번호 변경">
-                                        <form onSubmit={handlePasswordSubmit}>
-                                            <input type="text" value={formData.userid} placeholder="userid" disabled />
-                                            <input type = "password" id ="currentpassword" placeholder ="기존 비밀번호" required/>
-                                            <input type="password" id="password" placeholder="새 비밀번호" required />
-                                            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                            <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required />
-                                            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                            <button type="submit">변경</button>
-                                        </form>
-                                    </Modal>
-                                    )}
+                               
                             <div> 
                                 <span>닉네임</span> 
                                 <input 
@@ -200,7 +195,7 @@ function EditInfo() {
                             </div>
                             <div> 
                                 <span style={{ width: "141.8px" }}>성별</span>  
-                                <span>남</span> 
+                                <span style={{color : "white", fontWeight:"400"}}>{formData.gender === "1" ? '남' : formData.gender === "2" ? '여' : ''}</span> 
                             </div>
                             <div> 
                                 <span>생년월일</span> 
@@ -272,6 +267,22 @@ function EditInfo() {
                                 <button className="btn btn-primary">수정</button>
                             </div>
                         </form>
+                        {/* 비밀번호 변경용 모달 */}
+                        <div className='information'>
+                            {isPasswordModalOpen && (
+                            <Modal onClose={() => setIsPasswordModalOpen(false)} title="비밀번호 변경">
+                                <form onSubmit={handlePasswordSubmit}>
+                                    <input type="text" value={formData.userid} placeholder="userid" disabled />
+                                    <input type = "password" id ="currentPassword" placeholder ="기존 비밀번호" required/>
+                                    <input type="password" id="password" placeholder="새 비밀번호" required />
+                                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                    <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required />
+                                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                    <button type="submit">변경</button>
+                                </form>
+                            </Modal>
+                            )}
+                        </div>
                     </div>
                     <div className = "leave-button">
                     <button className = "btn btn-link">회원탈퇴</button>
