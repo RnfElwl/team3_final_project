@@ -82,11 +82,13 @@
     text-align: left;
 
 }
-
+.chatting_room .myText .chat_text{
+    background-color: #B6FFA1;
+    color: #c8c6e9;
+}
 .chatting_room .chat_text{
     padding: 5px 10px;
     min-height: 34px;
-    background-color: cadetblue;
     border-radius: 5px;
 }
 .chatting_room .chat_date{
@@ -135,7 +137,7 @@
     align-items: center;
     width: 100%;
     height: 70px;
-    background-color: aqua;
+    background-color: #00FF9C;
     padding: 15px 20px;
     z-index: 2;
 }
@@ -378,7 +380,7 @@
     background-color: aliceblue;
     padding: 50px;
     z-index: 3;
-    color: #000;
+    color: #1C1C20;;
     overflow: auto;
     
 }
@@ -428,7 +430,7 @@
     z-index: 1;
 }
 .chatting_room .report_window .chatting_report{
-    color: black;
+    color: #1C1C20;;
     background-color: aliceblue;
     padding: 50px;
     z-index: 2;

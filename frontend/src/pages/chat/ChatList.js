@@ -8,14 +8,21 @@ import axios from "../../component/api/axiosApi"
 
 function ChantList(){
     const [list, setList] = useState([]);
-    const [menu, setMenu] = useState(false);
     const [room, setRoom] = useState(false);
-    const [createType, setCreateType] = useState();
     const [formData, setFormData] = useState({});
     
     useEffect(() => {
         setChatList();
     }, []);
+    async function setSoloChatList(){
+        const {data} = await axios.get("http://localhost:9988/chat/soloChatList", {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          console.log(data);
+          setList(data);
+    }
     async function setChatList(){
         const result = await axios.get("http://localhost:9988/chat/openChatList", {
             headers: {
@@ -31,9 +38,6 @@ function ChantList(){
         setFormData(p=>{return {...p, [idField]:idValue}});
             
         console.log(formData);
-    }
-    function toggleMenu(){
-        setMenu(!menu);
     }
     function toggleRoom(event){
         setRoom(!room);
@@ -59,23 +63,17 @@ function ChantList(){
             '_blank', // 새 창으로 열기
             'width=500,height=800' // 팝업 창의 크기
           );
+          popupWindow.focus();
     }
     return (
         <main className="chatList">
 
         
         <div className="container">
-                <div className="chat-search"><input type="text"/><Search size={30}/></div>
-                <div className="chat-tab">
-                    <div>오픈채팅</div>
-                    <div>1대1채팅</div>
-                </div>
-                <div className="chat_create"  onClick={toggleMenu}>
+                <div className="chat-search"><input type="text"/><Search className="search_icon" size={30}/></div>
+                
+                <div className="chat_create"  onClick={toggleRoom}>
                     <div className="create">방만들기</div>
-                    <div className={`room_menu ${menu?'menu_show':'menu_hide'}`}>
-                        <div onClick={toggleRoom} data-chat="1">오픈 채팅</div>
-                        <div onClick={toggleRoom} data-chat="2">1대1채팅</div>
-                    </div>
                 </div>
                 <div className={`room_window ${room?'room_show':'room_hide'}`}>
                 <div className="room_cancle" onClick={toggleRoom} data-chat=""></div>
@@ -100,6 +98,10 @@ function ChantList(){
                 </div>
                 {/* <Link to={'chattest'}>채팅 테스트</Link> */}
                 <div className="chatList_list">
+                <div className="chat-tab">
+                    <div className="tab_focus" onClick={setChatList}>오픈채팅</div>
+                    <div onClick={setSoloChatList}>1대1채팅</div>
+                </div>
                 {
                     list.map(function(val, i){
                     return (<div className="openchat chat_box">
@@ -108,7 +110,7 @@ function ChantList(){
                         <div className="chat_box-img">
                             <img src={val.image_url}/>
                         </div>
-                        <div>
+                        <div className="chat_box_info">
                             <div>
                                 {val.chat_title}
                             </div>

@@ -53,10 +53,13 @@ const Chatting = () => {
             setDefaultSchdule();
             
         }
-        const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
         getUser()
         getRoomInfo();
         // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
+        
+    }, []);
+    useEffect(()=>{
+        const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
 
         // 연결 성공 시
         mqttClient.on('connect', () => {
@@ -69,7 +72,13 @@ const Chatting = () => {
                 if(!mqttClient.connected){
                     return;
                 }
-                userListAdd(mqttClient);
+                if(roomInfo.chatlist_type==1){
+                    userListAdd(mqttClient);
+                }
+                else if(roomInfo.chatlist_type==2){
+                    //채팅방 유저인지 확인
+                    // 아니면 바로 창닫기
+                }
             });
         });
         // 연결이 끊어졌을 때
@@ -114,9 +123,7 @@ const Chatting = () => {
         return () => {
             mqttClient.end();
         };
-        
-    }, []);
-    
+    }, [roomInfo])
     useEffect(() => {
         
         // 메시지가 변경될 때마다 실행
@@ -128,7 +135,7 @@ const Chatting = () => {
         const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
             chatlist_url
         }});
-        console.log(result);
+        console.log(result, "----------------");
         setRoomInfo(result.data);
       }
       async function dateMsgSend(){// 로컬 날짜 메시지 출력
@@ -365,28 +372,36 @@ const Chatting = () => {
         }
     }
     async function exitRoom(){
-        const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
-            headers: {
-              'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
-            }
-          });
-
-        if(data>=1){
-            const result = await axios.get('http://localhost:9988/user/userinfo');
-            setMyid(result.data);
-            const params = {userid : result.data};
-            const result2 = await axios.get('http://localhost:9988/getUserData', {params});
-            const offset = new Date().getTimezoneOffset() * 60000;
-            let today = new Date(Date.now() - offset);
-            const now = today.toISOString().replace('T', ' ').substring(0, 19);
-            const info = {  
-                chatlist_url,
-                usernick : result2.data.usernick, 
-                chat_date: now,
-                chat_type: 3
-            } 
+        if(roomInfo.chatlist_type==1){
+            const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
+                headers: {
+                    'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                }
+            });
             
-            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            if(data>=1){
+                const result = await axios.get('http://localhost:9988/user/userinfo');
+                setMyid(result.data);
+                const params = {userid : result.data};
+                const result2 = await axios.get('http://localhost:9988/getUserData', {params});
+                const offset = new Date().getTimezoneOffset() * 60000;
+                let today = new Date(Date.now() - offset);
+                const now = today.toISOString().replace('T', ' ').substring(0, 19);
+                const info = {  
+                    chatlist_url,
+                    usernick : result2.data.usernick, 
+                    chat_date: now,
+                    chat_type: 3
+                }    
+                client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            }
+            else if(roomInfo.chatlist_type==2){
+                const {data} = await axios.post("http://localhost:9988/chat/exit/solo", chatlist_url, {
+                    headers: {
+                        'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                    }
+                });
+            }
             window.close();
         }
     }
@@ -416,7 +431,7 @@ const Chatting = () => {
                             memberList.map((data, index)=>(
                                 <>
                                     <div>
-                                        <div><img src={`${data.userprofile}`}/></div>
+                                        <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
                                 </>

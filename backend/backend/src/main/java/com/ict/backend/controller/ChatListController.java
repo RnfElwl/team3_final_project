@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -108,10 +110,34 @@ public class ChatListController {
     public int updateChatUserFlag(@RequestBody String chatlist_url){
 
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        int result = chatListService.updateChatUserExit(chatlist_url, userid);
+        Date now = new Date();
+
+        // 날짜 형식 정의
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // Date 객체를 문자열로 변환
+        String last_conn = formatter.format(now);
+        int result = chatListService.updateChatUserExit(chatlist_url, userid, last_conn);
         if(result>=1){
             chatListService.updateChatHeadCountExit(chatlist_url);
         }
         return result;
+    }
+    @PostMapping("/exit/solo")
+    public int updateSoloChatUserConn(@RequestBody String chatlist_url){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        Date now = new Date();
+
+        // 날짜 형식 정의
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // Date 객체를 문자열로 변환
+        String last_conn = formatter.format(now);
+        int result = chatListService.updateSoloChatUserConn(chatlist_url, userid, last_conn);
+        return result;
+    }
+    public List<ChatListVO> selectSoloChatList(){
+        String userid =SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatListService.selectSoloChatList(userid);
     }
 }

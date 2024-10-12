@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #1C1C20;;
   margin:0;
   width: 100%;
 }
@@ -17,26 +17,43 @@
   margin-top: 20px;
   display: flex;
   justify-content: center;
-  background-color: green;
+  align-items: center;
+  background-color: #2d2d31;
   max-width: 1200px;
   width: 50%;
   height: 40px;
   border-radius: 50px;
-  padding: 0px 30px;
 }
 .chatList .chat-tab{
+  position: absolute;
+  top: -50px;
+  left: 10px;
   display: flex;
-  height: 50px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+.chatList .chat-tab>div{
+  color: #f1f1f1;
+  padding: 10px;
+}
+.chatList .chat-tab>.tab_focus{
+  border-bottom: 1px solid #f1f1f1;
 }
 .chatList .chat-search>input{
-  width:80%;
+  width:90%;
   border-width: 0;
-  background-color: green;
+  background-color: #2d2d31;
+  color: #f1f1f1;
 }
 .chatList .chat-search>input{
   outline: none;
 }
+.chatList .search_icon{
+  color: #1d1d20;
+}
 .chatList .chat_create{
+  margin-top: 30px;
   margin-left: auto;
   margin-right: 100px;
   height: 40px;
@@ -45,34 +62,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: aliceblue;
-  color: black;
+  background-color: #B6FFA1;
+  color: #1C1C20;;
   text-align: center;
 }
 
-.chatList .room_menu{
-  padding: 0 10px;
-  text-align: center;
-  position: absolute;
-  top: 40px;
-  left: 0px;
-  display: flex;
-  flex-direction: column;
-  background-color: blueviolet;
-  width: 100px;
-  display: none;
-}
-.chatList .menu_show{
-  display: flex;
-}
-.chatList .menu_hide{
-  display: none;
-}
-
-.chatList .room_menu>div{
-  height: 40px;
-  padding: 10px 0;
-}
 .chatList .room_cancle{
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
@@ -85,7 +79,7 @@
   align-items: center;
 }
 .chatList .room{
-  color: black;
+  color: #f1f1f1;;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -93,8 +87,17 @@
   padding: 30px 40px;
   width: 500px;
   height: 400px;
-  background-color: aliceblue;
+  background-color: #1C1C20;
+
 }
+.chatList .room >div>input{
+  width: 70%;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #3e3e44;
+  color: #f1f1f1;
+}
+
 .chatList.room_show{
   display: flex;
 }
@@ -103,6 +106,7 @@
 }
 
 .chatList .chatList_list{
+  position: relative;
   width: 100%;
   margin-top: 10px;
   display: grid;
@@ -115,10 +119,13 @@
 .chatList .chat_box{
   width: 100%;
   height: 250px;
-  background-color: gray;
+  
 }
 .chatList .chat_box-img{
   background-color: beige;
   width: 100%;
   height: 170px;
+}
+.chatList .chat_box_info{
+  color: #f1f1f1;
 }

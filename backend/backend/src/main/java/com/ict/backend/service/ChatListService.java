@@ -20,8 +20,10 @@ public interface ChatListService {
     public List<ScheduleVO> selectScheduleList(String chatlist_url, String userid);
     public int insertScheduleVoting(VotingVO votingVO);
     public List<MemberVO> selectVoteList(VotingVO votingVO);
-    public int updateChatUserExit(String chatlist_url, String userid);
+    public int updateChatUserExit(String chatlist_url, String userid, String last_conn);
     public int updateChatHeadCountExit(String chatlist_url);
+    public int updateSoloChatUserConn(String chatlist_url, String userid, String last_conn);
+    public List<ChatListVO> selectSoloChatList(String userid);
 
 
 }

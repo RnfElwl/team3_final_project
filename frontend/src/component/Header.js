@@ -71,13 +71,13 @@ function Header() {
       </nav>
       <header className="Header">
           <div className='left-info'>
-            <List color={"white"} size={40} onClick={showNav}/>
+            <List color={"#c2c2c2"} size={40} onClick={showNav}/>
             <Link to={'/'}><div><img src=""/>로고</div></Link>
           </div>
           
           <div className='right-info'>
             <div className='search'>
-              <Search color={"black"} size={20}/><input  type="text" />
+              <Search color={"#1C1C20"} size={20}/><input  type="text" />
             </div>
             <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
             <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>

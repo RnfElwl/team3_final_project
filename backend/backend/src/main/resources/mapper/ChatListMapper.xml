@@ -8,7 +8,10 @@
     </insert>
 
     <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
-        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1;
+        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1
+    </select>
+    <select id="selectSoloChatList" resultType="com.ict.backend.vo.ChatListVO">
+        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=2
     </select>
     <select id="selectChatContent" resultType="com.ict.backend.vo.ChatVO">
         SELECT
@@ -72,9 +75,10 @@
         select * from chat_list_tbl where chatlist_url=#{param1}
     </select>
     <select id="selectChatMember">
-        select chatlist_url, ut.userid, ut.userprofile, ut.usernick from chat_user_list cul
+        select chatlist_url, ut.userid, it.image_url userprofile, ut.usernick from chat_user_list cul
         join user_tbl ut on ut.userid=cul.userid
-        where chatlist_url=#{param1}
+        left join image_tbl it on ut.userprofile=it.image_no
+        where cul.chatlist_url=#{param1} and cul.flag=1
     </select>
     <update id="updateChatHeadCount">
         update chat_list_tbl set chatlist_headcount=chatlist_headcount+1 where chatlist_url=#{param1}
@@ -120,6 +124,9 @@
         where sv.schedule_id=#{schedule_id} and vote_value=${vote_value};
     </select>
     <update id="updateChatUserExit">
-        update chat_user_list set flag=0 where chatlist_url=#{param1} and userid=#{param2}
+        update chat_user_list set flag=0, last_conn=#{param3} where chatlist_url=#{param1} and userid=#{param2}
+    </update>
+    <update id="updateSoloChatUserConn">
+        update chat_user_list set last_conn=#{param3} where chatlist_url=#{param1} and userid=#{param2}
     </update>
 </mapper>

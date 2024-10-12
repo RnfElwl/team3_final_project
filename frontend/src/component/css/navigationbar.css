@@ -1,6 +1,6 @@
 /* src/components/NavigationBar.css */
-a {color: #fff; text-decoration: none; outline: none}
- a:hover, a:active {text-decoration: none; color:#fff; }
+a {color: #f1f1f1; text-decoration: none; outline: none}
+ a:hover, a:active {text-decoration: none; color:#c2c2c2; }
 input{
   border-width: 0;
 }
@@ -43,7 +43,7 @@ input:focus {
   left: 230px; 
   width: 110vw;
   height: 110vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: #141517c7;
 }
 .nav_show{
   animation: slidenav 0.3s ease forwards;
@@ -57,7 +57,7 @@ input:focus {
   }
 }
 .Header{
-  background-color: black;
+  background-color: #1C1C20;
   width:100%;
   display: flex;
   align-items: center;
@@ -65,11 +65,12 @@ input:focus {
   padding: 12px 40px;
   justify-content: space-between;
   box-sizing: border-box;
+  z-index: 10;
 }
 .Header .left-info{
   display: flex;
   align-items: center;
-  color: white;
+  color: #f1f1f1;
 }
 .Header .right-info{
   display: flex;
@@ -89,7 +90,7 @@ input:focus {
 }
 .Header .search input{
   background-color: rgb(34, 34, 34);
-  color: white;
+  color: #f1f1f1;
 }
 
 .Header .login_btn{
@@ -101,7 +102,7 @@ input:focus {
   height: 40px;
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: black;
+  background-color: #0b0c0f;
 }
 .Header .join_btn{
   display: flex;
@@ -110,9 +111,10 @@ input:focus {
   text-align: center;
   width: 110px;
   height: 40px;
-  padding: 5px 10px;
+  padding: 5px 10px;  
   border-radius: 5px;
-  background-color: #00ff88;
+  background-color: #00d382;
+  color: #f1f1f1;
 }
 .nav-bar {
     position: absolute;
@@ -178,13 +180,13 @@ input:focus {
 
   .nav3 a{
     text-decoration: none;
-    color: white;
+    color: #f1f1f1;
     font-size: 1.3rem;
   }
 
   
  .search-icon{
-    color: white;
+    color: #f1f1f1;
     cursor: pointer;
     width: 35px;
     height: 35px;
@@ -201,7 +203,7 @@ input:focus {
   
   
   .nav-bar a {
-    color: rgb(255, 255, 255);
+    color: #f1f1f1;
     text-decoration: none;
     font-size: 1.4rem;
   }
@@ -211,7 +213,7 @@ input:focus {
   }
 
   .search-icon-button{
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(29, 29, 29, 0.11);
    width: 1px;
    height: 1px;
    text-align: center;
