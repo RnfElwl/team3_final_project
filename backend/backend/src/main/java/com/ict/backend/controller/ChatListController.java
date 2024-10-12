@@ -54,7 +54,7 @@ public class ChatListController {
     public int insertChatUserList(@PathVariable String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        ChatListVO
+        
         int result = chatListService.insertChatEnter(chatlist_url, userid);
         return result;
     }
