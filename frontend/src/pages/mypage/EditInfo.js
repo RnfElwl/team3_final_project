@@ -261,7 +261,7 @@ function EditInfo() {
                                 <span>상세주소</span>  
                                 <input 
                                     type="text" 
-                                    name="useraddr" 
+                                    name="addrdetail" 
                                     value={formData.addrdetail} 
                                     onChange={(e) => setFormData({ ...formData, addrdetail: e.target.value })} 
                                     />

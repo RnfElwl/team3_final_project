@@ -59,6 +59,7 @@
     <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
         INSERT INTO image_tbl (image_url) VALUES (#{image_url})
     </insert>
+
     <update id="updateprofile">
         UPDATE user_tbl SET userprofile = #{param1} WHERE userid = #{param2}
     </update>

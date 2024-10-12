@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/mypage.css';
 import profile from '../../img/profile.png';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 function Mypage() {
@@ -48,7 +49,14 @@ function Mypage() {
 
             console.log(updatedUserInfo);
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.log(error.response.data); // "Access denied." 메시지 확인
+                if (error.response.data === "Access denied. token expired") {
+                    window.location = "/"; // 토큰 만료 시 리다이렉트
+                }
+            }else{
             console.error("Error fetching data: ", error);
+            }
         }
     };
 
@@ -124,7 +132,7 @@ function Mypage() {
                     <div className = "recent_watch">
                         <div className = "content_title">
                             <span>시청기록</span>
-                            <a href = "#"> 더보기 {'>'}</a>
+                            <Link to="/mypage/recentwatch"> 더보기 {'>'}</Link>
                         </div>
                         <div className = "content_info">
                             <Slider {...SliderSettings}>
@@ -142,7 +150,7 @@ function Mypage() {
                     <div className = "bookmark">
                         <div className = "content_title">
                             <span>즐겨찾기</span>
-                            <a href = "#"> 더보기 {'>'}</a>
+                            <Link to="/mypage/bookmarked"> 더보기 {'>'}</Link>
                         </div>
                         <div className = "content_info">
                             <Slider {...SliderSettings}>

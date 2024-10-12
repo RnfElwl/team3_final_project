@@ -178,6 +178,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
     // 사용자 프로필사진 업데이트
     @PostMapping("/uploadProfile")
     public ResponseEntity<Void> uploadProfile(@RequestParam("images") MultipartFile[] files) {
+        System.out.println(files);
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         String profileurl = userService.userprofile(userid);
         log.info("Current profile URL: {}", profileurl);

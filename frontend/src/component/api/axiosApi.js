@@ -55,7 +55,7 @@ const logout = () => {
     // 로컬 스토리지의 모든 항목을 비웁니다.
     localStorage.clear();
     // 로그인 페이지로 리다이렉트
-    window.location.href = '/user/login';
+    window.location.href = '/signin';
 };
 
 

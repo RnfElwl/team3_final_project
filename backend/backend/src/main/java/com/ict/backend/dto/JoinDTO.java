@@ -11,5 +11,10 @@ public class JoinDTO {
     private String username;
     private String usernick;
     private String usertel;
-    private String address;
+    private String zipcode;
+    private String useraddr;
+    private String addrdetail;
+    private String useremail;
+    private String gender;
+    private String userbirth;
 }

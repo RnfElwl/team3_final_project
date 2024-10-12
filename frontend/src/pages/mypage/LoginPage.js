@@ -30,12 +30,10 @@ function LoginPage() {
         window.localStorage.setItem("token", pureToken);
         //window.localStorage.setItem("isAdmin", response.data.isAdmin);
         window.localStorage.setItem("refresh", response.data.refresh);
-
       }
-
       return response;
     } catch (error) {
-      console.error('Login failed:', error);
+      //console.error('Login failed:', error);
       throw error; // 에러 상위로 전달
     }
   };
@@ -63,6 +61,8 @@ function LoginPage() {
     login(loginData)
       .then((response) => {
         console.log('Login successful:', response.data);
+        alert("로그인 성공");
+        window.location = "/";
       })
       .catch((error) => {
         console.error('Login failed:', error);

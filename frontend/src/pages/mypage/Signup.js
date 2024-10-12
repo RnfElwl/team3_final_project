@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import axios from '../../component/api/axiosApi';
 import '../../css/mypage/signup.css';
+import Modal from '../../component/api/Modal';
+import DaumPostcode from "react-daum-postcode";
 
 function Signup() {
     const [step, setStep] = useState(1);
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         userid: '',
         userpwd: '',
@@ -12,7 +15,9 @@ function Signup() {
         useremail: '',
         usernick: '',
         usertel: '',
+        zipcode: '',
         useraddr: '',
+        addrdetail: '',
         userbirth: '',
         gender: ''
     });
@@ -50,6 +55,7 @@ function Signup() {
         if (!formData.usertel) newErrors.usertel = "전화번호를 입력하세요.";
         if (!formData.useraddr) newErrors.useraddr = "주소를 입력하세요.";
         if (!formData.userbirth) newErrors.userbirth = "생년월일을 입력하세요.";
+        if (!formData.gender) alert("성별을 선택해주세요.");
         return newErrors;
     };
     // forcus out 시 아이디 체크
@@ -121,9 +127,35 @@ function Signup() {
                 setErrors(validationErrors);
                 return;
             }
-            console.log(formData);
-            setStep(3);
+            const { confirmPassword, ...dataToSubmit } = formData;
+            const formDataToSend = new FormData();
+
+            for (const key in dataToSubmit) {
+                formDataToSend.append(key, dataToSubmit[key]);
+            }
+
+            // console.log(...formDataToSend);
+            // console.log(formData);
+            axios.post('http://localhost:9988/join', formDataToSend)
+            .then(response => {
+                console.log('Success:', response.data);
+                setStep(3); // Proceed to the next step if the request is successful
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setErrors({ submit: 'There was an error submitting the form. Please try again.' });
+            });
+            // setStep(3);
         }
+    };
+    const handleAddressSelect = (data) => {
+        // 선택된 주소를 상태에 저장
+        setFormData({
+            ...formData,
+            useraddr: data.address,
+            zipcode: data.zonecode // postal code
+        });
+        setIsAddressModalOpen(false); // 모달 닫기
     };
 
     return (
@@ -146,7 +178,7 @@ function Signup() {
                                     <div className="inputclass">
                                         <input type="text" name="userid" value={formData.userid} onChange={handleInputChange} onBlur={handleIdBlur} placeholder='아이디' />
                                         {idCheckError && ( <div className="error-message" style={{ color: 'red' }}> {idCheckError} </div> )}
-                                        {idCheckSuccess && ( <div className="success-message" style={{ color: 'green' }}> </div> )} 
+                                        {idCheckSuccess && ( <div className="success-message" style={{ color: 'green' }}>사용 가능한 아이디입니다. </div> )} 
                                     </div>
                                     <div className="inputclass">
                                         <input type="password" name="userpwd" value={formData.userpwd} onChange={handleInputChange} placeholder='비밀번호' />
@@ -165,9 +197,17 @@ function Signup() {
                                             <span>개인정보</span>
                                         </div>
                                     </div>
-                                    <div className="inputclass">
+                                    <div className="inputclass" style={{ flexDirection: 'row' }}>
                                         <input type="text" name="username" value={formData.username} onChange={handleInputChange} placeholder='이름' />
                                         {errors.username && <div className="error-message">{errors.username}</div>}
+                                        <div className="gen">
+                                            <div className={`gender-option ${formData.gender === '남성' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '남성' })} >
+                                                <label>남성</label>
+                                            </div>
+                                            <div className={`gender-option ${formData.gender === '여성' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '여성' })} >
+                                                <label>여성</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="inputclass">
                                         <input type="text" name="useremail" value={formData.useremail} onChange={handleInputChange} placeholder='이메일' />
@@ -186,9 +226,34 @@ function Signup() {
                                         <input type="text" name="usertel" value={formData.usertel} onChange={handleInputChange} placeholder='전화번호' />
                                         {errors.usertel && <div className="error-message">{errors.usertel}</div>}
                                     </div>
+                                    {isAddressModalOpen && (
+                                    <Modal onClose={() => setIsAddressModalOpen(false)} title="" className = "addrmodal">
+                                        <DaumPostcode 
+                                        theme={{
+                                            bgColor: "#252525", // 바탕 배경색
+                                            searchBgColor: "#252525", // 검색창 배경색
+                                            contentBgColor: "#252525", // 본문 배경색
+                                            pageBgColor: "#252525", // 페이지 배경색
+                                            textColor: "#ffffff", // 기본 글자색
+                                            queryTextColor: "#ffffff", // 검색창 글자색
+                                            postcodeTextColor: "#ff0000", // 우편번호 글자색
+                                            emphTextColor: "", // 강조 글자색
+                                            outlineColor: "#ffffff", // 테두리 색상
+                                        }}
+                                            onComplete={handleAddressSelect}/>
+                                        </Modal>
+                                    )}
+                                    <div hidden> 
+                                        <span>우편번호</span>  
+                                        <input type = "text" name = "zipcode" value = ""/> 
+                                    </div>
                                     <div className="inputclass">
-                                        <input type="text" name="useraddr" value={formData.useraddr} onChange={handleInputChange} placeholder='주소' />
+                                        <input type="text" name="useraddr" value={formData.useraddr} onChange={handleInputChange}
+                                        onClick={() => setIsAddressModalOpen(true)} placeholder='주소' />
                                         {errors.useraddr && <div className="error-message">{errors.useraddr}</div>}
+                                    </div>
+                                    <div> 
+                                        <input  type="text" name="addrdetail" value={formData.addrdetail} onChange={handleInputChange} placeholder='상세주소'/>
                                     </div>
                                     <div className="inputclass">
                                         <input type="text" name="userbirth" value={formData.userbirth} onChange={handleInputChange} placeholder='생년월일' />
