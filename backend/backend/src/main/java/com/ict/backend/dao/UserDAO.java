@@ -22,8 +22,7 @@ public interface UserDAO {
     public int updateUserInfo(MemberVO user);
     // 사용자 비번 업데이트
     public int changepassword(@Param("userid") String userid,
-                       @Param("userpwd") String userpwd,
-                       @Param("newpassword") String newpassword);
+                       @Param("userpwd") String encryptedNewPassword);
     // 사용자의 프로필 유무 판단
     public String userprofile(String userid);
     // 이미지Table에 업로드 후 사용자의 정보에 No 삽입
@@ -33,8 +32,10 @@ public interface UserDAO {
 
     // 이미 있는 이미지에 url값 수정
     public int updateimageurl(String imgurl, int profileno);
+    // 사용자 userprofileno값 받기
     public int userprofileno(String userid);
-    Integer getLastInsertedId();
+    // 사용자 비번 들고오기
+    public String getuserpwd(String userid);
 
     public int usernickcheck(String usernick);
     public int useridcheck(String userid);

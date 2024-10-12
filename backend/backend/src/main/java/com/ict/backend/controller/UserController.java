@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,8 @@ public class UserController {
     UserService userService;
     @Autowired
     ImageService imageService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/view")
     public String view() {
@@ -176,13 +179,23 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return 0;
         }
     }
-    @PostMapping("/change-password")
-    public int changePassword(@RequestBody Map<String, String> requestBody) {
-        String userid = requestBody.get("userid");
+    public String changePassword(@RequestBody Map<String, String> requestBody) {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         String currentPassword = requestBody.get("currentPassword");
         String newPassword = requestBody.get("newPassword");
-        System.out.println("userid = " +userid + " currentPassword = " + currentPassword + " newPassword = " + newPassword);
-        return userService.changepassword(userid, currentPassword, newPassword);
+
+        if (!userid.equals(requestBody.get("userid"))) {
+            return "User ID mismatch.";
+        }
+
+        String userpwd = userService.getuserpwd(userid);
+        if (bCryptPasswordEncoder.matches(currentPassword, userpwd)) {
+            String encryptedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+            userService.changepassword(userid, encryptedNewPassword);
+            return "Password changed successfully.";
+        } else {
+            return "Current password is incorrect.";
+        }
     }
     // 사용자 프로필사진 업데이트
     @PostMapping("/uploadProfile")

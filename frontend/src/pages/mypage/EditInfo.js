@@ -132,23 +132,34 @@ function EditInfo() {
         const currentPassword = e.target.currentPassword.value;
         const newPassword = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
+    
         if (newPassword === confirmPassword) {
             console.log("working");
-            // 비밀번호 변경 API 호출
             axios.post('http://localhost:9988/user/change-password', { 
                     userid: formData.userid,
                     currentPassword,
                     newPassword 
                 })
                 .then(response => {
-                    console.log('비밀번호가 변경되었습니다:', response.data);
+                    const message = response.data;
+                    if (message === "Password changed successfully.") {
+                        console.log('비밀번호가 성공적으로 변경되었습니다.');
+                        alert('비밀번호가 성공적으로 변경되었습니다.');
+                    } else if (message === "Current password is incorrect.") {
+                        alert("비밀번호 변경 실패: 기존 비밀번호가 올바르지 않습니다.");
+                    } else if (message === "User ID mismatch.") {
+                        alert("비밀번호 변경 실패: 사용자 ID가 일치하지 않습니다.");
+                    } else {
+                        alert("비밀번호 변경 실패: 알 수 없는 오류가 발생했습니다.");
+                    }
                     setIsPasswordModalOpen(false); // 모달 닫기
                 })
                 .catch(error => {
-                    console.error('비밀번호 변경 실패:', error);
+                    console.error('비밀번호 변경 중 오류 발생:', error);
+                    alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해 주세요.");
                 });
         } else {
-            alert("비밀번호가 일치하지 않습니다.");
+            alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
         }
     };
     const handleAddressSelect = (data) => {
@@ -270,15 +281,15 @@ function EditInfo() {
                         {/* 비밀번호 변경용 모달 */}
                         <div className='information'>
                             {isPasswordModalOpen && (
-                            <Modal onClose={() => setIsPasswordModalOpen(false)} title="비밀번호 변경">
-                                <form onSubmit={handlePasswordSubmit}>
+                            <Modal onClose={() => setIsPasswordModalOpen(false)} title="비밀번호 설정">
+                                <form onSubmit={handlePasswordSubmit} className = "changepwd">
                                     <input type="text" value={formData.userid} placeholder="userid" disabled />
                                     <input type = "password" id ="currentPassword" placeholder ="기존 비밀번호" required/>
                                     <input type="password" id="password" placeholder="새 비밀번호" required />
                                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                     <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required />
                                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                    <button type="submit">변경</button>
+                                    <button type="submit" className="btn btn-secondary">변경하기</button>
                                 </form>
                             </Modal>
                             )}

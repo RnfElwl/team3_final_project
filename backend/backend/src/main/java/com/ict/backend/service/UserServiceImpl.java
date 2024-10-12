@@ -33,8 +33,8 @@ public class UserServiceImpl  implements UserService {
         return dao.updateUserInfo(user);
     }
     @Override
-    public int changepassword(String userid, String userpwd, String newpassword){
-        return dao.changepassword(userid, userpwd, newpassword);
+    public int changepassword(String userid, String encryptedNewPassword){
+        return dao.changepassword(userid, encryptedNewPassword);
     }
     @Override
     public String userprofile(String userid){
@@ -61,6 +61,10 @@ public class UserServiceImpl  implements UserService {
     @Override
     public int userprofileno(String userid){
         return dao.userprofileno(userid);
+    }
+    @Override
+    public String getuserpwd(String userid){
+        return dao.getuserpwd(userid);
     }
 
 

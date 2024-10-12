@@ -30,7 +30,9 @@
     <select id="useridcheck" resultType="int">
         select count(*) from user_tbl where userid = #{param1}
     </select>
-
+    <select id ="getuserpwd">
+        select userpwd from user_tbl where userid = #{userid};
+    </select>
     <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
         SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender
         FROM user_tbl
@@ -49,8 +51,7 @@
         where userid = #{userid}
     </update>
     <update id="changepassword">
-        UPDATE user_tbl SET
-        userpwd = #{newpassword} where userid = #{userid} AND userpwd = #{userpwd}
+        UPDATE user_tbl SET userpwd = #{userpwd} where userid = #{userid}
     </update>
 
     <select id="userprofile" resultType="String">

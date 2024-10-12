@@ -4,6 +4,7 @@
 body{
   margin: 0 auto;
   max-width: 1920px;
+  background-color:#1C1C20 !important;
 }
 /* .App-logo {
   height: 40vmin;

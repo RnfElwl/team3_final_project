@@ -119,5 +119,15 @@
     width: 100% !important;
     margin : 0 auto;
     overflow: hidden;
+    color : white;
 }
-
+.changepwd{
+    padding: 10px 20px;
+}
+.changepwd input{
+    margin: 10px 0;
+}
+.changepwd>input[disabled]{
+    color : white;
+    background-color: #252525 !important;
+}
