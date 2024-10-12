@@ -5,6 +5,7 @@ import axios from "../../component/api/axiosApi";
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillLock } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import qnaBack from '../../img/qnaBack.png'
 import $ from "jquery";
 
@@ -23,6 +24,7 @@ function QnA() {
     const handlePageChange = (newPage) => {
         setNowPage(newPage);
     };
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
 
     // 서버 토큰 확인 및 글 등록
@@ -109,6 +111,42 @@ function QnA() {
     const handlesearchWordChange = (e) => { //검색 처리
         setSearchWord(e.target.value);
     };
+    //테이블 정렬
+    const sortedQnA = [...QnA].sort((a, b) => {
+        if (sortConfig.key === null) {
+            return 0; // 정렬할 항목이 없으면 그대로 반환
+        }
+        let aVal = a[sortConfig.key];
+        let bVal = b[sortConfig.key];
+
+        // 작성자 항목의 경우 마스킹된 부분을 제외하고 정렬
+        if (sortConfig.key === 'userid') {
+            aVal = a.userid.substring(0, 2) + a.userid.substring(2).replace(/./g, "*");
+            bVal = b.userid.substring(0, 2) + b.userid.substring(2).replace(/./g, "*");
+        }
+
+        // qna_title 정렬 시 null 처리와 문자 비교
+        if (sortConfig.key === 'qna_title') {
+            aVal = a.qna_title || '';
+            bVal = b.qna_title || '';
+        }
+
+        if (aVal < bVal) {
+            return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aVal > bVal) {
+            return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+    });
+
+    const requestSort = (key) => {
+        let direction = 'ascending';
+        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
 
 
     return (
@@ -142,31 +180,32 @@ function QnA() {
                             <FaSearch
                                 onClick={handleSearchSubmit}
                                 size="30px"
-                                style={{ cursor: 'pointer' }} />
+                                style={{ cursor: 'pointer', color:'rgb(0, 255, 156)' }} />
                         </form>
                     </div>
                 </div>
                 <table className="table table-dark table-hover QnaTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
-                            <th>작성자</th>
-                            <th>제목</th>
-                            <th>등록일</th>
-                            <th>답변여부</th>
+                            <th onClick={() => requestSort('qna_no')}>No.</th>
+                            <th onClick={() => requestSort('userid')}>작성자</th>
+                            <th style={{display:"none"}}>카테고리</th>
+                            <th onClick={() => requestSort('qna_title')}>제목</th>
+                            <th onClick={() => requestSort('qna_writedate')}>등록일</th>
+                            <th onClick={() => requestSort('qna_state')}>답변여부</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {QnA.length > 0 ? (
-                            QnA.map((item, index) => (
+                        {sortedQnA.length > 0 ? (
+                            sortedQnA.map((item, index) => (
                                 <tr key={index}>
                                     <th>{item.qna_no}</th>
-                                    <th>{item.userid.substring(0,2)+item.userid.substring(2).replace(/./g, "*")}</th>
+                                    <th>{item.userid.substring(0, 2) + item.userid.substring(2).replace(/./g, "*")}</th>
                                     <th className="qna_ht_th">
                                         {item.head_title == 1 ? <div className="qna_ht">[상품]&nbsp;</div> :
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                                 <div className="qna_ht">[기타]&nbsp;</div>)}
-                                        {item.privacyQ == 0 ? (
+                                        {item.privacyQ === 0 ? (
                                             <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
                                         ) : (
                                             <div className="qna_pwt" onClick={() => handlePrivateClick(item)}>
@@ -175,7 +214,7 @@ function QnA() {
                                         )}
                                     </th>
                                     <th>{item.qna_writedate}</th>
-                                    <th>{item.qna_state == 1 ? "답변됨" : "답변 없음"}</th>
+                                    <th>{item.qna_state === 1 ? "답변됨" : "답변 없음"}</th>
                                 </tr>
                             ))
                         ) : (
@@ -187,7 +226,7 @@ function QnA() {
                 </table>
 
                 <div className="right-buttons write-buttons">
-                    <button onClick={checkid}>등록하기</button>
+                    <button onClick={checkid}>문의 등록하기</button>
                 </div>
             </div>
 
@@ -215,7 +254,7 @@ function QnA() {
                 <button className="paging-btn"
                     onClick={() => handlePageChange(nowPage - 1)}
                     disabled={nowPage === 1 || totalPage===1}>
-                    이전
+                    <FaChevronLeft />
                 </button>
 
                 {totalPage === 1 ? (
@@ -235,7 +274,7 @@ function QnA() {
                 <button className="paging-btn"
                     onClick={() => handlePageChange(nowPage + 1)}
                     disabled={nowPage === totalPage || totalPage===1}>
-                    다음
+                    <FaChevronRight />
                 </button>
             </div>
         </div>

@@ -8,13 +8,17 @@ import com.ict.backend.vo.QnAVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,9 +59,44 @@ public class QnAController {
 
     //뷰페이지 구하기
     @GetMapping("/view/{qna_no}")
-    public ResponseEntity<List<QnAVO>> getQnAList(@PathVariable int qna_no) {
+    public ResponseEntity<List<QnAVO>> getQnAList(
+            @PathVariable int qna_no,
+            @RequestHeader(value = "Host", required = false) String Host) {
+//        String imageUrl="http://";
         List<QnAVO> result = qnaService.getQnAView(qna_no);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    //이미지 불러오기
+    @GetMapping("/images/{foldername}/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String foldername, @PathVariable String filename) {
+        System.out.println("여기 들어옴"  +foldername+ "/" + filename);
+
+        String currentDir = System.getProperty("user.dir");
+        Path imagePath = Paths.get(currentDir+ "/images/" + foldername+ "/" + filename);
+        System.out.println("imagepath = " + imagePath);
+        //Path imagePath = Paths.get("D:/team3_final_project/images/" + foldername+ "/" + filename);
+        try {
+            Resource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = Files.probeContentType(imagePath);
+                if (contentType == null) {
+                    contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            log.error("잘못된 URL: {}", e.getMessage());
+            return ResponseEntity.badRequest().build(); // 잘못된 요청
+        } catch (Exception e) {
+            log.error("서버 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 오류
+        }
     }
     //글 등록
     @PostMapping("/writeOk")
@@ -88,7 +127,7 @@ public class QnAController {
 
                     String imgUrl = imgService.uploadImage(file, "qna"); // image_tbl에 이미지 넣기
                     log.info("New profile image uploaded: {}", imgUrl);         // 이미지 주소값 확인
-                    int num = userService.uploadImage(imgUrl);                  // 이거는 좀 바꾸셔야함 이게 넣고 마지막에 들어간 image_no값을 리턴하는거거든
+                    int num = userService.uploadImage(imgUrl);                  // 마지막에 들어간 image_no값을 리턴
                     log.info("no {}", num);                                      // image_no값 확인
                     no = String.valueOf(num);
                     //result = qnaService.updateprofile(no, qna_no);             // 똑바로 들어갔는지 확인 no = image_no/ userid = qna_no

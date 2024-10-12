@@ -15,10 +15,34 @@
         limit ${onePageRecord} offset ${offset}
     </select>
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
-        select qna_no, userid, head_title, qna_title,qna_content,
-        date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_state,qna_answer,
-        answer_user, qna_answer_date, active_state,privacyQ,qna_pwd
-        from qna_tbl where qna_no=#{qna_no}
+        SELECT
+        q.qna_no,
+        q.userid,
+        u.usernick,
+        q.head_title,   -- 테이블 별칭 추가
+        q.qna_title,
+        q.qna_content,
+        DATE_FORMAT(q.qna_writedate, '%y-%m-%d %H:%i') AS qna_writedate,
+        q.qna_state,
+        q.qna_answer,
+        q.answer_user,
+        q.qna_answer_date,
+        q.active_state,  -- 테이블 별칭 추가 (qna_tbl의 active_state를 사용)
+        q.privacyQ,
+        q.qna_pwd,
+        i.image_url as qna_img
+        FROM
+        qna_tbl q
+        JOIN
+        user_tbl u
+        ON
+        q.userid = u.userid
+        LEFT JOIN
+        image_tbl i
+        ON
+        q.qna_img = i.image_no
+        WHERE
+        q.qna_no = #{qna_no};
     </select>
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl
@@ -52,4 +76,10 @@
     <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
         INSERT INTO image_tbl (image_url) VALUES (#{image_url})
     </insert>
+<!--    <select id="getQnaImg" resultType="String">-->
+<!--        select i.image_url-->
+<!--        from qna_tbl q-->
+<!--        left join image_tbl i on q.qna_img=i.image_no-->
+<!--        where q.qna_no=#{qna_no}-->
+<!--    </select>-->
 </mapper>

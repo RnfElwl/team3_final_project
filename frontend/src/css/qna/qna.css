@@ -5,13 +5,12 @@
     color:white;
 }
 @media(max-width:577px){
-    .QnABody, .QnAWriteBody{
+    .QnABody{
         min-width: 577px;
     }
 }
 /* 상단 info css */
-.totalRecord-info{
-    
+.totalRecord-info{  
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -21,8 +20,9 @@
     font-size: 1.2em;
 }
 .tr-right-info div{
-    color:orange
+    color:#FFE700;
 }
+
 /* 테이블 css */
 .QnaTable td, .QnaTable th{
     background-color: transparent !important;
@@ -30,6 +30,9 @@
     font-size: 1em;
     border-bottom: none;
     text-align: center;
+}
+.QnaTable th{
+    cursor: pointer;
 }
 .QnaTable{
     white-space:nowrap;
@@ -46,7 +49,7 @@
     display: flex;
 }
 .qna_ht{
-    color: red;
+    color: #00FF9C;
 }
 .qna_ht_th a:link, .qna_ht_th a:hover,.qna_ht_th a:visited {
     color: white;
@@ -61,31 +64,35 @@
     width: 100px;
     height: 35px;
     font-size: 1em;
-    padding: 0 10px;
+    padding: 5px;
     margin-right: 10px;
     white-space:nowrap;
-
+    border-radius: 5px;
+    text-align: center;
 }
 /* 검색창 css */
 .searchForm input[type="text"]{
     height: 35px;
-    width: auto;
+    max-width: 180px;
+    width: 100%;
     margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
 }
 
-/* 페이지네이션 css */
-.qna_pagination{
-    text-align: center;
-}
 
 /* 버튼css */
 .right-buttons{
     text-align: right;
 }
 .right-buttons>button{
-    background-color: #00ff88;
-    color: white;
+    padding: 10px;
+    background-color: #00FF9C;
+    color: #2E5B2B;
     border:none;
+    border-radius: 5px;
+    font-weight: 900;
+    
 }
 
 
@@ -114,4 +121,41 @@
     background-color: #e6e6e6;
     width: 381px;
     margin-bottom: 10px;
+}
+
+.qna_pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* 페이지네이션 css */
+.paging-btn {
+    background-color: #B6FFA1; /* 버튼 배경색 */
+    border: none;
+    border-radius: 5px;
+    color: #2E5B2B; /* 글자색 */
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 900;
+}
+
+.paging-btn:disabled {
+    background-color: #ccc; /* 비활성화 시 색상 */
+    cursor: not-allowed;
+    opacity: 0.6; /* 비활성화 시 투명도 조절 */
+}
+
+.paging-btn:not(:disabled):hover {
+    background-color: #A3E885; /* 호버 시 색상 */
+    transform: scale(1.05); /* 호버 시 크기 증가 */
+}
+
+.paging-btn:not(:disabled):active {
+    background-color: #8DDC6B; /* 클릭 시 색상 */
+    transform: scale(0.95); /* 클릭 시 크기 감소 */
 }

@@ -14,4 +14,5 @@ public interface QnADAO {
     void qnaUpdate(QnAVO editData);
     void qnaDel(int qna_no, String userid);
     int uploadImage(String imageUrl);
+//    String getQnaImg(int qna_no);
 }

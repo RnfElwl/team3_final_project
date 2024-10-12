@@ -9,6 +9,7 @@ import java.util.List;
 public class QnAVO {
     public int qna_no;
     public String userid;
+    public String usernick;
     public String head_title;
     public String qna_title;
     public String qna_content;

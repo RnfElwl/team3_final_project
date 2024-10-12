@@ -1,57 +1,125 @@
-.qna_titleArea{
-    width: 100%;
-    min-width: 600px;
-    max-width: 600px;
-    display: flex;
-    margin: 0 auto; 
-}
-.qna_titleArea div{
-  margin-left: 10px;  
-}
-.qna_content{
-    margin: 20px auto;
-    max-width: 600px;
-    min-width: 200px;
-    min-height: 400px;
-    width: 100%;
-}
-@media (max-width: 768px) {
-    .qna_content {
-        margin: 15px; /* 좁은 화면에서 여백 조정 */
-        padding: 15px;
-        min-height: 300px; /* 최소 높이 줄이기 */
-    }
-}
-
-@media (max-width: 480px) {
-    .qna_content {
-        margin: 10px; /* 모바일에서 여백 최소화 */
-        padding: 10px;
-        min-width: 100%; /* 최소 너비를 100%로 확장하여 꽉 차도록 */
-    }
-}
+/* form css */
 .QnAWriteform{
     text-align: center;
     width: 100%;
 }
+/* form 상단 div css */
+.qna_titleArea{
+    /* width: 100%; */
+    min-width: 400px;
+    max-width: 860px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 0;
+}
+/* 글 제목 css */
+.qna_title{
+    background-color:rgb(245, 245, 247);
+    color: #323232;
+    padding: 10px;
+    border-bottom: 0.5px solid gray;
+    border-radius: 10px;
+    width: 100%;
+    min-width: 200px;
+    max-width: 350px;
+}
+.qna_title::placeholder{
+    color:rgb(158, 158, 158);
+}
+/* 카테고리 css */
+.head_title{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgb(245, 245, 247);
+    border: none;
+    color: #323232;
+    padding: 10px;
+    border-bottom: 0.5px solid gray;
+    border-radius: 10px;
+    min-width: 200px;
+}
+.head_title option{
+    color: black;
+}
+/* 글 내용 css */
+.qna_content{
+    margin: 10px auto;
+    max-width: 860px;
+    height: 400px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    resize: none;
+}
+/* 비밀글 설정 css */
 .privacy-select{
     text-align: left !important;
-    max-width: 600px;
+    max-width: 860px;
     margin: 0 auto;
 }
+.privacy-select input[type='radio']{ /* radio 형식 안보이게 */
+    display: none;
+}
+.qna-radio-label {
+    cursor: pointer;
+    margin: 20px 10px 20px 0;
+  }
+.qna-custom-radio{
+    background-color: rgb(182, 255, 161);
+    color: #2E5B2B;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 900;
+}
+input[type="radio"]:checked + .qna-custom-radio {
+    background-color: #17be57;
+  }
+.qna_pwd_box input{
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(245, 245, 247);
+    width: 280px;
+}
 
-.right-buttons>button{
-    background-color: #00ff88;
-    color: white;
+/* 이미지 업로더 css */
+.imgUploader-box{
+    max-width: 860px;
+    margin: 0 auto;
+}
+/* 이미지 미리보기 css */
+.image-preview{
+    max-width: 860px;
+    margin: 0 auto;
+}
+/* 저장 버튼 css */
+.qw-right-buttons{
+    text-align: right;
+    max-width: 860px;
+    margin: 0 auto;
+}
+.qw-right-buttons button{
+    padding: 10px;
+    background-color: #00FF9C;
+    color: #2E5B2B;
     border:none;
-
-}
-.preImageBar{
-    width: 600px;
-    margin: 10px auto;
-    text-align: left;
+    border-radius: 5px;
+    font-weight: 900;
 }
 
-.preImg{
-    width: 300px;
+/* form 반응형 */
+@media(max-width:512px){
+    .qna_titleArea{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .head_title{
+        margin-top: 10px;
+    }
+    .qna_content{
+        width: 80%;
+    }
 }
+

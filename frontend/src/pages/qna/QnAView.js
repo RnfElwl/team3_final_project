@@ -13,13 +13,15 @@ function QnAView() {
     const [usersid, setUsersid]=useState('');
     const navigate = useNavigate();
     const item=QnAView[0];
+    const [qnaImgSrc, setQnaImgSrc] = useState('');
 
     //뷰페이지 데이터 요청
     useEffect(() => {
         axios.get(`http://localhost:9988/qna/view/${params}`)
             .then(response => {
                 setQnAView(response.data);     
-                console.log(response.data);          
+                console.log(response.data);
+                setQnaImgSrc(response.data[0].qna_img)       
             });
     }, [params]);
 
@@ -37,6 +39,25 @@ function QnAView() {
             });
 
     },[]);
+    useEffect(() => {
+        const fetchImage = async () => {
+            try {
+                const response = await axios.get(`http://localhost:9988/qna/${item?.qna_img}`, {
+                    responseType: 'blob', // 이미지 응답을 Blob 형식으로 요청
+                });
+                
+                const imageUrl = URL.createObjectURL(response.data); // Blob URL 생성
+                setQnaImgSrc(imageUrl); // 상태 업데이트
+            } catch (error) {
+                console.error("오류 발생:", error);
+            }
+        };
+
+        if (item?.qna_img) {
+            fetchImage();
+        }
+    }, [item]);
+
     //아이디 체크
     function checkid(){
         if(usersid==='' || usersid===null){
@@ -73,44 +94,45 @@ function QnAView() {
 
     return(
     <div className="QnAViewBody">
-        <table>
+        <h1>문의 게시판</h1>
+        <table className="QnaTbl">
+            <tbody>
             <tr>
-                <td>작성자</td>
-                <td>{item?.userid.substring(0,2)+item?.userid.substring(2).replace(/./g, "*")}</td>
-                <td>번호</td>
-                <td>{item?.qna_no}</td>
-            </tr>
-            <tr>
-                <td>작성일</td>
+                <td className="qnaType">제목</td>
+                <td >{item?.qna_title}</td>
                 <td>{item?.qna_writedate}</td>
             </tr>
             <tr>
-                <td>제목</td>
-                <td colspan="2">{item?.qna_title}</td>
+                <td className="qnaType">작성자</td>
+                <td colSpan="2">{item?.usernick}</td>          
             </tr>
             <tr>
-                <td>내용</td>
-                <td colspan="2"> {item?.qna_content}</td>
+                <td colSpan="3"> {item?.qna_content}</td>
             </tr>
-        </table>
-        <hr/>답변
-        <table>
-            
             <tr>
-                <td></td>
-                <td>{item?.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{item?.qna_answer}</div> }</td>
+                <td className="qnaType">첨부파일</td>
+                <td colSpan="2" className="qna-imgArea"><img src={qnaImgSrc}/> </td>
             </tr>
+            </tbody>
         </table>
+        <div className="qnaItems">
+        {usersid !== item?.userid ?(<div><AiOutlineAlert onClick={checkid} size="35px"/></div>):null}
+        {usersid === item?.userid ? (
+                <div><FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={qnaDelete}/></div>
+            ) : null}
+        {usersid === item?.userid && item?.qna_state === 0 ? (
+                <div><FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={qnaEdit}/></div>
+            ) : null}
+        </div>
+        <hr/>
+        <div className="ansArea">
+            답변
+                {item?.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{item?.qna_answer}</div> }
+        </div>
         <br/>
        
     
-    {usersid !== item?.userid ?(<AiOutlineAlert onClick={checkid} size="35px"/>):null}
-    {usersid === item?.userid ? (
-            <div><FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={qnaDelete}/></div>
-        ) : null}
-    {usersid === item?.userid && item?.qna_state === 0 ? (
-            <div><FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={qnaEdit}/></div>
-        ) : null}
+
     </div>
 
 

@@ -54,5 +54,10 @@ public class QnAServiceImpl implements QnAService{
         return dao.uploadImage(imageUrl);
     }
 
+//    @Override
+//    public String getQnaImg(int qna_no) {
+//        return dao.getQnaImg(qna_no);
+//    }
+
 
 }

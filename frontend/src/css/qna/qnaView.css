@@ -1,7 +1,41 @@
 .QnAViewBody{
+    padding-top: 10px;
     color:white;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
 }
-td:nth-child(1){
-    min-width: 100px;
-    height: 20px;
+.QnaTbl{
+    margin: 30px auto 0;
+    max-width: 800px;
+    width: 100%;
+}
+.QnaTbl td{
+    padding: 10px;
+    border-bottom: 1px solid rgb(214, 214, 221);
+    border-top: 1px solid rgb(214, 214, 221);
+}
+.QnaTbl td:nth-child(1){
+    width: 90px;
+}
+.QnaTbl td:nth-child(3){
+    text-align: right;
+}
+.QnaTbl tr:nth-child(4){
+    height: 200px;
+}
+.qnaType{
+    background-color: rgb(182, 172, 172);
+    
+}
+.qnaItems{
+    display: flex;
+    justify-content: right;
+}
+.qnaItems div{
+    margin: 10px 5px 0 5px;
+}
+.qna-imgArea img{
+    width: 300px;
+    height: 200px;
 }
