@@ -8,7 +8,7 @@ import java.util.List;
 public interface ChatListDAO {
     public int insertChatList(ChatListVO chatListVO);
     public List<ChatListVO> selectOpenChatList();
-    public ChatListVO selectChatUser(String chatlist_url, String userid);
+    public ChatUserVO selectChatUser(String chatlist_url, String userid);
     public int insertChatEnter(String chatlist_url, String userid);
     public List<ChatVO> selectChatContent(String chatlist_url, String userid);
     public int updateChatHeadCount(String chatlist_url);

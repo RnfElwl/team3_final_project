@@ -28,7 +28,7 @@ public class ChatListServiceImpl implements ChatListService {
     public int insertChatEnter(String chatlist_url, String userid){
         return chatListDAO.insertChatEnter(chatlist_url, userid);
     }
-    public ChatListVO selectChatUser(String chatlist_url, String userid){
+    public ChatUserVO selectChatUser(String chatlist_url, String userid){
         return chatListDAO.selectChatUser(chatlist_url, userid);
     }
     public int updateChatHeadCount(String chatlist_url){

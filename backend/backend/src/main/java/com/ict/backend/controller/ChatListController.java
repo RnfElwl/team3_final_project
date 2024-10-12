@@ -53,10 +53,14 @@ public class ChatListController {
     @PostMapping("/userlistadd/{chatlist_url}")
     public int insertChatUserList(@PathVariable String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        
-        int result = chatListService.insertChatEnter(chatlist_url, userid);
-        return result;
+        ChatUserVO chatuserVO = chatListService.selectChatUser(chatlist_url, userid);
+        System.out.println(chatuserVO==null);
+        if(chatuserVO==null || chatuserVO.getFlag()==0){
+            System.out.println(chatuserVO);
+            int result = chatListService.insertChatEnter(chatlist_url, userid);
+            return result;
+        }
+        return 0;
     }
     @GetMapping("/roominfo")
     public ChatListVO selectRoomInfo(@RequestParam String chatlist_url){
@@ -98,7 +102,13 @@ public class ChatListController {
     }
     @GetMapping("/vote/list")
     public List<MemberVO> selectVoteList(VotingVO votingVO){
-        System.out.println(votingVO.toString());
         return chatListService.selectVoteList(votingVO);
+    }
+    @PostMapping("/exit")
+    public int updateChatUserFlag(@RequestParam String chatlist_url){
+        chatListService.updateChat
+                
+
+
     }
 }

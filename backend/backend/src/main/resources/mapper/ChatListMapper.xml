@@ -30,10 +30,9 @@
         GROUP BY DATE(dl.chat_date), dl.chatlist_url
         ) as date_records
         where
-        (select date(cul.first_conn) from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= date_records.chat_date
+        (select date(cul.first_conn) from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2} and flag=1) &lt;= date_records.chat_date
         UNION ALL
         select * from(
-
         select chatlist_url, ut.userid, first_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 2 as chat_type
         from chat_user_list cul
         join user_tbl ut on ut.userid=cul.userid
@@ -60,13 +59,13 @@
         where chatlist_url=#{param1} and cct.content_id not in (select rt.report_tbluuid from report_tbl rt where rt.report_userid=#{param2} and rt.report_tblname=3)
         ORDER BY chat_date
         ) as rs where
-        (select cul.first_conn from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2}) &lt;= rs.chat_date
-        order by chat_date
+        (select cul.first_conn from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2} and flag=1) &lt;= rs.chat_date
+        order by chat_date;
     </select>
     <insert id="insertChatEnter">
         insert ignore into chat_user_list(chatlist_url, userid) values(#{param1}, #{param2});
     </insert>
-    <select id="selectChatUser" resultType="com.ict.backend.vo.ChatListVO">
+    <select id="selectChatUser" resultType="com.ict.backend.vo.ChatUserVO">
         select * from chat_user_list where chatlist_url=#{param1} and userid=#{param2} order by flag desc limit 1
     </select>
     <select id="selectChatRoom">

@@ -25,6 +25,9 @@ import QNAEdit from './pages/qna/QnAEdit.js'
 import Recommend from './pages/recommend/Recommend.js';
 import EditInfo from './pages/mypage/EditInfo.js';
 import Signup from './pages/mypage/Signup.js'; 
+import SeeMore from './pages/mypage/SeeMore.js'
+import RecentWatch from './pages/mypage/RecentWatch.js'
+import BookMarked from './pages/mypage/BookMarked.js';
 
 function App() {
   return (
@@ -54,6 +57,9 @@ function App() {
                 <Route path = '/signup' element = {<Signup/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
+                <Route path = "/mypage/more" element={<SeeMore/>}/>
+                <Route path = "/mypage/bookmarked" element={<BookMarked/>}/>
+                <Route path = "/mypage/recentwatch" element={<RecentWatch/>}/>
 
             </Route>
         </Routes>

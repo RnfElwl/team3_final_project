@@ -365,7 +365,7 @@ const Chatting = () => {
         }
     }
     async function exitRoom(){
-        const {data} = await axios.post("", {chatlist_url});
+        const {data} = await axios.post("http://localhost:9988/chat/exit", {chatlist_url});
 
         if(data==1){
             const result = await axios.get('http://localhost:9988/user/userinfo');
