@@ -1,5 +1,6 @@
 package com.ict.backend.service;
 
+import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -12,9 +13,7 @@ public interface MovieService {
     List<MovieVO> getMoviesByNation(String nation);
     MovieVO getMovieByCode(String movieCode);
 
-
-
-    // MovieVO getMovieById(int movieId); // 특정 영화 조회 메서드
-
+    // 이미지 가져오기
+    List<String> getMovieImagesByCode(String movieCode);
 
 }

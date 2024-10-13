@@ -1,6 +1,7 @@
 package com.ict.backend.service;
 
 import com.ict.backend.dao.MovieDAO;
+import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,9 @@ import java.util.List;
 @Service
 public class MovieServiceImpl implements MovieService {
 
+    @Autowired
     private final MovieDAO movieDAO;
+    private MovieImgVO movieImgDAO;
 
     @Autowired
     public MovieServiceImpl(MovieDAO movieDAO) {
@@ -37,15 +40,11 @@ public class MovieServiceImpl implements MovieService {
         return movieDAO.getMovieByCode(movieCode);
     }
 
+    @Override
+    public List<String> getMovieImagesByCode(String movieCode) {
+        return movieDAO.getMovieImagesByCode(movieCode);
+    }
 
 
 
-
-
-
-    /*@Override
-    public MovieVO getMovieById(int movieId) {
-        // MovieDAO를 통해 DB에서 영화 정보를 가져옴
-        return movieDAO.getMovieById(movieId);
-    }*/
 }

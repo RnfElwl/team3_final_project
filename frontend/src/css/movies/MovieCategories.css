@@ -1,6 +1,6 @@
 /* 페이지 전체 배경과 중앙 정렬을 위한 스타일 */
 .page-container {
-    background-color: #000; /* 배경 검정색 */
+    background-color: #1C1C20; 
     min-height: 100vh;
     display: flex;
     justify-content: flex-start; /* 위쪽에 배치 */

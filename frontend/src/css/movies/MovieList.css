@@ -1,9 +1,9 @@
 .movie-list-wrapper {
+  background-color: #1C1C20; 
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  padding: 20px;
+  padding-top: 20px;
 }
-
 
 .movie-list-container {
   max-width: 1200px; /* 최대 너비를 1200px로 설정 */
@@ -11,14 +11,18 @@
 }
 .movie-list-container > h2 {
   color: white;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .movie-list-title {
   color: white; /* 영화 목록 제목 색상 */
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
+.row{
+  border-top: 1px solid #ddd;
+  padding: 20px;
 
+}
 .movie-card {
   border-radius: 10px;
   overflow: hidden;

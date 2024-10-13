@@ -52,7 +52,7 @@ function MovieList() {
   return (
     <div className="movie-list-wrapper"> {/* 컨텐츠를 감싸는 중앙 배치용 div */}
       <div className="movie-list-container">
-        <h2> {id} 영화 목록</h2>
+        <h2> <b>'{id}'</b>을 선택한 당신의 영화</h2>
         <div className="row">
           {movies.map((movie) => (
             <div key={movie.movie_code} className="col-6 col-sm-4 col-md-2 mb-4">

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {useParams, useLocation } from 'react-router-dom';
-import Slider from 'react-slick'; // react-slick 슬라이더 추가
 import './../../css/movies/MovieView.css';
-import { FaStar, FaHeart, FaShareAlt } from 'react-icons/fa'; // 별 아이콘을 위해 react-icons 사용
+import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; // 별 아이콘을 위해 react-icons 사용
 import axios from 'axios';
 
 function MovieView() {
-
   
   // 더미 리뷰 데이터
-  const dummyReviews = [
+  const [reviews, setReviews] = useState([
   {
     id: 1,
     profileImg: 'https://via.placeholder.com/50', // 유저 프로필 이미지 (더미)
@@ -31,36 +29,38 @@ function MovieView() {
     rating: 3,
     review: '그냥 그랬어요...',
   },
-];
-
-// 임의의 이미지 데이터
-const dummyImages = [
-  'https://via.placeholder.com/300x200?text=Image+1',
-  'https://via.placeholder.com/300x200?text=Image+2',
-  'https://via.placeholder.com/300x200?text=Image+3',
-  'https://via.placeholder.com/300x200?text=Image+4',
-  'https://via.placeholder.com/300x200?text=Image+5',
-];
+]);
 
 
-  const { movieCode } = useParams(); // URL 파라미터에서 type, genre, id 가져옴
-  const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 창 상태
-  const [rating, setRating] = useState(0); // 별점 상태
-  const [reviewText, setReviewText] = useState(''); // 한줄평 상태
-  const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
-  const location = useLocation(); // 현재 경로 가져오기 위해 사용
+const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
+console.log(movieCode);
+const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
+const [loading, setLoading] = useState(true); // 로딩 상태
+const [images, setImages] = useState([]);  // 이미지 목록 상태
+const [rating, setRating] = useState(0); // 별점 상태
+const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 추가
+const [reviewText, setReviewText] = useState(''); // 한줄평 상태
+const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
+const location = useLocation(); // 현재 경로 가져오기 위해 사용
+const userid = 'goguma1234';
 
   useEffect(() => {
     const fetchMovie = async () => {
       setLoading(true); // 로딩 상태 시작
       try {
+        // 영화 정보 가져오기
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
         console.log(response.data); // API 응답 데이터 콘솔에 출력
         setMovie(response.data); // 영화 데이터를 상태에 저장
+
+        // 영화 이미지 정보 가져오기
+        // 이미지 정보 가져오기
+        const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
+        setImages(imageResponse.data);
+
+        
       } catch (error) {
-        console.error("Error fetching movie data:", error);
+        console.error("Error:", error);
       } finally {
         setLoading(false); // 로딩 상태 종료
       }
@@ -69,7 +69,6 @@ const dummyImages = [
   }, [movieCode]);
 
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
-
   if (!movie) return <div>No movie data available</div>; // 데이터가 없을 때 표시
 
   const toggleFavorite = () => {
@@ -95,28 +94,26 @@ const dummyImages = [
       });
     }
   }
-
+  
   const handleReviewSubmit = () => {
-    console.log("Rating:", rating);
-    console.log("Review:", reviewText);
-    // 여기서 서버로 평점과 한줄평을 제출할 로직 추가 가능
-    setIsModalOpen(false); // 모달 창 닫기
+    if (rating > 0 && reviewText) {
+      const newReview = {
+        id: reviews.length + 1,
+        profileImg: 'https://via.placeholder.com/50', // 기본 프로필 이미지
+        nickname: userid, // 임시로 userid 사용
+        rating,
+        review: reviewText,
+      };
+      setReviews([newReview, ...reviews]); // 최신 리뷰를 리스트 상단에 추가
+      setRating(0); // 평점 초기화
+      setReviewText(''); // 리뷰 텍스트 초기화
+    }
   };
 
-  // react-slick 설정
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3, // 한 번에 표시할 이미지 수
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  };
 
     // 리뷰 컴포넌트
     const renderReviews = () => {
-      return dummyReviews.map((review) => (
+      return reviews.map((review) => (
         <div key={review.id} className="review">
           <img src={review.profileImg} alt="User profile" className="profile-img" />
           <div className="review-content">
@@ -133,6 +130,8 @@ const dummyImages = [
         </div>
       ));
     };
+
+    const formattedCasts = movie.movie_casts.replace(/\//g, ', ');
 
     return (
         <div className="movie-view-container">
@@ -154,23 +153,23 @@ const dummyImages = [
                     </div>
                     <div className="info-details">
                         <span>{movie.movie_genre}</span> {/* 장르 */}
-                        <span>|  {movie.opened_year}</span> {/* 개봉년도 */}
-                        <span>|  {movie.movie_showtime}분</span> {/* 러닝타임 */}
-                        <span>|  {movie.movie_grade}</span> {/* 관람등급 */}
+                        <span>| {movie.opened_year}년</span> {/* 개봉년도 */}
+                        <span>| {movie.movie_showtime}분</span> {/* 러닝타임 */}
+                        <span>| {movie.movie_grade}</span> {/* 관람등급 */}
                     </div>
                     {/* 시놉시스 */}
                     <div className="info-synops">
-                      <p>{movie.movie_synops}</p>
+                      {movie.movie_synops}
                     </div>
                 </div>
 
                 <div className="movie-actions">
                   {/* 찜하기 */}
-                <FaHeart
-                  className={`favorite-icon ${isFavorite ? 'active' : ''}`}
-                  onClick={toggleFavorite}
-                  title={isFavorite ? '찜 해제' : '찜하기'}
-                />
+                  <FaRegBookmark
+                    className={`favorite-icon ${isFavorite ? 'active' : ''}`}
+                    onClick={toggleFavorite}
+                    title={isFavorite ? '북마크 해제' : '북마크'}
+                  />
                   {/* 공유하기 */}
                   <FaShareAlt
                   className="share-icon"
@@ -193,7 +192,7 @@ const dummyImages = [
               {/* 출연진 */}
               <div className="info-section">
                 <h3>출연진</h3>
-                <p>{movie.movie_casts}</p>
+                <p>{formattedCasts}</p>
               </div>
 
               {/* 감독 */}
@@ -205,60 +204,62 @@ const dummyImages = [
             </div>
         </div>
 
-         {/* 이미지 슬라이드 섹션 */}
-        <div className="image-slider">
+        {/* 이미지 표시 섹션 */}
+        <div className="image-gallery">
           <h3>관련 이미지</h3>
-          <Slider {...settings}>
-            {dummyImages.map((image, index) => (
-              <div key={index} className="image-slide">
-                <img src={image} alt={`관련 이미지 ${index + 1}`} />
-              </div>
+          <div className="image-row">
+            {images.slice(0, 3).map((img, index) => (
+              <img key={index} src={img} alt={`관련 이미지 ${index + 1}`} className="gallery-image" />
             ))}
-          </Slider>
+          </div>
         </div>
-        <hr/>
 
         {/* 사용자 평 섹션 */}
         <div className="review-section">
         <div className="review-header">
-            <h2>S# 사용자 평</h2>
-            <button className="write-review-btn" onClick={() => setIsModalOpen(true)}>리뷰쓰기</button>
+            <h2><b>'{movie.movie_kor}'</b>의 사용자 평</h2>
           </div>
+          {/* 리뷰 입력 필드 */}
+        <div className="review-input-section">
+          <div className="profile-section">
+            <img src="https://via.placeholder.com/50" alt="Profile" className="profile-img" />
+            <span className="nickname">{userid}</span>
+          </div>
+          <div className="rating-and-review">
+            <div className="star-rating">
+              {[...Array(5)].map((star, index) => (
+                <FaStar
+                key={index}
+                className={`star ${index < (hoverRating || rating) ? 'active' : ''}`} // 호버 상태 반영
+                onMouseEnter={() => setHoverRating(index + 1)} // 마우스 오버 시 별 색 채움
+                onMouseLeave={() => setHoverRating(0)} // 마우스가 벗어날 때 초기화
+                onClick={() => setRating(index + 1)} // 별 클릭 시 선택
+                />
+              ))}
+            </div>
+            <div
+              contentEditable
+              className="review-input"
+              placeholder="한줄평을 남겨보세요"
+              onInput={(e) => setReviewText(e.currentTarget.textContent)}
+            >
+              {reviewText}
+            </div>
+          </div>
+          <button className="submit-btn" onClick={handleReviewSubmit}>
+            등록
+          </button>
+        </div>
+        {/* 리뷰 리스트 */}
+        <div className="review-section">
           {renderReviews()}
         </div>
 
-        {/* 모달 창 */}
-        {isModalOpen && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>평점 남기기</h3>
-              <div className="star-rating">
-                {[...Array(5)].map((star, index) => (
-                  <FaStar
-                    key={index}
-                    className={index < rating ? 'star active' : 'star'}
-                    onClick={() => setRating(index + 1)} // 클릭한 별까지 채우기
-                  />
-                ))}
-              </div>
-              <div className="review-input">
-                <textarea
-                  placeholder="한줄평을 남겨보세요"
-                  value={reviewText}
-                  onChange={(e) => setReviewText(e.target.value)}
-                />
-              </div>
-              <button className="submit-btn" onClick={handleReviewSubmit}>
-                등록
-              </button>
-              <button className="close-btn" onClick={() => setIsModalOpen(false)}>
-                닫기
-              </button>
-            </div>
-          </div>
-        )}
+      </div>
 
-        </div>  
+        
+
+      </div>  
     </div>
     );
 }

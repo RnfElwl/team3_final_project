@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class MovieVO {
+    private int movie_no;
     private String movie_code; // 영화별 고유 코드
     private String movie_kor; // 영화명(한글)
     private String movie_eng;// 영화명(영문)
