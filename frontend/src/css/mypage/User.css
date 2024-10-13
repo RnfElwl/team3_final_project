@@ -1,4 +1,4 @@
-.myPage {
+.User {
     max-width: 1920px;
     height: 91vh;
     /* background-size: cover; */
@@ -6,12 +6,12 @@
     background-position: center;
     margin: 0 auto;
 }
-.myPage>.container{
+.User>.container{
     margin: 0 auto;
     /* max-width: 1920px; */
     max-width: 1500px;
 }
-.info{
+.User .info{
     background-color: #232323;
     opacity: 0.7;
     width: 100%;
@@ -19,6 +19,13 @@
     display: flex;
     padding : 10px 0;
     margin: 30px 0;
+    flex-direction: column;
+}
+.User #userinfo div{
+    color : white;
+}
+.followingBtn{
+    text-align: center;
 }
 .otherinfo{
     width: 100%;
@@ -31,10 +38,18 @@
     flex-direction: column;
     align-items: center;
 }
-.info #userinfo{
-    flex-grow: 7;
+.User .info #userinfo{
+    display: flex;
+    justify-content: space-around;
 }
-
+.User .info div{
+    position: relative;
+}
+.User #info_change button{
+    position: absolute;
+    right : 1px;
+    top : 0px;
+}
 .info #profile>img {
     max-width: 150px;
     width: 100%;
@@ -158,7 +173,7 @@
     display: flex !important;
     justify-content: flex-start !important;
   }
-.follower .userprofile[src="empty"], .slidPoster[alt = "empty"]{
+.follower .userprofile[src="empty"] {
     display: none;
   }
 

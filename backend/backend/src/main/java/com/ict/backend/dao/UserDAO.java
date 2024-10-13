@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserDAO {
     public MemberVO test();
 
@@ -39,4 +42,19 @@ public interface UserDAO {
 
     public int usernickcheck(String usernick);
     public int useridcheck(String userid);
+
+    // 사용자 관련 정보 업데이트용
+    public List<Map<String, String>> getBookmarks(@Param("userid") String userid, @Param("limit") int limit);
+    public List<Map<String, String>> getHistory(@Param("userid") String userid, @Param("limit") int limit);
+    public List<Map<String, String>> getfollower(@Param("userid") String userid, @Param("limit") int limit);
+
+    public MemberVO getOtherUserInfo(String usernick);
+
+    public int getCountBookmarks(String userid);
+    public int getCountHistory(String userid);
+    public int getCountfollower(String userid);
+    public int getCountCommunity(String userid);
+    public int getCountComment(String userid);
+    public int getCountfollowing(String userid);
+    public int getCountReplyComment(String userid);
 }

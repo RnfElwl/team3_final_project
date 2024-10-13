@@ -28,6 +28,7 @@ import Signup from './pages/mypage/Signup.js';
 import SeeMore from './pages/mypage/SeeMore.js'
 import RecentWatch from './pages/mypage/RecentWatch.js'
 import BookMarked from './pages/mypage/BookMarked.js';
+import User from './pages/mypage/User.js';
 
 function App() {
   return (
@@ -60,6 +61,8 @@ function App() {
                 <Route path = "/mypage/more" element={<SeeMore/>}/>
                 <Route path = "/mypage/bookmarked" element={<BookMarked/>}/>
                 <Route path = "/mypage/recentwatch" element={<RecentWatch/>}/>
+                <Route path ="/user/info/:usernick" element={<User/>}/>
+                <Route path ="/user/info/" element={<User/>}/>
             </Route>
         </Routes>
     </BrowserRouter>

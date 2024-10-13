@@ -6,6 +6,9 @@ body{
   max-width: 1920px;
   background-color:#1C1C20 !important;
 }
+/* html{
+  scrollbar-color: #a5a5a5 #1C1C20;
+} */
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;

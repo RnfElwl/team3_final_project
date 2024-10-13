@@ -27,6 +27,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -114,6 +116,59 @@ public class UserController {
         log.info(userInfo.toString());
         return userInfo;
     }
+    @GetMapping("/totaldata")
+    public ResponseEntity<Map<String, Object>> getUserData(@RequestHeader(value = "Host", required = false) String Host) {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 각 서비스에서 데이터 가져오기
+        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
+        List<Map<String, String>> history = userService.getHistory(userid, 10);
+        List<Map<String, String>> followers = userService.getfollower(userid, 14);
+        // 이미지 URL 처리
+        for (Map<String, String> user : followers) {
+            String imageUrl = user.get("image_url");
+            if (imageUrl != null) {
+                user.put("image_url", "http://" + Host +"/"+ imageUrl);
+//                user.put("image_url", "http://" + Host + "/user/" + imageUrl);
+                System.out.println(user.toString());
+            }
+        }
+        // 결과를 하나의 맵에 담기
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("bookmarks", bookmarks);
+        responseData.put("history", history);
+        responseData.put("followers", followers);
+        return ResponseEntity.ok(responseData);
+    }
+    // 북마크한 정보 가져오기
+    @GetMapping("/bookmarks")
+    public ResponseEntity<List<Map<String, String>>> getBookmarks() {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 0);
+        System.out.println(bookmarks);
+        return ResponseEntity.ok(bookmarks);
+    }
+    // 최근 본 list 가져오기
+    @GetMapping("/history")
+    public ResponseEntity<List<Map<String, String>>> getHistory() {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Map<String, String>> history = userService.getHistory(userid, 0);
+        System.out.println(history);
+        return ResponseEntity.ok(history);
+    }
+    // 팔로워 불러오기
+    @GetMapping("/follower")
+    public ResponseEntity<List<Map<String, String>>> getFollower(@RequestHeader(value = "Host", required = false) String Host) {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Map<String, String>> follower = userService.getfollower(userid, 0);
+        System.out.println(follower);
+        for (Map<String, String> user : follower) {
+            String imageUrl = user.get("image_url");
+            if (imageUrl != null) {
+                user.put("image_url", "http://" + Host + "/" + imageUrl);
+            }
+        }
+        return ResponseEntity.ok(follower);
+    }
 
 @GetMapping("/mypageinfo")
 public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) String Host) {
@@ -128,7 +183,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
     System.out.println("host = "+ Host);
     //referer = referer.replace(":3000/", ":9988");
     // 이미지를 HTTP URL로 변환
-    String imageUrl = "http://" + Host + "/user/" + filePath;    // 나중에 시연시 써야할거
+    String imageUrl = "http://" + Host + "/" + filePath;    // 나중에 시연시 써야할거
     //String imageUrl = "http://192.168.1.88:9988/user/" + filePath;    // 나중에 시연시 써야할거
     //String imageUrl = "http://localhost:9988/user/" + filePath; // 적절한 경로로 수정
     userInfo.setUserprofile(imageUrl); // HTTP URL 설정
@@ -248,6 +303,54 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null); // 오류 발생 시 응답
         }
+    }
+    @GetMapping("/info/{usernick}")
+    public ResponseEntity<Map<String, Object>> otheruser(@PathVariable String usernick,
+                                                         @RequestHeader(value = "Host", required = false) String Host) {
+        if (usernick == null || usernick.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Usernick is required"));
+        }
+        System.out.println(usernick);
+        MemberVO vo =  userService.getOtherUserInfo(usernick);
+        if (vo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+        }
+
+        String userid = vo.getUserid();
+        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
+        List<Map<String, String>> followers = userService.getfollower(userid, 14);
+
+        String userprofile = "http://" + Host +"/" + vo.getUserprofile();
+
+        Map<String, Object> userdata = new HashMap<>();
+        userdata.put("usernick", vo.getUsernick());
+        userdata.put("userprofile", userprofile);
+        userdata.put("bookmarks", userService.getCountBookmarks(userid));
+        userdata.put("follower", userService.getCountfollower(userid)); // 내가 팔로우 한 수
+        userdata.put("following", userService.getCountfollowing(userid));   // 내가 팔로잉 한 수
+        userdata.put("community", userService.getCountCommunity(userid));
+        userdata.put("comment", userService.getCountComment(userid) + userService.getCountReplyComment(userid));
+        int com = userService.getCountComment(userid);
+        int rel = userService.getCountReplyComment(userid);
+        int total = com + rel;
+        System.out.println("total : " + total + " com : " + com + " rel : " + rel);
+
+        for (Map<String, String> user : followers) {
+            String imageUrl = user.get("image_url");
+            if (imageUrl != null) {
+                user.put("image_url", "http://" + Host +"/"+ imageUrl);
+                System.out.println(user.toString());
+            }
+        }
+        // 결과를 하나의 맵에 담기
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("user", userdata);
+        responseData.put("bookmarks", bookmarks);
+        responseData.put("followers", followers);
+        System.out.println(responseData);
+        return ResponseEntity.ok(responseData);
     }
 
 

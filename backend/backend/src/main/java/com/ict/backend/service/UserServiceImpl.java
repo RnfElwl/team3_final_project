@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -66,6 +67,52 @@ public class UserServiceImpl  implements UserService {
     public String getuserpwd(String userid){
         return dao.getuserpwd(userid);
     }
+
+    @Override
+    public List<Map<String, String>> getBookmarks(String userid, int limit){
+        return dao.getBookmarks(userid, limit);
+    }
+    @Override
+    public List<Map<String, String>> getHistory(String userid, int limit){
+        return dao.getHistory(userid, limit);
+    }
+    @Override
+    public List<Map<String, String>> getfollower(String userid, int limit){
+        return dao.getfollower(userid, limit);
+    }
+    @Override
+    public MemberVO getOtherUserInfo(String usernick){
+        return dao.getOtherUserInfo(usernick);
+    }
+    @Override
+    public int getCountBookmarks(String userid){
+        return dao.getCountBookmarks(userid);
+    }
+    @Override
+    public int getCountHistory(String userid){
+        return dao.getCountHistory(userid);
+    }
+    @Override
+    public int getCountfollower(String userid){
+        return dao.getCountfollower(userid);
+    }
+    @Override
+    public int getCountCommunity(String userid){
+        return dao.getCountCommunity(userid);
+    }
+    @Override
+    public int getCountComment(String userid){
+        return dao.getCountComment(userid);
+    }
+    @Override
+    public int getCountfollowing(String userid){
+        return dao.getCountfollowing(userid);
+    }
+    @Override
+    public int getCountReplyComment(String userid){
+        return dao.getCountReplyComment(userid);
+    }
+
 
 
 

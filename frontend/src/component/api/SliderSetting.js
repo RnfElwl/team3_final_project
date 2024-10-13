@@ -36,7 +36,6 @@ export const SliderSettings = {
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
-        initialSlide: 2
       }
     },
     {
@@ -111,39 +110,32 @@ export const AdaptiveHeightSettings = {
 // 이미지 세팅
 
 export const recentSlides = [
-  { imgSrc: poster1, alt: "김과장", movieCd: "1234" },
-  { imgSrc: poster2, alt: "굿파트너", movieCd: "1234" },
-  { imgSrc: poster3, alt: "모법택시", movieCd: "1234" },
-  { imgSrc: poster4, alt: "천변", movieCd: "1234" },
-  { imgSrc: poster5, alt: "피노키오", movieCd: "1234" },
-  { imgSrc: poster, alt: "뚱이", movieCd: "1234" },
-  { imgSrc: poster2, alt: "굿파트너", movieCd: "1234" },
-  { imgSrc: poster1, alt: "김과장", movieCd: "1234" }
+  { movie_link: poster1, movie_kor: "김과장", movie_code: "1234" }
 ];
 
 export const bookmarkSlides = [
-  { imgSrc: poster1, alt: "김과장", movieCd: "1234" },
-  { imgSrc: poster2, alt: "굿파트너", movieCd: "1234" },
-  { imgSrc: poster3, alt: "모법택시", movieCd: "1234" },
-  { imgSrc: poster1, alt: "김과장", movieCd: "1234" },
-  { imgSrc: poster2, alt: "굿파트너", movieCd: "1234" },
-  { imgSrc: poster3, alt: "모법택시", movieCd: "1234" },
-  { imgSrc: poster4, alt: "천변", movieCd: "1234" },
-  { imgSrc: poster5, alt: "피노키오", movieCd: "1234" },
-  { imgSrc: poster, alt: "뚱이", movieCd: "1234" },
-  { imgSrc: poster2, alt: "굿파트너", movieCd: "1234" },
+  { movie_link: poster1, movie_kor: "김과장", movie_code: "1234" },
+  { movie_link: poster2, movie_kor: "굿파트너", movie_code: "1234" },
+  { movie_link: poster3, movie_kor: "모법택시", movie_code: "1234" },
+  { movie_link: poster1, movie_kor: "김과장", movie_code: "1234" },
+  { movie_link: poster2, movie_kor: "굿파트너", movie_code: "1234" },
+  { movie_link: poster3, movie_kor: "모법택시", movie_code: "1234" },
+  { movie_link: poster4, movie_kor: "천변", movie_code: "1234" },
+  { movie_link: poster5, movie_kor: "피노키오", movie_code: "1234" },
+  { movie_link: poster, movie_kor: "뚱이", movie_code: "1234" },
+  { movie_link: poster2, movie_kor: "굿파트너", movie_code: "1234" },
 ];
 
 // userprofile용 세팅
 export const useprofileSlides = [
-  { imgSrc: profile, nick: "hi", userid: "1" },
-  { imgSrc: profile, nick: "bye", userid: "2" },
-  { imgSrc: profile, nick: "new", userid: "3" },
-  { imgSrc: poster1, nick: "last", userid: "4" },
-  { imgSrc: profile, nick: "hi", userid: "1" },
-  { imgSrc: profile, nick: "bye", userid: "2" },
-  { imgSrc: profile, nick: "new", userid: "3" },
-  { imgSrc: poster1, nick: "last", userid: "4" },
+  { image_url: profile, usernick: "hi"},
+  { image_url: profile, usernick: "bye"},
+  { image_url: profile, usernick: "new"},
+  { image_url: poster1, usernick: "last"},
+  { image_url: profile, usernick: "hi"},
+  { image_url: profile, usernick: "bye"},
+  { image_url: profile, usernick: "new"},
+  { image_url: poster1, usernick: "last"},
 ];
 
 // 빈 슬라이드 추가

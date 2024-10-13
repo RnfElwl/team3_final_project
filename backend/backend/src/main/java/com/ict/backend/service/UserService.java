@@ -3,6 +3,9 @@ package com.ict.backend.service;
 import com.ict.backend.vo.MemberVO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserService {
     public MemberVO test();
     public MemberVO getUserInfo(String userid);
@@ -14,4 +17,19 @@ public interface UserService {
     public int updateimageurl(String imgurl, int profileno);
     int userprofileno(String userid);
     public String getuserpwd(String userid);
+
+    // 사용자 정보 필요용
+    public List<Map<String, String>> getBookmarks(String userid, int limit);
+    public List<Map<String, String>> getHistory(String userid, int limit);
+    public List<Map<String, String>> getfollower(String userid, int limit);
+
+    public MemberVO getOtherUserInfo(String usernick);
+
+    public int getCountBookmarks(String userid);
+    public int getCountHistory(String userid);
+    public int getCountfollower(String userid);
+    public int getCountCommunity(String userid);
+    public int getCountComment(String userid);
+    public int getCountfollowing(String userid);
+    public int getCountReplyComment(String userid);
 }

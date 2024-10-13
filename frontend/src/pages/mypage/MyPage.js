@@ -18,6 +18,7 @@ function Mypage() {
     const [recentSlidesData, setRecentSlides] = useState([]);
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
+    
     // 글, 댓글 불러올거
     const [tagName, setTagName] = useState("Tag1");
     const [list, setList] = useState([]);
@@ -59,8 +60,30 @@ function Mypage() {
             }
         }
     };
-
+    const fetchtotaldata = async () => {
+        try {
+            const response = await axios.get("http://localhost:9988/user/totaldata"); // Change to your bookmarks API
+            console.log(response.data);
+            console.log(response.data.bookmarks);
+            console.log(response.data.history);
+            console.log(response.data.followers);
+            if (Array.isArray(response.data.bookmarks)) {
+                setBookmarkSlides(response.data.bookmarks);
+            }
+            if (Array.isArray(response.data.history)) {
+                setRecentSlides(response.data.history);
+            }
+            if (Array.isArray(response.data.followers)) {
+                setProfileSlides(response.data.followers);
+            }
+        } catch (error) {
+            console.error("Error fetching: ", error);
+        }
+    };
+    
+    fetchtotaldata();
     fetchUserInfo();
+
     }, []);
 
     const handleProfileImageError = () => {
@@ -74,14 +97,20 @@ function Mypage() {
     useEffect(() => {
         // 초기 데이터 설정
         setRecentSlides(recentSlides);
-        setBookmarkSlides(bookmarkSlides);
-        setProfileSlides(useprofileSlides);
+        //setBookmarkSlides(bookmarkSlides);
+        // setProfileSlides(useprofileSlides);
     }, []);
-      while (useprofileSlides.length < 7) {
-        useprofileSlides.push({ imgSrc: "empty", nick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
-      }
+    while (recentSlidesData.length < 5 && recentSlidesData.length != 0){
+        recentSlidesData.push({ imgSrc: "empty", className: "empty-slide"});
+    }
+    while (bookmarkSlidesData.length < 5 && bookmarkSlidesData.length != 0){
+        bookmarkSlidesData.push({ imgSrc: "empty", className: "empty-slide"});
+    }
+    while (profileSlidesData.length < 7) {
+        profileSlidesData.push({ imgSrc: "empty", usernick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
+    }
 
-      const fetchData = async (tag) => {
+    const fetchData = async (tag) => {
         let url;
         if (tag === "Tag1") {
           url = "http://localhost:9988/user/userinfo";  // 글 리스트 호출 URL
@@ -90,23 +119,21 @@ function Mypage() {
         }
     
         try {
-          const response = await axios.get(url);
-          setList(response.data);
+            const response = await axios.get(url);
+            setList(response.data);
         } catch (error) {
-          console.error("Error fetching data: ", error);
+            console.error("Error fetching data: ", error);
         }
-      };
+    };
     
-      const handleClickedTagName = (tag) => {
+    const handleClickedTagName = (tag) => {
         setTagName(tag);
         fetchData(tag);
-      };
-    
+    };
       // 컴포넌트가 처음 렌더링될 때 Tag1 데이터를 자동으로 호출
     //   useEffect(() => {
     //     fetchData("Tag1");
     //   }, []);
-
 
     return (
         <div className="myPage">
@@ -121,7 +148,7 @@ function Mypage() {
                         <p>이름 : <span>{userInfo.username}</span></p>
                         <p>주소 : <span>{userInfo.useraddr} ({userInfo.addrdetail})</span></p>
                         <p>전화번호 : <span>{userInfo.usertel}</span></p>
-                        <p>이름 : <span>{userInfo.username}</span></p>
+                        <p>이메일 : <span>{userInfo.useremail}</span></p>
                     </div>
                     <div id = "info_change">
                         <button className="btn btn-secondary" onClick={() => navigate('/mypage/edit')}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>
@@ -132,17 +159,19 @@ function Mypage() {
                     <div className = "recent_watch">
                         <div className = "content_title">
                             <span>시청기록</span>
-                            <Link to="/mypage/recentwatch"> 더보기 {'>'}</Link>
+                            {recentSlidesData.length >= 10 && (
+                                <Link to="/mypage/recentwatch"> 더보기 {'>'}</Link>
+                            )}
                         </div>
-                        <div className = "content_info">
+                        <div className="content_info">
                             <Slider {...SliderSettings}>
-                            {recentSlides.map((slide, index) => (
-                                <div key={index}>
-                                <a href = {`/movies/view/${slide.movieCd}`}>
-                                <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
-                                </a>
-                                </div>
-                            ))}
+                                {recentSlidesData.map((slide, index) => (
+                                    <div key={index}>
+                                        <a href={`/movies/view/${slide.movie_code}`}>
+                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                        </a>
+                                    </div>
+                                ))}
                             </Slider>
                         </div>
                     </div>
@@ -150,17 +179,19 @@ function Mypage() {
                     <div className = "bookmark">
                         <div className = "content_title">
                             <span>즐겨찾기</span>
-                            <Link to="/mypage/bookmarked"> 더보기 {'>'}</Link>
+                            {bookmarkSlidesData.length >= 10 && (
+                                <Link to="/mypage/bookmarked"> 더보기 {'>'}</Link>
+                            )}
                         </div>
-                        <div className = "content_info">
+                        <div className="content_info">
                             <Slider {...SliderSettings}>
-                            {bookmarkSlides.map((slide, index) => (
-                                <div key={index}>
-                                <a href = {`/movies/view/${slide.movieCd}`}>
-                                <img className="slidPoster" src={slide.imgSrc} alt={slide.alt} />
-                                </a>
-                                </div>
-                            ))}
+                                {bookmarkSlidesData.map((slide, index) => (
+                                    <div key={index}>
+                                        <a href={`/movies/view/${slide.movie_code}`}>
+                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                        </a>
+                                    </div>
+                                ))}
                             </Slider>
                         </div>
                     </div>
@@ -168,20 +199,34 @@ function Mypage() {
                     <div className = "follower">
                         <div className = "content_title">
                             <span>팔로워</span>
-                            <a href = "#"> 더보기 {'>'}</a>
+                            {profileSlidesData.length >= 14 && (
+                                <Link to="/mypage/follower"> 더보기 {'>'}</Link>
+                            )}
                         </div>
-                        <div className = "content_info">
+                        <div className="content_info">
+                            <Slider {...AdaptiveHeightSettings}>
+                                {profileSlidesData.map((slide, index) => (
+                                    <div key={index}>
+                                        <a href={`/user/info/${slide.usernick}`}>
+                                            <img className="userprofile" src={slide.image_url || slide.imgSrc} alt="프로필" />
+                                            <p className="usernick">{slide.usernick || ""}</p>
+                                        </a>
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+                        {/* <div className = "content_info">
                             <Slider {...AdaptiveHeightSettings}>
                             {useprofileSlides.map((slide, index) => (
                                 <div key={index}>
-                                <a href = {`/userinfo/${slide.userid}`}>
-                                <img className="userprofile" src={slide.imgSrc} alt="프로필" />
-                                <p className="usernick">{slide.nick}</p>
+                                <a href = {`/user/info/${slide.usernick}`}>
+                                <img className="userprofile" src={slide.image_url} alt="프로필" />
+                                <p className="usernick">{slide.usernick}</p>
                                 </a>
                                 </div>
                             ))}
                             </Slider>
-                        </div>
+                        </div> */}
                     </div>
                     {/* 내가 쓴 글 */}
                     <div className = "write">

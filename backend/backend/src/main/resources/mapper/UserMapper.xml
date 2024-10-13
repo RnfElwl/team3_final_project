@@ -38,6 +38,11 @@
         FROM user_tbl
         WHERE userid = #{userid}
     </select>
+    <select id = "getOtherUserInfo" resultType="com.ict.backend.vo.MemberVO">
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender, i.image_url as userprofile
+        FROM user_tbl u join image_tbl i on u.userprofile = i.image_no
+        WHERE usernick = #{usernick};
+    </select>
 <!--    <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">-->
 <!--        SELECT-->
 <!--        userid, usernick, username, userbirth, usertel, useremail, useraddr, zipcode, addrdetail, image_url AS userprofile-->
@@ -74,5 +79,47 @@
     <update id = "updateimageurl">
         UPDATE image_tbl set image_url = #{param1} where image_no = #{param2}
     </update>
+    <select id="getBookmarks" resultType="map">
+        SELECT m.movie_kor, m.movie_code, m.movie_link FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id="getCountBookmarks" resultType="int">
+        SELECT count(*) FROM bookmark_tbl WHERE userid = #{userid}
+    </select>
+    <select id="getHistory" resultType="map">
+        select m.movie_kor, m.movie_code, m.movie_link from history_sec_tbl h join movie_data_tbl m on h.movie_no = m.movie_no where h.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id="getCountHistory" resultType="int">
+        SELECT count(*) FROM history_sec_tbl where userid = #{userid}
+    </select>
+    <select id ="getfollower" resultType="map">
+        SELECT u.usernick, i.image_url FROM  follower_tbl f JOIN user_tbl u ON f.follower_userid = u.userid
+        JOIN  image_tbl i ON i.image_no = u.userprofile
+        WHERE  f.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id ="getCountfollower" resultType="int">
+        SELECT count(*) FROM  follower_tbl where userid = #{userid}
+    </select>
+    <select id ="getCountfollowing" resultType="int">
+        SELECT count(*) FROM  follower_tbl where follower_userid = #{userid}
+    </select>
+    <select id="getCountCommunity" resultType = "int">
+        SELECT count(*) FROM community_tbl where userid = #{userid};
+    </select>
+    <select id="getCountComment" resultType = "int">
+        SELECT count(*) FROM community_comment_tbl where userid = #{userid};
+    </select>
+    <select id ="getCountReplyComment" resultType="int">
+        SELECT count(*) FROM reply_comment_tbl where userid = #{userid};
+    </select>
+
 
 </mapper>
