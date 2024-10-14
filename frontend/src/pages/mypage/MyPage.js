@@ -336,24 +336,146 @@ function Mypage() {
                         </table>
                         </div>
                     </div>
+                    <div className = "board">
+                        <div className = "write_4">
+                            <div className = "content_title">
+                                <span>커뮤니티</span>
+                            </div>
+                            <div className = "content_info">
+                            <table className="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th className = "col-md-1">번호</th>
+                                        <th className = "col-md-2">작성한 곳</th>
+                                        <th className = "col-md-6">제목</th>
+                                        <th className = "col-md-2">작성일</th>
+                                        <th className = "col-md-1"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>70</td>
+                                        <td>커뮤니티</td>
+                                        <td>베테랑 2 재미있음?</td>
+                                        <td>2024-09-10</td>
+                                        <th>
+                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div className = "comm_4">
+                        <div className = "content_title">
+                                <span>커뮤니티 댓글</span>
+                            </div>
+                            <div className = "content_info">
+                            <table className="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th className = "col-md-1">번호</th>
+                                        <th className = "col-md-2">작성한 곳</th>
+                                        <th className = "col-md-6">제목</th>
+                                        <th className = "col-md-2">작성일</th>
+                                        <th className = "col-md-1"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>70</td>
+                                        <td>커뮤니티</td>
+                                        <td>베테랑 2 재미있음?</td>
+                                        <td>2024-09-10</td>
+                                        <th>
+                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div className = "comm_like_4">
+                        <div className = "content_title">
+                                <span>커뮤니티 좋아요</span>
+                            </div>
+                            <div className = "content_info">
+                            <table className="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th className = "col-md-1">번호</th>
+                                        <th className = "col-md-2">작성한 곳</th>
+                                        <th className = "col-md-6">제목</th>
+                                        <th className = "col-md-2">작성일</th>
+                                        <th className = "col-md-1"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>70</td>
+                                        <td>커뮤니티</td>
+                                        <td>베테랑 2 재미있음?</td>
+                                        <td>2024-09-10</td>
+                                        <th>
+                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        <div className = "qna_4">
+                        <div className = "content_title">
+                                <span>QnA</span>
+                            </div>
+                            <div className = "content_info">
+                            <table className="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th className = "col-md-1">번호</th>
+                                        <th className = "col-md-2">작성한 곳</th>
+                                        <th className = "col-md-6">제목</th>
+                                        <th className = "col-md-2">작성일</th>
+                                        <th className = "col-md-1"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>70</td>
+                                        <td>커뮤니티</td>
+                                        <td>베테랑 2 재미있음?</td>
+                                        <td>2024-09-10</td>
+                                        <th>
+                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
                     {/* 장바구니 */}
-                    <div className = "cart">
+                    {/* <div className = "cart">
                         <div className = "content_title">
                             <span>장바구니</span>
                             <a href = "#"> 더보기 {'>'}</a>
                         </div>
                         <div className = "content_info">
                         </div>
-                    </div>
+                    </div> */}
                     {/* 배송내역 */}
-                    <div className = "delivery">
+                    {/* <div className = "delivery">
                         <div className = "content_title">
                             <span>배송내역</span>
                             <a href = "#"> 더보기 {'>'}</a>
                         </div>
                         <div className = "content_info">
                         </div>
-                    </div>
+                    </div> */}
                 </div>            
             </div>
         </div>

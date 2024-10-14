@@ -171,3 +171,29 @@
     text-align: center;
     background-color: transparent !important; /* 부모 요소의 배경색을 따름 */
   }
+/* 4분활 */
+.board{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px; /* 요소 간의 간격 조절 */
+}
+.write_4 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.comm_4 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.com_like_4 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.qna_4 {
+    grid-column: 2;
+    grid-row: 2;
+}

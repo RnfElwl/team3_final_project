@@ -100,10 +100,6 @@ public class UserController {
             filePath = "images/default/profile.png";    // 프로필 없을시 default 프로필
         }
         ResponseEntity<Resource> responseEntity = imageService.getImage(filePath);
-//        log.info("Response Status: {}", responseEntity.getStatusCode());
-//        log.info("Response Headers: {}", responseEntity.getHeaders());
-//        log.info("Response Body: {}", responseEntity.getBody() != null ? responseEntity.getBody().toString() : "No body");
-//        System.out.println(responseEntity.getBody());
         return responseEntity;
     }
     // 사용자 정보 수신
@@ -257,20 +253,21 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
     public ResponseEntity<Void> uploadProfile(@RequestParam("images") MultipartFile[] files) {
         System.out.println(files);
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        String profileurl = userService.userprofile(userid);
+        int profileurl = userService.userprofileno(userid);
         log.info("Current profile URL: {}", profileurl);
         int result = 0;
         try {
             for (MultipartFile file : files) {
                 String imgUrl;
-                if (profileurl == null) {
+                if (profileurl == 1) {
                     imgUrl = imageService.uploadImage(file, "profile");
                     log.info("New profile image uploaded: {}", imgUrl);
                     int no = userService.uploadImage(imgUrl); //이거
                     log.info("no {}", no);
                     result = userService.updateprofile(no, userid);
                 } else {
-                    imgUrl = imageService.updateImage(file, "profile", profileurl);
+                    userService.userprofileno(userid);
+                    imgUrl = imageService.updateImage(file, "profile", userService.userprofile(userid));
                     log.info("Profile image updated: {}", imgUrl);
                     int profileno = userService.userprofileno(userid);
                     System.out.println("profileno = " + profileno);
