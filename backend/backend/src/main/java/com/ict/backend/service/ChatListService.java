@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ChatListService {
     public int insertChatList(ChatListVO chatListVO);
-    public List<ChatListVO> selectOpenChatList();
+    public List<ChatListVO> selectOpenChatList(String keyWord);
     public List<ChatVO> selectChatContent(String chatlist_url, String userid);
     public ChatUserVO selectChatUser(String chatlist_url, String userid);
     public int insertChatEnter(String chatlist_url, String userid);
@@ -23,7 +23,10 @@ public interface ChatListService {
     public int updateChatUserExit(String chatlist_url, String userid, String last_conn);
     public int updateChatHeadCountExit(String chatlist_url);
     public int updateSoloChatUserConn(String chatlist_url, String userid, String last_conn);
-    public List<ChatListVO> selectSoloChatList(String userid);
+    public List<ChatListVO> selectSoloChatList(String userid, String keyWord);
+    public int selectSoloChatCheck(String chatlist_url, String userid);
+    public int updateSoloChatUserFirstConn(String chatlist_url, String userid, String first_conn);
+    public ChatListVO selectSoloChatRoomCheck(String userid1, String userid2);
 
 
 }

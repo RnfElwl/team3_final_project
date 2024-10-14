@@ -8,10 +8,34 @@
     </insert>
 
     <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
-        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=1
+        select chatlist_url, chat_title, ut.usernick, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt
+        left join image_tbl it on clt.chatlist_img=it.image_no
+        join user_tbl ut on clt.userid=ut.userid
+        where clt.chatlist_type=1
+        <if test="param1!=''">
+            and chat_title like '%${param1}%'
+        </if>
     </select>
     <select id="selectSoloChatList" resultType="com.ict.backend.vo.ChatListVO">
-        select chatlist_url, chat_title, ut.usernick, ut.userprofile, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt join image_tbl it on clt.chatlist_img=it.image_no join user_tbl ut on clt.userid=ut.userid where clt.chatlist_type=2
+        select clt.chatlist_url, clt.chatlist_type, clt.chatlist_headcount, ut.usernick, it.image_url, cm.chat_content from chat_user_list cul
+        join chat_list_tbl clt on cul.chatlist_url=clt.chatlist_url
+        join chat_user_list cul2 on cul.chatlist_url=cul2.chatlist_url
+        join user_tbl ut on cul2.userid=ut.userid
+        left join image_tbl it on it.image_no=ut.userprofile
+        LEFT JOIN (
+        SELECT chatlist_url, chat_content
+        FROM chat_content_tbl
+        WHERE (chatlist_url, chat_date) IN (
+        SELECT chatlist_url, MAX(chat_date)
+        FROM chat_content_tbl
+        GROUP BY chatlist_url
+        )
+        ) cm
+        ON clt.chatlist_url = cm.chatlist_url
+        where cul.userid=#{param1} and cul2.userid!=#{param1} and clt.chatlist_type=2
+        <if test="param2!=''">
+            and ut.usernick like '%${param2}%'
+        </if>
     </select>
     <select id="selectChatContent" resultType="com.ict.backend.vo.ChatVO">
         SELECT
@@ -51,7 +75,7 @@
         cct.chatlist_url,
         ut.userid,
         cct.chat_date,
-        ut.userprofile,
+        it.image_url userprofile,
         ut.usernick,
         cct.chat_content,
         cct.content_id,
@@ -59,6 +83,7 @@
         FROM
         chat_content_tbl cct
         join user_tbl ut on ut.userid=cct.userid
+        join image_tbl it on ut.userprofile=it.image_no
         where chatlist_url=#{param1} and cct.content_id not in (select rt.report_tbluuid from report_tbl rt where rt.report_userid=#{param2} and rt.report_tblname=3)
         ORDER BY chat_date
         ) as rs where
@@ -87,7 +112,7 @@
         update chat_list_tbl set chatlist_headcount=chatlist_headcount-1 where chatlist_url=#{param1}
     </update>
     <insert id="insertSchedule">
-            insert into schedule_tbl values(#{schedule_id}, #{chatlist_url},#{schedule_title}, #{schedule_date}, #{schedule_deadline}, #{userid}, #{schedule_addr})
+        insert into schedule_tbl values(#{schedule_id}, #{chatlist_url},#{schedule_title}, #{schedule_date}, #{schedule_deadline}, #{userid}, #{schedule_addr})
     </insert>
     <select id="selectScheduleList" resultType="com.ict.backend.vo.ScheduleVO">
         SELECT
@@ -100,28 +125,29 @@
         st.schedule_addr,
         IFNULL(SUM(sv.vote_value), 0) AS yes,  -- 찬성 투표 수
         IFNULL(COUNT(sv.vote_value) - SUM(sv.vote_value), 0) AS no,  -- 반대 투표 수
-        CASE
-        WHEN MAX(sv.userid = #{param2}) THEN
-        CASE MAX(sv.vote_value)
+        (CASE sv2.vote_value
         WHEN 1 THEN 'yes'
         WHEN 0 THEN 'no'
         ELSE null
-        END
-        ELSE null
-        END AS user_vote
+        end )AS user_vote
         FROM schedule_tbl st
         LEFT JOIN schedule_vote sv
         ON sv.schedule_id = st.schedule_id
+        left join (select schedule_id, vote_value from schedule_vote where userid=#{param2}) sv2 on st.schedule_id=sv2.schedule_id
         WHERE st.chatlist_url = #{param1}
-        GROUP BY st.schedule_id;
+        GROUP BY st.schedule_id
     </select>
     <insert id="insertScheduleVoting">
-        insert ignore into schedule_vote(schedule_id, userid, vote_value) values(#{schedule_id}, #{userid}, ${vote_value})
+        insert into schedule_vote(schedule_id, userid, vote_value) values(#{schedule_id}, #{userid}, ${vote_value})
+        ON DUPLICATE KEY UPDATE
+        userid = VALUES(userid),
+        vote_value = VALUES(vote_value);
     </insert>
     <select id="selectVoteList" resultType="com.ict.backend.vo.MemberVO">
-        select ut.usernick, ut.userprofile from schedule_vote sv join user_tbl ut
-        on ut.userid=sv.userid
-        where sv.schedule_id=#{schedule_id} and vote_value=${vote_value};
+        select ut.usernick, it.image_url userprofile from schedule_vote sv
+        join user_tbl ut on ut.userid=sv.userid
+        join image_tbl it on ut.userprofile=it.image_no
+        where sv.schedule_id=#{schedule_id} and vote_value=${vote_value}
     </select>
     <update id="updateChatUserExit">
         update chat_user_list set flag=0, last_conn=#{param3} where chatlist_url=#{param1} and userid=#{param2}
@@ -129,4 +155,18 @@
     <update id="updateSoloChatUserConn">
         update chat_user_list set last_conn=#{param3} where chatlist_url=#{param1} and userid=#{param2}
     </update>
+    <update id="updateSoloChatUserFirstConn">
+        update chat_user_list set first_conn=#{param3} where chatlist_url=#{param1} and userid=#{param2}
+    </update>
+    <select id="selectSoloChatCheck" resultType="int">
+        select exists(
+        select c1.chatlist_url, c1.userid from chat_user_list c1
+        where c1.chatlist_url=#{param1} and c1.userid=#{param2}) as soloCheck;
+    </select>
+    <select id="selectSoloChatRoomCheck">
+        select clt.chatlist_url, cul1.userid as userid,cul2.userid user2  from chat_list_tbl clt
+        join chat_user_list cul1 on clt.chatlist_url=cul1.chatlist_url
+        join chat_user_list cul2 on cul1.chatlist_url=cul2.chatlist_url
+        where chatlist_type=2 and cul1.userid=#{param1} and cul2.userid=#{param2}
+    </select>
 </mapper>

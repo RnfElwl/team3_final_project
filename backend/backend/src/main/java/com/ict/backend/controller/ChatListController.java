@@ -29,19 +29,34 @@ public class ChatListController {
         String chatlist_url = UUIDUtils.createType4UUID();
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         chatListVo.setChatlist_url(chatlist_url);
-        chatListVo.setChatlist_headcount(1);
 
         chatListVo.setUserid(userid);
-        chatListService.insertChatList(chatListVo);
-        chatListService.insertChatEnter(chatlist_url, userid);
-        return "";
+        if(chatListVo.getChatlist_type() == 1){
+            chatListVo.setChatlist_headcount(1);
+            chatListService.insertChatList(chatListVo);
+            chatListService.insertChatEnter(chatlist_url, userid);
+        }
+        else if (chatListVo.getChatlist_type() == 2){
+            chatListVo.setChatlist_headcount(2);
+            String userid2 = chatListVo.getUser2();
+            ChatListVO clVO =  chatListService.selectSoloChatRoomCheck(userid, userid2);
+            if(clVO!=null){
+                return clVO.getChatlist_url();
+            }
+            chatListService.insertChatList(chatListVo);
+            ChatUserVO chatuserVO = chatListService.selectChatUser(chatlist_url, userid);
+            if(chatuserVO==null){
+                chatListService.insertChatEnter(chatlist_url, userid);
+                chatListService.insertChatEnter(chatlist_url, chatListVo.getUser2());
+            }
+
+        }
+        return chatlist_url;
     }
     @GetMapping("/openChatList")
-    public List<ChatListVO> selectOpenChatList(){
-
-        List<ChatListVO> list = chatListService.selectOpenChatList();
-        System.out.println(list);
-
+    public List<ChatListVO> selectOpenChatList(@RequestParam String keyWord){
+        System.out.println(keyWord);
+        List<ChatListVO> list = chatListService.selectOpenChatList(keyWord);
         return  list;
     }
     @GetMapping("/{chatlist_url}")
@@ -93,6 +108,7 @@ public class ChatListController {
     @GetMapping("/schedule/list")
     public List<ScheduleVO> selectScheduleList(@RequestParam String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(chatlist_url +""+userid);
         return chatListService.selectScheduleList(chatlist_url, userid);
     }
     @PostMapping("/schedule/voting")
@@ -104,6 +120,7 @@ public class ChatListController {
     }
     @GetMapping("/vote/list")
     public List<MemberVO> selectVoteList(VotingVO votingVO){
+        System.out.println(votingVO.toString());
         return chatListService.selectVoteList(votingVO);
     }
     @PostMapping("/exit")
@@ -127,17 +144,32 @@ public class ChatListController {
     public int updateSoloChatUserConn(@RequestBody String chatlist_url){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         Date now = new Date();
-
         // 날짜 형식 정의
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         // Date 객체를 문자열로 변환
         String last_conn = formatter.format(now);
         int result = chatListService.updateSoloChatUserConn(chatlist_url, userid, last_conn);
         return result;
     }
-    public List<ChatListVO> selectSoloChatList(){
+    @GetMapping("/soloChatList")
+    public List<ChatListVO> selectSoloChatList(@RequestParam String keyWord){
         String userid =SecurityContextHolder.getContext().getAuthentication().getName();
-        return chatListService.selectSoloChatList(userid);
+        return chatListService.selectSoloChatList(userid, keyWord);
+    }
+    @GetMapping("/check/solo")
+    public int selectSoloChatCheck(@RequestParam String chatlist_url){
+        System.out.println(chatlist_url);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        ChatUserVO chatuserVO = chatListService.selectChatUser(chatlist_url, userid);
+        if(chatuserVO.getLast_conn() != null){
+            Date now = new Date();
+            // 날짜 형식 정의
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // Date 객체를 문자열로 변환
+            String first_conn = formatter.format(now);
+            chatListService.updateSoloChatUserConn(chatlist_url, userid, null);
+            chatListService.updateSoloChatUserFirstConn(chatlist_url, userid, first_conn);
+        }
+        return chatListService.selectSoloChatCheck(chatlist_url, userid);
     }
 }
