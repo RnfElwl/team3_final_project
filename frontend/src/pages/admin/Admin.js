@@ -448,6 +448,7 @@ if(qna_filter ==="년"){
   return (
     <div className="adminBody">
       <h3 style={{ textAlign: "left" }}>Dashboard</h3>
+      <hr/>
       <div className="minDatas">
         <div className="minDataTitle">today's QnAs
           <div className="minDataBox">{inputMinData.dQna}</div>
@@ -500,11 +501,11 @@ if(qna_filter ==="년"){
           </div>
         </div>
         <div className='simpBoardArea'>
-        <div className="simpBoardT">
-            멤버 목록
-            <div className="simpBoardL">더보기▷</div>
+          <div className="simpBoardT">
+              멤버 목록
+              <div className="simpBoardL">더보기▷</div>
           </div>
-          <table className="table memTable">
+          <table className="memTable">
             <thead>
               <tr>
                 <th>ID</th>

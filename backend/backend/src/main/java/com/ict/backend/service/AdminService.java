@@ -1,23 +1,23 @@
 package com.ict.backend.service;
 
-import com.ict.backend.vo.AdminDateVO;
-import com.ict.backend.vo.AdminVO;
-import com.ict.backend.vo.MemberVO;
+import com.ict.backend.vo.*;
 
 import java.util.List;
 
 public interface AdminService {
-    public List<AdminVO> qnaDataSelectMonth();
-    public List<AdminVO> qnaDataSelectYear();
-    public List<AdminVO> qnaDataSelectDay();
-    public List<AdminVO> communityDataSelectMonth();
-    public List<AdminVO> communityDataSelectYear();
-    public List<AdminVO> communityDataSelectDay();
-    public List<AdminVO> qnaSearch(AdminDateVO dateList);
-    public List<AdminVO> comSearch(AdminDateVO dateList);
-    public int dailySubscriberSelect();
-    public int dailyCommunitySelect();
-    public int dailyQnaSelect();
-    public int dailyRepSelect();
-    public List<MemberVO> selectMemberMin();
+    List<AdminVO> qnaDataSelectMonth();
+    List<AdminVO> qnaDataSelectYear();
+    List<AdminVO> qnaDataSelectDay();
+    List<AdminVO> communityDataSelectMonth();
+    List<AdminVO> communityDataSelectYear();
+    List<AdminVO> communityDataSelectDay();
+    List<AdminVO> qnaSearch(AdminDateVO dateList);
+    List<AdminVO> comSearch(AdminDateVO dateList);
+    int dailySubscriberSelect();
+    int dailyCommunitySelect();
+    int dailyQnaSelect();
+    int dailyRepSelect();
+    List<MemberVO> selectMemberMin();
+    int getTotalRecord(PagingVO pagingVO);
+    List<QnAVO> getQnAList(PagingVO pagingVO);
 }

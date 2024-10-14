@@ -12,23 +12,40 @@
 .admin_header{
   color:white;
 }
-.admin_nav a{
+.admin_navList a{
   color:white; 
 }
-.admin_nav{
+.admin_navList{
   width: 200px;
-  height: auto;
+  height: 100vh;
   position:fixed;
   background-color: rgba(34, 34, 34, 0.5);
   text-align: center;
+  z-index: 100;
 }
-.admin_nav div{
-  height: 50px;
-  line-height: 50px;
+.admin_nav{
+  line-height: 60px;
 }
+.admin_minNav {
+  padding-left: 75px;
+  display: flex;
+  line-height: 20px !important;
+  flex-direction: column;
+
+}
+.admin_minNav a {
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  text-align: left !important;
+  margin: 5px 0;
+}
+
 .adminBody{
   max-width: 1920px;
+  padding-top: 10px;
   padding-left: 210px;
+  padding-right: 10px;
   margin: 0 auto;
   background-color: rgb(49, 49, 49);
   color:white;
@@ -110,17 +127,17 @@ canvas{
 .simpBoardL{
   text-align: right;
 }
+.simpBoardT{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
 .memListTopBox{
   margin:10px 0;
 }
 .memTable{
   background-color: rgba(52, 58, 64, 0.7);
+  height: 300px;
+  width: 450px;
 }
 
-.noFlexBox{
-  flex-wrap: nowrap;
-}
-
-.memCol{
-  margin-bottom: 5px;
-}

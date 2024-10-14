@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
 import {List, Search} from 'react-bootstrap-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './css/navigationbar.css';
 
 
@@ -16,9 +18,18 @@ function Header() {
   const location =useLocation();
   const [isAdminPage, setIsAdminPage]=useState(false);
   const [isChatting, setIsChatting] = useState(false);
+  const [isContentVisible1, setContentVisible1] = useState(false); // 하위 div의 표시 여부 상태
+  const [isContentVisible2, setContentVisible2] = useState(false); // 하위 div의 표시 여부 상태
+
+    const toggleContent1 = () => {
+        setContentVisible1(prev => !prev); // 현재 상태를 반전
+    };
+    const toggleContent2 = () => {
+        setContentVisible2(prev => !prev); // 현재 상태를 반전
+    };
 
   useEffect(()=>{
-    location.pathname === "/admin"
+    location.pathname.startsWith("/admin")
     ? setIsAdminPage(true)
     : setIsAdminPage(false);
 
@@ -33,16 +44,31 @@ function Header() {
       <>
       <header className="Header">
           <div className='admin_header'>
-             <div><img src=""/>관리자페이지</div>
+             <div><img src=""/><Link to={'/admin'}>관리자페이지</Link></div>
           </div>
       </header>
-        <div className="admin_nav">
-          <div><Link to={'/admin'}>대쉬보드</Link></div>
-          <div><Link to={'#'}>사용자 관리</Link></div>
-          <div><Link to={'#'}>컨텐츠 관리</Link></div>
-          <div><Link to={'#'}>상품 관리</Link></div>
-          <div><Link to={'#'}>통계</Link></div>
-          <div><Link to={'#'}>신고 관리</Link></div>
+        <div className="admin_navList">
+          <div className="admin_nav"><Link to={'/admin'}>대쉬보드</Link></div>
+          <div className="admin_nav"><Link to={'#'} onClick={toggleContent1}>사용자 관리&nbsp;
+            {isContentVisible1 ? <FontAwesomeIcon icon={faChevronUp} />  :
+              <FontAwesomeIcon icon={faChevronDown} />}</Link></div>
+              {isContentVisible1 && (
+                <div className="admin_minNav">
+                  <Link to={'/admin/memCon'}>활동 멤버</Link>
+                  <Link to={'#'}>비활성화 멤버</Link>
+                </div>
+              )}
+          <div className="admin_nav"><Link to={'#'} onClick={toggleContent2}>컨텐츠 관리&nbsp;
+            {isContentVisible2 ? <FontAwesomeIcon icon={faChevronUp} />  :
+              <FontAwesomeIcon icon={faChevronDown} />} </Link></div>
+              {isContentVisible2 && (
+                <div className="admin_minNav">
+                  <Link to={'/admin/qnaCon'}>QnA</Link>
+                  <Link to={'/admin/comCon'}>Community</Link>
+                </div>
+              )}
+          <div className="admin_nav"><Link to={'#'}>신고 관리</Link></div>
+          <div className="admin_nav"><Link to={'#'}>통계</Link></div>
         </div>
       </>
     );

@@ -1,0 +1,76 @@
+.AdminQnaBody{
+    max-width: 1920px;
+    padding-top: 10px;
+    padding-left: 210px;
+    padding-right: 10px;
+    margin: 0 auto;
+    background-color: rgb(49, 49, 49);
+    color:white;
+  }
+/* 검색 css */
+.adminSearchForm form{
+  display: flex;
+}
+.adminSearchForm input[type="radio"]{
+  display: none;
+}
+.adminSearchForm label{
+  background-color: #00FF9C;
+  padding: 10px;
+  margin: 5px;
+}
+.qnaAnswerModify-btn{
+  background-color: rgb(182, 255, 161);
+  color: rgb(46, 91, 43);
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-weight: 900;
+}
+.qnaAnswerAdd-btn{
+  background-color: rgb(255, 144, 144);
+  color:rgb(91, 46, 43);
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-weight: 900;
+
+}
+.AdminQnaTable td, .AdminQnaTable th{
+  background-color: transparent !important;
+  border-collapse : collapse !important;
+  font-size: 1em;
+  border-bottom: none;
+  text-align: center;
+}
+.AdminQnaTable th{
+  cursor: pointer;
+  line-height: 30px;
+  vertical-align: middle;
+}
+.AdminQnaTable{
+  margin-top: 20px;
+  white-space:nowrap;
+  border-top: 3px solid gray;
+  border-bottom: 3px solid gray;
+}
+.AdminQnaTable thead th{
+  font-size: 1.1em;
+  font-weight:bolder;
+}
+
+.adqna_ht_th{
+  display: flex;
+  height: 60px;
+  align-items: center;
+}
+.adqna_ht{
+  color: #00FF9C;
+  height: 30px;
+}
+.adqna_ht_th a:link, .adqna_ht_th a:hover,.adqna_ht_th a:visited {
+  color: white;
+  height: 30px;
+}

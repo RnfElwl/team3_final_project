@@ -57,8 +57,8 @@
         values (#{userid}, #{head_title}, #{qna_title}, #{qna_content}, #{qna_state}, NOW(), #{privacyQ}, #{active_state}, #{qna_pwd}, #{qna_img})
     </insert>
     <select id="getQnAViewEdit" resultType="com.ict.backend.vo.QnAVO">
-        select qna_no, head_title, qna_title,qna_content,qna_state,privacyQ,qna_pwd
-        from qna_tbl where qna_no=#{qna_no}
+        select qna_no, head_title, qna_title,qna_content,qna_state,privacyQ,qna_pwd, i.image_url as qna_img
+        from qna_tbl q left join image_tbl i on q.qna_img=i.image_no where qna_no=#{qna_no}
     </select>
     <update id="qnaUpdate">
         update qna_tbl set
@@ -76,10 +76,10 @@
     <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
         INSERT INTO image_tbl (image_url) VALUES (#{image_url})
     </insert>
-<!--    <select id="getQnaImg" resultType="String">-->
-<!--        select i.image_url-->
-<!--        from qna_tbl q-->
-<!--        left join image_tbl i on q.qna_img=i.image_no-->
-<!--        where q.qna_no=#{qna_no}-->
-<!--    </select>-->
+    <select id="getImgPath" resultType="String">
+        select i.image_url
+        from qna_tbl q
+        left join image_tbl i on q.qna_img=i.image_no
+        where q.qna_no=#{qna_no}
+    </select>
 </mapper>

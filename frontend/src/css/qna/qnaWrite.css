@@ -1,5 +1,5 @@
 /* form css */
-.QnAWriteform{
+.QnAWriteform, .QnAEditform{
     text-align: center;
     width: 100%;
 }
@@ -9,7 +9,7 @@
     min-width: 400px;
     max-width: 860px;
     display: flex;
-    justify-content: space-between;
+    justify-content: left;
     margin: 0 auto;
     padding: 0;
 }
@@ -21,8 +21,7 @@
     border-bottom: 0.5px solid gray;
     border-radius: 10px;
     width: 100%;
-    min-width: 200px;
-    max-width: 350px;
+    min-width: 400px;
 }
 .qna_title::placeholder{
     color:rgb(158, 158, 158);
@@ -94,6 +93,21 @@ input[type="radio"]:checked + .qna-custom-radio {
     max-width: 860px;
     margin: 0 auto;
 }
+/* HTML: <img class="film-strip" src="" alt=""> */
+.film-strip {
+    --s: 6px; /* control the size */
+    --c: rgb(245, 245, 247);
+   
+    width: calc(20*var(--s));
+    aspect-ratio: 1.25;
+    background: 
+      conic-gradient(at 50% var(--s),var(--c) 75%,#807e7e00 0) 
+      0 0/calc(2*var(--s)) calc(100% - var(--s)) padding-box;
+    border: var(--s) solid var(--c);
+    padding: calc(var(--s)*2) calc(var(--s)*1.5);
+    box-sizing: content-box;
+    
+  }
 /* 저장 버튼 css */
 .qw-right-buttons{
     text-align: right;
@@ -114,6 +128,7 @@ input[type="radio"]:checked + .qna-custom-radio {
     .qna_titleArea{
         display: flex;
         flex-wrap: wrap;
+        flex-direction:row;
     }
     .head_title{
         margin-top: 10px;

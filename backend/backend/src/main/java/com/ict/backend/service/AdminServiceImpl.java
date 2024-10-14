@@ -1,9 +1,7 @@
 package com.ict.backend.service;
 
 import com.ict.backend.dao.AdminDAO;
-import com.ict.backend.vo.AdminDateVO;
-import com.ict.backend.vo.AdminVO;
-import com.ict.backend.vo.MemberVO;
+import com.ict.backend.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +76,16 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<MemberVO> selectMemberMin() {
         return dao.selectMemberMin();
+    }
+
+    @Override
+    public int getTotalRecord(PagingVO pagingVO) {
+        return dao.getTotalRecord(pagingVO);
+    }
+
+    @Override
+    public List<QnAVO> getQnAList(PagingVO pagingVO) {
+        return dao.getQnAList(pagingVO);
     }
 
 

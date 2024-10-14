@@ -159,17 +159,34 @@ public class QnAController {
     @GetMapping("/viewEdit/{qna_no}")
     public ResponseEntity<List<QnAVO>> getQnAViewEdit(@PathVariable int qna_no) {
         List<QnAVO> result = qnaService.getQnAViewEdit(qna_no);
+        System.out.println(result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     //수정
     @PostMapping("/viewEditOk/{qna_no}")
-    public void viewEdit(@PathVariable int qna_no, @RequestBody QnAVO editData){
-        System.out.println("수정폼 도착 : " + editData);
-        String userid=SecurityContextHolder.getContext().getAuthentication().getName();
-        editData.setUserid(userid);
-        editData.setQna_no(qna_no);
-        System.out.println("수정폼 set 후: " + editData);
-        qnaService.qnaUpdate(editData);
+    public void viewEdit(@PathVariable int qna_no, @ModelAttribute QnAVO editData, @RequestParam(value = "qna_img", required = false) MultipartFile[] qna_img){
+
+        try {
+            if (qna_img != null && qna_img.length > 0) {
+                String filePath = qnaService.getImgPath(qna_no);
+                for (MultipartFile file : qna_img) {
+                    String imgUrl = imgService.updateImage(file, "qna", filePath);
+                    // 필요한 경우 imgUrl을 editData에 추가할 수 있습니다.
+                }
+            }
+
+            // 수정된 데이터 처리
+            System.out.println("수정폼 도착 : " + editData);
+            String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+            editData.setUserid(userid);
+            editData.setQna_no(qna_no);
+            System.out.println("수정폼 set 후: " + editData);
+
+            qnaService.qnaUpdate(editData);
+        }catch (Exception e) {
+            System.out.println(e); // 오류 발생 시 응답
+        }
+
         System.out.println(editData);
 
     }
