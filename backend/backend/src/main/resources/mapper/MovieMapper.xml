@@ -36,6 +36,7 @@
     <!-- 영화 코드를 기반으로 특정 영화의 상세 정보를 가져오는 쿼리 -->
     <select id="getMovieByCode" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
         SELECT
+        movie_no,
         movie_code,
         movie_kor,
         movie_eng,

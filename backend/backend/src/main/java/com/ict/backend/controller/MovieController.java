@@ -5,10 +5,13 @@ import com.ict.backend.vo.MovieVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")  // React 서버 주소
 @RestController
@@ -41,9 +44,25 @@ public class MovieController {
     }
 
     // MovieView 페이지
+//    @GetMapping("/{movieCode}")
+//    public MovieVO getMovieByCode(@PathVariable String movieCode) {
+//        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        return movieService.getMovieByCode(movieCode);
+//    }
     @GetMapping("/{movieCode}")
-    public MovieVO getMovieByCode(@PathVariable String movieCode) {
-        return movieService.getMovieByCode(movieCode);
+    public ResponseEntity<Map<String, Object>> getMovieByCode(@PathVariable String movieCode) {
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(userid == "anonymousUser"){
+            userid = "";
+        }
+        MovieVO movie = movieService.getMovieByCode(movieCode);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("movieVO", movie);
+        response.put("userid", userid);
+
+        return ResponseEntity.ok(response);
     }
 
     // movie_code에 해당하는 이미지 목록을 가져오는 API

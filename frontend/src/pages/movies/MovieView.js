@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {useParams, useLocation } from 'react-router-dom';
 import './../../css/movies/MovieView.css';
 import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; // 별 아이콘을 위해 react-icons 사용
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../component/api/axiosApi';
 
 function MovieView() {
   
@@ -33,7 +34,6 @@ function MovieView() {
 
 
 const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
-console.log(movieCode);
 const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
 const [loading, setLoading] = useState(true); // 로딩 상태
 const [images, setImages] = useState([]);  // 이미지 목록 상태
@@ -42,22 +42,32 @@ const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 �
 const [reviewText, setReviewText] = useState(''); // 한줄평 상태
 const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
 const location = useLocation(); // 현재 경로 가져오기 위해 사용
-const userid = 'goguma1234';
+const [userid, setUserId] = useState(null); // userid를 상태로 관리
+
 
   useEffect(() => {
     const fetchMovie = async () => {
+
       setLoading(true); // 로딩 상태 시작
       try {
         // 영화 정보 가져오기
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
         console.log(response.data); // API 응답 데이터 콘솔에 출력
-        setMovie(response.data); // 영화 데이터를 상태에 저장
+        setMovie(response.data.movieVO); // 영화 데이터를 상태에 저장
+        setUserId(response.data.userid);
 
-        // 영화 이미지 정보 가져오기
         // 이미지 정보 가져오기
         const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
         setImages(imageResponse.data);
 
+        if (userid !== "") {
+          // 북마크 상태 가져오기
+          const bookmarkResponse = await axios.get(`http://localhost:9988/api/bookmarks/add/${userid}/${movieCode}`);
+          setIsFavorite(bookmarkResponse.data.isFavorite); // 북마크 여부 설정
+        }
+        // // 북마크 상태 가져오기
+        //   const bookmarkResponse = await axios.get(`http://localhost:9988/api/bookmarks/add/${userid}/${movieCode}`);
+        //   setIsFavorite(bookmarkResponse.data.isFavorite); // 북마크 여부 설정
         
       } catch (error) {
         console.error("Error:", error);
@@ -66,15 +76,33 @@ const userid = 'goguma1234';
       }
     };
     fetchMovie();
-  }, [movieCode]);
+  }, [movieCode, userid]);
 
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
   if (!movie) return <div>No movie data available</div>; // 데이터가 없을 때 표시
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    // 여기서 서버로 찜하기 상태를 저장하거나 업데이트하는 API 호출 로직 추가 가능
-    console.log(isFavorite ? 'Removed from favorites' : 'Added to favorites');
+  // 찜하기 토글 함수
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        // 북마크 해제 API 호출
+        await axios.delete('http://localhost:9988/api/bookmarks/remove', {
+          data: { userid, movie_no: movie.movie_no }
+        });
+        setIsFavorite(false);
+      } else {
+        // 북마크 추가 API 호출
+        await axios.post('http://localhost:9988/api/bookmarks/add', {
+          userid,
+          movie_no: movie.movie_no
+        
+        });
+        setIsFavorite(true);
+        console.log("success");
+      }
+    } catch (error) {
+      console.error('Error updating bookmark:', error);
+    }
   };
 
   const handleShare = () => {
@@ -109,7 +137,6 @@ const userid = 'goguma1234';
       setReviewText(''); // 리뷰 텍스트 초기화
     }
   };
-
 
     // 리뷰 컴포넌트
     const renderReviews = () => {
@@ -174,7 +201,7 @@ const userid = 'goguma1234';
                   <FaShareAlt
                   className="share-icon"
                   onClick={handleShare}
-                  title="공유하기" // 마우스 오버 시 설명
+                  title="공유하기"
                 />
                 </div>
               </div>
@@ -216,46 +243,46 @@ const userid = 'goguma1234';
 
         {/* 사용자 평 섹션 */}
         <div className="review-section">
-        <div className="review-header">
+          <div className="review-header">
             <h2><b>'{movie.movie_kor}'</b>의 사용자 평</h2>
           </div>
           {/* 리뷰 입력 필드 */}
-        <div className="review-input-section">
-          <div className="profile-section">
-            <img src="https://via.placeholder.com/50" alt="Profile" className="profile-img" />
-            <span className="nickname">{userid}</span>
-          </div>
-          <div className="rating-and-review">
-            <div className="star-rating">
-              {[...Array(5)].map((star, index) => (
-                <FaStar
-                key={index}
-                className={`star ${index < (hoverRating || rating) ? 'active' : ''}`} // 호버 상태 반영
-                onMouseEnter={() => setHoverRating(index + 1)} // 마우스 오버 시 별 색 채움
-                onMouseLeave={() => setHoverRating(0)} // 마우스가 벗어날 때 초기화
-                onClick={() => setRating(index + 1)} // 별 클릭 시 선택
-                />
-              ))}
+          <div className="review-input-section">
+            <div className="profile-section">
+              <img src="https://via.placeholder.com/50" alt="Profile" className="profile-img" />
+              <span className="nickname">{userid}</span>
             </div>
-            <div
-              contentEditable
-              className="review-input"
-              placeholder="한줄평을 남겨보세요"
-              onInput={(e) => setReviewText(e.currentTarget.textContent)}
-            >
-              {reviewText}
+            <div className="rating-and-review">
+              <div className="star-rating">
+                {[...Array(5)].map((star, index) => (
+                  <FaStar
+                  key={index}
+                  className={`star ${index < (hoverRating || rating) ? 'active' : ''}`} // 호버 상태 반영
+                  onMouseEnter={() => setHoverRating(index + 1)} // 마우스 오버 시 별 색 채움
+                  onMouseLeave={() => setHoverRating(0)} // 마우스가 벗어날 때 초기화
+                  onClick={() => setRating(index + 1)} // 별 클릭 시 선택
+                  />
+                ))}
+              </div>
+              <div
+                contentEditable
+                className="review-input"
+                placeholder="한줄평을 남겨보세요"
+                onInput={(e) => setReviewText(e.currentTarget.textContent)}
+              >
+                {reviewText}
+              </div>
             </div>
+            <button className="submit-btn" onClick={handleReviewSubmit}>
+              리뷰 등록
+            </button>
           </div>
-          <button className="submit-btn" onClick={handleReviewSubmit}>
-            등록
-          </button>
-        </div>
-        {/* 리뷰 리스트 */}
-        <div className="review-section">
-          {renderReviews()}
-        </div>
+          {/* 리뷰 리스트 */}
+          <div className="review-section">
+            {renderReviews()}
+          </div>
 
-      </div>
+        </div>
 
         
 
