@@ -307,7 +307,11 @@
 
 .review-text {
   font-size: 20px;
-  color: #f9f9f9;
+  color: white;
   line-height: 1.5;
+}
+
+.review-input{
+  color: black;
 }
 
