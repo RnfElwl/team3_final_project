@@ -148,6 +148,16 @@ function QnAView() {
                 {item?.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{item?.qna_answer}</div> }
         </div>
         <br/>
+        <div className="PagingArea">
+            <button onClick={(e)=>navigate('/qna')}>목록으로</button>
+            {item?.next_qna_no ?
+             <div onClick={(e)=>navigate(`/qna/view/${item.next_qna_no}`)}>다음글</div>
+             :<div></div>}
+            {item?.prev_qna_no ?
+            <div onClick={(e)=>navigate(`/qna/view/${item.prev_qna_no}`)}>이전글</div>
+            :<div></div>} 
+            {item.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글</div>:<div></div>}
+        </div>
        
     
 

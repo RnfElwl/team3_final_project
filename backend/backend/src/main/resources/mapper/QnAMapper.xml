@@ -11,7 +11,7 @@
             ${searchKey} like '%${searchWord}%' and
         </if>
         active_state IN (1, 2)
-        order by qna_writedate desc
+        order by qna_no desc
         limit ${onePageRecord} offset ${offset}
     </select>
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
@@ -19,7 +19,7 @@
         q.qna_no,
         q.userid,
         u.usernick,
-        q.head_title,   -- 테이블 별칭 추가
+        q.head_title,
         q.qna_title,
         q.qna_content,
         DATE_FORMAT(q.qna_writedate, '%y-%m-%d %H:%i') AS qna_writedate,
@@ -27,7 +27,7 @@
         q.qna_answer,
         q.answer_user,
         q.qna_answer_date,
-        q.active_state,  -- 테이블 별칭 추가 (qna_tbl의 active_state를 사용)
+        q.active_state,
         q.privacyQ,
         q.qna_pwd,
         i.image_url as qna_img
@@ -42,7 +42,17 @@
         ON
         q.qna_img = i.image_no
         WHERE
-        q.qna_no = #{qna_no};
+        q.qna_no = #{qna_no}
+    </select>
+    <select id="getPrevQnaNo" resultType="int">
+        SELECT MAX(qna_no)
+        FROM qna_tbl
+        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0);
+    </select>
+    <select id="getNextQnaNo" resultType="int">
+        SELECT MIN(qna_no)
+        FROM qna_tbl
+        WHERE qna_no <![CDATA[>]]> #{qna_no} AND active_state not IN (0);
     </select>
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl
@@ -68,6 +78,9 @@
         privacyQ=#{privacyQ},
         active_state=#{active_state},
         qna_pwd=#{qna_pwd}
+        <if test="qna_img != null">
+            , qna_img=#{qna_img}
+        </if>
         where qna_no=#{qna_no} and userid=#{userid}
     </update>
     <update id="qnaDel">
@@ -76,10 +89,20 @@
     <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
         INSERT INTO image_tbl (image_url) VALUES (#{image_url})
     </insert>
+    <select id="qnaImgNumGet" resultType="int">
+        select i.image_no from qna_tbl q left join image_tbl i on q.qna_img=i.image_no
+        where q.qna_no=#{qna_no}
+    </select>
     <select id="getImgPath" resultType="String">
         select i.image_url
         from qna_tbl q
         left join image_tbl i on q.qna_img=i.image_no
         where q.qna_no=#{qna_no}
     </select>
+    <update id="updateImgUrl">
+        update image_tbl set image_url=#{param1} where image_no=#{param2}
+    </update>
+    <insert id="insertImgUrl" useGeneratedKeys="true" keyProperty="image_no">
+        insert into image_tbl (image_url) values(#{image_url})
+    </insert>
 </mapper>

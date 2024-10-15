@@ -1,5 +1,6 @@
 package com.ict.backend.dao;
 
+import com.ict.backend.vo.ImageVO;
 import com.ict.backend.vo.PagingVO;
 import com.ict.backend.vo.QnAVO;
 
@@ -15,5 +16,9 @@ public interface QnADAO {
     void qnaDel(int qna_no, String userid);
     int uploadImage(String imageUrl);
     String getImgPath(int qna_no);
-//    String getQnaImg(int qna_no);
+    Integer qnaImgNumGet(int qna_no);
+    void updateImgUrl(String updatedImgUrl, int qnaPath);
+    void insertImgUrl(ImageVO imgVO);
+    Integer getPrevQnaNo(int qna_no); //이전 글 번호 가져오는거
+    Integer getNextQnaNo(int qna_no);
 }

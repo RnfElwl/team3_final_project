@@ -175,7 +175,7 @@ function QnAWrite() {
                 ></textarea>
                 {/* 비밀글 설정 */}
                 <div className='privacy-select'>
-                    <label class="qna-radio-label">
+                    <label className="qna-radio-label">
                         <input
                             type='radio'
                             name='privacy'
@@ -184,7 +184,7 @@ function QnAWrite() {
                             onChange={handleprivacyQChange}
                         /> <span class="qna-custom-radio">공개글</span>
                     </label>
-                    <label class="qna-radio-label">
+                    <label className="qna-radio-label">
                         <input
                             type='radio'
                             name='privacy'
