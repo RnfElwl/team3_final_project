@@ -83,7 +83,7 @@ function QnAView() {
     //삭제
     function qnaDelete() {
         if(window.confirm('해당 문의글을 삭제하시겠습니까?')) {
-            axios.get(`http://localhost:9988/qna/viewDel/${item.qna_no}`)
+            axios.get(`http://localhost:9988/qna/viewDel/${item?.qna_no}`)
                 .then(() => {
                     alert('삭제가 완료되었습니다. 목록으로 이동합니다.');
                     navigate('/qna');  // 삭제 성공 시 목록으로 이동
@@ -91,7 +91,7 @@ function QnAView() {
                 .catch(error => {
                     console.error('삭제 실패', error);
                     alert('삭제가 실패되었습니다.');
-                    navigate(`/qna/view/${item.qna_no}`);  // 삭제 실패 시 원래 페이지로 유지
+                    navigate(`/qna/view/${item?.qna_no}`);  // 삭제 실패 시 원래 페이지로 유지
                 });
         } else {
             return false;  // 삭제 취소 시 아무 작업도 하지 않음
@@ -156,7 +156,7 @@ function QnAView() {
             {item?.prev_qna_no ?
             <div onClick={(e)=>navigate(`/qna/view/${item.prev_qna_no}`)}>이전글</div>
             :<div></div>} 
-            {item.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글</div>:<div></div>}
+            {item?.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글</div>:<div></div>}
         </div>
        
     
