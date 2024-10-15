@@ -8,14 +8,12 @@
         insert into chat_content_tbl(content_id, chatlist_url, userid, chat_content, chat_date) values(#{content_id}, #{chatlist_url}, #{userid}, #{chat_content}, #{chat_date});
     </insert>
     <insert id="insertChatList" parameterType="com.ict.backend.vo.ChatListVO">
-        insert into chat_list_tbl values(#{chatlist_url}, #{chat_title}, #{userid}, #{chat_content}, ${chatlist_type}, ${chatlist_headcount}, ${chatlist_img})
+        insert into chat_list_tbl(chatlist_url, chat_title, userid, chatlist_type, chatlist_headcount, movie_code, movie_img_url, movie_no, movie_title) values(#{chatlist_url}, #{chat_title}, #{userid}, ${chatlist_type}, ${chatlist_headcount}, #{movie_code}, #{movie_img_url}, ${movie_no}, #{movie_title})
     </insert>
 
     <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
-        select chatlist_url, chat_title, ut.usernick, chat_content, chatlist_type, chatlist_headcount, it.image_url  from chat_list_tbl clt
-        left join image_tbl it on clt.chatlist_img=it.image_no
-        join user_tbl ut on clt.userid=ut.userid
-        where clt.chatlist_type=1
+        select chatlist_url, chat_title, chat_content, chatlist_type, chatlist_headcount, movie_img_url from chat_list_tbl clt
+        where clt.chatlist_type=1 and clt.movie_no in (select mrt.movie_no from movie_review_tbl mrt where mrt.userid=#{param2})
         <if test="param1!=''">
             and chat_title like '%${param1}%'
         </if>
@@ -172,5 +170,19 @@
         join chat_user_list cul1 on clt.chatlist_url=cul1.chatlist_url
         join chat_user_list cul2 on cul1.chatlist_url=cul2.chatlist_url
         where chatlist_type=2 and cul1.userid=#{param1} and cul2.userid=#{param2}
+    </select>
+    <select id="selectReviewList" resultType="com.ict.backend.vo.ChatListVO">
+        select ut.userid, mdt.movie_no, mdt.movie_code, movie_img_url, mdt.movie_kor as movie_title from user_tbl ut
+        join movie_review_tbl mrt on ut.userid=mrt.userid
+        join movie_data_tbl mdt on mrt.movie_no=mdt.movie_no
+        join (select m.movie_code, min(m.movie_img_url) as movie_img_url from movie_img_tbl m group by m.movie_code) mit on mdt.movie_code=mit.movie_code
+        where ut.userid=#{param1}
+        <if test="param2!=''">
+            and( mdt.movie_kor like '%${param2}%' or mdt.movie_eng like '%${param2}%')
+        </if>
+    </select>
+    <select id="selectUserReviewCheck">
+        select movie_no from chat_list_tbl clt
+        where clt.chatlist_type=1 and clt.movie_no in (select mrt.movie_no from movie_review_tbl mrt where mrt.userid=#{param1} and mrt.movie_no=${param2});
     </select>
 </mapper>

@@ -187,24 +187,4 @@ public class CommunityController {
     public int getLikesCount(@PathVariable int community_no) {
         return service.getLikesCount(community_no);
     }
-
-
 }
-//-------------------------------------좋아요 필요없어짐--------------------------------------------------------------------
-    //like 추가
-//    @PostMapping("/like")
-//    public void likeCommunity(@RequestBody CommunityLikeVO like){
-//        String userid = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인한 사용자 ID 가져오기
-//        like.setUserid(userid);
-//        service.likeCommunity(like);
-//    }
-//
-//    // 좋아요 삭제
-//    @DeleteMapping("/unlike")
-//    public void unlikeCommunity(@RequestBody CommunityLikeVO like) {
-//        System.out.println("1" + like.toString());
-//        String userid = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인한 사용자 ID 가져오기
-//        like.setUserid(userid);
-//        System.out.println("2" + like.toString());
-//        service.unlikeCommunity(like);
-//    }

@@ -21,8 +21,11 @@ public class ChatListServiceImpl implements ChatListService {
     public int insertChatList(ChatListVO chatListVO){
         return chatListDAO.insertChatList(chatListVO);
     }
-    public List<ChatListVO> selectOpenChatList(String keyWord){
-        return chatListDAO.selectOpenChatList(keyWord);
+    public List<ChatListVO> selectReviewList(String userid, String keyWord){
+        return chatListDAO.selectReviewList(userid, keyWord);
+    }
+    public List<ChatListVO> selectOpenChatList(String keyWord, String userid){
+        return chatListDAO.selectOpenChatList(keyWord, userid);
     }
     public List<ChatVO> selectChatContent(String chatlist_url, String userid){
         return chatListDAO.selectChatContent(chatlist_url, userid);
@@ -74,5 +77,8 @@ public class ChatListServiceImpl implements ChatListService {
     }
     public ChatListVO selectSoloChatRoomCheck(String userid1, String userid2){
         return chatListDAO.selectSoloChatRoomCheck(userid1, userid2);
+    }
+    public String selectUserReviewCheck(String userid, int movie_no){
+        return chatListDAO.selectUserReviewCheck(userid, movie_no);
     }
 }

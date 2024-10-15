@@ -20,7 +20,6 @@ function CommunityList() {
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
 
     const [topViewedPosts, setTopViewedPosts] = useState([]);
-    const [topLikedPosts, setTopLikedPosts] = useState([]);// 상위 3개 게시물
     const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
 
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
@@ -60,10 +59,6 @@ function CommunityList() {
 
                 setCategoryCounts(counts);
 
-                // 상위 3개 게시물 설정
-                const sortedByLikes = [...response.data].sort((a, b) => b.likesCount - a.likesCount).slice(0, 3);
-                setTopLikedPosts(sortedByLikes);
-
             })
             .catch(error => {
                 console.error("Error fetching community list:", error);
@@ -75,7 +70,6 @@ function CommunityList() {
 
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {
-                //console.log("hi",response.data);
                 setUserId(response.data);
             })
             .catch(error => {
@@ -161,44 +155,18 @@ function CommunityList() {
         // }
 
         try {
+            
             const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
                 params: { community_no: no, userid }
             });
-            
-            // setLiked(isLikedResponse.data);
-            // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
-            
-            // if (isLiked) {
-            //     // 좋아요 삭제로
-            //     await axios.delete(`http://localhost:9988/community/unlike`, { params: { community_no, userid } });
-            // } else {
-            //     // 좋아요 추가
-            //     await axios.post(`http://localhost:9988/community/like`, { community_no, userid });
-            // }
+ 
             communityListSetting();
-            // 좋아요 수 업데이트
             const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${no}`);
-            // setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
-            // console.log("좋아요 수"+likesCountResponse);
-            //setLiked(!isLiked); // 좋아요 상태 업데이트
         } catch (error) {
             console.error('좋아요 처리 실패:', error);
         }
         
     };
-
-    useEffect(() => {
-        const fetchTopViewedPosts = async () => {
-            try {
-                const response = await axios.get(`http://localhost:9988/community/top-viewed-posts`); // API 호출
-                setTopViewedPosts(response.data); // 데이터 저장
-            } catch (error) {
-                console.error('Error fetching top viewed posts:', error);
-            }
-        };
-
-        fetchTopViewedPosts();
-    }, []);
 
     function openReport(e){{/* 신고 기능 */}
         const id = e.target.dataset.id;

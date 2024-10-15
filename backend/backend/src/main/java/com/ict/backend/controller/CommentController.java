@@ -3,6 +3,8 @@ package com.ict.backend.controller;
 import com.ict.backend.service.CommentService;
 import com.ict.backend.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +20,25 @@ public class CommentController {
     // 댓글 작성
     @PostMapping
     public CommentVO addComment(@RequestBody CommentVO comment) {
+        // 현재 로그인된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 인증된 사용자가 없거나 인증되지 않은 경우 예외 처리
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("등록된 사용자가 없습니다.");
+        }
+
+        // 로그인된 사용자의 userid 가져오기
+        String userid = authentication.getName();
+        System.out.println("Logged-in user: " + userid); // 디버깅용 로그
+
+        // CommentVO에 로그인된 사용자 ID 설정
+        comment.setUserid(userid);
+
+        // 댓글을 서비스에 전달하여 저장
         service.addComment(comment);
+
+        // 저장된 댓글 반환
         return comment;
     }
 
