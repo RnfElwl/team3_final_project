@@ -7,42 +7,21 @@ import axios from '../../component/api/axiosApi';
 
 function MovieView() {
   
-  // 더미 리뷰 데이터
-  const [reviews, setReviews] = useState([
-  {
-    id: 1,
-    profileImg: 'https://via.placeholder.com/50', // 유저 프로필 이미지 (더미)
-    nickname: 'User1',
-    rating: 4,
-    review: '정말 감동적인 영화였어요!',
-  },
-  {
-    id: 2,
-    profileImg: 'https://via.placeholder.com/50', // 유저 프로필 이미지 (더미)
-    nickname: 'User2',
-    rating: 5,
-    review: '다섯 번은 더 보고 싶은 영화!',
-  },
-  {
-    id: 3,
-    profileImg: 'https://via.placeholder.com/50', // 유저 프로필 이미지 (더미)
-    nickname: 'User3',
-    rating: 3,
-    review: '그냥 그랬어요...',
-  },
-]);
+  
+  const [reviews, setReviews] = useState([]);
+  
 
 
-const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
-const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
-const [loading, setLoading] = useState(true); // 로딩 상태
-const [images, setImages] = useState([]);  // 이미지 목록 상태
-const [rating, setRating] = useState(0); // 별점 상태
-const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 추가
-const [reviewText, setReviewText] = useState(''); // 한줄평 상태
-const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
-const location = useLocation(); // 현재 경로 가져오기 위해 사용
-const [userid, setUserId] = useState(null); // userid를 상태로 관리
+  const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
+  const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [images, setImages] = useState([]);  // 이미지 목록 상태
+  const [rating, setRating] = useState(0); // 별점 상태
+  const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 추가
+  const [reviewText, setReviewText] = useState(''); // 한줄평 상태
+  const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
+  const location = useLocation(); // 현재 경로 가져오기 위해 사용
+  const [userid, setUserId] = useState(null); // userid를 상태로 관리
 
 
   useEffect(() => {
@@ -68,6 +47,10 @@ const [userid, setUserId] = useState(null); // userid를 상태로 관리
         // // 북마크 상태 가져오기
         //   const bookmarkResponse = await axios.get(`http://localhost:9988/api/bookmarks/add/${userid}/${movieCode}`);
         //   setIsFavorite(bookmarkResponse.data.isFavorite); // 북마크 여부 설정
+
+        // 리뷰 정보 가져오기
+        const reviewResponse = await axios.get(`/api/reviews/${movieCode}`);
+        setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
         
       } catch (error) {
         console.error("Error:", error);
@@ -80,6 +63,9 @@ const [userid, setUserId] = useState(null); // userid를 상태로 관리
 
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
   if (!movie) return <div>No movie data available</div>; // 데이터가 없을 때 표시
+
+
+
 
   // 찜하기 토글 함수
   const toggleFavorite = async () => {
@@ -122,21 +108,34 @@ const [userid, setUserId] = useState(null); // userid를 상태로 관리
       });
     }
   }
-  
-  const handleReviewSubmit = () => {
+
+  // 리뷰 제출 함수
+  const handleReviewSubmit = async () => {
+    console.log("Submitting review with userid:", userid);
     if (rating > 0 && reviewText) {
-      const newReview = {
-        id: reviews.length + 1,
-        profileImg: 'https://via.placeholder.com/50', // 기본 프로필 이미지
-        nickname: userid, // 임시로 userid 사용
-        rating,
-        review: reviewText,
-      };
-      setReviews([newReview, ...reviews]); // 최신 리뷰를 리스트 상단에 추가
-      setRating(0); // 평점 초기화
-      setReviewText(''); // 리뷰 텍스트 초기화
+      try {
+        if (!userid) {
+          console.error('User ID is missing');
+          return;
+        }
+        // 리뷰 서버로 전송
+        const response = await axios.post('/api/reviews/add', {
+          userid,
+          movie_no: movie.movie_no,
+          movie_review_content: reviewText,
+          rate: rating,
+        });
+        // 새로운 리뷰 추가 후 상태 업데이트
+        setReviews([response.data, ...reviews]); // 최신 리뷰가 상단에 추가
+        // 리뷰 입력 초기화
+        setRating(0);
+        setReviewText('');
+      } catch (error) {
+        console.error('Error submitting review:', error);
+      }
     }
   };
+  
 
     // 리뷰 컴포넌트
     const renderReviews = () => {
@@ -145,14 +144,14 @@ const [userid, setUserId] = useState(null); // userid를 상태로 관리
           <img src={review.profileImg} alt="User profile" className="profile-img" />
           <div className="review-content">
             <div className="review-header">
-              <span className="nickname">{review.nickname}</span>
+              <span className="nickname">{review.userid}</span>
               <div className="rating">
                 {[...Array(5)].map((star, i) => (
-                  <FaStar key={i} className={i < review.rating ? 'star active' : 'star'} />
+                  <FaStar key={i} className={i < review.rate ? 'star active' : 'star'} />
                 ))}
               </div>
             </div>
-            <p className="review-text">{review.review}</p>
+            <p className="review-text">{review.movie_review_content}</p>
           </div>
         </div>
       ));
@@ -268,7 +267,8 @@ const [userid, setUserId] = useState(null); // userid를 상태로 관리
                 contentEditable
                 className="review-input"
                 placeholder="한줄평을 남겨보세요"
-                onInput={(e) => setReviewText(e.currentTarget.textContent)}
+                onInput={(e) => setReviewText(e.currentTarget.textContent)} 
+                
               >
                 {reviewText}
               </div>
