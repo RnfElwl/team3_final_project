@@ -8,7 +8,8 @@ import java.util.List;
 public interface ChatListDAO {
     public int insertChatMessage(ChatVO chatVO);
     public int insertChatList(ChatListVO chatListVO);
-    public List<ChatListVO> selectOpenChatList(String keyWord);
+    public List<ChatListVO> selectReviewList(String userid, String keyWord);
+    public List<ChatListVO> selectOpenChatList(String keyWord, String userid);
     public ChatUserVO selectChatUser(String chatlist_url, String userid);
     public int insertChatEnter(String chatlist_url, String userid);
     public List<ChatVO> selectChatContent(String chatlist_url, String userid);
@@ -26,4 +27,5 @@ public interface ChatListDAO {
     public int selectSoloChatCheck(String chatlist_url, String userid);
     public int updateSoloChatUserFirstConn(String chatlist_url, String userid, String first_conn);
     public ChatListVO selectSoloChatRoomCheck(String userid1, String userid2);
+    public String selectUserReviewCheck(String userid, int movie_no);
 }

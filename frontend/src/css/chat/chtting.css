@@ -141,6 +141,9 @@
     padding: 15px 20px;
     z-index: 2;
 }
+.chatting_room .user_count{
+    width: 40px;
+}
 .chatting_room .user_count:hover{
     color: #555;
 }
@@ -259,13 +262,13 @@
 }
 .chatting_room .schedule_icon{
     display: flex;
-    padding-top: 10px;
     justify-content: center;
     align-items: start;
     height: 70%;
 }
 .chatting_room .schedule_info{
     font-size: 0.9em;
+    
 }
 .chatting_room .schedule_voting{
     display: flex;
@@ -398,8 +401,31 @@
     overflow: auto;
     
 }
-
-
+.chatting_room .room_box{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .room_info{
+    margin-left: 10px;
+}
+.chatting_room .room_img{
+    width: 40px;
+    height: 40px;
+}
+.chatting_room .room_img img{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 13px;
+}
+.chatting_input button{
+    border: 0;
+    width: 70px;
+    background-color: #B6FFA1;
+}
+.chatting_input button:hover{
+    background-color: #00FF9C;
+}
 .chatting_room .exit_window{
     position: absolute;
     display: flex;
@@ -423,7 +449,7 @@
     display: none;
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     align-items: center; 
     top: 0px;

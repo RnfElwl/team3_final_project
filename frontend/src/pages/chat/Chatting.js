@@ -139,7 +139,19 @@ const Chatting = () => {
         const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
             chatlist_url
         }});
-        console.log(result, "----------------");
+
+        console.log(result);
+        if(result.data.chatlist_type==1){
+            const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
+                params: { movie_no: result.data.movie_no }
+            });
+            console.log("---------------")
+            console.log(data);
+            if(data==null || data==""){
+                navigate("/");
+                window.close();
+            }
+        }
         setRoomInfo(result.data);
       }
       
@@ -440,15 +452,17 @@ const Chatting = () => {
                 </div>
             </div>
             <header className='chat_header'> 
+                <div className='room_box'>
+                <div className='room_img'><img src={roomInfo.movie_img_url}/></div>
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
                     <div className='user_count' title="유저 목록" onClick={userToggle}>
-                        <div>
+
                         <IoPerson size="15px" ></IoPerson >{roomInfo.chatlist_headcount}
-                        </div>
+               
                         <div className={`user_list ${userList?'user_show':'user_hide'}`}>
                             {
-                            memberList.map((data, index)=>(
+                                memberList.map((data, index)=>(
                                 <>
                                     <div className='user_info'>
                                         <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
@@ -456,9 +470,10 @@ const Chatting = () => {
                                     </div>
                                 </>
                             ))
-                            }
+                        }
                         </div>
                     </div>
+                </div>
                 </div>
                 <div className='schedule_icon'>
                     <div onClick={menuToggle} className={`${scheduleShow?'schedule_hide':'schedule_show'}`}>
@@ -641,7 +656,7 @@ const Chatting = () => {
                         value={messageToSend}
                         onKeyDown={pressKeyboard}
                         onChange={(e)=>setMessageToSend(e.target.value)}
-                        placeholder="Type your message"
+                        placeholder="메시지 입력"
                         />
                     <button onClick={handleSendMessage}>Send</button>
                 </div>
