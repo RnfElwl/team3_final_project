@@ -6,6 +6,7 @@ import { useParams, Link } from 'react-router-dom';
 import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
 
+
 function CommunityList() {
     const { community_no } = useParams(); // URL에서 community_no 가져오기
     const [community, setCommunity] = useState([]);
@@ -25,18 +26,17 @@ function CommunityList() {
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
         switch (category) {
             case 0:
-                return "영화";
+                return "Movies";
             case 1:
-                return "일상";
+                return "Daily";
             case 2:
-                return "자유";
-            case 3:
-                return "포스터";
+                return "Free";
             default:
                 return "기타";
         }
@@ -145,7 +145,7 @@ function CommunityList() {
     // 카테고리 클릭 시 필터링
     const filterByCategory = (category) => {
         if (category === "All Posts") {
-            setFilteredCommunity(community); // "전체" 선택 시 모든 커뮤니티 표시
+            setSelectedCategory(category); // 카테고리를 선택할 때 상태 업데이트
         } else {
             setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
         }
