@@ -3,6 +3,7 @@ package com.ict.backend.service;
 import com.ict.backend.dao.CommunityDAO;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.ImageVO;
 import com.ict.backend.vo.PagingVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -88,6 +89,20 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     public int getLikesCount(int community_no) {
         return dao.getLikesCount(community_no);
+    }
+
+    @Override
+    public int uploadImage(String imageUrl) {
+        ImageVO imageVO = new ImageVO();
+        imageVO.setImage_url(imageUrl);
+        dao.uploadImage(imageVO);
+        return imageVO.getImage_no();  // image_no를 반환
+    }
+    public int updateimageurl(String imgurl, int profileno) {
+        return dao.updateimageurl(imgurl, profileno);
+    }
+    public int getimgno(int community_no){
+        return dao.getimgno(community_no);
     }
 
 }

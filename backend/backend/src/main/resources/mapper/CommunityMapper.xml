@@ -4,17 +4,26 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.CommunityDAO">
     <!-- 게시글 리스트 조회 쿼리 -->
+<!--    <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">-->
+<!--        SELECT * FROM community_tbl cct-->
+<!--        where cct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)-->
+<!--        ORDER BY community_writedate DESC-->
+<!--    </select>-->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl cct
-        where cct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)
+        SELECT c.community_no, c.userid, c.community_title, c.community_content, c.community_like, c.community_writedate, i.image_url as community_img, c.hit  FROM community_tbl c join community_image_tbl i on c.community_img = i.image_no
+        where c.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)
         ORDER BY community_writedate DESC
     </select>
     <insert id = "createCommunity" parameterType="com.ict.backend.vo.CommunityVO">
         INSERT INTO community_tbl (userid, community_title, community_content, community_img, loc, category, privacy)
         VALUES (#{userid}, #{community_title}, #{community_content}, #{community_img}, #{loc}, #{category}, #{privacy})
     </insert>
+<!--    <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">-->
+<!--        SELECT * FROM community_tbl WHERE community_no = #{community_no}-->
+<!--    </select>-->
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl WHERE community_no = #{community_no}
+        SELECT c.community_no, c.userid, c.community_title, c.community_content, c.community_like, i.image_url as community_img, c.hit, c.loc, c.category, c.privacy from community_tbl c
+        join community_image_tbl i on c.community_img = i.image_no WHERE c.community_no = #{community_no}
     </select>
     <update id="increaseHit" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl
@@ -28,14 +37,17 @@
     </select>
     <update id="editCommunity" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl
-        SET community_content = #{community_content},
+        SET userid = #{userid},
+        community_content = #{community_content},
         community_title = #{community_title},
-        community_img = #{community_img},
+<!--        community_img = #{community_img},-->
         loc = #{loc},
         privacy = #{privacy},
+        category =#{category},
         edit_date = NOW(),
         edit_user = #{edit_user}
         WHERE community_no = #{community_no}
+
     </update>
     <delete id="deleteCommentsByCommunityNo" parameterType="int">
         DELETE FROM community_comment_tbl WHERE community_no = #{community_no}
@@ -64,4 +76,14 @@
         SELECT COUNT(*) FROM community_like_tbl
         WHERE community_no = #{community_no}
     </select>
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO community_image_tbl (image_url) VALUES (#{image_url})
+    </insert>
+    <update id = "updateimageurl">
+        UPDATE community_image_tbl set image_url = #{param1} where image_no = #{param2}
+    </update>
+    <select id = "getimgno" resultType="int">
+        select community_img from community_tbl where community_no = #{community_no};
+    </select>
+
 </mapper>

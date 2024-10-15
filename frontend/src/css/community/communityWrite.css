@@ -1,25 +1,14 @@
 .communityWrite-container{
     width: 1200px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
     padding: 20px;
-    background-color: #fff;
     margin: 0 auto;
-    color: black;
+    background-color: #1C1C20; /* 배경색 */
+    color: #f0f0f0;
   }
   
   .communityWrite-container .communityWrite-header {
     text-align: center;
     padding-bottom: 20px;
-  }
-  .communityWrite-container .communityWrite-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
   }
   
   .communityWrite-container .communityWrite-title .title-input {
@@ -28,11 +17,14 @@
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background-color: #1C1C20;
+    color: #f0f0f0; /* 입력창 글자색 */
+    margin-bottom: 20px;
   }
   
   .communityWrite-container .communityWrite-image .image-preview {
     width: 100%;
-    max-width: 300px;
+    max-width: 200px;
     border-radius: 10px;
     margin-bottom: 10px;
   }
@@ -41,17 +33,24 @@
     display: block;
     margin-top: 10px;
   }
-  
-  .communityWrite-container .communityWrite-content .content-input {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    min-height: 150px;
+
+  .communityWrite-container .communityWrite-image .button {
+    color: #f0f0f0;
+    background: none;
+    border: #48d1cdea 1px solid;
   }
   
-  
+  .ck-editor__editable_inline {
+    background-color: #1C1C20 !important; /* 배경을 검정색으로 변경 */
+    color: #f0f0f0; /* 텍스트 색상은 흰색으로 설정 */
+    min-height: 300px; /* 최소 높이를 300px로 설정 */
+    max-height: 500px; /* 최대 높이 500px로 설정 */
+    padding: 10px; /* 내용 패딩 추가 */
+    border-radius: 5px; /* 모서리를 둥글게 설정 */
+    overflow-y: auto; /* 내용이 길어지면 스크롤 추가 */
+    margin-bottom: 20px;
+  }
+
   .communityWrite-container .communityWrite-section {
     display: flex;
     flex-direction: column;
@@ -60,18 +59,19 @@
   }
   
   .communityWrite-container .communityWrite-item {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
+    border-top: 1px solid #555;
+    padding-top: 20px;
   }
   
   .communityWrite-container .communityWrite-item h4 {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 22px;
   }
   
   .communityWrite-container .communityWrite-item label {
     display: block;
     margin: 5px 0;
-    font-size: 16px;
+    font-size: 15px;
   }
   
   .communityWrite-container input[type="radio"] {
@@ -84,18 +84,18 @@
   }
   
   .communityWrite-container .share-button {
-    background-color: #3498db;
+    background: none;
+    border: #48d1cdea 1px solid;
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 10px;
+    border-radius: 10px;
     cursor: pointer;
-    width: 100%;
+    width: 100px;
     font-size: 16px;
   }
   
   .communityWrite-container .share-button:hover {
-    background-color: #2980b9;
+    background-color: #48d1cdea;
   }
 
   .communityWrite-container .places-list {
@@ -109,17 +109,16 @@
 }
 
 .communityWrite-container .search-button {
-    padding: 5px 15px;
-    background-color: #3498db;
+    padding: 8px 15px;
+    background: none;
+    border: #48d1cdea 1px solid;
     color: white;
-    border: none;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 5px;
 }
-  
-.communityWrite-container .image-upload {
-    width: 100%;
-    margin-bottom: 20px;
+
+.communityWrite-container .search-button:hover{
+  background-color: #48d1cdea;
 }
 
 .communityWrite-container .selected-place{
@@ -132,5 +131,11 @@
 }
 
 .communityWrite-container .location-input{
-  width: 250px;
+    width: 300px;
+    margin-right: 20px;
+    border: 1px solid #f0f0f0;
+    background: none;
+    border-radius: 5px;
+    padding: 8px;
+    color: #f0f0f0;
 }

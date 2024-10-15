@@ -42,4 +42,10 @@ public interface CommunityService {
 
     int getLikesCount(int community_no);
 
+    int uploadImage(String imageUrl);
+
+    public int updateimageurl(String imgurl, int profileno);
+
+    int getimgno(int community_no);
+
 }
