@@ -30,6 +30,11 @@ public class ChatListController {
         System.out.println(chatVO.toString());
         return chatListService.insertChatMessage(chatVO);
     }
+    @GetMapping("/review-list")
+    public List<ChatListVO> selectReviewList(@RequestParam String keyWord){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatListService.selectReviewList(userid, keyWord);
+    }
     @PostMapping("/create")
     public String insertChatList(@RequestBody ChatListVO chatListVo){
         String chatlist_url = UUIDUtils.createType4UUID();
@@ -61,10 +66,12 @@ public class ChatListController {
     }
     @GetMapping("/openChatList")
     public List<ChatListVO> selectOpenChatList(@RequestParam String keyWord){
-        System.out.println(keyWord);
-        List<ChatListVO> list = chatListService.selectOpenChatList(keyWord);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ChatListVO> list = chatListService.selectOpenChatList(keyWord, userid);
+        System.out.println(list.toString());
         return  list;
     }
+
     @GetMapping("/{chatlist_url}")
     public List<ChatVO> selectChatContent(@PathVariable String chatlist_url){
         System.out.println("-----------------");
@@ -177,5 +184,10 @@ public class ChatListController {
             chatListService.updateSoloChatUserFirstConn(chatlist_url, userid, first_conn);
         }
         return chatListService.selectSoloChatCheck(chatlist_url, userid);
+    }
+    @GetMapping("/check/review")
+    public String selectUserReviewCheck(@RequestParam int movie_no){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return chatListService.selectUserReviewCheck(userid, movie_no);
     }
 }

@@ -11,7 +11,10 @@ function ChantList(){
     const [room, setRoom] = useState(false);
     const [formData, setFormData] = useState({});
     const [tabValue, setTabValue] = useState(1);
+    const [reviewList, setReviewList] = useState([]);
+    const [clickMovie, setClickMovie] = useState(null);
     const [search, setSearch] = useState("");
+    const [reviewSearch, setReviewSearch] = useState("");
     useEffect(() => {
         setChatList();
     }, []);
@@ -36,7 +39,6 @@ function ChantList(){
                 keyWord: search
             }
           });
-          console.log(result.data);
           setList(result.data);
     }
     function setRoomFormData(event){
@@ -46,18 +48,34 @@ function ChantList(){
             
         console.log(formData);
     }
-    function toggleRoom(event){
+    function toggleRoom(){
         setRoom(!room);
-        setFormData(p=>{return {...p, ["chatlist_type"]:event.target.dataset.chat*1}});
+        setFormData(p=>{return {...p, ["chatlist_type"]:1}});
+        if(!room==false){
+            setClickMovie(null);
+            setFormData(p=>{return {...p, ['chat_title']:""}});
+        }
+        
+    }
+    async function reviewDefault(){
+        const {data} = await axios.get("http://localhost:9988/chat/review-list", {
+            params:{
+                keyWord: reviewSearch
+            }
+        });
+        setReviewList(data);
+        console.log(data);
     }
     async function createRoom(event){
         event.preventDefault();
+        console.log(formData);
+
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
             }
           });
-          console.log(result)
+          toggleRoom();
           if(result == 1){
             setChatList();
             setRoom(!room);
@@ -73,16 +91,29 @@ function ChantList(){
     }
     function setSearchTitle(e){
         setSearch(e.target.value);
-        
+    }
+    function setReviewTitle(e){
+        setReviewSearch(e.target.value);
+    }
+    async function setMovieData(movie_no, movie_code, movie_img_url, movie_title){
+        const data={
+            movie_no, movie_code, movie_img_url, movie_title
+        }
+        setFormData(p=>{return {...p, ...data}});
     }
     useEffect(() => {
         if(tabValue==1){
+            reviewDefault();
             setChatList();
         }
         else{
             setSoloChatList();
         }
     }, [search]);
+
+    useEffect(()=>{
+        reviewDefault();
+    }, [reviewSearch])
     return (
         <main className="chatList">
         <div className="container">
@@ -91,14 +122,14 @@ function ChantList(){
                 </form>
                 {
                 tabValue===1?
-                <div className="chat_create"  onClick={toggleRoom} data-chat="1">
+                <div className="chat_create"  onClick={toggleRoom}>
                     <div className="create">방 만들기</div>
                 </div>:
                  <div className="null_create">
                 </div>
                 }
                 <div className={`room_window ${room?'room_show':'room_hide'}`}>
-                <div className="room_cancle" onClick={toggleRoom} data-chat=""></div>
+                <div className="room_cancle" onClick={toggleRoom}></div>
                 <form className="room" onSubmit={createRoom}>
                         <div className="title">
                             <h2>방 제목</h2>
@@ -109,20 +140,27 @@ function ChantList(){
                         <input type="text" name="chat_content" value={formData.chat_content} onChange={setRoomFormData}/>
                         </div> */}
                         <div className="debate_img">
-                            <h2>평가한 영화들</h2>
+                            <h2>내가 리뷰한 영화</h2>
+                            <form className="chat-search">
+                                <input type="text" value={reviewSearch} onChange={setReviewTitle}/><Search className="search_icon" size={30} />
+                            </form>
                             <div className="movie_list">
-                                <div className="movie_box">
-                                    <div className="movie_img">
-                                        <img src={``} />
-                                    </div>
-                                    <div className="movie_title">
-                                        제목
-                                    </div>
-                                </div>
+                                {
+                                    reviewList.map((data, i)=>(
+                                        <div className={`movie_box ${clickMovie==data.movie_no?'focus':''}`}>
+                                            <div className="movie_img">
+                                                <img onClick={()=>{setMovieData(data.movie_no, data.movie_code, data.movie_img_url, data.movie_title); setClickMovie(data.movie_no)}} src={`${data.movie_img_url}`} />
+                                            </div>
+                                            <div className="movie_title">
+                                                {data.movie_title}
+                                            </div>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         
-                        <button type="submit">오픈 채팅방 만들기</button>
+                        <button type="submit" disabled={clickMovie==null}>오픈 채팅방 만들기</button>
                 </form>
                 </div>
                 {/* <Link to={'chattest'}>채팅 테스트</Link> */}
@@ -132,6 +170,16 @@ function ChantList(){
                     <div className={tabValue==2 && 'tab_focus'} onClick={()=>{setSoloChatList(); setTabValue(2)}}>1대1채팅</div>
                 </div>
                 {
+                        list.length==0&&(
+                            <>
+
+                                 당신이 속한 채팅방이 없습니다
+
+                            </>
+                        )
+                    }
+                {
+                    
                     list.map(function(val, i){
                     return (
                         <>
@@ -140,7 +188,7 @@ function ChantList(){
                             <div className="openchat chat_box">
                         <div onClick={()=>openWindow(val.chatlist_url)}>
                         <div className="chat_box-img">
-                            <img src={`http://localhost:9988/${val.image_url}`}/>
+                            <img src={val.movie_img_url}/>
                         </div>
                         <div className="chat_box_info">
                                 <div>
