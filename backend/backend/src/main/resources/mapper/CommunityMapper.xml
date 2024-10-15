@@ -10,7 +10,7 @@
 <!--        ORDER BY community_writedate DESC-->
 <!--    </select>-->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT c.community_no, c.userid, c.community_title, c.community_content, c.community_like, c.community_writedate, i.image_url as community_img, c.hit  FROM community_tbl c join community_image_tbl i on c.community_img = i.image_no
+        SELECT c.community_no, c.userid, c.community_title, c.community_content, c.community_like, c.community_writedate, i.image_url as community_img, c.hit, c.loc, c.privacy, c.category FROM community_tbl c join community_image_tbl i on c.community_img = i.image_no
         where c.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)
         ORDER BY community_writedate DESC
     </select>
