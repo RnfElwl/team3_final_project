@@ -10,7 +10,7 @@
 <!--        ORDER BY community_writedate DESC-->
 <!--    </select>-->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        select ct.community_no, ct.userid, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
+        select ct.community_no, ct.userid, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, i.image_url as community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
         exists(select * from community_like_tbl clt2 where clt2.userid=#{param1} and clt2.community_no=ct.community_no) like_state
         from community_tbl ct
         left outer join community_like_tbl clt on ct.community_no=clt.community_no

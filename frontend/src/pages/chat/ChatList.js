@@ -110,7 +110,16 @@ function ChantList(){
                         </div> */}
                         <div className="debate_img">
                             <h2>평가한 영화들</h2>
-                            <input type="file" name="image_url" value={formData.chatlist_img} onChange={setRoomFormData}/>
+                            <div className="movie_list">
+                                <div className="movie_box">
+                                    <div className="movie_img">
+                                        <img src={``} />
+                                    </div>
+                                    <div className="movie_title">
+                                        제목
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <button type="submit">오픈 채팅방 만들기</button>
