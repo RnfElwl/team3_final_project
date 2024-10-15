@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
 import ReportModal from '../../component/api/ReportModal.js';
+import { AiOutlineAlert } from "react-icons/ai";
 
 function CommunityList() {
     const { community_no } = useParams(); // URL에서 community_no 가져오기
     const [community, setCommunity] = useState([]);
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
     const [filteredCommunity, setFilteredCommunity] = useState([]); // 필터링된 커뮤니티 상태
-    const categories = ["전체", "영화", "일상", "자유", "포스터"]; // 카테고리 목록에 "전체" 추가
+    const categories = ["All Posts", "Movies", "Daily", "Free"]; // 카테고리 목록에 "전체" 추가
     const [userid, setUserId] = useState('');
     //const userid = localStorage.getItem('userid');
     const userprofile = localStorage.getItem('userprofile');
@@ -55,7 +56,7 @@ function CommunityList() {
                 }, {});
 
                 // 전체 카테고리 수 설정
-                counts["전체"] = response.data.length;
+                counts["All Posts"] = response.data.length;
 
                 setCategoryCounts(counts);
 
@@ -143,11 +144,12 @@ function CommunityList() {
 
     // 카테고리 클릭 시 필터링
     const filterByCategory = (category) => {
-        if (category === "전체") {
+        if (category === "All Posts") {
             setFilteredCommunity(community); // "전체" 선택 시 모든 커뮤니티 표시
         } else {
             setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
         }
+        setSelectedCategory(category); // 카테고리를 선택할 때 상태 업데이트
     };  
 
     // 좋아요 처리
@@ -227,12 +229,33 @@ function CommunityList() {
             });
     }, []);
     
+    const formatDate = (dateString) => {
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        
+        const date = new Date(dateString); // 날짜 문자열을 Date 객체로 변환
+        const day = date.getDate(); // 날짜
+        const month = months[date.getMonth()]; // 줄인 월 이름
+        const year = date.getFullYear(); // 연도
+    
+        return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
+    };
+
     return (
         <div className="community_list">
             <div className="container">
                 <div className="list_header">
-                    <img className="user_image" src={userprofile || '/default_profile.png'} alt="User Profile"/>
-                    <p className="user_name">{userid}</p>
+                    <div className="category_box">
+                        <ul className="category_list">
+                            {categories.map(category => (
+                                <li key={category} onClick={() => filterByCategory(category)} className={`category_item ${selectedCategory === category ? 'active' : ''}`}>
+                                    {category}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <div className="search" style={{ position: 'relative', width: '60%' }}>
                         <i className="fas fa-search" style={{
                             position: 'absolute',
@@ -249,14 +272,32 @@ function CommunityList() {
                             onChange={handleSearchInputChange}
                             style={{
                                 paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
-                                width: '100%'
+                                width: '100%',
+                                background: '#1C1C20',
+                                color: '#f0f0f0'
                             }}
                         />
                     </div>
+                </div>
+                <div className="post">
+                    <div className="category_counts">
+                        {/* 선택된 카테고리의 게시물 수만 표시 */}
+                        {selectedCategory ? (
+                            <div>
+                                {/* {selectedCategory}*/} {categoryCounts[selectedCategory] || 0} post
+                            </div>
+                         ) : (
+                            <div>
+                                {/* 선택된 카테고리가 없을 때 전체 게시물 수 */}
+                                {categoryCounts["All Posts"] || 0} post
+                            </div>   
+                        )}
+                    </div>
                     <Link to="/community/CommunityWrite">
-                        <input className="write" type="button" value="글 작성하기" />
+                        <input className="write" type="button" value="New Post" />
                     </Link>
                 </div>
+
 
                 {filteredCommunity.length > 0 ? (
                     filteredCommunity.map((communityItem) => (
@@ -274,20 +315,24 @@ function CommunityList() {
                                     <div className="writer_info">
                                         <p className="writer_name">{communityItem.userid}</p>
                                         <div className="list_info">
-                                            <p className="writedate">{communityItem.community_writedate}</p>
-                                            <p className="location">{communityItem.loc}</p>
+                                            <p className="writedate">{formatDate(communityItem.community_writedate)}</p>
+                                            {/* <p className="location">{communityItem.loc}</p> */}
                                         </div>
                                     </div>
                                     <div className="action_button_container">
                                         {userid !== communityItem.userid && (
                                             <>
-                                                <input type="button" value="팔로우" className="action_button" />
-                                                <input type="button" value="신고" className="action_button" 
+                                                <input type="button" value="follow" className="action_button" />
+                                                <button 
+                                                    className="report_button" 
+                                                    title="신고"
                                                     onClick={(e) => openReport(e)} 
-                                                    data-id={community.community_no}
-                                                    data-userid={community.userid}
-                                                    data-content={community.community_title} 
-                                                />
+                                                    data-id={communityItem.community_no}
+                                                    data-userid={communityItem.userid}
+                                                    data-content={communityItem.community_title}
+                                                >
+                                                    <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
+                                                </button>
                                             </>
                                         )}
                                     </div>
@@ -301,7 +346,7 @@ function CommunityList() {
 
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>
                                     <div className="list_middle">
-                                        <div className="category">{getCategoryName(communityItem.category)} |</div>
+                                        <div className="category">{getCategoryName(communityItem.category)}</div>
                                         <h3 className="community_title">{communityItem.community_title}</h3>
                                     </div>
                                 </Link>
@@ -328,43 +373,11 @@ function CommunityList() {
                         </div>
                     ))
                 ) : (
-                    <p style={{textAlign:"center", fontSize:"1.4em", paddingTop:"40px"}}>커뮤니티 글이 없습니다.</p> // 글이 없을 때 메시지
+                    <p style={{textAlign:"center", fontSize:"1.4em", paddingTop:"40px", marginLeft:"20px"}}>No posts have been posted.</p> // 글이 없을 때 메시지
                 )}
             </div>
 
-            <div className="categories_and_top_posts">
-                <div className="category_box">
-                    {categories.map(category => (
-                        <button key={category} onClick={() => filterByCategory(category)}>
-                            {category} ({categoryCounts[category] || 0}) {/* 카테고리별 게시물 수 표시 */}
-                        </button>
-                    ))}
-                </div>
-                
-                {/* 조회수 많은 게시물 Top 3 */}
-                <div className="top_posts">
-                    <h3>조회수 Top 3</h3>
-                    {topViewedPosts.map((post, index) => (
-                        <div key={post.community_no} className="top_post_item">
-                            <Link to={`/community/communityView/${post.community_no}`}>
-                                <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 좋아요 많은 게시물 Top 3 */}
-                <div className="top_posts">
-                    <h3>좋아요 Top 3</h3>
-                    {topLikedPosts.map((post, index) => (
-                        <div key={post.community_no} className="top_post_item">
-                            <Link to={`/community/communityView/${post.community_no}`}>
-                                <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            
         </div>
     );
 }

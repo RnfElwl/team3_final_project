@@ -2,6 +2,7 @@ package com.ict.backend.dao;
 
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.ImageVO;
 import com.ict.backend.vo.PagingVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,5 +40,12 @@ public interface CommunityDAO {
     void unlikeCommunity(CommunityLikeVO like);
 
     int getLikesCount(int community_no);
+
+    void uploadImage(ImageVO imageVO);
+
+    int updateimageurl(String imgurl, int profileno);
+
+    int getimgno(int community_no);
+
 
 }
