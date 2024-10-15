@@ -140,7 +140,7 @@ function ChantList(){
                         <input type="text" name="chat_content" value={formData.chat_content} onChange={setRoomFormData}/>
                         </div> */}
                         <div className="debate_img">
-                            <h2>내가 리뷰한 영화</h2>
+                            <h4>내가 리뷰한 영화</h4>
                             <form className="chat-search">
                                 <input type="text" value={reviewSearch} onChange={setReviewTitle}/><Search className="search_icon" size={30} />
                             </form>
