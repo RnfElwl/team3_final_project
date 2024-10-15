@@ -144,7 +144,7 @@ function CommunityView(){
         if (newComment.trim()) {
             // 새로운 댓글 추가 로직
             const commentData = {
-                userid: "test1234",
+                userid: userid,
                 community_no: parseInt(community_no),
                 comment_content: newComment,
                 // 추가 필드가 필요할 경우 여기에 추가
@@ -312,7 +312,7 @@ function CommunityView(){
                         <p className="writer_name">{community.userid}</p>
                         <div className="list_info">
                             <p className="writedate">{formatDate(community.community_writedate)}</p>
-                            {community.loc?.trim() ? (
+                            {community.loc && community.loc.trim() !== "" && community.loc !== "null" ? (
                                 <>
                                     <span className="separator">·</span>
                                     <p className="location">{community.loc}</p>
@@ -375,25 +375,33 @@ function CommunityView(){
                         <span className="likeCount">{likesCount}</span>
 
                     <div className="edit_delete">
-                        <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
-                        <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
+                        {loggedInUserId !== null && loggedInUserId == community.userid && (
+                            <>
+                                <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>
+                                <input type="button" value="삭제" className="delete_button" onClick={handleDelete}/>
+                            </>
+                        )}
                     </div> 
                 </div>  
 
                 
 
                 <div className="comments_section">
-                    <h3>댓글 ({commentCount})</h3>
-                    <form onSubmit={handleCommentSubmit} className="commnet_form">
-                        <input
-                            className="inputform"
-                            type="text"
-                            value={newComment}
-                            onChange={handleCommentChange}
-                            placeholder="댓글을 입력하세요"
-                        />
-                        <button type="submit" className="submit_button">댓글 남기기</button>
-                    </form>
+                    {loggedInUserId !== null && (
+                        <>
+                            <h3>댓글 ({commentCount})</h3>
+                            <form onSubmit={handleCommentSubmit} className="commnet_form">
+                                <input
+                                    className="inputform"
+                                    type="text"
+                                    value={newComment}
+                                    onChange={handleCommentChange}
+                                    placeholder="댓글을 입력하세요"
+                                />
+                                <button type="submit" className="submit_button">댓글 남기기</button>
+                            </form>
+                        </>
+                    )}
 
                     <div className="comments_list">
                         {comments.map((comment) => (

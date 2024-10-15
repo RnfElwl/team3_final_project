@@ -28,7 +28,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
             <form className="chatting_report" onSubmit={submitReport}>
                 <div className="title" >
                     <h2>신고하기</h2>
-                    <div>
+                    <div className='report_radio'>
                         <input type="radio" name="report_type" value='0' onChange={reportFormAdd} /><span>욕설</span>
                         <input type="radio" name="report_type" value='1' onChange={reportFormAdd}/><span>스포일러</span>
                         <input type="radio" name="report_type" value='2' onChange={reportFormAdd}/><span>비매너 행위</span>
@@ -36,12 +36,12 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
                     </div>
                 </div>
                 <div className="sub_title">
-                <h2>상세내용</h2>
-                <textarea name="report_reason" onChange={reportFormAdd}>
+                
+                <textarea name="report_reason" onChange={reportFormAdd} placeholder="상세내용을 입력해주세요.">
 
                 </textarea>
                 </div>
-                <button type="submit">신고하기</button>
+                <button type="submit">submit</button>
             </form>
     </div> 
     )

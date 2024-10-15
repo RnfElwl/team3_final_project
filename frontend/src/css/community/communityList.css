@@ -239,14 +239,15 @@
 }
 
 .community_list .report_window{
-    display: none;
+    display: none; /* 필요 시 JavaScript로 제어 */
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed; /* 변경된 부분 */
     justify-content: center;
     align-items: center; 
     top: 0px;
     left: 0px;
+    z-index: 999; /* 다른 요소 위에 표시하도록 설정 */
 }
 .community_list .report_show{
     display: flex;
@@ -263,11 +264,45 @@
     z-index: 1;
 }
 .community_list .report_window .chatting_report{
-    color: #f0f0f0;
-    background-color: aliceblue;
+    color: #1C1C20;
+    background-color: #f0f0f0;
     padding: 50px;
     z-index: 2;
     border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    text-align: center;
+}
+.community_list .report_window .title h2{
+    font-size: 1.5em;
+    color: rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.community_list .report_window .report_radio{
+    gap: 10px;
+    display: flex;
+}
+.community_list .report_window .report_radio span{
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e1e20c2;
+}
+.community_list .report_window .sub_title textarea{
+    width: 100%;
+    height: 150px;
+    margin: 12px 0;
+}
+.community_list .report_window button{
+    border:1px solid rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    border-radius: 5px;
+    background: none;
+    color:rgba(235, 59, 59, 0.774);
+}
+.community_list .report_window button:hover{
+    background: rgba(235, 59, 59, 0.774);
+    color:#f0f0f0;
 }
 
 /*  */
@@ -293,7 +328,6 @@
     margin: 15px 10px;
     text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
     width: 200px;
-    
     font-weight: bold;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */

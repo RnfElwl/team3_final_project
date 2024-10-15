@@ -144,12 +144,13 @@ function CommunityList() {
 
     // 카테고리 클릭 시 필터링
     const filterByCategory = (category) => {
+        setSelectedCategory(category);
+
         if (category === "All Posts") {
-            setSelectedCategory(category); // 카테고리를 선택할 때 상태 업데이트
+            setFilteredCommunity(community); // 카테고리를 선택할 때 상태 업데이트
         } else {
             setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
         }
-        setSelectedCategory(category); // 카테고리를 선택할 때 상태 업데이트
     };  
 
     // 좋아요 처리
