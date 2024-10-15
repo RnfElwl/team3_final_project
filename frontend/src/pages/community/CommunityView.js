@@ -356,7 +356,7 @@ function CommunityView(){
                     {community.community_img && (
                         <img className="community_img" src={community.community_img} alt="Uploaded" />
                     )}
-                    <h3 className="community_content">{community.community_content}</h3>
+                    <h3 className="community_content" dangerouslySetInnerHTML={{ __html: community.community_content }}></h3>
                 </div>
 
                 <div className="view_bottom">

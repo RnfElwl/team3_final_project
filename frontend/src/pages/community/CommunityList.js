@@ -362,7 +362,7 @@ function CommunityList() {
                                             className={`fa-heart ${communityItem.like_state==1 ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
                                             onClick={()=>{handleLikeToggle(communityItem.community_no)}}
                                             style={{ 
-                                                color: communityItem.like_state==1 ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
+                                                color: communityItem.like_state==1 ? 'red' : '#f0f0f0',  // 좋아요 상태에 따라 하트 색상 변경
                                                 cursor: 'pointer' 
                                             }}
                                         ></i>
