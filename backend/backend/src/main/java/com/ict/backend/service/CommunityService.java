@@ -14,7 +14,7 @@ public interface CommunityService {
 
     // 게시글 리스트 조회 메서드
     //Page<CommunityVO> getCommunityList(Pageable pageable);
-    List<CommunityVO> getCommunityList();
+    List<CommunityVO> getCommunityList(String userid);
 //    List<CommunityVO> getCommunityList(@Param("size") int size, @Param("offset") int offset);
 //    int getTotalCount(); // 총 게시물 수를 가져오는 메서드
 
@@ -41,5 +41,11 @@ public interface CommunityService {
     void unlikeCommunity(CommunityLikeVO like);
 
     int getLikesCount(int community_no);
+
+    int uploadImage(String imageUrl);
+
+    public int updateimageurl(String imgurl, int profileno);
+
+    int getimgno(int community_no);
 
 }

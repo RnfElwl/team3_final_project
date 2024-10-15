@@ -10,7 +10,8 @@ function ChantList(){
     const [list, setList] = useState([]);
     const [room, setRoom] = useState(false);
     const [formData, setFormData] = useState({});
-    
+    const [tabValue, setTabValue] = useState(1);
+    const [search, setSearch] = useState("");
     useEffect(() => {
         setChatList();
     }, []);
@@ -18,6 +19,9 @@ function ChantList(){
         const {data} = await axios.get("http://localhost:9988/chat/soloChatList", {
             headers: {
               'Content-Type': 'application/json'
+            },
+            params:{
+                keyWord: search
             }
           });
           console.log(data);
@@ -27,6 +31,9 @@ function ChantList(){
         const result = await axios.get("http://localhost:9988/chat/openChatList", {
             headers: {
               'Content-Type': 'application/json'
+            },
+            params:{
+                keyWord: search
             }
           });
           console.log(result.data);
@@ -45,7 +52,6 @@ function ChantList(){
     }
     async function createRoom(event){
         event.preventDefault();
-
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
@@ -65,60 +71,162 @@ function ChantList(){
           );
           popupWindow.focus();
     }
+    function setSearchTitle(e){
+        setSearch(e.target.value);
+        
+    }
+    useEffect(() => {
+        if(tabValue==1){
+            setChatList();
+        }
+        else{
+            setSoloChatList();
+        }
+    }, [search]);
     return (
         <main className="chatList">
-
-        
         <div className="container">
-                <div className="chat-search"><input type="text"/><Search className="search_icon" size={30}/></div>
-                
-                <div className="chat_create"  onClick={toggleRoom}>
-                    <div className="create">방만들기</div>
+                <form className="chat-search">
+                    <input type="text" value={search} onChange={setSearchTitle}/><Search className="search_icon" size={30} />
+                </form>
+                {
+                tabValue===1?
+                <div className="chat_create"  onClick={toggleRoom} data-chat="1">
+                    <div className="create">방 만들기</div>
+                </div>:
+                 <div className="null_create">
                 </div>
+                }
                 <div className={`room_window ${room?'room_show':'room_hide'}`}>
                 <div className="room_cancle" onClick={toggleRoom} data-chat=""></div>
                 <form className="room" onSubmit={createRoom}>
-                        <div className="title" >
+                        <div className="title">
                             <h2>방 제목</h2>
                             <input type="text" name="chat_title" value={formData.chat_title} onChange={setRoomFormData}/>
                         </div>
-                        <div className="sub_title">
+                        {/* <div className="sub_title">
                         <h2>부제목</h2>
                         <input type="text" name="chat_content" value={formData.chat_content} onChange={setRoomFormData}/>
-                        </div>
-                        
-
+                        </div> */}
                         <div className="debate_img">
                             <h2>평가한 영화들</h2>
-                            <input type="text" name="chat_content" value={formData.chatlist_img} onChange={setRoomFormData}/>
+                            <div className="movie_list">
+                                <div className="movie_box">
+                                    <div className="movie_img">
+                                        <img src={``} />
+                                    </div>
+                                    <div className="movie_title">
+                                        제목
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <button type="submit">방만들기</button>
+                        <button type="submit">오픈 채팅방 만들기</button>
                 </form>
                 </div>
                 {/* <Link to={'chattest'}>채팅 테스트</Link> */}
-                <div className="chatList_list">
+                <div className={`chatList_list ${tabValue==1?'open':'solo'}`}>
                 <div className="chat-tab">
-                    <div className="tab_focus" onClick={setChatList}>오픈채팅</div>
-                    <div onClick={setSoloChatList}>1대1채팅</div>
+                    <div className={tabValue==1 && 'tab_focus'} onClick={()=>{setChatList(); setTabValue(1);}}>오픈채팅</div>
+                    <div className={tabValue==2 && 'tab_focus'} onClick={()=>{setSoloChatList(); setTabValue(2)}}>1대1채팅</div>
                 </div>
                 {
                     list.map(function(val, i){
-                    return (<div className="openchat chat_box">
-                        {/* <Link to={`/chat/${val.chatlist_url}`}> */}
+                    return (
+                        <>
+                        {
+                            tabValue==1?
+                            <div className="openchat chat_box">
                         <div onClick={()=>openWindow(val.chatlist_url)}>
                         <div className="chat_box-img">
-                            <img src={val.image_url}/>
+                            <img src={`http://localhost:9988/${val.image_url}`}/>
+                        </div>
+                        <div className="chat_box_info">
+                                <div>
+                                    {val.chat_title}
+                                </div>
+                                <div>{val.usernick}</div>
+                            </div>
+
+                        </div>
+                        <div>
+                        </div>
+                        </div>
+                        :
+                        <>
+                        <div className="solochat chat_box">
+                            <div onClick={()=>openWindow(val.chatlist_url)}>
+                                <div className="chat_box-img">
+                                    <img src={`http://localhost:9988/${val.image_url}`}/>
+                                </div>
+                                <div className="chat_box_info">
+                                    <div>
+                                        {val.usernick}
+                                    </div>
+                                    <div className="sub_content">
+                                        {val.chat_content}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                        <div className="solochat chat_box">
+                        <div onClick={()=>openWindow(val.chatlist_url)}>
+                            <div className="chat_box-img">
+                                <img src={`http://localhost:9988/${val.image_url}`}/>
+                            </div>
+                            <div className="chat_box_info">
+                                <div>
+                                    {val.usernick}
+                                </div>
+                                <div>
+                                    {val.chat_content}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                    <div className="solochat chat_box">
+                    <div onClick={()=>openWindow(val.chatlist_url)}>
+                        <div className="chat_box-img">
+                            <img src={`http://localhost:9988/${val.image_url}`}/>
                         </div>
                         <div className="chat_box_info">
                             <div>
-                                {val.chat_title}
+                                {val.usernick}
                             </div>
-                            <div>{val.usernick}</div>
-                            </div>
-                        {/* </Link> */}
+                            <div>
+                                        {val.chat_content}
+                                    </div>
                         </div>
-                    </div>)
+                    </div>
+                    <div>
+                    </div>
+                </div>
+                <div className="solochat chat_box">
+                            <div onClick={()=>openWindow(val.chatlist_url)}>
+                                <div className="chat_box-img">
+                                    <img src={`http://localhost:9988/${val.image_url}`}/>
+                                </div>
+                                <div className="chat_box_info">
+                                    <div>
+                                        {val.usernick}
+                                    </div>
+                                    <div>
+                                        {val.chat_content}
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                </>
+                        }
+                    </>
+                )
                 })
             }
             </div>

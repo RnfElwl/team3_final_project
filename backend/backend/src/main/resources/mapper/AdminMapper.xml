@@ -114,6 +114,21 @@
     </select>
     <select id="selectMemberMin" resultType="com.ict.backend.vo.MemberVO">
         select userid, username, DATE_FORMAT(regiserdate, '%y.%m.%d') AS regiserdate, active_state from user_tbl
-        order by regiserdate desc limit 8
+        order by regiserdate desc limit 5
+    </select>
+    <select id = "getQnAList" resultType="com.ict.backend.vo.QnAVO">
+        select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
+        privacyQ,qna_state,active_state,qna_pwd from qna_tbl
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+        order by qna_writedate desc
+        limit ${onePageRecord} offset ${offset}
+    </select>
+    <select id="getTotalRecord" resultType="int">
+        select count(qna_no) from qna_tbl
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
     </select>
 </mapper>

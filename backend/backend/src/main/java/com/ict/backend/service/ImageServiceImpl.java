@@ -54,7 +54,8 @@ public class ImageServiceImpl implements ImageService {
 
         Files.createDirectories(path.getParent()); // 디렉토리 생성
         Files.write(path, file.getBytes()); // 파일 저장
-        String resultPath = filepath.toString().replace("\\", "/");
+        //String resultPath = filepath.toString().replace("\\", "/");
+        String resultPath = filepath.getParent().resolve(path.getFileName()).toString().replace("\\", "/");
         return resultPath;
         //return path.toString(); // 저장된 이미지 경로 반환
     }
@@ -81,7 +82,8 @@ public class ImageServiceImpl implements ImageService {
         // 디렉토리 생성 및 파일 저장
         Files.createDirectories(path.getParent());
         Files.write(path, file.getBytes());
-        String resultPath = filepath.toString().replace("\\", "/");
+        //String resultPath = filepath.toString().replace("\\", "/");
+        String resultPath = filepath.getParent().resolve(path.getFileName()).toString().replace("\\", "/");
         return resultPath;
         //return path.toString(); // 저장된 이미지 경로 반환
     }

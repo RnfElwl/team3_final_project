@@ -21,9 +21,6 @@
 .QnaTbl td:nth-child(3){
     text-align: right;
 }
-.QnaTbl tr:nth-child(4){
-    height: 200px;
-}
 .qnaType{
     background-color: rgb(182, 172, 172);
     

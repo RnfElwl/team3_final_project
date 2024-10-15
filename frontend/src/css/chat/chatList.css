@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2d2d31;
+  background-color: #444946;
   max-width: 1200px;
   width: 50%;
   height: 40px;
@@ -26,24 +26,30 @@
 }
 .chatList .chat-tab{
   position: absolute;
-  top: -50px;
+  top: -60px;
   left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 40px;
+  
 }
 .chatList .chat-tab>div{
   color: #f1f1f1;
-  padding: 10px;
+  padding: 10px 20px;
+  border-bottom: 0px;
+  transition: border 0.5s;
+  border-bottom: 2px solid #444946;
 }
 .chatList .chat-tab>.tab_focus{
-  border-bottom: 1px solid #f1f1f1;
+  width: auto;
+  border-bottom: 2px solid #B6FFA1;
+
 }
 .chatList .chat-search>input{
   width:90%;
   border-width: 0;
-  background-color: #2d2d31;
+  background-color: #444946;
   color: #f1f1f1;
 }
 .chatList .chat-search>input{
@@ -62,9 +68,27 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: #B6FFA1;
-  color: #1C1C20;;
+  background-color: #5cc79e;
+  color: #f1f1f1;
   text-align: center;
+  border-radius: 5px;
+  z-index: 1;
+}
+.chatList .null_create{
+  height: 40px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: 100px;
+  height: 40px;
+  padding: 10px;
+  width: 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #f1f1f1;
+  text-align: center;
+  border-radius: 5px;
+  z-index: 1;
 }
 
 .chatList .room_cancle{
@@ -89,6 +113,7 @@
   height: 400px;
   background-color: #1C1C20;
 
+
 }
 .chatList .room >div>input{
   width: 70%;
@@ -98,8 +123,9 @@
   color: #f1f1f1;
 }
 
-.chatList.room_show{
+.chatList .room_show{
   display: flex;
+  z-index: 1;
 }
 .chatList .room_hide{
   display: none;
@@ -108,7 +134,7 @@
 .chatList .chatList_list{
   position: relative;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 50px;
   display: grid;
   justify-content: center;
   align-items: center;
@@ -116,16 +142,57 @@
   gap: 10px;
 
 }
+.chatList .solo{
+  display: grid;
+  gap: 10px 20px;
+}
+
 .chatList .chat_box{
   width: 100%;
   height: 250px;
   
 }
+.chatList .solo .solochat{
+  width: 300px;
+  height: auto;
+  background-color: #3e3e44;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+.chatList .solo .solochat>div{
+  display: flex;
+}
+.chatList .solo .sub_content{
+  color: #cdcdd6;
+}
 .chatList .chat_box-img{
-  background-color: beige;
   width: 100%;
   height: 170px;
 }
+.chatList .solo .chat_box-img{
+  width: 60px;
+  height: 70px;
+}
+.chatList .solo .chat_box-img img{
+  object-fit: cover;
+  width: 60px;
+  border-radius: 18px;
+}
+.chatList .open .chat_box-img img{
+  object-fit: cover;
+  border-radius: 20px;
+  width: 100%;
+  height: 100%;
+}
 .chatList .chat_box_info{
   color: #f1f1f1;
+}
+.chatList .chat_box_info{
+  margin: 0px 10px;
+}
+
+
+
+.chatList .movie_title{
+
 }

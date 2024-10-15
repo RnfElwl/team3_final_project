@@ -57,4 +57,6 @@ public interface UserDAO {
     public int getCountComment(String userid);
     public int getCountfollowing(String userid);
     public int getCountReplyComment(String userid);
+
+    public List<Map<String, Object>> getFollowData(String userid);
 }

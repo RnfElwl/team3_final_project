@@ -10,17 +10,19 @@ import java.util.List;
 
 @Service
 public class ChatListServiceImpl implements ChatListService {
+
     private ChatListDAO chatListDAO;
     @Autowired
     public ChatListServiceImpl(ChatListDAO chatListDAO){
         this.chatListDAO = chatListDAO;
     }
 
+    public int insertChatMessage(ChatVO chatVO){return chatListDAO.insertChatMessage(chatVO);}
     public int insertChatList(ChatListVO chatListVO){
         return chatListDAO.insertChatList(chatListVO);
     }
-    public List<ChatListVO> selectOpenChatList(){
-        return chatListDAO.selectOpenChatList();
+    public List<ChatListVO> selectOpenChatList(String keyWord){
+        return chatListDAO.selectOpenChatList(keyWord);
     }
     public List<ChatVO> selectChatContent(String chatlist_url, String userid){
         return chatListDAO.selectChatContent(chatlist_url, userid);
@@ -61,7 +63,16 @@ public class ChatListServiceImpl implements ChatListService {
     public int updateSoloChatUserConn(String chatlist_url, String userid, String last_conn){
         return chatListDAO.updateSoloChatUserConn(chatlist_url, userid, last_conn);
     }
-    public List<ChatListVO> selectSoloChatList(String userid){
-        return chatListDAO.selectSoloChatList(userid);
+    public List<ChatListVO> selectSoloChatList(String userid, String keyWord){
+        return chatListDAO.selectSoloChatList(userid, keyWord);
+    }
+    public int selectSoloChatCheck(String chatlist_url, String userid){
+        return chatListDAO.selectSoloChatCheck(chatlist_url, userid);
+    }
+    public int updateSoloChatUserFirstConn(String chatlist_url, String userid, String first_conn){
+        return chatListDAO.updateSoloChatUserFirstConn(chatlist_url, userid, first_conn);
+    }
+    public ChatListVO selectSoloChatRoomCheck(String userid1, String userid2){
+        return chatListDAO.selectSoloChatRoomCheck(userid1, userid2);
     }
 }

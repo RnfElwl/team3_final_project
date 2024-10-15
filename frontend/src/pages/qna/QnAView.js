@@ -39,6 +39,18 @@ function QnAView() {
             });
 
     },[]);
+    //수정 제한을 위한 날짜 체크
+    const writeDate = new Date("20"+item?.qna_writedate);//qna 날짜
+    const currentDate = new Date();//오늘 날짜
+    const twoDaysInMs = 2 * 24 * 60 * 60 * 1000; //2일 밀리초 계산
+    //qna 날짜와 오늘 날짜 차이를 통해 비교
+    const isTwoDaysPassed = currentDate - writeDate > twoDaysInMs;
+    console.log(isTwoDaysPassed);
+
+
+
+
+    //이미지 생성
     useEffect(() => {
         const fetchImage = async () => {
             try {
@@ -111,18 +123,24 @@ function QnAView() {
             </tr>
             <tr>
                 <td className="qnaType">첨부파일</td>
-                <td colSpan="2" className="qna-imgArea"><img src={qnaImgSrc}/> </td>
+                <td colSpan="2" className="qna-imgArea">
+                    {item?.qna_img&&qnaImgSrc ? (<img src={qnaImgSrc}/>):<div>첨부된 파일이 없습니다.</div>}
+                </td>
             </tr>
             </tbody>
         </table>
         <div className="qnaItems">
         {usersid !== item?.userid ?(<div><AiOutlineAlert onClick={checkid} size="35px"/></div>):null}
-        {usersid === item?.userid ? (
+        {usersid === item?.userid || usersid==='admin1' ? (
                 <div><FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={qnaDelete}/></div>
             ) : null}
-        {usersid === item?.userid && item?.qna_state === 0 ? (
-                <div><FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={qnaEdit}/></div>
-            ) : null}
+        {usersid === item?.userid && item?.qna_state === 0
+        //  && !isTwoDaysPassed
+          ? (
+            <div>
+                <FontAwesomeIcon icon={faPenToSquare} size="2x" onClick={qnaEdit} />
+            </div>
+        ) : null}
         </div>
         <hr/>
         <div className="ansArea">

@@ -11,9 +11,12 @@
 <!--    </select>-->
     <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">
         SELECT u.*, CASE a.authority
-            WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role
+        WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role,
+        it.image_url
         FROM user_tbl u
-        left JOIN admin_grade_tbl a ON u.userid = a.userid where u.userid = #{userid};
+        left JOIN admin_grade_tbl a ON u.userid = a.userid
+        left join image_tbl it on u.userprofile=it.image_no
+        where u.userid = #{userid};
     </select>
 
     <select id="existsByUserid" parameterType="String" resultType="Boolean">
@@ -106,6 +109,14 @@
             LIMIT #{limit}
         </if>
     </select>
+    <select id ="getfollowing" resultType="map">
+        SELECT u.usernick, i.image_url FROM  follower_tbl f JOIN user_tbl u ON f.follower_userid = u.userid
+        JOIN  image_tbl i ON i.image_no = u.userprofile
+        WHERE  f.follower_userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
     <select id ="getCountfollower" resultType="int">
         SELECT count(*) FROM  follower_tbl where userid = #{userid}
     </select>
@@ -120,6 +131,23 @@
     </select>
     <select id ="getCountReplyComment" resultType="int">
         SELECT count(*) FROM reply_comment_tbl where userid = #{userid};
+    </select>
+
+    <select id="getFollowData" resultType = "map">
+        SELECT
+        f1.follower_userid AS following_user,
+        u1.usernick AS following_user_nick,
+        i1.image_url AS following_user_image,
+        f2.userid AS follower_user,
+        u2.usernick AS follower_user_nick,
+        i2.image_url AS follower_user_image
+        FROM  follower_tbl AS f1
+        LEFT JOIN follower_tbl AS f2 ON f1.follower_userid = f2.userid AND f2.follower_userid = f1.userid
+        LEFT JOIN user_tbl AS u1 ON f1.follower_userid = u1.userid
+        LEFT JOIN image_tbl AS i1 ON i1.image_no = u1.userprofile
+        LEFT JOIN user_tbl AS u2 ON f2.userid = u2.userid
+        LEFT JOIN image_tbl AS i2 ON i2.image_no = u2.userprofile
+        WHERE f1.userid = #{userid};
     </select>
 
 

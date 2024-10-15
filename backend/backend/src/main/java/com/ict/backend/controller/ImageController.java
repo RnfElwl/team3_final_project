@@ -25,11 +25,11 @@ public class ImageController {
 
     @GetMapping("/images/{foldername}/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String foldername, @PathVariable String filename) {
-        System.out.println("ImageController 여기 들어옴"  +foldername+ "/" + filename);
+        //System.out.println("ImageController 여기 들어옴"  +foldername+ "/" + filename);
 
         String currentDir = System.getProperty("user.dir");
         Path imagePath = Paths.get(currentDir+ "/images/" + foldername+ "/" + filename);
-        System.out.println("imagepath = " + imagePath);
+        //System.out.println("imagepath = " + imagePath);
         //Path imagePath = Paths.get("D:/team3_final_project/images/" + foldername+ "/" + filename);
         try {
             Resource resource = new UrlResource(imagePath.toUri());

@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AiFillLock } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
 import qnaBack from '../../img/qnaBack.png'
 import $ from "jquery";
 
@@ -61,7 +63,7 @@ function QnA() {
     //검색 시 데이터 요청
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        setNowPage(1);  // 검색할 때 페이지를 1로 초기화
+        setNowPage(1);
         axios.get(`http://localhost:9988/qna/list?nowPage=1&searchKey=${searchKey}&searchWord=${searchWord}`)
             .then(response => {
                 console.log(response.data);
@@ -252,6 +254,11 @@ function QnA() {
             {/* 페이지네이션 */}
             <div className="qna_pagination">
                 <button className="paging-btn"
+                    onClick={() => handlePageChange(1)} // 맨 처음 페이지로 가는 버튼
+                    disabled={nowPage === 1 || totalPage === 1}>
+                    <FontAwesomeIcon icon={faAngleDoubleLeft} />
+                </button>
+                <button className="paging-btn"
                     onClick={() => handlePageChange(nowPage - 1)}
                     disabled={nowPage === 1 || totalPage===1}>
                     <FaChevronLeft />
@@ -275,6 +282,11 @@ function QnA() {
                     onClick={() => handlePageChange(nowPage + 1)}
                     disabled={nowPage === totalPage || totalPage===1}>
                     <FaChevronRight />
+                </button>
+                <button className="paging-btn"
+                    onClick={() => handlePageChange(totalPage)}
+                    disabled={nowPage === totalPage || totalPage === 1}>
+                    <FontAwesomeIcon icon={faAngleDoubleRight} />
                 </button>
             </div>
         </div>

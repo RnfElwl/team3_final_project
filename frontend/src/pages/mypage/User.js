@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-import {useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
-import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Slider from "react-slick";
 import { SliderSettings, AdaptiveHeightSettings } from '../../component/api/SliderSetting';
@@ -11,13 +10,18 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/User.css';
 import profile from '../../img/profile.png';
-import { useNavigate } from 'react-router-dom';
+import Modal from '../../component/api/Modal';
 import { Link } from 'react-router-dom';
 
 
 function User() {
     const { usernick } = useParams();
     const navigate = useNavigate();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userList, setUserList] = useState([]); // 사용자 목록
+    const [currentList, setCurrentList] = useState([]);
+    const [modalTitle, setModalTitle] = useState('');
 
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
@@ -72,26 +76,80 @@ function User() {
         profileSlidesData.push({ imgSrc: "empty", usernick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
     }
 
-      const fetchData = async (tag) => {
-        let url;
-        if (tag === "Tag1") {
-          url = "http://localhost:9988/user/userinfo";  // 글 리스트 호출 URL
-        } else if (tag === "Tag2") {
-          url = "http://localhost:9988/api/comments";  // 댓글 리스트 호출 URL
-        }
-    
+    const checkMutualFollow = (userList) => {
+        const followersSet = new Set(userList.map(user => user.follower_user));
+        const followingsSet = new Set(userList.map(user => user.following_user));
+
+        const mutualFollows = userList.filter(user => 
+            followersSet.has(user.following_user) && followingsSet.has(user.follower_user)
+        );
+
+        return mutualFollows.length > 0 ? 1 : 0; // 1 또는 0 반환
+    };
+
+    const fetchUserList = async (type) => {
         try {
-          const response = await axios.get(url);
-          setList(response.data);
+            const endpoint = type === 'following' ? 'following' : 'followers';
+            // const response = await axios.get(`http://localhost:9988/user/info/f/${endpoint}`, {
+            const response = await axios.get("http://localhost:9988/user/info/f/follow", {
+            params: { usernick } // params를 사용하여 쿼리 파라미터로 전달
+            });
+            const userList = response.data;
+
+            if (type === 'following') {
+                setCurrentList(userList.filter(user => user.following_user)); // 팔로잉 목록 필터링
+            } else {
+                setCurrentList(userList.filter(user => user.follower_user)); // 팔로워 목록 필터링
+            }
+            
+            setUserList(response.data);
+            setModalTitle(type === 'following' ? '팔로잉 목록' : '팔로워 목록');
         } catch (error) {
-          console.error("Error fetching data: ", error);
+            console.error("Error fetching user list:", error);
         }
-      };
+    };
+
+    const handleOpenModal = (type) => {
+        fetchUserList(type);
+        setIsModalOpen(true);
+    };
+    const toggleFollow = (user) => {
+        console.log(user.following_user);
+        // user의 each 값을 반전시키기
+        const updatedUserList = userList.map(u => {
+            if (u === user) {
+                return { ...u, each: u.each === "1" ? "0" : "1" }; // 각 사용자 업데이트
+            }
+            return u;
+        });
+        setUserList(updatedUserList); // 상태 업데이트
+    };
     
-      const handleClickedTagName = (tag) => {
-        setTagName(tag);
-        fetchData(tag);
-      };
+
+    // 개인 채팅방 생성 코드
+      async function createSoloRoom(){
+        alert("hi");
+        const formData = {
+            'chat_title': '고구마1234',//데이터 안씀  그냥넣는 값
+            'chatlist_type': 2,
+            'user2': 'flower1234', // 상대 유저 아이디 이게 중요
+            'chatlist_img': '1' //데이터 안씀 그냥넣는 값
+        }
+        const {data} = await axios.post("http://localhost:9988/chat/create", formData, {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          openWindow(data)
+    }
+    function openWindow(url){
+        const popupWindow = window.open(
+            'http://localhost:3000/chatting/'+url, // 열고자 하는 URL
+            '_blank', // 새 창으로 열기
+            'width=500,height=800' // 팝업 창의 크기
+          );
+          popupWindow.focus();
+    }
 
 
     return (
@@ -100,7 +158,7 @@ function User() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                      <div id = "info_change">
-                        <button className="btn btn-secondary" onClick={() => navigate('/mypage/edit')}><FontAwesomeIcon icon={faPenToSquare} />채팅하기</button>
+                        <button className="btn btn-secondary" onClick={createSoloRoom} style ={{zIndex:"10"}}><FontAwesomeIcon icon={faPenToSquare} />채팅하기</button>
                     </div>
                     <div id = "profile">
                         <img src = {userInfo.userprofile} alt = {profile}/>
@@ -110,8 +168,12 @@ function User() {
                         <button className="btn btn-secondary">팔로우</button>
                     </div>
                     <div id = "userinfo">
-                        <div>팔로잉 : <span>{userInfo.follower}</span></div>
-                        <div>팔로워 : <span>{userInfo.following}</span></div>
+                        <div onClick={() => handleOpenModal('following')}>
+                            팔로잉 : <span>{userInfo.follower}</span>
+                        </div>
+                        <div onClick={() => handleOpenModal('followers')}>
+                            팔로워 : <span>{userInfo.following}</span>
+                        </div>
                         <div>게시글 : <span>{userInfo.community}</span></div>
                         <div>댓글 : <span>{userInfo.comment}</span></div>
                     </div>
@@ -136,10 +198,9 @@ function User() {
                         </div>
                     </div>
                     {/* 즐찾 회원 */}
-                    <div className = "follower">
+                    {/* <div className = "follower">
                         <div className = "content_title">
                             <span>팔로워</span>
-                            {/* <a href = "#"> 더보기 {'>'}</a> */}
                         </div>
                         <div className="content_info">
                             <Slider {...AdaptiveHeightSettings}>
@@ -153,62 +214,31 @@ function User() {
                                 ))}
                             </Slider>
                         </div>
-                    </div>
-                    {/* 내가 쓴 글 */}
-                    <div className = "write">
-                        <div className = "content_title">
-                            <span>내가 쓴 글</span>
-                            {/* <a href = "#"> 더보기 {'>'}</a> */}
-                        </div>
-                        <div className = "content_info">
-                            <ul style={{ display: 'inline-block', color : 'white' }}>
-                            <button className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => handleClickedTagName("Tag1")}>글</button>
-                            <button className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => handleClickedTagName("Tag2")}>댓글</button>
-                        </ul>
-                        <table className="table table-dark table-hover">
-                            <thead>
-                                <tr>
-                                    <th className = "col-md-1">번호</th>
-                                    <th className = "col-md-2">작성한 곳</th>
-                                    <th className = "col-md-6">제목</th>
-                                    <th className = "col-md-2">작성일</th>
-                                    <th className = "col-md-1"></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>70</td>
-                                    <td>커뮤니티</td>
-                                    <td>베테랑 2 재미있음?</td>
-                                    <td>2024-09-10</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>71</td>
-                                    <td>커뮤니티</td>
-                                    <td>탈출 보고옴</td>
-                                    <td>2024-09-11</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>72</td>
-                                    <td>커뮤니티</td>
-                                    <td>안본 흑우</td>
-                                    <td>2024-09-13</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                </div>            
+                    </div> */}
+
+                </div>
+                {isModalOpen && (
+                <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                    <ul className = "user-list-ul">
+                        {currentList.map((user, index) => {
+                            const isMutual = user.each === "1"; // 개별 사용자에 대한 팔로우 상태 확인
+                            return (
+                                <li key={index} className="user-list">
+                                    <a href={`/user/info/${user.following_user_nick || user.follower_user_nick}`}>
+                                    <img src={user.following_user_image || user.follower_user_image} alt={profile}/>
+                                    <span>{user.following_user_nick || user.follower_user_nick}</span>
+                                    </a>
+                                    <button style={{ backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', color:isMutual ? 'black' : 'white' }}
+                                    onClick={() => toggleFollow(user)}
+                                    >
+                                        {isMutual ? '팔로잉' : '팔로우'}
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </Modal>
+            )}    
             </div>
         </div>
 

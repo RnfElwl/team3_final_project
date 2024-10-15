@@ -5,6 +5,7 @@ import axios from '../../component/api/axiosApi';
 import { useParams, useNavigate} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 import ReportModal from '../../component/api/ReportModal.js';
+import { AiOutlineAlert } from "react-icons/ai";
 
 
 function CommunityView(){
@@ -32,17 +33,16 @@ function CommunityView(){
     const getCategoryName = (category) => {
         switch (category) {
             case 0:
-                return "영화";
+                return "Movies";
             case 1:
-                return "일상";
+                return "Daily";
             case 2:
-                return "자유";
-            case 3:
-                return "포스터";
+                return "Free";
             default:
                 return "기타";
         }
     };
+    
     // 좋아요 처리
     const handleLikeToggle = async () => {
         // if (!userid) {
@@ -284,6 +284,20 @@ function CommunityView(){
         }
     }, [isUserFetched]); // isUserFetched가 변경될 때마다 호출
    
+    const formatDate = (dateString) => {
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        
+        const date = new Date(dateString); // 날짜 문자열을 Date 객체로 변환
+        const day = date.getDate(); // 날짜
+        const month = months[date.getMonth()]; // 줄인 월 이름
+        const year = date.getFullYear(); // 연도
+    
+        return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
+    };
+
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -295,32 +309,45 @@ function CommunityView(){
                 <div className="view_top">
                     <img className="writer_image" src={community.userprofile} alt="Writer" />
                     <div className="writer_info">
-                        <div className="name_location">
-                            <p className="writer_name">{community.userid}</p>
-                            <p className="location">{community.loc}</p>
+                        <p className="writer_name">{community.userid}</p>
+                        <div className="list_info">
+                            <p className="writedate">{formatDate(community.community_writedate)}</p>
+                            {community.loc?.trim() ? (
+                                <>
+                                    <span className="separator">·</span>
+                                    <p className="location">{community.loc}</p>
+                                </>
+                            ) : null}
                         </div>
-                        <p className="writedate">{community.community_writedate}</p>
                     </div>
-                    {loggedInUserId !== null && loggedInUserId !== community.userid && (
-                        <>
-                        <input type="button" value="팔로우" className="action_button" />
-                        <input type="button" value="신고" className="action_button" 
-                            onClick={(e) => openReport(e)} 
-                            data-id={community.community_no}
-                            data-userid={community.userid}
-                            data-content={community.community_title} 
-                        />
-                    </>
-                )}
+                     
+                    <div className="action_button_container">
+                        {loggedInUserId !== null && loggedInUserId !== community.userid && (
+                            <>
+                                <input type="button" value="follow" className="action_button" />
+                                <button 
+                                    className="report_button" 
+                                    title="신고"
+                                    onClick={(e) => openReport(e)} 
+                                    data-id={community.community_no}
+                                    data-userid={community.userid}
+                                    data-content={community.community_title}
+                                >
+                                    <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
+                                </button>
+                            </>
+                        )}
+                    </div>
+                
                     <ReportModal    
                         reportShow={reportShow}// 모달창 보이기 여부
                         toggleReport={toggleReport} // 모달창 열고닫기 함수
                         report={report}// 신고 데이터 변수
                         setReport={setReport} // 신고 데이터 변수 세팅
-                        //setDefaultList={setDefaultChat} // list다시 select
                     />
                 </div> 
                 <hr/>
+
                 <div className="view_middle">
                     <div className="category_title">
                         <div className="category">{getCategoryName(community.category)}</div>
@@ -329,23 +356,23 @@ function CommunityView(){
                     {community.community_img && (
                         <img className="community_img" src={community.community_img} alt="Uploaded" />
                     )}
-                    <h3 className="community_content">{community.community_content}</h3>
+                    <h3 className="community_content" dangerouslySetInnerHTML={{ __html: community.community_content }}></h3>
                 </div>
 
                 <div className="view_bottom">
-                    <i 
-                        className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
-                        onClick={handleLikeToggle}
-                        style={{ 
-                            color: liked ? 'red' : 'white',  // 좋아요 상태에 따라 하트 색상 변경
-                            cursor: 'pointer' 
-                        }}
-                    ></i>
-                    <span className="likeCount">{likesCount}</span>
-                    <i className="far fa-comment"></i>
-                    <span className="commentCount">{commentCount}</span>
-                    <i className="far fa-eye"></i>  {/* 조회수 아이콘 (눈 모양) */}
-                    <span className="hitCount">{community.hit}</span>  {/* 조회수 */}
+                        <i className="far fa-eye"></i>  {/* 조회수 아이콘 (눈 모양) */}
+                        <span className="hitCount">{community.hit}</span>  {/* 조회수 */}
+                        <i className="far fa-comment"></i>
+                        <span className="commentCount">{commentCount}</span>
+                        <i 
+                            className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                            onClick={handleLikeToggle}
+                            style={{ 
+                                color: liked ? 'red' : 'white',  // 좋아요 상태에 따라 하트 색상 변경
+                                cursor: 'pointer' 
+                            }}
+                        ></i>
+                        <span className="likeCount">{likesCount}</span>
 
                     <div className="edit_delete">
                         <input type="button" value="수정" className="edit_button" onClick={handleEdit}/>

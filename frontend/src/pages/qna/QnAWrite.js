@@ -3,7 +3,6 @@ import './../../css/qna/qnaWrite.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
-import useUnsavedChangesWarning from '../../component/useUnsavedChangesWarning';
 
 function QnAWrite() {
     const navigate = useNavigate();
@@ -134,14 +133,14 @@ function QnAWrite() {
     };
     return (
         <div className='QnAWriteBody'>
-            <h1>질의응답(QnA) 작성</h1>
-            <hr />
             <form className='QnAWriteform' onSubmit={handleSubmit}>
+                <h2 style={{textAlign:"left"}}>질의응답(QnA) 작성</h2>
+                <hr />
                 <div className='qna_titleArea'>
                     <input type='hidden'
                         name='userid'
                         value={userid} />
-                    <div style={{ width: "300px" }}>
+                    <div>
                         <input
                             type='text'
                             className='qna_title'
@@ -219,7 +218,8 @@ function QnAWrite() {
                     </div>
                     <div className='image-preview'>
                         {images.map((image, index) => (
-                            <img key={index} src={image} alt={`preview-${index}`} style={{ width: '100px', margin: '10px' }} />
+                            <img key={index} src={image} alt={`preview-${index}`} style={{ width:'50%',height:'auto', marginTop:'10px', objectFit: 'contain'}}
+                            className="film-strip" />
                         ))}
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.service.CommunityService;
+import com.ict.backend.service.ImageService;
+import com.ict.backend.service.UserService;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ import java.util.List;
 public class CommunityController {
     @Autowired
     CommunityService service;
+    @Autowired
+    ImageService imageService;
 
     //list
 //    @GetMapping("/list")
@@ -28,18 +33,56 @@ public class CommunityController {
 //        return service.getCommunityList(pageable);
 //    }
     @GetMapping("/list")
-    public List<CommunityVO> getCommunityList(){
-        return service.getCommunityList();
+    public List<CommunityVO> getCommunityList(@RequestHeader(value = "Host", required = false) String Host){
+            String userid= SecurityContextHolder.getContext().getAuthentication().getName();
+        List<CommunityVO> vo = service.getCommunityList(userid);
+        for (CommunityVO community : vo) {
+            if (community.getCommunity_img() != null) {
+                community.setCommunity_img("http://" + Host +"/"+ community.getCommunity_img());
+            }
+        }
+        return vo;
     }
 
     //게시글 작성
     @PostMapping("/create")
-    public CommunityVO communityInsert (@RequestBody CommunityVO vo){
+//    public CommunityVO createCommunity (@RequestBody CommunityVO vo){
+    public CommunityVO createCommunity(
+            @RequestParam("community_title") String title,
+            @RequestParam("community_content") String content,
+            @RequestParam(value = "community_img", required = false) MultipartFile[] image, // multipart 파일 수신
+            @RequestParam("community_writedate") String writedate,
+            @RequestParam("loc") String loc,
+            @RequestParam("category") int category,
+            @RequestParam("privacy") int privacy) {
+
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        vo.setUserid(userid);
-        System.out.println(vo.toString());
-        service.createCommunity(vo);
-        return vo;
+        System.out.println(userid);
+        String no = "";
+        try {
+            for (MultipartFile file : image) {
+                String imgUrl = imageService.uploadImage(file, "community"); // image_tbl에 이미지 넣기
+                System.out.println("New profile image uploaded: "+ imgUrl);         // 이미지 주소값 확인
+                int num = service.uploadImage(imgUrl);
+                System.out.println("no : "+ num);
+                no = String.valueOf(num);// image_no값 확인
+            }
+        } catch (Exception e) {
+            System.out.println(e); // 오류 발생 시 응답
+        }
+
+        CommunityVO community = new CommunityVO();
+        community.setUserid(userid);
+        community.setCommunity_title(title);
+        community.setCommunity_content(content);
+        community.setCommunity_img(no); // 이미지 저장 메서드 호출
+        community.setCommunity_writedate(writedate);
+        community.setLoc(loc);
+        community.setCategory(category);
+        community.setPrivacy(privacy);
+
+        service.createCommunity(community);
+        return community;
     }
 
     // 조회수 증가를 위한 별도의 API 엔드포인트
@@ -50,8 +93,10 @@ public class CommunityController {
 
     //view
     @GetMapping("/view/{community_no}")
-    public CommunityVO getCommunityView(@PathVariable("community_no") int community_no){
+    public CommunityVO getCommunityView(@PathVariable("community_no") int community_no, @RequestHeader(value = "Host", required = false) String Host){
         CommunityVO communityVO = service.getCommunityView(community_no);
+        System.out.println(communityVO.getCommunity_img());
+        communityVO.setCommunity_img("http://" + Host +"/"+ communityVO.getCommunity_img());
         return communityVO;
     }
 
@@ -62,11 +107,55 @@ public class CommunityController {
 
     //edit
     @PutMapping("/edit/{community_no}")
-    public void editCommunity(@PathVariable int community_no, @RequestBody CommunityVO community){
-        String edit_user = SecurityContextHolder.getContext().getAuthentication().getName();
-        community.setEdit_user(edit_user);
-        community.setCommunity_no(community_no);
-        service.editCommunity(community);
+//    public void editCommunity(@PathVariable int community_no, @RequestBody CommunityVO community){
+        public CommunityVO editCommunity(
+//        String edit_user = SecurityContextHolder.getContext().getAuthentication().getName();
+//        community.setEdit_user(edit_user);
+//        community.setCommunity_no(community_no);
+//        service.editCommunity(community);
+        @PathVariable int community_no,
+        @RequestParam("community_title") String title,
+        @RequestParam("community_content") String content,
+        @RequestParam(value = "community_img", required = false) MultipartFile[] image, // multipart 파일 수신
+        @RequestParam("community_writedate") String writedate,
+        @RequestParam("loc") String loc,
+        @RequestParam("category") int category,
+        @RequestParam("privacy") int privacy) {
+
+            String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+            System.out.println(userid);
+            String no = "";
+            int result = 0;
+            CommunityVO communityVO = service.getCommunityView(community_no);
+            String img_url = communityVO.getCommunity_img();
+            System.out.println(communityVO);
+            System.out.println(img_url);
+            try {
+                for (MultipartFile file : image) {
+                    String imgUrl = imageService.updateImage(file, "community", img_url); // image_tbl에 이미지 넣기
+                    System.out.println("New profile image uploaded: "+ imgUrl);         // 이미지 주소값 확인
+
+                    result =  service.updateimageurl(imgUrl, service.getimgno(community_no));
+                    //no = String.valueOf(num);// image_no값 확인
+                }
+            } catch (Exception e) {
+                System.out.println(e); // 오류 발생 시 응답
+            }
+
+            CommunityVO community = new CommunityVO();
+            community.setUserid(communityVO.getUserid());
+            community.setCommunity_title(title);
+            community.setCommunity_content(content);
+            community.setCommunity_writedate(writedate);
+            community.setLoc(loc);
+            community.setCategory(category);
+            community.setPrivacy(privacy);
+            community.setEdit_user(userid);
+            community.setCommunity_no(community_no);
+
+            service.editCommunity(community);
+
+            return community;
     }
 
     //delete

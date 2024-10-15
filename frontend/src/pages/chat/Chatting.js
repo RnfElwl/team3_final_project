@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import "../../css/chat/chtting.css";
 import axios from '../../component/api/axiosApi.js';
 import mqtt from 'mqtt';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineAlert } from "react-icons/ai";
 import { IoPerson, IoExitOutline, IoCloseSharp  } from "react-icons/io5";
@@ -17,6 +17,7 @@ const Chatting = () => {
         day: 'numeric',
         weekday: 'long' // 요일
     };
+    const navigate = useNavigate()
     const {chatlist_url } = useParams();// 채팅방 id 
     const [roomInfo, setRoomInfo]= useState({}); // 채팅방 정보 
     const [client, setClient] = useState(null);
@@ -39,6 +40,7 @@ const Chatting = () => {
     const [oldTag, setOldTag] = useState([]);
     const [voteForm, setVoteForm]= useState({});
     const [voteList, setVoteList] = useState([]);
+    const [vote_state, setVoteState] = useState();
     const [voteUserWindow, setVoteUserWindow] = useState(false);
     const [openExit, setOpenExit] = useState(false);
     let once = 0;
@@ -48,13 +50,13 @@ const Chatting = () => {
         document.body.style.overflow = 'hidden';
         if(once == 0){
             once = 1;
+            getUser()
+            getRoomInfo();
             setDefaultChat();
             setDefaultMember();
             setDefaultSchdule();
             
         }
-        getUser()
-        getRoomInfo();
         // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
         
     }, []);
@@ -77,7 +79,9 @@ const Chatting = () => {
                 }
                 else if(roomInfo.chatlist_type==2){
                     //채팅방 유저인지 확인
-                    // 아니면 바로 창닫기
+                    soloChatCheck();
+                    
+                    
                 }
             });
         });
@@ -89,8 +93,8 @@ const Chatting = () => {
         // 메시지 수신 시
         mqttClient.on('message', (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
-            console.log(decoding)
             if(JSON.parse(decoding).chat_type==4){
+                console.log("투표된당!!!!!!")
                 setDefaultSchdule();
             }else{
                 setReceivedMessages(p=>[...p, JSON.parse(decoding)])
@@ -129,7 +133,7 @@ const Chatting = () => {
         // 메시지가 변경될 때마다 실행
         scrollBottom();
         dateMsgSend()
-        
+        console.log(receivedMessages)
       }, [receivedMessages, client]);
       async function getRoomInfo(){
         const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
@@ -138,6 +142,7 @@ const Chatting = () => {
         console.log(result, "----------------");
         setRoomInfo(result.data);
       }
+      
       async function dateMsgSend(){// 로컬 날짜 메시지 출력
         if(receivedMessages.length >= 1){
             const now = receivedMessages[receivedMessages.length -1].chat_date;
@@ -164,7 +169,16 @@ const Chatting = () => {
             }
         }
     }
-    
+    async function soloChatCheck(){
+        const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
+        if(data==0){
+            console.log("왜 있어~~~~~")
+            navigate("/");
+            window.close();
+        }
+        setDefaultChat();
+        return data;
+    }
     async function setDefaultChat(){ // 채팅 기본 값 세팅
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
         
@@ -175,7 +189,6 @@ const Chatting = () => {
     async function setDefaultSchdule(){
         const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
         setScheduleList(data);
-        
     }
     async function setDefaultMember(){
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
@@ -208,6 +221,7 @@ const Chatting = () => {
                 chat_date: now,
                 chat_type: 2
             } 
+
             if(data == 1){
                 console.log(data, typeof(data), data == 1)
                 const result3 = await axios.post("http://localhost:9988/chat/headcount", chatlist_url, {
@@ -218,6 +232,7 @@ const Chatting = () => {
                 if(result3.data == 1){
                     getRoomInfo();
                 }
+
                 setReceivedMessages(receivedMessages)
                 
                 mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
@@ -227,7 +242,6 @@ const Chatting = () => {
     useEffect(() => {
         // 매초마다 실행되는 함수
         const interval = setInterval(() => {
-          console.log("Current value:", today); // 변수 확인
           setToday(new Date());
           schedule_list_tag();
         }, 1000); // 1000ms = 1초
@@ -239,7 +253,7 @@ const Chatting = () => {
         schedule_list_tag();
         setToday(new Date());
     }, [scheduleList])
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
             const offset = new Date().getTimezoneOffset() * 60000;
@@ -254,10 +268,16 @@ const Chatting = () => {
                 chatlist_url,
                 usernick:userData.data.usernick, 
                 userprofile: userData.data.userprofile,
+                image_url: userData.data.image_url,
                 chat_date: now,
                 chat_type: 1
             } 
-
+            const result = await axios.post("http://localhost:9988/chat/add", data);
+            if(result.data==1){
+                console.log("성공");
+            }else{
+                console.log("실패");
+            }
             
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
@@ -306,7 +326,7 @@ const Chatting = () => {
         e.preventDefault();
         const {data} = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
         setScheduleCreate(false);
-        if(data==1){
+        if(data>=1){
             const info = {
                 chat_type: 4
             } 
@@ -323,7 +343,6 @@ const Chatting = () => {
         const oldList = [];
         scheduleList.map((data, index)=>{
             if((new Date(data.schedule_date).getTime() -  today.getTime())>=0){
-                console.log()
                 newList.push({
                     schedule_id: data.schedule_id,
                     schedule_title: data.schedule_title,
@@ -337,6 +356,7 @@ const Chatting = () => {
             }
             else{
                 oldList.push({
+                    schedule_id: data.schedule_id,
                     schedule_title: data.schedule_title,
                     schedule_date:data.schedule_date,
                     schedule_addr: data.schedule_addr,
@@ -352,7 +372,7 @@ const Chatting = () => {
     async function setScheduleVote(e){
         e.preventDefault();
         const {data} = await axios.post('http://localhost:9988/chat/schedule/voting', voteForm);
-        if(data==1){
+        if(data>=1){
             const info = {
                 chat_type: 4
             } 
@@ -365,10 +385,10 @@ const Chatting = () => {
             schedule_id: id,
             vote_value: value
         }});
+
         if(data.length !=0){
             setVoteUserWindow(true);
             setVoteList(data);
-
         }
     }
     async function exitRoom(){
@@ -395,15 +415,15 @@ const Chatting = () => {
                 }    
                 client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
             }
-            else if(roomInfo.chatlist_type==2){
-                const {data} = await axios.post("http://localhost:9988/chat/exit/solo", chatlist_url, {
-                    headers: {
-                        'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
-                    }
-                });
-            }
-            window.close();
         }
+        if(roomInfo.chatlist_type==2){
+            const test = await axios.post("http://localhost:9988/chat/exit/solo", chatlist_url, {
+                headers: {
+                    'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                }
+            });
+        }
+        window.close();
     }
     return (
         <div className='chatting_room'>
@@ -430,7 +450,7 @@ const Chatting = () => {
                             {
                             memberList.map((data, index)=>(
                                 <>
-                                    <div>
+                                    <div className='user_info'>
                                         <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
@@ -493,10 +513,11 @@ const Chatting = () => {
                     <div className={`voteWindow ${voteUserWindow?'show':'hide'}`}>
                         <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
                         <div className='vote_user_box'>
+                            <h2>{vote_state==1?'참여 목록':'불참 목록'}</h2>
                             {
                                 voteList.map((data, index)=>(
                                 <div className='vote_user_info'>
-                                    <div><img src={`${data.userprofile}`}/></div>
+                                    <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
                                     <div>{data.usernick}</div>
                                 </div>
                                 ))
@@ -515,29 +536,17 @@ const Chatting = () => {
                             <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
                             <div className='schedule_addr'>{data.schedule_addr}</div>
                         </div>
-                                {data.user_vote==null?(<>
-                                    <form className='schedule_voting' onSubmit={setScheduleVote}>
-                                        <div className='voting_box'>
-                                            <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                            <button className='yes_vote vote_btn' type='submit' name='vote' onClick={()=>setVoteForm({vote_value:1, schedule_id: data.schedule_id})}>참여</button>
-                                        </div>
-                                        <div className='voting_box'>
-                                            <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
-                                            <button className='no_vote vote_btn' type='submit' name='vote' onClick={()=>setVoteForm({vote_value:0, schedule_id: data.schedule_id})}>불참</button>
-                                        </div>
-                                    </form>
-                                </>):(<>
-                                    <div className={`schedule_voting ${data.user_vote}`}>
-                                        <div className='voting_box'>
-                                            <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                            <div className='yes_btn vote_btn'>참여</div>
-                                        </div>
-                                        <div className='voting_box'>
-                                            <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
-                                            <div className='no_btn vote_btn'>불참</div>
-                                        </div>
-                                    </div>
-                                </>)}
+
+                        <form className={`schedule_voting ${data.user_vote}`} onSubmit={setScheduleVote}>
+                            <div className='voting_box'>
+                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id});setVoteState(1);}}>참여</button>
+                            </div>
+                            <div className='voting_box'>
+                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                <button className='no_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:0, schedule_id: data.schedule_id}); setVoteState(2);}}>불참</button>
+                            </div>
+                        </form>
                     </div>
                     ))
 
@@ -549,15 +558,15 @@ const Chatting = () => {
                                 <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                                 <div className='schedule_info'>
                                     <div className='schedule_title'>{data.schedule_title}</div>
-                                    <div className='schedule_member'><IoPerson size="15px" ></IoPerson >2 [참여] {(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
                                     <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
                                     <div className='schedule_addr'>{data.schedule_addr}</div>
                                 </div>
                                     <div className='schedule_voting'>
                                         <div className='end_vote'>
                                             <div>
-                                                <div className='vote_yes_user vote_user'><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                                <div className='vote_no_user vote_user'><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
                                             </div>
                                             <div className='voting_box'>
                                                 <button>투표종료</button>
@@ -592,11 +601,11 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >
@@ -618,8 +627,8 @@ const Chatting = () => {
                                         </div>
                                     </div>
                                     ,
-                                2:  <div className='doorway'>{data.usernick} 님이 입장 하였습니다.</div>,
-                                3:  <div className='doorway'>{data.usernick} 님이 퇴장 하였습니다.</div>,
+                                2:  <>{roomInfo.chatlist_type==1 &&<div className='doorway'>{data.usernick} 님이 입장 하였습니다.</div>}</>,
+                                3:  <>{roomInfo.chatlist_type==1 &&<div className='doorway'>{data.usernick} 님이 퇴장 하였습니다.</div>}</>,
                             }[data.chat_type]
                         }
                         

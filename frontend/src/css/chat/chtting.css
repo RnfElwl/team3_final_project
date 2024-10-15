@@ -190,6 +190,13 @@
     overflow-y: auto;
 }
 
+.chatting_room .user_info{
+    display: flex;
+}
+.chatting_room .user_info img{
+    width: 40px;
+    height: 40px;
+}
 
 .chatting_room .user_list::-webkit-scrollbar{
     width: 8px;
@@ -280,6 +287,13 @@
 .chatting_room .vote_user{
     margin-right: 8px;
 }
+.chatting_room .vote_user_info{
+    display: flex;
+}
+.chatting_room .vote_user_info img{
+    width: 40px;
+    height: 40px;
+}
 .chatting_room .vote_yes_user{
     color: #d0effd;
 }
@@ -298,17 +312,17 @@
     justify-content: center;
     border-radius: 50px;
 }
-.chatting_room .yes_vote:hover {
+.chatting_room .yes_btn:hover {
     background-color: rgb(126, 201, 255) !important;
 }
-.chatting_room .no_vote:hover {
+.chatting_room .no_btn:hover {
     background-color: rgb(255, 175, 129) !important;
 }
 .chatting_room .yes .yes_btn{
-    background-color: rgb(126, 201, 255);
+    background-color: rgb(126, 201, 255) !important;
 }
 .chatting_room .no .no_btn{
-    background-color: rgb(255, 175, 129);
+    background-color: rgb(255, 175, 129) !important;
 }
 .chatting_room .schedule_voting .voting_box>button{
     width: 100px;

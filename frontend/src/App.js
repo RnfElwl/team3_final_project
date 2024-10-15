@@ -15,6 +15,11 @@ import CommunityWrite from './pages/community/CommunityWrite.js';
 import CommunityView from './pages/community/CommunityView.js';
 import CommunityEdit from './pages/community/CommunityEdit.js';
 import Admin from './pages/admin/Admin.js'
+// 신규 추가
+import AdminQnaCon from './pages/admin/Admin_qnaCon.js'
+import AdminComCon from './pages/admin/Admin_comCon.js'
+import AdminMemCon from './pages/admin/Admin_memCon.js'
+// 신규 추가
 import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'
 import MvShopping from './pages/shopping/MvShopping.js'    
@@ -48,6 +53,11 @@ function App() {
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
                 <Route path='/admin' element={<Admin/>}/>
+                {/* 신규 추가 */}
+                <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/>
+                <Route path='/admin/comCon' element={<AdminComCon/>}/>
+                <Route path='/admin/memCon' element={<AdminMemCon/>}/>
+                {/* 신규 추가 */}
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 

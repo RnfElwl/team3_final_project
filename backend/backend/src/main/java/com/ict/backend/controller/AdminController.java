@@ -1,11 +1,11 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.service.AdminService;
-import com.ict.backend.vo.AdminDateVO;
-import com.ict.backend.vo.AdminVO;
-import com.ict.backend.vo.MemberVO;
+import com.ict.backend.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -105,6 +105,24 @@ public class AdminController {
         List<MemberVO> result=adminService.selectMemberMin();
 
         return result;
+    }
+
+    //QnA Management part
+    @GetMapping("/qnaCon/list")
+    public ResponseEntity<Map<String, Object>> getAdminQnAList(@ModelAttribute PagingVO pagingVO) {
+        System.out.println("Input: " + pagingVO);
+        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
+        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+
+        List<QnAVO> result = adminService.getQnAList(pagingVO);
+        int qnaTotalPages = adminService.getTotalRecord(pagingVO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("qnaList", result);
+        resultMap.put("qnaTotalPages", qnaTotalPages);
+        System.out.println("Result: " + resultMap);
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
 }

@@ -14,6 +14,8 @@ public class ChatListVO {
     private String usernick;
     private String image_url;
     private String userprofile;
+    private String user2;
+
     private int flag;
 
 }
