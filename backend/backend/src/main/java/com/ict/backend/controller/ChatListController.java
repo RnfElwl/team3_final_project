@@ -24,6 +24,12 @@ public class ChatListController {
     public ChatListController(ChatListService chatListService){
         this.chatListService = chatListService;
     }
+
+    @PostMapping("/add")
+    public int insertChatMessage(@RequestBody ChatVO chatVO){
+        System.out.println(chatVO.toString());
+        return chatListService.insertChatMessage(chatVO);
+    }
     @PostMapping("/create")
     public String insertChatList(@RequestBody ChatListVO chatListVo){
         String chatlist_url = UUIDUtils.createType4UUID();

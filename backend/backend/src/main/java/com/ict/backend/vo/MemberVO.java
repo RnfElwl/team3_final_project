@@ -20,6 +20,7 @@ public class MemberVO {
     private String userbirth;
     private String gender;
     private String userprofile;
+    private String image_url;
     private String regiserdate;
     private String role;
     private String password;

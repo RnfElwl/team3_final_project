@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface ChatListDAO {
+    public int insertChatMessage(ChatVO chatVO);
     public int insertChatList(ChatListVO chatListVO);
     public List<ChatListVO> selectOpenChatList(String keyWord);
     public ChatUserVO selectChatUser(String chatlist_url, String userid);

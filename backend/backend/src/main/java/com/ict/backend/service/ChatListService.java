@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface ChatListService {
+    public int insertChatMessage(ChatVO chatVO);
     public int insertChatList(ChatListVO chatListVO);
     public List<ChatListVO> selectOpenChatList(String keyWord);
     public List<ChatVO> selectChatContent(String chatlist_url, String userid);

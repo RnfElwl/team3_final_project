@@ -11,5 +11,6 @@ public class ChatVO {
     private String content_id;
     private String usernick;
     private String userprofile;
+    private String image_url;
     private String chat_type;
 }

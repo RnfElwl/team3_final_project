@@ -11,9 +11,12 @@
 <!--    </select>-->
     <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">
         SELECT u.*, CASE a.authority
-            WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role
+        WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role,
+        it.image_url
         FROM user_tbl u
-        left JOIN admin_grade_tbl a ON u.userid = a.userid where u.userid = #{userid};
+        left JOIN admin_grade_tbl a ON u.userid = a.userid
+        left join image_tbl it on u.userprofile=it.image_no
+        where u.userid = #{userid};
     </select>
 
     <select id="existsByUserid" parameterType="String" resultType="Boolean">

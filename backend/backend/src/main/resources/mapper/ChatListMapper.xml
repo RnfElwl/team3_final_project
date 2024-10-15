@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.ChatListDAO">
+
+    <insert id="insertChatMessage" parameterType="com.ict.backend.vo.ChatVO">
+        insert into chat_content_tbl(content_id, chatlist_url, userid, chat_content, chat_date) values(#{content_id}, #{chatlist_url}, #{userid}, #{chat_content}, #{chat_date});
+    </insert>
     <insert id="insertChatList" parameterType="com.ict.backend.vo.ChatListVO">
         insert into chat_list_tbl values(#{chatlist_url}, #{chat_title}, #{userid}, #{chat_content}, ${chatlist_type}, ${chatlist_headcount}, ${chatlist_img})
     </insert>
@@ -42,7 +46,7 @@
         date_records.chatlist_url,
         NULL AS userid,
         DATE(date_records.chat_date) AS chat_date,
-        null as userprofile,
+        null as image_url,
         null as usernick,
         NULL AS chat_content,
         NULL AS content_id,
@@ -60,12 +64,12 @@
         (select date(cul.first_conn) from chat_user_list cul where cul.chatlist_url=#{param1} and userid=#{param2} and flag=1) &lt;= date_records.chat_date
         UNION ALL
         select * from(
-        select chatlist_url, ut.userid, first_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 2 as chat_type
+        select chatlist_url, ut.userid, first_conn as chat_date, null as image_url, ut.usernick, null as chat_content, null as content_id, 2 as chat_type
         from chat_user_list cul
         join user_tbl ut on ut.userid=cul.userid
         where chatlist_url=#{param1}
         UNION ALL
-        select chatlist_url, ut.userid, last_conn as chat_date, null as userprofile, ut.usernick, null as chat_content, null as content_id, 3 as chat_type
+        select chatlist_url, ut.userid, last_conn as chat_date, null as image_url, ut.usernick, null as chat_content, null as content_id, 3 as chat_type
         from chat_user_list cul
         join user_tbl ut on ut.userid=cul.userid
         where chatlist_url=#{param1}
@@ -75,7 +79,7 @@
         cct.chatlist_url,
         ut.userid,
         cct.chat_date,
-        it.image_url userprofile,
+        it.image_url ,
         ut.usernick,
         cct.chat_content,
         cct.content_id,

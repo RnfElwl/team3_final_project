@@ -10,12 +10,14 @@ import java.util.List;
 
 @Service
 public class ChatListServiceImpl implements ChatListService {
+
     private ChatListDAO chatListDAO;
     @Autowired
     public ChatListServiceImpl(ChatListDAO chatListDAO){
         this.chatListDAO = chatListDAO;
     }
 
+    public int insertChatMessage(ChatVO chatVO){return chatListDAO.insertChatMessage(chatVO);}
     public int insertChatList(ChatListVO chatListVO){
         return chatListDAO.insertChatList(chatListVO);
     }

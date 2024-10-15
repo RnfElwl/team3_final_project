@@ -133,7 +133,7 @@ const Chatting = () => {
         // 메시지가 변경될 때마다 실행
         scrollBottom();
         dateMsgSend()
-        
+        console.log(receivedMessages)
       }, [receivedMessages, client]);
       async function getRoomInfo(){
         const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
@@ -221,6 +221,7 @@ const Chatting = () => {
                 chat_date: now,
                 chat_type: 2
             } 
+
             if(data == 1){
                 console.log(data, typeof(data), data == 1)
                 const result3 = await axios.post("http://localhost:9988/chat/headcount", chatlist_url, {
@@ -231,6 +232,7 @@ const Chatting = () => {
                 if(result3.data == 1){
                     getRoomInfo();
                 }
+
                 setReceivedMessages(receivedMessages)
                 
                 mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
@@ -251,7 +253,7 @@ const Chatting = () => {
         schedule_list_tag();
         setToday(new Date());
     }, [scheduleList])
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
             const offset = new Date().getTimezoneOffset() * 60000;
@@ -266,10 +268,16 @@ const Chatting = () => {
                 chatlist_url,
                 usernick:userData.data.usernick, 
                 userprofile: userData.data.userprofile,
+                image_url: userData.data.image_url,
                 chat_date: now,
                 chat_type: 1
             } 
-
+            const result = await axios.post("http://localhost:9988/chat/add", data);
+            if(result.data==1){
+                console.log("성공");
+            }else{
+                console.log("실패");
+            }
             
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
@@ -593,11 +601,11 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.userprofile}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.userprofile}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >
