@@ -21,8 +21,8 @@ public class CommunityServiceImpl implements CommunityService{
 //        return dao.getCommunityList(pageable);
 //    }
     @Override
-    public List<CommunityVO> getCommunityList() {
-        return dao.getCommunityList();
+    public List<CommunityVO> getCommunityList(String userid) {
+        return dao.getCommunityList(userid);
     }
 
 //    @Override

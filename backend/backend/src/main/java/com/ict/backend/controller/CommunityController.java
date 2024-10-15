@@ -29,7 +29,8 @@ public class CommunityController {
 //    }
     @GetMapping("/list")
     public List<CommunityVO> getCommunityList(){
-        return service.getCommunityList();
+        String userid= SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getCommunityList(userid);
     }
 
     //게시글 작성

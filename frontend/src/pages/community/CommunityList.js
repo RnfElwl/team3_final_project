@@ -40,11 +40,10 @@ function CommunityList() {
                 return "기타";
         }
     };
-
-    useEffect(() => {
-        // 커뮤니티 글 리스트 가져오기
+    function communityListSetting(){
         axios.get('http://localhost:9988/community/list')
             .then(response => {
+                console.log(response.data);
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
                 
@@ -68,6 +67,10 @@ function CommunityList() {
             .catch(error => {
                 console.error("Error fetching community list:", error);
             });
+    }
+    useEffect(() => {
+        // 커뮤니티 글 리스트 가져오기
+        communityListSetting();
 
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {
@@ -86,6 +89,7 @@ function CommunityList() {
         axios.get(`http://localhost:9988/community/view/${community_no}`)
             .then(response => {
                 console.log(response.data); // API 응답 로그
+                console.log(response);
                 setCommunity(response.data); // community 상태 업데이트
                 setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
                 setLiked(response.data.liked); // 초기 좋아요 상태 설정
@@ -147,7 +151,7 @@ function CommunityList() {
     };  
 
     // 좋아요 처리
-    const handleLikeToggle = async () => {
+    const handleLikeToggle = async (no) => {
         // if (!userid) {
         //     console.error('사용자가 로그인하지 않았습니다.');
         //     return; // userid가 없으면 처리 중지
@@ -155,10 +159,10 @@ function CommunityList() {
 
         try {
             const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
-                params: { community_no, userid }
+                params: { community_no: no, userid }
             });
-            console.log("좋아요 결과"+isLikedResponse.data);
-            setLiked(isLikedResponse.data);
+            
+            // setLiked(isLikedResponse.data);
             // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
             
             // if (isLiked) {
@@ -168,15 +172,16 @@ function CommunityList() {
             //     // 좋아요 추가
             //     await axios.post(`http://localhost:9988/community/like`, { community_no, userid });
             // }
-
+            communityListSetting();
             // 좋아요 수 업데이트
-            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${community_no}`);
-            setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
-            console.log("좋아요 수"+likesCountResponse);
+            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${no}`);
+            // setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
+            // console.log("좋아요 수"+likesCountResponse);
             //setLiked(!isLiked); // 좋아요 상태 업데이트
         } catch (error) {
             console.error('좋아요 처리 실패:', error);
         }
+        
     };
 
     useEffect(() => {
@@ -265,7 +270,7 @@ function CommunityList() {
                             </Link>  
                             <div className="content"> 
                                 <div className="list_top">
-                                    <img className="writer_image" src={communityItem.userprofile} alt="Writer" />
+                                    <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     <div className="writer_info">
                                         <p className="writer_name">{communityItem.userid}</p>
                                         <div className="list_info">
@@ -309,14 +314,14 @@ function CommunityList() {
                                     </div>
                                     <div className="right_info">
                                         <i 
-                                            className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
-                                            onClick={handleLikeToggle}
+                                            className={`fa-heart ${communityItem.like_state==1 ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                                            onClick={()=>{handleLikeToggle(communityItem.community_no)}}
                                             style={{ 
-                                                color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
+                                                color: communityItem.like_state==1 ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
                                                 cursor: 'pointer' 
                                             }}
                                         ></i>
-                                        <span className="likeCount">{likesCount}</span>
+                                        <span className="likeCount">{communityItem.community_like}</span>
                                     </div>
                                 </div> 
                             </div>  

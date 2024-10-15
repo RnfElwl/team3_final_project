@@ -5,8 +5,15 @@
 <mapper namespace="com.ict.backend.dao.CommunityDAO">
     <!-- 게시글 리스트 조회 쿼리 -->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl cct
-        where cct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)
+        select ct.community_no, ct.userid, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
+        exists(select * from community_like_tbl clt2 where clt2.userid=#{param1} and clt2.community_no=ct.community_no) like_state
+        from community_tbl ct
+        left outer join community_like_tbl clt on ct.community_no=clt.community_no
+        left JOIN community_image_tbl i ON ct.community_img = i.image_no
+        join user_tbl ut on ct.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        where ct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{param1} and rt.report_tblname=2)
+        group by ct.community_no
         ORDER BY community_writedate DESC
     </select>
     <insert id = "createCommunity" parameterType="com.ict.backend.vo.CommunityVO">
@@ -59,7 +66,7 @@
         DELETE FROM community_like_tbl
         WHERE community_no = #{community_no} AND userid = #{userid}
     </delete>
-    <!-- 좋아요 수 조회 -->
+<!--     좋아요 수 조회 -->
     <select id="getLikesCount" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM community_like_tbl
         WHERE community_no = #{community_no}
