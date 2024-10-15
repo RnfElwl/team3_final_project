@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import axios from '../../component/api/axiosApi';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Slider from "react-slick";
 import { SliderSettings, AdaptiveHeightSettings } from '../../component/api/SliderSetting';
@@ -18,6 +19,10 @@ function Mypage() {
     const [recentSlidesData, setRecentSlides] = useState([]);
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
+    const [isLiked, setIsLiked] = useState(true);
+    const toggleLike = () => {
+        setIsLiked(!isLiked); // 클릭 시 상태 토글
+    };
     
     // 글, 댓글 불러올거
     const [tagName, setTagName] = useState("Tag1");
@@ -215,182 +220,104 @@ function Mypage() {
                                 ))}
                             </Slider>
                         </div>
-                        {/* <div className = "content_info">
-                            <Slider {...AdaptiveHeightSettings}>
-                            {useprofileSlides.map((slide, index) => (
-                                <div key={index}>
-                                <a href = {`/user/info/${slide.usernick}`}>
-                                <img className="userprofile" src={slide.image_url} alt="프로필" />
-                                <p className="usernick">{slide.usernick}</p>
-                                </a>
-                                </div>
-                            ))}
-                            </Slider>
-                        </div> */}
                     </div>
-                    {/* 내가 쓴 글 */}
-                    <div className = "write">
-                        <div className = "content_title">
-                            <span>내가 쓴 글</span>
-                            <a href = "#"> 더보기 {'>'}</a>
-                        </div>
-                        <div className = "content_info">
-                            <ul style={{ display: 'inline-block', color : 'white' }}>
-                            <button className="btn btn-secondary" style={{ marginRight: '10px' }} onClick={() => handleClickedTagName("Tag1")}>글</button>
-                            <button className="btn btn-secondary" style={{ marginLeft: '10px' }} onClick={() => handleClickedTagName("Tag2")}>댓글</button>
-                        </ul>
-                        <table className="table table-dark table-hover">
-                            <thead>
-                                <tr>
-                                    <th className = "col-md-1">번호</th>
-                                    <th className = "col-md-2">작성한 곳</th>
-                                    <th className = "col-md-6">제목</th>
-                                    <th className = "col-md-2">작성일</th>
-                                    <th className = "col-md-1"></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>70</td>
-                                    <td>커뮤니티</td>
-                                    <td>베테랑 2 재미있음?</td>
-                                    <td>2024-09-10</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>71</td>
-                                    <td>커뮤니티</td>
-                                    <td>탈출 보고옴</td>
-                                    <td>2024-09-11</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>72</td>
-                                    <td>커뮤니티</td>
-                                    <td>안본 흑우</td>
-                                    <td>2024-09-13</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                    {/* Q&A */}
-                    <div className = "qna">
-                        <div className = "content_title">
-                            <span>QnA</span>
-                            <a href = "#"> 더보기 {'>'}</a>
-                        </div>
-                        <div className = "content_info">
-                        <table className="table table-dark table-hover">
-                            <thead>
-                                <tr>
-                                    <th className = "col-md-1">번호</th>
-                                    <th className = "col-md-2">문의종류</th>
-                                    <th className = "col-md-4" >제목</th>
-                                    <th className = "col-md-2">상태</th>
-                                    <th className = "col-md-2">작성일</th>
-                                    <th className = "col-md-1"></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>3</td>
-                                    <td>서버 문의</td>
-                                    <td>서버가 느려요</td>
-                                    <td>처리 중</td>
-                                    <td>2024-09-10</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>배송 문의</td>
-                                    <td>택배 언제와요</td>
-                                    <td>처리 완료</td>
-                                    <td>2024-09-08</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>서버 문의</td>
-                                    <td>얘 비매너에요</td>
-                                    <td>처리 중</td>
-                                    <td>2024-09-13</td>
-                                    <th>
-                                        <FontAwesomeIcon icon={faPenToSquare} size ="2x" onClick={() => alert("edit")}/>  <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
+                    {/* 사등분 */}
                     <div className = "board">
                         <div className = "write_4">
                             <div className = "content_title">
-                                <span>커뮤니티</span>
+                                <span>게시글</span>
                             </div>
                             <div className = "content_info">
                             <table className="table table-dark table-hover">
                                 <thead>
                                     <tr>
-                                        <th className = "col-md-1">번호</th>
-                                        <th className = "col-md-2">작성한 곳</th>
-                                        <th className = "col-md-6">제목</th>
-                                        <th className = "col-md-2">작성일</th>
                                         <th className = "col-md-1"></th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>70</td>
-                                        <td>커뮤니티</td>
-                                        <td>베테랑 2 재미있음?</td>
-                                        <td>2024-09-10</td>
                                         <th>
-                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
                                         </th>
                                     </tr>
                                 </tbody>
                             </table>
                             </div>
                         </div>
+
                         <div className = "comm_4">
                         <div className = "content_title">
-                                <span>커뮤니티 댓글</span>
+                                <span>댓글</span>
                             </div>
                             <div className = "content_info">
                             <table className="table table-dark table-hover">
                                 <thead>
                                     <tr>
-                                        <th className = "col-md-1">번호</th>
-                                        <th className = "col-md-2">작성한 곳</th>
-                                        <th className = "col-md-6">제목</th>
-                                        <th className = "col-md-2">작성일</th>
                                         <th className = "col-md-1"></th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>70</td>
-                                        <td>커뮤니티</td>
-                                        <td>베테랑 2 재미있음?</td>
-                                        <td>2024-09-10</td>
                                         <th>
-                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
                                         </th>
                                     </tr>
                                 </tbody>
@@ -405,22 +332,54 @@ function Mypage() {
                             <table className="table table-dark table-hover">
                                 <thead>
                                     <tr>
-                                        <th className = "col-md-1">번호</th>
-                                        <th className = "col-md-2">작성한 곳</th>
-                                        <th className = "col-md-6">제목</th>
-                                        <th className = "col-md-2">작성일</th>
                                         <th className = "col-md-1"></th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>70</td>
-                                        <td>커뮤니티</td>
-                                        <td>베테랑 2 재미있음?</td>
-                                        <td>2024-09-10</td>
                                         <th>
-                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    {isLiked ? (
+                                                        <FaHeart onClick={toggleLike} />
+                                                    ) : (
+                                                        <FaRegHeart onClick={toggleLike} />
+                                                    )}
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    {isLiked ? (
+                                                        <FaHeart onClick={toggleLike} />
+                                                    ) : (
+                                                        <FaRegHeart onClick={toggleLike} />
+                                                    )}
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div>전우치 존나 재미있는데</div>
+                                                    {isLiked ? (
+                                                        <FaHeart onClick={toggleLike} />
+                                                    ) : (
+                                                        <FaRegHeart onClick={toggleLike} />
+                                                    )}
+                                                </li>
+                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                            </ul>
                                         </th>
                                     </tr>
                                 </tbody>
@@ -435,22 +394,42 @@ function Mypage() {
                             <table className="table table-dark table-hover">
                                 <thead>
                                     <tr>
-                                        <th className = "col-md-1">번호</th>
-                                        <th className = "col-md-2">작성한 곳</th>
-                                        <th className = "col-md-6">제목</th>
-                                        <th className = "col-md-2">작성일</th>
                                         <th className = "col-md-1"></th>
                                         
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>70</td>
-                                        <td>커뮤니티</td>
-                                        <td>베테랑 2 재미있음?</td>
-                                        <td>2024-09-10</td>
                                         <th>
-                                            <FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={() => alert("delete")}/>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div><span>[사이트] </span>영화 업데이트 언제 하나요</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">새로운 영화 좀 올려주세요 <div className="right-align">답변 없음</div></li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div><span>[사이트] </span> 서버가 느려요</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">서버가 느려요 <div className="right-align">답변 없음</div></li>
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <ul className="custom-list">
+                                                <li className ="list_title">
+                                                    <div><span>[사이트] </span>히히히</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                </li>
+                                                <li className="smaller-text">ㅇㅋ <div className="right-align">답변 됨</div></li>
+                                            </ul>
                                         </th>
                                     </tr>
                                 </tbody>

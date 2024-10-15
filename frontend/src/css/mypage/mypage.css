@@ -176,11 +176,26 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 10px; /* 요소 간의 간격 조절 */
+    row-gap: 10px;
+    column-gap: 40px;
+}
+.board .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
+}
+
+.write_4, .comm_4, .comm_like_4, .qna_4 {
+    /* margin-bottom: 20px; */
+    padding: 20px 5px 40px 5px;
+    box-sizing: border-box;
+    /* border: 1px solid #4b4646; */
 }
 .write_4 {
     grid-column: 1;
     grid-row: 1;
+}
+.board .content_info{
+    height: auto !important;
 }
 
 .comm_4 {
@@ -188,7 +203,7 @@
     grid-row: 1;
 }
 
-.com_like_4 {
+.comm_like_4 {
     grid-column: 1;
     grid-row: 2;
 }
@@ -196,4 +211,31 @@
 .qna_4 {
     grid-column: 2;
     grid-row: 2;
+}
+
+
+.custom-list .list_title{
+    display: flex;
+    justify-content: space-between;
+}
+.custom-list {
+    list-style-type: none; /* 점 없애기 */
+    padding: 0; /* 기본 패딩 제거 */
+    text-align: left;
+    margin: 0;
+}
+
+.smaller-text {
+    font-size: 0.9em; /* 글씨 크기 작게 */
+    color: gray; /* 회색 */
+    padding-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.right-align {
+    text-align: right; /* 우측 정렬 */
+    font-size: 0.8em; /* 글씨 크기 작게 */
+    color : white;
 }

@@ -3,6 +3,7 @@ import React from 'react';
 //import './Modal.css';
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import profile from '../../img/profile.png';
 
 function Modal({ onClose, title, children, className}) {
     const combinedClassName = `modal-content ${className || ''}`.trim();

@@ -113,6 +113,11 @@ public class UserServiceImpl  implements UserService {
         return dao.getCountReplyComment(userid);
     }
 
+    @Override
+    public List<Map<String, Object>> getFollowData(String userid){
+        return dao.getFollowData(userid);
+    }
+
 
 
 

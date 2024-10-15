@@ -113,7 +113,7 @@
 .modal-backdrop{
     background-color: rgba(0, 0, 0, 0.7);
 }
-.modal-content{
+.editInfo .modal-content{
     background-color: #252525;
     max-width: 550px;
     width: 100% !important;

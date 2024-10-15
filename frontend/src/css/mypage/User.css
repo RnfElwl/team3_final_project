@@ -94,7 +94,7 @@
     height : 150px;
     margin: 10px auto;
 }
-.content_info{
+.User .content_info{
     width: 90%;
     height : 300px;
     margin: 10px auto;
@@ -186,3 +186,69 @@
     text-align: center;
     background-color: transparent !important; /* 부모 요소의 배경색을 따름 */
   }
+.User .modal-backdrop{
+    display: flex;
+    align-items: center;
+}
+.User .modal-content{
+    border-radius: 15px;
+    background-color: #252525;
+    max-width: 400px;
+    max-height: 900px;
+    height: 400px;
+    width: 100% !important;
+    margin : 0 auto;
+    overflow-y: auto;
+    color : white;
+}
+.User .modal-content h2{
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 800;
+    font-size: 20px;
+}
+.user-list-ul{
+    margin-top: 20px;
+    padding : 0;
+}
+
+.user-list {
+    list-style-type: none; /* 리스트 점 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+    display: flex;
+    padding-bottom: 10px;
+    margin: 5px 20px;
+    border-bottom: 1px solid #998f8f;  /* 아래 경계선 추가 (선택 사항) */
+}
+
+.user-list a {
+    display: flex; /* Flexbox로 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit; /* 부모 요소의 글자 색상 상속 */
+    flex: 1; /* 버튼과 공간을 나누기 위해 flex 속성 추가 */
+}
+
+.user-list img {
+    width: 40px; /* 이미지 너비 설정 */
+    height: 40px; /* 이미지 높이 설정 */
+    border-radius: 50%; /* 둥글게 만들기 */
+    margin-right: 20px; /* 이미지와 텍스트 사이의 간격 */
+}
+
+.user-list span {
+    font-size: 1em;
+    font-weight: 800;
+    line-height: 40px;
+    display: inline-block; /* 텍스트가 버튼보다 더 많은 공간을 차지하도록 조정 */
+}
+
+.user-list button {
+    border: none; /* 기본 테두리 제거 */
+    padding: 4px 8px; /* 버튼 패딩 */
+    border-radius: 5px; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+    font-weight: 550;
+    margin-left: 40px; 
+}

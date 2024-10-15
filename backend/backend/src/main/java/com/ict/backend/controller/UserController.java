@@ -26,10 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -165,6 +162,7 @@ public class UserController {
         }
         return ResponseEntity.ok(follower);
     }
+
 
 @GetMapping("/mypageinfo")
 public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) String Host) {
@@ -348,6 +346,72 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         responseData.put("followers", followers);
         System.out.println(responseData);
         return ResponseEntity.ok(responseData);
+    }
+    @GetMapping("/info/f/followers")
+    public ResponseEntity<List<Map<String, String>>> getFollowers(@RequestParam("usernick") String usernick, @RequestHeader(value = "Host", required = false) String Host) {
+        System.out.println(usernick);
+        MemberVO vo =  userService.getOtherUserInfo(usernick);
+        if (vo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList(Map.of("error", "User not found")));
+        }
+        String userid = vo.getUserid();
+        List<Map<String, String>> follower = userService.getfollower(userid, 0);
+        System.out.println(follower);
+
+        for (Map<String, String> user : follower) {
+            String imageUrl = user.get("image_url");
+            if (imageUrl != null) {
+                user.put("image_url", "http://" + Host + "/" + imageUrl);
+            }
+        }
+        System.out.println("followers : " + follower);
+        return ResponseEntity.ok(follower);
+    }
+    @GetMapping("/info/f/follow")
+    public ResponseEntity<List<Map<String, String>>> getFollowing(@RequestParam("usernick") String usernick, @RequestHeader(value = "Host", required = false) String Host) {
+        System.out.println(usernick);
+        MemberVO vo =  userService.getOtherUserInfo(usernick);
+        if (vo == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonList(Map.of("error", "User not found")));
+        }
+        String userid = vo.getUserid();
+        List<Map<String, Object>> followerData  = userService.getFollowData(userid);
+        System.out.println(followerData);
+
+        List<Map<String, String>> responseList = new ArrayList<>();
+        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
+        for (Map<String, Object> user : followerData) {
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("following_user", (String) user.get("following_user"));
+            responseMap.put("following_user_nick", (String) user.get("following_user_nick"));
+            responseMap.put("following_user_image", user.get("following_user_image") != null
+                    ? "http://" + Host + "/" + user.get("following_user_image")
+                    : null);
+            responseMap.put("follower_user", (String) user.get("follower_user"));
+            responseMap.put("follower_user_nick", (String) user.get("follower_user_nick"));
+            responseMap.put("follower_user_image", user.get("follower_user_image") != null
+                    ? "http://" + Host + "/" + user.get("follower_user_image")
+                    : null);
+            String followingUser = (String) user.get("following_user");
+            String followerUser = (String) user.get("follower_user");
+
+            if(login_user.equals(userid)) {
+                if (followingUser != null && followerUser != null) {
+                    responseMap.put("each", "1"); // 서로 팔로우하는 경우
+                } else {
+                    responseMap.put("each", "0"); // 하나라도 null인 경우
+                }
+            } else {
+                responseMap.put("each", "0"); // 하나라도 null인 경우
+            }
+
+            responseList.add(responseMap);
+        }
+
+        //System.out.println("followers : " + responseList);
+        return ResponseEntity.ok(responseList);
     }
 
 
