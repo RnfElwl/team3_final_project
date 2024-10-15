@@ -10,7 +10,6 @@ import { AiOutlineAlert } from "react-icons/ai";
 
 function CommunityView(){
     const { community_no } = useParams(); // URL에서 community_no 가져오기
-    // const { comment_no } = useParams();
     const [community, setCommunity] = useState(null);
     const [comments, setComments] = useState([]); // 댓글 상태 추가
     const [newComment, setNewComment] = useState(""); // 새로운 댓글 입력 상태 추가
@@ -19,14 +18,22 @@ function CommunityView(){
     const navigate = useNavigate();
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
-    const userid = localStorage.getItem('userid');
-    //const [hitCount, setHitCount] = useState(0); // 조회수 상태
+    const [userid, setUserId] = useState('');
+    const userprofile = localStorage.getItem('userprofile');
+    //const userid = localStorage.getItem('userid');
+
     const isInitialRender = useRef(true); //1번만 호출 
 
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
     const [isUserFetched, setIsUserFetched] = useState(false);
+
+    const [userData, setUserData] = useState({});
+    const [myid, setMyid] = useState("");
+
+    const [showReplies, setShowReplies] = useState({}); // 각 댓글에 대한 대댓글 표시 여부 관리
+
 
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
@@ -139,28 +146,52 @@ function CommunityView(){
         setNewComment(e.target.value); // 입력값 상태 업데이트
     };
 
-    const handleCommentSubmit = (e) => {
+    async function getUser() {
+        try {
+            const result = await axios.get('http://localhost:9988/user/userinfo');
+            setMyid(result.data); // 사용자 ID 설정
+            const params = { userid: result.data };
+            const result2 = await axios.get('http://localhost:9988/getUserData', { params });
+            setUserData(result2.data); // 사용자 데이터 설정
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    }    
+
+    const handleCommentSubmit = async (e) => {
         e.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+        
+        // 사용자 정보를 가져오는 함수를 호출합니다.
+        await getUser();
+    
+        // myid가 설정되었는지 확인
+        if (!myid) {
+            console.error("User is not logged in or myid is missing");
+            return; // userid가 없으면 제출 방지
+        }
+    
         if (newComment.trim()) {
             // 새로운 댓글 추가 로직
             const commentData = {
-                userid: userid,
+                userid: myid, // 사용자 ID 사용
                 community_no: parseInt(community_no),
                 comment_content: newComment,
                 // 추가 필드가 필요할 경우 여기에 추가
             };
-
-            // 댓글 데이터 가져오기
-            axios.post('http://localhost:9988/community/comments', commentData)
-                .then(response => {
-                    setComments([...comments, response.data]); // 댓글 상태 업데이트
-                    setNewComment(""); // 입력 필드 초기화
-                })
-                .catch(error => {
-                    console.error("Error submitting comment:", error);
-                });
+    
+            try {
+                const response = await axios.post(`http://localhost:9988/community/comments`, commentData);
+                setComments([...comments, response.data]); // 댓글 상태 업데이트
+                setNewComment(""); // 입력 필드 초기화
+            } catch (error) {
+                console.error("Error submitting comment:", error);
+            }
         }
     };
+    
+    useEffect(() => {
+        getUser(); // 컴포넌트가 마운트될 때 사용자 정보를 가져옴
+    }, []);
 
     // 댓글 수 계산
     const commentCount = comments.length;
@@ -209,27 +240,28 @@ function CommunityView(){
     //         });
     // };
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // 댓글별 대댓글 가져오기
-        comments.forEach(comment => {
-            axios.get(`http://localhost:9988/community/comments/reply/${comment.comment_no}`)
-                .then(response => {
-                    setReplies(prevReplies => ({
-                        ...prevReplies,
-                        [comment.comment_no]: response.data
-                    }));
-                })
-                .catch(error => {
-                    console.error(`Error fetching replies for comment ${comment.comment_no}:`, error);    
-                });
-        });
-    }, [comments]);
+    //     // 댓글별 대댓글 가져오기
+    //     comments.forEach(comment => {
+    //         axios.get(`http://localhost:9988/community/comments/reply/${comment.comment_no}`)
+    //             .then(response => {
+    //                 setReplies(prevReplies => ({
+    //                     ...prevReplies,
+    //                     [comment.comment_no]: response.data
+    //                 }));
+    //             })
+    //             .catch(error => {
+    //                 console.error(`Error fetching replies for comment ${comment.comment_no}:`, error);    
+    //             });
+    //     });
+    // }, [comments]);
 
     const handleReplyChange = (comment_no, value) => {
         setReplyComment({ ...replyComment, [comment_no]: value });
     };
 
+    
     const handleReplySubmit = (e, comment_no) => {
         e.preventDefault();
         const replyData = {
@@ -269,7 +301,7 @@ function CommunityView(){
     const toggleReport = () => {
         setReportShow(!reportShow);
     };
-
+    
     useEffect(() => {
         if (!isUserFetched) { // 사용자가 이미 불러와지지 않았다면
             axios.get(`http://localhost:9988/user/userinfo`)
@@ -298,6 +330,14 @@ function CommunityView(){
         return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
     };
 
+    const toggleReplies = (comment_no) => {
+        setShowReplies((prev) => ({
+            ...prev,
+            [comment_no]: !prev[comment_no], // 해당 댓글의 대댓글 표시 여부 토글
+        }));
+    };
+    
+
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -307,7 +347,7 @@ function CommunityView(){
         <div className="community_view">
             <div className="container">
                 <div className="view_top">
-                    <img className="writer_image" src={community.userprofile} alt="Writer" />
+                    <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
                     <div className="writer_info">
                         <p className="writer_name">{community.userid}</p>
                         <div className="list_info">
@@ -384,13 +424,11 @@ function CommunityView(){
                     </div> 
                 </div>  
 
-                
-
                 <div className="comments_section">
                     {loggedInUserId !== null && (
                         <>
-                            <h3>댓글 ({commentCount})</h3>
-                            <form onSubmit={handleCommentSubmit} className="commnet_form">
+                            {/* <h3>댓글 ({commentCount})</h3> */}
+                            <form onSubmit={handleCommentSubmit} className="comment_form">
                                 <input
                                     className="inputform"
                                     type="text"
@@ -405,44 +443,57 @@ function CommunityView(){
 
                     <div className="comments_list">
                         {comments.map((comment) => (
-                            <div key={comment.comment_no} className="comment_item">
-                                <div className="comment_top">
-                                    <div className="comment_user">
-                                        <img className="comment_writer_image" src={community.writerImage} />
-                                        <p className="comment_writer_name">{comment.userid}</p>
-                                    </div>
-                                    <div className="comment_actions">
-                                        <p className="comment_writedate">{comment.comment_writedate}</p>
-                                        <button onClick={() => handleCommentUpdate(comment)}>수정</button>
-                                        <button onClick={() => handleCommentDelete(comment.comment_no)}>삭제</button>
-                                        {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
-                                    </div>
-                                </div>
-                                <div className="comment_info">
-                                    <p className="comment_content">{comment.comment_content}</p>
-                                    <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
-                                        <input
-                                            type="text"
-                                            value={replyComment[comment.comment_no] || ""}
-                                            onChange={(e) => handleReplyChange(comment.comment_no, e.target.value)}
-                                            placeholder="대댓글을 입력하세요"
-                                        />
-                                        <button type="submit">대댓글 남기기</button>
-                                    </form>
-                                </div>
-                                {/* 대댓글 리스트 표시 */}
-                                {replies[comment.comment_no] && replies[comment.comment_no].map((reply) => (
-                                    <div key={reply.comment_no} className="reply_item">
-                                        <div className="reply_top">
-                                            <p>{reply.userid}</p>
-                                            <p>{reply.comment_writedate}</p>
+                            <div key={comment.comment_no} className="comment_container">
+                                <div className="comment_item">
+                                    <div className="comment_top">
+                                        <div className="comment_user">
+                                            <img className="comment_writer_image" src={community.writerImage} alt="작성자" />
+                                            <p className="comment_writer_name">{community.userid}</p>
                                         </div>
-                                        <p>{reply.comment_content}</p>
+                                        <div className="comment_actions"> 
+                                            <p className="comment_writedate">{comment.comment_writedate}</p>
+                                                <button onClick={() => handleCommentUpdate(comment)}>Edit</button>
+                                                <button onClick={() => handleCommentDelete(comment.comment_no)}>Del</button>
+                                                {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
+                                            </div>
+                                        </div>
+                                    <div className="comment_content">{comment.comment_content}</div>
+
+                                    <div className="comment_info">
+                                        {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
+                                        <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
+                                            <input
+                                                type="text"
+                                                value={replyComment[comment.comment_no] || ""}
+                                                onChange={(e) => handleReplyChange(comment.comment_no, e.target.value)}
+                                                placeholder="대댓글을 입력하세요"
+                                            />
+                                            <button type="submit">답글 남기기</button>
+                                        </form>
+                                        <button  className="reply_open" onClick={() => toggleReplies(comment.comment_no)}>
+                                            {showReplies[comment.comment_no] ? "답글 숨기기" : "댓글 보기"}
+                                        </button>
                                     </div>
-                                ))}
+                                    
+                                    {/* 대댓글 리스트 표시 */}
+                                    {showReplies[comment.comment_no] && replies[comment.comment_no] && (
+                                        <div className="replies">
+                                            {replies[comment.comment_no].map((reply) => (
+                                                <div key={reply.comment_no} className="reply_item">
+                                                    <div className="reply_top">
+                                                        <p>{reply.userid}</p>
+                                                        <p>{reply.comment_writedate}</p>
+                                                    </div>
+                                                    <p>{reply.comment_content}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
+
                 </div>       
             </div>    
         </div>
