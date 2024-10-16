@@ -11,4 +11,6 @@ public class CommentReplyVO {
     public String edit_date;
     public String edit_user;
     public String active_state;
+    private String writerImage;
+    private String usernick;
 }

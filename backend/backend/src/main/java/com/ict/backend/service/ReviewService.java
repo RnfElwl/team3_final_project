@@ -11,6 +11,9 @@ public interface ReviewService {
 
     void addReview(ReviewVO reviewVO);
     List<ReviewVO> getReviewsByMovieCode(String movieCode);
+    ReviewVO getReviewById(int reviewId);
+    void updateReview(int reviewId, ReviewVO updatedReview);
+    void deleteReview(int reviewId);
 
 
 

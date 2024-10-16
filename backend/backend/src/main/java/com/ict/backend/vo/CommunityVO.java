@@ -6,6 +6,7 @@ import lombok.Data;
 public class CommunityVO {
     public int community_no;
     public String userid;
+    private String usernick;
     public String userprofile;
     public String community_title;
     public String community_content;
@@ -21,4 +22,5 @@ public class CommunityVO {
     public int category;
     public int privacy;
     public int like_state;
+    public int follow;
 }

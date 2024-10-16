@@ -146,15 +146,13 @@ input[name="username"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 20px;
-    margin: 0 5px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-    background-color: #555;
+    padding: 5px;
     border: 1px solid transparent;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    color: white;
+    width: 36px !important;
+    height: 36px !important;
+    border: 1px solid white;
 }
 .gender-option:hover {
     background-color: #666;
@@ -162,8 +160,8 @@ input[name="username"] {
 }
 
 .gender-option.active {
-    background-color: #28a745;
-    border: 1px solid #1e7e34;
+    background-color: #666;
+    border: 1px solid #666;
     color: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }

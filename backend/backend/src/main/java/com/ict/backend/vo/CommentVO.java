@@ -14,4 +14,6 @@ public class CommentVO {
     public String edit_state;
     public String edit_user;
     public String active_state;
+    private String usernick;
+    private String writerImage;
 }

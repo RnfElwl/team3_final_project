@@ -26,8 +26,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public void removeBookmark(BookmarkVO bookmark) {
-        bookmarkDAO.removeBookmark(bookmark);
+    public void removeBookmark(String userid, int movieNo) {
+        bookmarkDAO.removeBookmark(userid, movieNo);
     }
 
     @Override

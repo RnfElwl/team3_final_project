@@ -15,4 +15,5 @@ public class ReviewVO {
     private double avgRating; // 평균 별점 추가
     private int reviewCount; // 리뷰 개수 추가
 
+
 }

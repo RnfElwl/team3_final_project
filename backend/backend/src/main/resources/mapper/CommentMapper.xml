@@ -12,7 +12,10 @@
 
     <!-- 특정 게시글의 댓글 조회 -->
     <select id="getComments" parameterType="int" resultType="com.ict.backend.vo.CommentVO">
-        SELECT * FROM community_comment_tbl WHERE community_no = #{community_no} ORDER BY comment_no DESC
+        SELECT cct.*, ut.usernick, it.image_url as writerImage FROM community_comment_tbl cct
+        join user_tbl ut on cct.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        WHERE community_no = #{community_no} ORDER BY comment_no DESC
     </select>
 
     <!-- 댓글 수정 -->
