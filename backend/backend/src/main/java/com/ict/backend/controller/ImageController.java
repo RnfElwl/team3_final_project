@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -52,6 +54,46 @@ public class ImageController {
         } catch (Exception e) {
             log.error("서버 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 오류
+        }
+    }
+
+    @GetMapping("/get-masonry-images")
+    public ResponseEntity<List<ImageResponse>> getMasonryImages() {
+        List<ImageResponse> images = new ArrayList<>();
+
+        // 서버에 저장된 이미지 파일들을 관리하는 예시입니다.
+        // 실제 파일 위치나 데이터베이스 경로 정보를 사용하여 이미지 URL 생성
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/1JHAXXc8pacHGeX67jhBoPghrMv.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/nGeaz06pGANC01qrk2nOuEOOT3K.jpg"));
+        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oGEJcbizXLYJL6ZQ0ylQDOTC3s9.jpg"));
+        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/4cnAaQG0E4CmtIsLxnmferfQkML.jpg"));
+        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wBsVETlndUADx0VN0VTtLn837PD.jpg"));
+        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/IdHCGjWbJQF1LezD3uWuwe9NUk.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wBsVETlndUADx0VN0VTtLn837PD.jpg"));
+
+
+        // 더 많은 이미지를 추가
+
+        return ResponseEntity.ok(images);
+    }
+    public static class ImageResponse {
+        private String src;
+
+        public ImageResponse(String src) {
+            this.src = src;
+        }
+
+        public String getSrc() {
+            return src;
+        }
+
+        public void setSrc(String src) {
+            this.src = src;
         }
     }
 }

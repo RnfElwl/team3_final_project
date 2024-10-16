@@ -4,6 +4,7 @@ import com.ict.backend.dao.UserDAO;
 import com.ict.backend.vo.ImageVO;
 import com.ict.backend.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,9 +114,27 @@ public class UserServiceImpl  implements UserService {
         return dao.getCountReplyComment(userid);
     }
 
+//    @Override
+//    public List<Map<String, Object>> getFollowData(String userid){
+//        return dao.getFollowData(userid);
+//    }
     @Override
-    public List<Map<String, Object>> getFollowData(String userid){
-        return dao.getFollowData(userid);
+    public List<Map<String, Object>> getFollowData(String login_user, String userid, String endpoint){
+        return dao.getFollowData(login_user, userid, endpoint);
+    }
+
+    @Override
+    public boolean toggleFollow(String followerUserId, String loginUser) {
+        // 현재 팔로우 상태 확인
+        int isFollowing = dao.isFollowing(loginUser, followerUserId);
+
+        if (isFollowing > 0) {
+            // 팔로우 중이면 팔로우 취소 (DELETE)
+            return dao.deleteFollow(loginUser, followerUserId) > 0;
+        } else {
+            // 팔로우 중이 아니면 팔로우 추가 (INSERT)
+            return dao.insertFollow(loginUser, followerUserId) > 0;
+        }
     }
 
 

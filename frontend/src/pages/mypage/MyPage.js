@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import axios from '../../component/api/axiosApi';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart,  } from "react-icons/fa6";
+import { BsExclamationCircle } from "react-icons/bs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Slider from "react-slick";
 import { SliderSettings, AdaptiveHeightSettings } from '../../component/api/SliderSetting';
@@ -13,7 +14,7 @@ import '../../css/mypage/mypage.css';
 import profile from '../../img/profile.png';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import Modal from '../../component/api/Modal';
 
 function Mypage() {
     const [recentSlidesData, setRecentSlides] = useState([]);
@@ -81,13 +82,22 @@ function Mypage() {
             if (Array.isArray(response.data.followers)) {
                 setProfileSlides(response.data.followers);
             }
+            setUserInfo((prevUserInfo) => ({
+                ...prevUserInfo,
+                bookmark_n: response.data.bookmark_n,
+                community: response.data.community,
+                follower: response.data.follower,
+                following: response.data.following,
+                comment: response.data.comment,
+            }));
         } catch (error) {
             console.error("Error fetching: ", error);
         }
     };
     
-    fetchtotaldata();
     fetchUserInfo();
+    fetchtotaldata();
+    
 
     }, []);
 
@@ -139,6 +149,93 @@ function Mypage() {
     //   useEffect(() => {
     //     fetchData("Tag1");
     //   }, []);
+    // 모달용
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userList, setUserList] = useState([]); // 사용자 목록
+    const [currentList, setCurrentList] = useState([]);
+    const [modalTitle, setModalTitle] = useState('');
+
+    const handleOpenModal = (type) => {
+        fetchUserList(type);
+        setIsModalOpen(true);
+    };
+    const fetchUserList = async (type) => {
+        console.log(userInfo.usernick);
+        console.log(type);
+        try {
+            const endpoint = type === 'following' ? 'following' : 'followers';
+            const response = await axios.get(`http://localhost:9988/user/info/f/${endpoint}`, {
+                params:  {usernick: userInfo.usernick}
+            });
+            const userList = response.data;
+            console.log(response.data);
+
+            setCurrentList(response.data);
+            setUserList(response.data);
+            setModalTitle(type === 'following' ? '팔로잉 목록' : '팔로워 목록');
+        } catch (error) {
+            console.error("Error fetching user list:", error);
+        }
+    };
+    const toggleFollow = (user) => {
+        // 현재 팔로우 상태를 토글하여 새 상태를 설정
+        const updatedList = currentList.map((u) => {
+            if (u.follow_user_nick === user.follow_user_nick) {
+                return {
+                    ...u,
+                    is_follower: u.is_follower === "1" ? "0" : "1", // 팔로우 상태 변경
+                };
+            }
+            return u;
+        });
+        
+        setCurrentList(updatedList);
+    
+        // 서버에 변경된 팔로우 상태를 전송 (axios 사용)
+        axios.post('http://localhost:9988/user/info/toggleFollow', {
+            follow_user_nick: user.follow_user_nick,
+            newStatus: user.is_follower === "1" ? "0" : "1"
+        })
+        .then(response => {
+            console.log(response.data); // 성공 응답 처리
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    // 로그인 필요 시 로그인 페이지로 리디렉션
+                    alert("팔로우 기능은 로그인이 필요합니다.");
+                    window.location.href = "/signin"; // 로그인 페이지 경로
+                } else {
+                    // 400 오류가 발생하면 상태 복구
+                    const restoredList = currentList.map((u) => {
+                        if (u.follow_user_nick === user.follow_user_nick) {
+                            return {
+                                ...u,
+                                is_follower: u.is_follower === "1" ? "0" : "1", // 원래 상태로 복구
+                            };
+                        }
+                        return u;
+                    });
+                    setCurrentList(restoredList);
+                    alert("팔로우 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                }
+            } else {
+                // 다른 에러 처리 (네트워크 오류 등)
+                console.error('Error toggling follow status:', error);
+                const restoredList = currentList.map((u) => {
+                    if (u.follow_user_nick === user.follow_user_nick) {
+                        return {
+                            ...u,
+                            is_follower: u.is_follower === "1" ? "0" : "1", // 원래 상태로 복구
+                        };
+                    }
+                    return u;
+                });
+                setCurrentList(restoredList);
+                alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+            }
+        });
+    };
 
     return (
         <div className="myPage">
@@ -150,10 +247,18 @@ function Mypage() {
                         <span>{userInfo.usernick}님</span>
                     </div>
                     <div id = "userinfo">
-                        <p>이름 : <span>{userInfo.username}</span></p>
-                        <p>주소 : <span>{userInfo.useraddr} ({userInfo.addrdetail})</span></p>
-                        <p>전화번호 : <span>{userInfo.usertel}</span></p>
-                        <p>이메일 : <span>{userInfo.useremail}</span></p>
+                        <div className = "usertop">
+                            <p>이름 : <span>{userInfo.username}</span></p>
+                            <p>주소 : <span>{userInfo.useraddr}</span></p>
+                            <p>전화번호 : <span>{userInfo.usertel}</span></p>
+                            <p>이메일 : <span>{userInfo.useremail}</span></p>
+                        </div>
+                        <div className = "userbottom">
+                            <p onClick={() => handleOpenModal('following')}>팔로워 : <span>{userInfo.follower}</span></p>
+                            <p onClick={() => handleOpenModal('followers')}>팔로잉 : <span>{userInfo.following}</span></p>
+                            <p>게시글 : <span>{userInfo.community}</span></p>
+                            <p>댓글 : <span>{userInfo.comment}</span></p>
+                        </div>
                     </div>
                     <div id = "info_change">
                         <button className="btn btn-secondary" onClick={() => navigate('/mypage/edit')}><FontAwesomeIcon icon={faPenToSquare} />관리하기</button>
@@ -169,6 +274,7 @@ function Mypage() {
                             )}
                         </div>
                         <div className="content_info">
+                        {recentSlidesData.length > 0 ? (
                             <Slider {...SliderSettings}>
                                 {recentSlidesData.map((slide, index) => (
                                     <div key={index}>
@@ -178,17 +284,25 @@ function Mypage() {
                                     </div>
                                 ))}
                             </Slider>
+                        ) : (
+                            <div className="noslide">
+                                <BsExclamationCircle />
+                                <p>시청기록이 없습니다</p>
+                            </div>
+                        )}
+                        
                         </div>
                     </div>
                     {/* 즐겨찾기 */}
                     <div className = "bookmark">
                         <div className = "content_title">
                             <span>즐겨찾기</span>
-                            {bookmarkSlidesData.length >= 10 && (
+                            {userInfo.bookmark_n >= 10 && (
                                 <Link to="/mypage/bookmarked"> 더보기 {'>'}</Link>
                             )}
                         </div>
                         <div className="content_info">
+                        {bookmarkSlidesData.length > 0 ? (
                             <Slider {...SliderSettings}>
                                 {bookmarkSlidesData.map((slide, index) => (
                                     <div key={index}>
@@ -198,10 +312,42 @@ function Mypage() {
                                     </div>
                                 ))}
                             </Slider>
+                             ) : (
+                                <div className="noslide">
+                                    <BsExclamationCircle />
+                                    <p>즐겨찾기가 없습니다</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                     {/* 즐찾 회원 */}
-                    <div className = "follower">
+                    {isModalOpen && (
+                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        <ul className="user-list-ul">
+                            {currentList.map((user, index) => {
+                                const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
+                                return (
+                                    <li key={index} className="user-list">
+                                        <a href={`/user/info/${user.follow_user_nick}`}>
+                                            <img src={user.follow_user_image} alt={user.follow_user_nick} />
+                                            <span>{user.follow_user_nick}</span>
+                                        </a>
+                                        <button 
+                                            style={{ 
+                                                backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', 
+                                                color: isMutual ? 'black' : 'white' 
+                                            }}
+                                            onClick={() => toggleFollow(user)}
+                                        >
+                                            {isMutual ? '팔로잉' : '팔로우'}
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </Modal>
+                        )}    
+                    {/* <div className = "follower">
                         <div className = "content_title">
                             <span>팔로워</span>
                             {profileSlidesData.length >= 14 && (
@@ -209,6 +355,7 @@ function Mypage() {
                             )}
                         </div>
                         <div className="content_info">
+
                             <Slider {...AdaptiveHeightSettings}>
                                 {profileSlidesData.map((slide, index) => (
                                     <div key={index}>
@@ -219,8 +366,9 @@ function Mypage() {
                                     </div>
                                 ))}
                             </Slider>
+
                         </div>
-                    </div>
+                    </div> */}
                     {/* 사등분 */}
                     <div className = "board">
                         <div className = "write_4">

@@ -115,21 +115,26 @@ public class UserController {
         // 각 서비스에서 데이터 가져오기
         List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
         List<Map<String, String>> history = userService.getHistory(userid, 10);
-        List<Map<String, String>> followers = userService.getfollower(userid, 14);
+//        List<Map<String, String>> followers = userService.getfollower(userid, 14);
         // 이미지 URL 처리
-        for (Map<String, String> user : followers) {
-            String imageUrl = user.get("image_url");
-            if (imageUrl != null) {
-                user.put("image_url", "http://" + Host +"/"+ imageUrl);
-//                user.put("image_url", "http://" + Host + "/user/" + imageUrl);
-                System.out.println(user.toString());
-            }
-        }
+//        for (Map<String, String> user : followers) {
+//            String imageUrl = user.get("image_url");
+//            if (imageUrl != null) {
+//                user.put("image_url", "http://" + Host +"/"+ imageUrl);
+////                user.put("image_url", "http://" + Host + "/user/" + imageUrl);
+//                System.out.println(user.toString());
+//            }
+//        }
         // 결과를 하나의 맵에 담기
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("bookmarks", bookmarks);
         responseData.put("history", history);
-        responseData.put("followers", followers);
+//        responseData.put("followers", followers);
+        responseData.put("bookmark_n", userService.getCountBookmarks(userid));
+        responseData.put("follower", userService.getCountfollower(userid)); // 내가 팔로우 한 수
+        responseData.put("following", userService.getCountfollowing(userid));   // 내가 팔로잉 한 수
+        responseData.put("community", userService.getCountCommunity(userid));
+        responseData.put("comment", userService.getCountComment(userid) + userService.getCountReplyComment(userid));
         return ResponseEntity.ok(responseData);
     }
     // 북마크한 정보 가져오기
@@ -315,7 +320,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
 
         String userid = vo.getUserid();
         List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
-        List<Map<String, String>> followers = userService.getfollower(userid, 14);
+//        List<Map<String, String>> followers = userService.getfollower(userid, 14);
 
         String userprofile = "http://" + Host +"/" + vo.getUserprofile();
 
@@ -332,86 +337,74 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         int total = com + rel;
         System.out.println("total : " + total + " com : " + com + " rel : " + rel);
 
-        for (Map<String, String> user : followers) {
-            String imageUrl = user.get("image_url");
-            if (imageUrl != null) {
-                user.put("image_url", "http://" + Host +"/"+ imageUrl);
-                System.out.println(user.toString());
-            }
-        }
+//        for (Map<String, String> user : followers) {
+//            String imageUrl = user.get("image_url");
+//            if (imageUrl != null) {
+//                user.put("image_url", "http://" + Host +"/"+ imageUrl);
+//                System.out.println(user.toString());
+//            }
+//        }
         // 결과를 하나의 맵에 담기
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("user", userdata);
         responseData.put("bookmarks", bookmarks);
-        responseData.put("followers", followers);
+//        responseData.put("followers", followers);
         System.out.println(responseData);
         return ResponseEntity.ok(responseData);
     }
-    @GetMapping("/info/f/followers")
-    public ResponseEntity<List<Map<String, String>>> getFollowers(@RequestParam("usernick") String usernick, @RequestHeader(value = "Host", required = false) String Host) {
-        System.out.println(usernick);
-        MemberVO vo =  userService.getOtherUserInfo(usernick);
-        if (vo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Collections.singletonList(Map.of("error", "User not found")));
-        }
-        String userid = vo.getUserid();
-        List<Map<String, String>> follower = userService.getfollower(userid, 0);
-        System.out.println(follower);
 
-        for (Map<String, String> user : follower) {
-            String imageUrl = user.get("image_url");
-            if (imageUrl != null) {
-                user.put("image_url", "http://" + Host + "/" + imageUrl);
-            }
-        }
-        System.out.println("followers : " + follower);
-        return ResponseEntity.ok(follower);
-    }
-    @GetMapping("/info/f/follow")
-    public ResponseEntity<List<Map<String, String>>> getFollowing(@RequestParam("usernick") String usernick, @RequestHeader(value = "Host", required = false) String Host) {
+    @GetMapping("/info/f/{endpoint}")
+    public ResponseEntity<List<Map<String, String>>> getFollowers(@RequestParam("usernick") String usernick, @PathVariable("endpoint") String endpoint, @RequestHeader(value = "Host", required = false) String Host) {
+        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println(usernick);
+        System.out.println(endpoint);
+
         MemberVO vo =  userService.getOtherUserInfo(usernick);
         if (vo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonList(Map.of("error", "User not found")));
         }
         String userid = vo.getUserid();
-        List<Map<String, Object>> followerData  = userService.getFollowData(userid);
+        List<Map<String, Object>> followerData  = userService.getFollowData(login_user, userid, endpoint);
         System.out.println(followerData);
 
         List<Map<String, String>> responseList = new ArrayList<>();
-        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
         for (Map<String, Object> user : followerData) {
             Map<String, String> responseMap = new HashMap<>();
-            responseMap.put("following_user", (String) user.get("following_user"));
-            responseMap.put("following_user_nick", (String) user.get("following_user_nick"));
-            responseMap.put("following_user_image", user.get("following_user_image") != null
-                    ? "http://" + Host + "/" + user.get("following_user_image")
-                    : null);
-            responseMap.put("follower_user", (String) user.get("follower_user"));
-            responseMap.put("follower_user_nick", (String) user.get("follower_user_nick"));
-            responseMap.put("follower_user_image", user.get("follower_user_image") != null
-                    ? "http://" + Host + "/" + user.get("follower_user_image")
-                    : null);
-            String followingUser = (String) user.get("following_user");
-            String followerUser = (String) user.get("follower_user");
 
-            if(login_user.equals(userid)) {
-                if (followingUser != null && followerUser != null) {
-                    responseMap.put("each", "1"); // 서로 팔로우하는 경우
-                } else {
-                    responseMap.put("each", "0"); // 하나라도 null인 경우
-                }
-            } else {
-                responseMap.put("each", "0"); // 하나라도 null인 경우
-            }
+            //responseMap.put("follow_user", (String) user.get("follow_user")); // follower_userid
+            responseMap.put("follow_user_nick", (String) user.get("usernick")); // usernick
+            responseMap.put("is_follower", String.valueOf(user.get("is_follow"))); // is_follower
+            responseMap.put("follow_user_image", user.get("image_url") != null
+                        ? "http://" + Host + "/" + user.get("image_url")
+                        : null);
 
             responseList.add(responseMap);
         }
-
-        //System.out.println("followers : " + responseList);
+        System.out.println("followers : " + responseList);
         return ResponseEntity.ok(responseList);
+    }
+    @PostMapping("/info/toggleFollow")
+    public ResponseEntity<String> toggleFollow(@RequestBody Map<String, String> request) {
+        String follow_user_nick = request.get("follow_user_nick");
+        System.out.println("follow_user_nick : " + follow_user_nick);
+        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
+        MemberVO vo =  userService.getOtherUserInfo(follow_user_nick);
+        String follower_user_id = vo.getUserid();
+        if (!login_user.equals("anonymousUser")) {
+            try {
+                boolean isUpdated = userService.toggleFollow(follower_user_id, login_user);
+                if (isUpdated) {
+                    return ResponseEntity.ok("Follow status updated successfully");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update follow status");
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating follow status");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Need login");
+        }
     }
 
 

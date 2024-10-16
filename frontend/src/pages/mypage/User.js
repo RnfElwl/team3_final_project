@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BsExclamationCircle } from "react-icons/bs";
 import Slider from "react-slick";
 import { SliderSettings, AdaptiveHeightSettings } from '../../component/api/SliderSetting';
 import { recentSlides, bookmarkSlides, useprofileSlides  } from '../../component/api/SliderSetting';
@@ -66,63 +67,100 @@ function User() {
     // 데이터를 초기화하는 useEffect 추가
     useEffect(() => {
         // 초기 데이터 설정
-        setBookmarkSlides(bookmarkSlides);
-        setProfileSlides(useprofileSlides);
+        // setBookmarkSlides(bookmarkSlides);
+        // setProfileSlides(useprofileSlides);
     }, []);
     while (bookmarkSlidesData.length < 5 && bookmarkSlidesData.length != 0){
         bookmarkSlidesData.push({ imgSrc: "empty", className: "empty-slide"});
     }
-    while (profileSlidesData.length < 7) {
-        profileSlidesData.push({ imgSrc: "empty", usernick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
-    }
-
-    const checkMutualFollow = (userList) => {
-        const followersSet = new Set(userList.map(user => user.follower_user));
-        const followingsSet = new Set(userList.map(user => user.following_user));
-
-        const mutualFollows = userList.filter(user => 
-            followersSet.has(user.following_user) && followingsSet.has(user.follower_user)
-        );
-
-        return mutualFollows.length > 0 ? 1 : 0; // 1 또는 0 반환
-    };
+    // while (profileSlidesData.length < 7) {
+    //     profileSlidesData.push({ imgSrc: "empty", usernick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
+    // }
 
     const fetchUserList = async (type) => {
         try {
             const endpoint = type === 'following' ? 'following' : 'followers';
-            // const response = await axios.get(`http://localhost:9988/user/info/f/${endpoint}`, {
-            const response = await axios.get("http://localhost:9988/user/info/f/follow", {
-            params: { usernick } // params를 사용하여 쿼리 파라미터로 전달
+            const response = await axios.get(`http://localhost:9988/user/info/f/${endpoint}`, {
+            //const response = await axios.get("http://localhost:9988/user/info/f/follow", {
+            params: { usernick:usernick } // params를 사용하여 쿼리 파라미터로 전달
             });
             const userList = response.data;
+            console.log(response.data);
 
-            if (type === 'following') {
-                setCurrentList(userList.filter(user => user.following_user)); // 팔로잉 목록 필터링
-            } else {
-                setCurrentList(userList.filter(user => user.follower_user)); // 팔로워 목록 필터링
-            }
-            
+            setCurrentList(response.data);
             setUserList(response.data);
             setModalTitle(type === 'following' ? '팔로잉 목록' : '팔로워 목록');
         } catch (error) {
             console.error("Error fetching user list:", error);
         }
     };
+    useEffect(() => {
+        // 초기 데이터 설정
+        console.log("변경" + userList.data)
+    }, [userList]);
 
     const handleOpenModal = (type) => {
         fetchUserList(type);
         setIsModalOpen(true);
     };
     const toggleFollow = (user) => {
-        console.log(user.following_user);
-        // user의 each 값을 반전시키기
-        const updatedUserList = userList.map(u => {
-            if (u === user) {
-                return { ...u, each: u.each === "1" ? "0" : "1" }; // 각 사용자 업데이트
+        // 현재 팔로우 상태를 토글하여 새 상태를 설정
+        const updatedList = currentList.map((u) => {
+            if (u.follow_user_nick === user.follow_user_nick) {
+                return {
+                    ...u,
+                    is_follower: u.is_follower === "1" ? "0" : "1", // 팔로우 상태 변경
+                };
             }
             return u;
         });
-        setUserList(updatedUserList); // 상태 업데이트
+        
+        setCurrentList(updatedList);
+    
+        // 서버에 변경된 팔로우 상태를 전송 (axios 사용)
+        axios.post('http://localhost:9988/user/info/toggleFollow', {
+            follow_user_nick: user.follow_user_nick,
+            newStatus: user.is_follower === "1" ? "0" : "1"
+        })
+        .then(response => {
+            console.log(response.data); // 성공 응답 처리
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    // 로그인 필요 시 로그인 페이지로 리디렉션
+                    alert("팔로우 기능은 로그인이 필요합니다.");
+                    window.location.href = "/signin"; // 로그인 페이지 경로
+                } else {
+                    // 400 오류가 발생하면 상태 복구
+                    const restoredList = currentList.map((u) => {
+                        if (u.follow_user_nick === user.follow_user_nick) {
+                            return {
+                                ...u,
+                                is_follower: u.is_follower === "1" ? "0" : "1", // 원래 상태로 복구
+                            };
+                        }
+                        return u;
+                    });
+                    setCurrentList(restoredList);
+                    alert("팔로우 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                }
+            } else {
+                // 다른 에러 처리 (네트워크 오류 등)
+                console.error('Error toggling follow status:', error);
+                const restoredList = currentList.map((u) => {
+                    if (u.follow_user_nick === user.follow_user_nick) {
+                        return {
+                            ...u,
+                            is_follower: u.is_follower === "1" ? "0" : "1", // 원래 상태로 복구
+                        };
+                    }
+                    return u;
+                });
+                setCurrentList(restoredList);
+                alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+            }
+        });
     };
     
 
@@ -186,58 +224,51 @@ function User() {
                             {/* <Link to="/mypage/bookmarked"> 더보기 {'>'}</Link> */}
                         </div>
                         <div className="content_info">
-                            <Slider {...SliderSettings}>
-                                {bookmarkSlidesData.map((slide, index) => (
-                                    <div key={index}>
-                                        <a href={`/movies/view/${slide.movie_code}`}>
-                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                        </a>
-                                    </div>
-                                ))}
-                            </Slider>
+                            {bookmarkSlidesData.length > 0 ?( 
+                                <Slider {...SliderSettings}>
+                                    {bookmarkSlidesData.reverse().map((slide, index) => (
+                                        <div key={index}>
+                                            <a href={`/movies/view/${slide.movie_code}`}>
+                                                <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                            </a>
+                                        </div>
+                                    ))}
+                                </Slider>
+                            ) : (
+                                <div className="noslide">
+                                    <BsExclamationCircle />
+                                    <p>즐겨찾기 목록이가 없습니다</p>
+                                </div>
+                            )}
+                            
                         </div>
                     </div>
-                    {/* 즐찾 회원 */}
-                    {/* <div className = "follower">
-                        <div className = "content_title">
-                            <span>팔로워</span>
-                        </div>
-                        <div className="content_info">
-                            <Slider {...AdaptiveHeightSettings}>
-                                {profileSlidesData.map((slide, index) => (
-                                    <div key={index}>
-                                        <a href={`/user/info/${slide.usernick}`}>
-                                            <img className="userprofile" src={slide.image_url || slide.imgSrc} alt="프로필" />
-                                            <p className="usernick">{slide.usernick || ""}</p>
-                                        </a>
-                                    </div>
-                                ))}
-                            </Slider>
-                        </div>
-                    </div> */}
-
                 </div>
                 {isModalOpen && (
                 <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
-                    <ul className = "user-list-ul">
-                        {currentList.map((user, index) => {
-                            const isMutual = user.each === "1"; // 개별 사용자에 대한 팔로우 상태 확인
-                            return (
-                                <li key={index} className="user-list">
-                                    <a href={`/user/info/${user.following_user_nick || user.follower_user_nick}`}>
-                                    <img src={user.following_user_image || user.follower_user_image} alt={profile}/>
-                                    <span>{user.following_user_nick || user.follower_user_nick}</span>
-                                    </a>
-                                    <button style={{ backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', color:isMutual ? 'black' : 'white' }}
+                <ul className="user-list-ul">
+                    {currentList.map((user, index) => {
+                        const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
+                        return (
+                            <li key={index} className="user-list">
+                                <a href={`/user/info/${user.follow_user_nick}`}>
+                                    <img src={user.follow_user_image} alt={user.follow_user_nick} />
+                                    <span>{user.follow_user_nick}</span>
+                                </a>
+                                <button 
+                                    style={{ 
+                                        backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', 
+                                        color: isMutual ? 'black' : 'white' 
+                                    }}
                                     onClick={() => toggleFollow(user)}
-                                    >
-                                        {isMutual ? '팔로잉' : '팔로우'}
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </Modal>
+                                >
+                                    {isMutual ? '팔로잉' : '팔로우'}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </Modal>
             )}    
             </div>
         </div>

@@ -1,6 +1,6 @@
 .seemoretitle{
-    background-color: #232323;
-    opacity: 0.7;
+    background-color: #252525;
+    /* opacity: 0.7; */
     width: 100%;
     /* height: auto; */
     display: flex;
@@ -12,14 +12,13 @@
     font-size: 3em;
 }
 
-.SeeMore .otherinfo{
-    border: 1px solid white;
-    height: 90vh;
+.More .otherinfo{
+    height: 70vh;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
 }
-.SeeMore .otherinfo .moviecontent{
+.More .otherinfo .moviecontent{
     width: calc(100%/6);
     /* height: 280px; */
     /* border: 1px solid red; */
@@ -27,22 +26,20 @@
     display: flex;
     flex-direction: column;
 }
-.SeeMore .otherinfo .moviecontent .moiveimage{
-    border : 1px solid green;
+.More .otherinfo .moviecontent .moiveimage{
     height: 250px;
     margin-bottom: 10px;
     position: relative;
     overflow: hidden;
 }
-.SeeMore .otherinfo .moviecontent .moiveimage img{
+.More .otherinfo .moviecontent .moiveimage img{
     width: 100%;
     height: 100%;
-    border: 1px solid white;
 }
-.SeeMore .otherinfo .moviecontent .moiveimage img {
+.More .otherinfo .moviecontent .moiveimage img {
     transition: transform 0.3s ease;
 }
-.SeeMore .otherinfo .moviecontent .moiveimage::after {
+.More .otherinfo .moviecontent .moiveimage::after {
     content: ''; /* 가상 요소의 내용 */
     position: absolute; /* 위치 설정 */
     top: 0; /* 상단 정렬 */
@@ -54,22 +51,21 @@
     transition: opacity 0.3s ease; /* 부드러운 변화 */
     pointer-events: none;
 }
-.SeeMore .otherinfo .moviecontent .moiveimage:hover::after {
+.More .otherinfo .moviecontent .moiveimage:hover::after {
     opacity: 1;
 }
 
-.SeeMore .otherinfo .moviecontent .moiveimage:hover img {
+.More .otherinfo .moviecontent .moiveimage:hover img {
     transform: scale(1.1);
 }
-.SeeMore .otherinfo .moviecontent .moiveimage:hover .heart {
+.More .otherinfo .moviecontent .moiveimage:hover .heart {
     display: block;
 }
-.SeeMore .otherinfo .moviecontent .moivetitle{
-    border : 1px solid yellow;
+.More .otherinfo .moviecontent .moivetitle{
     height: 30px;
     text-align: center;
 }
-.SeeMore .otherinfo .moviecontent .moivetitle span{
+.More .otherinfo .moviecontent .moivetitle span{
     color : white;
 }
 .moiveimage .heart{
@@ -81,4 +77,22 @@
     bottom : 10px;
     display: none;
     z-index: 1; 
+}
+.noInfo{
+    width: 100%;
+    height: 100%;
+    color : #fff;
+    display: flex;
+}
+.noInfo div{
+    font-size: 4em;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.noInfo>div>p{
+    margin-top: 20px;
+    font-size: 0.6em;
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../component/api/axiosApi';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import '../../css/mypage/seemore.css';
+// import '../../css/mypage/seemore.css';
 import profile from '../../img/profile.png';
 import { useNavigate } from 'react-router-dom';
 

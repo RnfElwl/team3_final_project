@@ -58,5 +58,12 @@ public interface UserDAO {
     public int getCountfollowing(String userid);
     public int getCountReplyComment(String userid);
 
-    public List<Map<String, Object>> getFollowData(String userid);
+    //public List<Map<String, Object>> getFollowData(String userid);
+    public List<Map<String, Object>> getFollowData(@Param("login_user") String login_user, @Param("userid") String userid , @Param("endpoint") String endpoint);
+
+    int insertFollow(@Param("loginUser") String loginUser, @Param("followerUserId") String followerUserId);
+
+    int deleteFollow(@Param("loginUser") String loginUser, @Param("followerUserId") String followerUserId);
+
+    int isFollowing(@Param("loginUser") String loginUser, @Param("followerUserId") String followerUserId);
 }
