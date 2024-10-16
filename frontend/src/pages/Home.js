@@ -3,9 +3,9 @@ import '../css/Home.css';
 import axios from '../component/api/axiosApi';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { useNavigate } from 'react-router-dom';
-import image1 from '../img/05.jpeg';
-import image2 from '../img/F04.jpeg';
-import image3 from '../img/j01.png';
+import image1 from '../img/4.png';
+import image2 from '../img/2.png';
+import image3 from '../img/미스터 션샤인.png';
 
 // banner
 const images = [image1, image2, image3];
@@ -57,7 +57,7 @@ function Home() {
 
 function MovieList() {
   const [movies, setMovies] = useState([]);
-  const [currentMovieIndexes, setCurrentMovieIndexes] = useState(Array(5).fill(0)); // 각 리스트에 대한 인덱스 배열
+  const [currentMovieIndexes, setCurrentMovieIndexes] = useState(Array(8).fill(0)); // 각 리스트에 대한 인덱스 배열
   const moviesPerPage = 6; 
   const [hoveredListIndex, setHoveredListIndex] = useState(null); // 어떤 리스트에 마우스가 올라왔는지 저장
   const [loading, setLoading] = useState(true);
@@ -69,7 +69,10 @@ function MovieList() {
     '기대작 TOP20', 
     '리뷰가 많은 컨텐츠', 
     '별점이 높은 컨텐츠', 
-    '새로 올라온 컨텐츠'
+    '새로 올라온 컨텐츠',
+    '추천 장르',
+    '회원님의 나이를 고려한 컨텐츠',
+    '회원님의 성별을 고려한 컨텐츠'
   ];
 
   // 각 카테고리에 대한 영화 데이터 로딩
@@ -152,12 +155,12 @@ function MovieList() {
           <div className="loading">Loading...</div> // 로딩 UI
         ) : (
           category.map((category, index) => ( 
-            <div key={`category-${index}`}>
+            <div key={`category-${index}`} className='category_list'> 
               <h3>{category}</h3>
               <div className="movie-grid"
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}> 
-                <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 1200}px)` }}>
+                <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 100}%)` }}>
                   {movies[index] && movies[index].slice(currentMovieIndexes[index], currentMovieIndexes[index] + moviesPerPage).map(movie => (
                     <div key={movie.movie_code || movie.id} className="movie-item">
                       <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)} />

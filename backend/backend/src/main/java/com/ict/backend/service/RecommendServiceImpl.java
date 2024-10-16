@@ -56,4 +56,19 @@ public class RecommendServiceImpl implements RecommendService{
     public List<MovieVO> getMoviesByViewCount() {
         return dao.getMoviesByViewCount();
     }
+
+    @Override
+    public List<MovieVO> getGenre() {
+        return dao.getGenre();
+    }
+
+    @Override
+    public List<MovieVO> getAge() {
+        return dao.getAge();
+    }
+
+    @Override
+    public List<MovieVO> getGender() {
+        return dao.getGender();
+    }
 }

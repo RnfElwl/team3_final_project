@@ -57,6 +57,18 @@ public class RecommendController {
     public List<MovieVO> getMoviesByViewCount(){
         return service.getMoviesByViewCount();
     }
+    @GetMapping("/genre")
+    public List<MovieVO> getGenre(){
+        return service.getGenre();
+    }
+    @GetMapping("/age")
+    public List<MovieVO> getAge(){
+        return service.getAge();
+    }
+    @GetMapping("/gender")
+    public List<MovieVO> getGender(){
+        return service.getGender();
+    }
 //    @GetMapping("/homeList")
 //    public  List<MovieVO> getMovies(
 //            @RequestParam String category,

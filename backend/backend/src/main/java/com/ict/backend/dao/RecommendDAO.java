@@ -23,4 +23,10 @@ public interface RecommendDAO {
     List<MovieVO> getMoviesByRating();
 
     List<MovieVO> getMoviesByViewCount();
+
+    List<MovieVO> getGenre();
+
+    List<MovieVO> getAge();
+
+    List<MovieVO> getGender();
 }

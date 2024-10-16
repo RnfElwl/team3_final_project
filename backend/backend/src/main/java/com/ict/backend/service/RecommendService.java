@@ -25,4 +25,11 @@ public interface RecommendService {
 
     List<MovieVO> getMoviesByViewCount();
 
+    List<MovieVO> getGenre();
+
+    List<MovieVO> getAge();
+
+    List<MovieVO> getGender();
+
+
 }
