@@ -65,7 +65,7 @@
   }
 
   .info-synops{
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #48d1cdea;
     padding-top: 20px;
     font-size: 17px;
     text-align: justify;
@@ -234,7 +234,7 @@
 }
 
 .review-input {
-  border: 1px solid #ddd;
+  border: 1px solid #48d1cdea;
   padding: 10px;
   min-height: 100px;
   width: 100%;
@@ -251,7 +251,7 @@
 .submit-btn {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #48d1cdea;
   color: white;
   border: none;
   border-radius: 5px;
@@ -264,12 +264,9 @@
 
 .review-section{
   padding-top: 40px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #48d1cdea;
   
 }
-
-
-
 
 .review {
   display: flex;
@@ -283,7 +280,7 @@
 .review-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
 }
 
@@ -315,3 +312,45 @@
   color: black;
 }
 
+.edit-review-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.star-rating {
+  margin-bottom: 10px; /* 별점과 입력 필드 사이에 여백 추가 */
+}
+
+.review-edit-input {
+  min-height: 100px;
+  width: 100%;
+  border: 1px solid #48d1cdea;
+  padding: 10px;
+  margin-bottom: 10px; /* 입력 필드와 버튼 사이에 여백 추가 */
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 5px; /* 모서리를 둥글게 */
+  outline: none;
+}
+
+.review-actions {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  
+}
+.delete-btn {
+  background-color: #dc3545;
+}
+.edit-btn:hover, .delete-btn:hover {
+  opacity: 0.8; /* 버튼에 호버 효과 */
+}

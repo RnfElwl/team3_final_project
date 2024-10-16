@@ -21,17 +21,19 @@ function MovieView() {
   const [userid, setUserId] = useState(null); // userid를 상태로 관리
   const [isEditing, setIsEditing] = useState(false); // 리뷰 수정 상태
   const [editReviewText, setEditReviewText] = useState(''); // 수정할 리뷰 내용 저장
+  const [editingReviewId, setEditingReviewId] = useState(null); // 수정 중인 리뷰의 ID를 저장
+  const [movieNo, setMovieNo] = useState(null); // 영화 번호 상태
+  const [movieCodeState, setMovieCode] = useState(null); // 영화 코드 상태
+  const [ratingInfo, setRatingInfo] = useState({ avg_rating: 0, review_count: 0 }); // 평점 정보 상태
 
+  
   // Ref로 contentEditable 요소를 제어
   const reviewInputRef = useRef(null);
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true); // 상태 추가
 
-  // const isLoggedIn = !!userid; // 로그인 상태를 확인하는 코드 (userid가 있으면 true)
-
-
-
+  // 처음 시작할때 불러올 값들
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchMovieData = async () => {
       setLoading(true); // 로딩 상태 시작
       try {
         // 영화 정보 가져오기
@@ -49,6 +51,11 @@ function MovieView() {
         const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
         console.log('Fetched reviews:', reviewResponse.data); // 리뷰 데이터 로그로 확인
         setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
+
+        // 평균 평점과 리뷰 개수 가져오기
+        const ratingResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/rating`);
+        console.log('Rating info:', ratingResponse.data); // API 응답 데이터 확인
+        setRatingInfo(ratingResponse.data); // 상태에 평점 정보 저장
         
       } catch (error) {
         console.error("Error:", error);
@@ -56,7 +63,7 @@ function MovieView() {
         setLoading(false); // 로딩 상태 종료
       }
     };
-    fetchMovie();
+    fetchMovieData();
   }, [movieCode, userid]);
 
   // userid가 설정된 후에 북마크 상태를 가져오도록 useEffect 분리
@@ -142,7 +149,7 @@ function MovieView() {
           return;
         }
         // 리뷰 서버로 전송
-        const response = await axios.post('/api/reviews/add', {
+        const response = await axios.post('http://localhost:9988/api/reviews/add', {
           userid,
           movie_no: movie.movie_no,
           movie_review_content: reviewText,
@@ -153,99 +160,139 @@ function MovieView() {
         // 리뷰 입력 초기화
         reviewInputRef.current.textContent = ''; // 리뷰 입력 초기화
         setIsPlaceholderVisible(true); // placeholder 다시 표시
+        console.log(reviews);
       } catch (error) {
         console.error('Error submitting review:', error);
       }
     }
   };
+
+      // 리뷰 수정 요청 전송
+      const handleUpdateReview = async (movie_review_no) => {
+        if (!movie_review_no) {
+          console.error('Error: movie_review_no is undefined or null');
+          return;
+        }
+        // 요청 데이터 확인
+        console.log('Updating review with data:', {
+          movie_review_content: editReviewText, // 리뷰 내용
+          rate: rating,                        // 별점
+          movie_review_no: movie_review_no      // 리뷰 번호 (고유 ID)
+        });
+        try {
+          const response = await axios.put(`http://localhost:9988/api/reviews/${movie_review_no}`, {
+            movie_review_no,
+            movie_review_content: editReviewText, // 리뷰 내용
+            rate: rating,                        // 별점
+          });
+          console.log('Review updated:', response.data);
   
-    // 리뷰 컴포넌트
+          // 리뷰 업데이트 후 다시 리스트를 새로고침
+          setReviews(reviews.map(review => review.movie_review_no === movie_review_no ? 
+            { ...review, movie_review_content: editReviewText } : review));
+            setEditingReviewId(null); // 수정 모드 종료
+
+        } catch (error) {
+          console.error('Error updating review:', error);
+          console.error('Response:', error.response?.data);
+        }
+      };
+
+      // 수정 모드로 전환
+      const handleEditReview = (review) => {
+        setEditingReviewId(review.movie_review_no); // 수정 중인 리뷰의 ID를 설정
+        setEditReviewText(review.movie_review_content); // 기존 리뷰 내용을 가져옴
+        setRating(review.rate); // 기존 별점 값을 초기화
+        // 리뷰의 영화 정보 설정
+        setMovieNo(review.movie_no);  // 영화 번호 설정
+        setMovieCode(review.movie_code);  // 영화 코드 설정
+
+      };
+      
+    
+      // 리뷰 삭제 요청 전송
+      const handleDeleteReview = async (movie_review_no) => {
+        try {
+          await axios.request(`http://localhost:9988/api/reviews/${movie_review_no}`);
+          
+          // 리뷰 삭제 후 리스트 업데이트
+          setReviews(reviews.filter(review => review.movie_review_no !== movie_review_no));
+        } catch (error) {
+          console.error('Error deleting review:', error);
+        }
+      };
+  
     // 리뷰 컴포넌트
     const renderReviews = () => {
       return reviews.map((review) => (
-        <div key={review.id} className="review">
+        <div key={review.movie_review_no} className="review">
+          <div className="profile-section">
           <img src={review.profileImg} alt="User profile" className="profile-img" />
+          <span className="nickname">{review.userid}</span>
+          </div>
           <div className="review-content">
-          {isEditing ? (
-            <div>
-              <textarea 
-                value={editReviewText} 
-                onChange={(e) => setEditReviewText(e.target.value)} 
-                className="review-edit-input"
-              />
-              <button onClick={() => handleUpdateReview(review.id)}>저장</button>
-              <button onClick={() => setIsEditing(false)}>취소</button>
+            {/* 항상 표시되는 별점*/}
+            {editingReviewId !== review.movie_review_no && (
+            <div className="star-rating">
+              {[...Array(5)].map((star, index) => (
+                <FaStar
+                  key={index}
+                  className={`star ${index < review.rate ? 'active' : ''}`} // review.rate 사용
+                  
+                />
+              ))}
             </div>
+            )}
+
+            {editingReviewId === review.movie_review_no ? (
+            <div className="edit-review-section">
+              {/* 수정 가능한 별점 필드 - 수정 모드일때만 표시*/}
+              <div className="star-rating">
+                {[...Array(5)].map((star, index) => (
+                  <FaStar
+                    key={index}
+                    className={`star ${index < (hoverRating || rating) ? 'active' : ''}`} // hover 및 rating 상태 반영
+                    onMouseEnter={() => setHoverRating(index + 1)} // 마우스 오버 시
+                    onMouseLeave={() => setHoverRating(0)}        // 마우스가 벗어나면 초기화
+                    onClick={() => setRating(index + 1)}           // 클릭 시 별점 선택
+                    style={{ cursor: 'pointer' }}
+                  />
+                ))}
+                </div>
+
+            {/* 수정 입력 필드 */}
+            <div
+              contentEditable
+              className="review-edit-input"
+              onInput={(e) => setEditReviewText(e.target.textContent)}
+              style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}
+            >
+              {editReviewText}
+            </div>
+            {/* 저장, 취소 버튼 */}
+            <div className="review-actions">
+              <button onClick={() => handleUpdateReview(review.movie_review_no)} className="edit-btn">저장</button>
+              <button onClick={() => setEditingReviewId(null)} className="delete-btn">취소</button>
+            </div>
+          </div>
           ) : (
             <p className="review-text">{review.movie_review_content}</p>
           )}
-            <div className="review-header">
-              <span className="nickname">{review.userid}</span>
-              <div className="rating">
-                {[...Array(5)].map((star, i) => (
-                  <FaStar key={i} className={i < review.rate ? 'star active' : 'star'} />
-                ))}
-                  </div>
-                </div>
-                <p className="review-text">{review.movie_review_content}</p>
-
-                {/* 로그인된 사용자가 작성한 리뷰일 경우 수정/삭제 버튼을 표시 */}
-                {review.userid === userid && (
-                  <div className="review-actions">
-                    <button onClick={() => handleEditReview(review)}>수정</button>
-                    <button onClick={() => handleDeleteReview(review.id)}>삭제</button>
-                  </div>
-                )}
+            {review.userid === userid && editingReviewId !== review.movie_review_no && (
+            <div className="review-actions">
+              <button onClick={() => handleEditReview(review)} className="edit-btn">수정</button>
+              <button onClick={() => handleDeleteReview(review.movie_review_no)} className="delete-btn">삭제</button>
+            </div>
+            )}
           </div>
         </div>
       ));
     };
 
-    // 수정 모드로 전환
-    const handleEditReview = (review) => {
-      setIsEditing(true);
-      setEditReviewText(review.movie_review_content); // 기존 리뷰 내용을 가져옴
-    };
-
-    // 리뷰 수정 요청 전송
-    const handleUpdateReview = async (reviewId) => {
-      try {
-        const response = await axios.put(`/api/reviews/${reviewId}`, {
-          movie_review_content: editReviewText,
-          rate: rating,
-        }, {
-          headers: { userid }, // 로그인된 사용자의 userid를 헤더에 포함
-        });
-
-        // 리뷰 업데이트 후 다시 리스트를 새로고침
-        setReviews(reviews.map(review => review.id === reviewId ? { ...review, movie_review_content: editReviewText } : review));
-        setIsEditing(false); // 수정 모드 종료
-      } catch (error) {
-        console.error('Error updating review:', error);
-      }
-    };
-
-    // 리뷰 삭제 요청 전송
-    const handleDeleteReview = async (reviewId) => {
-      try {
-        await axios.delete(`/api/reviews/${reviewId}`, {
-          headers: { userid }, // 로그인된 사용자의 userid를 헤더에 포함
-        });
-
-        // 리뷰 삭제 후 리스트 업데이트
-        setReviews(reviews.filter(review => review.id !== reviewId));
-      } catch (error) {
-        console.error('Error deleting review:', error);
-      }
-    };
-
-
-
-
-
-
-
+    
+    // 배우를 /가 아닌 , 로 구분
     const formattedCasts = movie.movie_casts.replace(/\//g, ', ');
+    
 
     return (
         <div className="movie-view-container">
@@ -263,7 +310,7 @@ function MovieView() {
 
                 <div className="movie-info">
                     <div className="rating-info">
-                        <FaStar className="star-icon" /> 4.5 (200) {/* 평균 평점과 평점 개수 */}
+                        <FaStar className="star-icon" />  {ratingInfo.avg_rating.toFixed(1)} ({ratingInfo.review_count}) {/* 평균 평점과 평점 개수 */}
                     </div>
                     <div className="info-details">
                         <span>{movie.movie_genre}</span> {/* 장르 */}
@@ -294,9 +341,7 @@ function MovieView() {
               </div>
             </div>
 
-        <div className="watch-button-container">
-            <button className="watch-btn">보러가기</button>
-        </div>
+        
         <hr/>
         
         <div className="tab-content">

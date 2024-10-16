@@ -7,6 +7,6 @@ public class BookmarkVO {
 
     private String userid;
     private int movie_no;
-    private String movie_code;
+    private int movie_code;
 
 }

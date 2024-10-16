@@ -24,19 +24,20 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewVO getReviewById(int reviewId) {
-        return reviewDAO.selectReviewById(reviewId);
+    public ReviewVO getReviewById(int movieReviewNo) {
+        System.out.println("Service - Fetching review by reviewNo: " + movieReviewNo);
+        return reviewDAO.selectReviewById(movieReviewNo);
     }
 
     @Override
-    public void updateReview(int reviewId, ReviewVO updatedReview) {
-        // return 제거
-        reviewDAO.updateReview(reviewId, updatedReview.getMovie_review_content(), updatedReview.getRate());
+    public void updateReview(ReviewVO reviewVO) {
+        System.out.println("Service - Updating review: " + reviewVO);
+        reviewDAO.updateReview(reviewVO);
     }
 
     @Override
-    public void deleteReview(int reviewId) {
-        reviewDAO.deleteReview(reviewId);
+    public void deleteReview(int movieReviewNo) {
+        reviewDAO.deleteReview(movieReviewNo);
     }
 
 

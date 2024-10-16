@@ -2,6 +2,7 @@ package com.ict.backend.dao;
 
 import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
+import com.ict.backend.vo.RatingVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -22,5 +23,10 @@ public interface MovieDAO {
 
     // movie_code에 해당하는 여러 이미지 URL을 가져오는 메서드
     List<String> getMovieImagesByCode(@Param("movieCode") String movieCode);
+
+    int getMovieNoByCode(String movieCode); // movieCode로 movieNo 조회
+
+    // movie_no에 따라 평균별점과 리뷰개수
+    RatingVO getRatingByMovieNo(int movieNo);
 
 }
