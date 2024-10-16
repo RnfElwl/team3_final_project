@@ -54,7 +54,7 @@ function App() {
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
                 <Route path='/admin' element={<Admin/>}/>
                 <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/>
-                <Route path='/admin/adminQAns' element={<AdminQAns/>}/>
+                <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
                 <Route path='/admin/memCon' element={<AdminMemCon/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
