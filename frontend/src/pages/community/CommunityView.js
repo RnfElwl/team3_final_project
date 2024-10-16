@@ -23,7 +23,10 @@ function CommunityView(){
     //const userid = localStorage.getItem('userid');
 
     const isInitialRender = useRef(true); //1번만 호출 
-
+    const replyShowRender = useRef([]);
+    const commentInput = useRef([]);
+    let x = -1;
+    let y = -1;
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -33,6 +36,7 @@ function CommunityView(){
     const [myid, setMyid] = useState("");
 
     const [showReplies, setShowReplies] = useState({}); // 각 댓글에 대한 대댓글 표시 여부 관리
+    const [replyText, setReplyText] = useState("");
 
 
 
@@ -199,7 +203,37 @@ function CommunityView(){
 
     // 댓글 수 계산
     const commentCount = comments.length;
-
+     function handleReplyUpdate(reply){
+        const updatedCommentContent = prompt("댓글을 수정하세요:", reply.reply_content);
+        if (updatedCommentContent !== null) {
+            const updatedComment = {
+                ...reply,
+                reply_content: updatedCommentContent
+            };
+            console.log(updatedComment);
+            axios.put(`http://localhost:9988/community/comments/reply/${reply.reply_no}`, updatedComment)
+                .then(() => {
+                    // setComments(comments.map(c => c.comment_no === comment.comment_no ? updatedComment : c)); // 댓글 상태 업데이트
+                    toggleReplies(reply.comment_no)
+                    
+                })
+                .catch(error => {   
+                    console.error("Error updating comment:", error);
+                });
+        }
+    }
+    function handleReplyDelete(reply){
+        if(window.confirm("이 댓글을 삭제하시겠습니까?")) {
+            // 댓글 삭제 로직
+            axios.delete(`http://localhost:9988/community/comments/reply/${reply.reply_no}`)
+                .then(() => {
+                    toggleReplies(reply.comment_no);
+                })
+                .catch(error => {
+                    console.error("Error deleting comment:", error);
+                });
+        }
+    }
     const handleCommentUpdate = (comment) => {
         // 댓글 수정 로직
         const updatedCommentContent = prompt("댓글을 수정하세요:", comment.comment_content);
@@ -261,33 +295,53 @@ function CommunityView(){
     //     });
     // }, [comments]);
 
-    const handleReplyChange = (comment_no, value) => {
-        setReplyComment({ ...replyComment, [comment_no]: value });
+    const handleReplyChange = (e) => {
+        setReplyText(e.target.value);
     };
 
-    
+    const toggleReplies = async (comment_no) => {
+        const {data} = await  axios.get(`http://localhost:9988/community/comments/reply/${comment_no}`);
+        console.log(data)
+        setReplyComment((p)=>({...p, [comment_no]:data}));
+        // setShowReplies((prev) => ({
+        //     ...prev,
+        //     [comment_no]: !prev[comment_no], // 해당 댓글의 대댓글 표시 여부 토글
+        // }));
+    };
     const handleReplySubmit = (e, comment_no) => {
         e.preventDefault();
+        if(replyText==""){
+            return;
+        }
         const replyData = {
-            userid: "test1234",
-            community_no: parseInt(community_no),
-            parent_comment_no: comment_no,
-            comment_content: replyComment[comment_no],
+            comment_no: comment_no,
+            reply_content: replyText,
         };
-
+        console.log(replyData);
         axios.post(`http://localhost:9988/community/comments/reply`, replyData)
             .then(response => {
-                setReplies(prevReplies => ({
-                    ...prevReplies,
-                    [comment_no]: [...(prevReplies[comment_no] || []), response.data]
-                }));
-                setReplyComment({ ...replyComment, [comment_no]: "" });
+                setReplyComment((p)=>({ ...p,
+                     [comment_no]: [...(p[comment_no] || []), response.data]})    );
             })
             .catch(error => {
                 console.error("Error submitting reply:", error);
             });
     };
-
+    async function handleToReplySubmit(e, reply){
+        e.preventDefault();
+        if(replyText==""){
+            return;
+        }
+        const replyData = {
+            comment_no: reply.comment_no,
+            reply_content: replyText,
+            tag_usernick: reply.usernick
+        };
+        const {data} = await axios.post(`http://localhost:9988/community/comments/reply`, replyData);
+        setReplyComment((p)=>({ ...p,
+            [reply.comment_no.comment_no]: [...(p[reply.comment_no.comment_no] || []), data]}));
+        toggleReplies(reply.comment_no);
+    }
     function openReport(e){{/* 신고 기능 */}
         const id = e.target.dataset.id;
         const userid = e.target.dataset.userid;
@@ -333,13 +387,15 @@ function CommunityView(){
     
         return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
     };
-
-    const toggleReplies = (comment_no) => {
-        setShowReplies((prev) => ({
-            ...prev,
-            [comment_no]: !prev[comment_no], // 해당 댓글의 대댓글 표시 여부 토글
-        }));
-    };
+    function showCommentInput(i, j){
+        if(x!=-1 && y!=-1){
+            commentInput.current[x][y].style.display = 'none';
+        }
+            commentInput.current[i][j].style.display = 'block';
+            x = i;
+            y = j;
+    }
+    
     function toggleFollow(user){
         console.log(user);
         axios.post('http://localhost:9988/user/info/toggleFollow', {
@@ -370,7 +426,12 @@ function CommunityView(){
         });
 
     }
-
+    function removeShowBtn(index){
+        const element = replyShowRender.current[index]; // 클릭된 항목 참조
+    if (element) {
+      element.style.display = 'none'; // DOM 조작으로 항목 숨기기
+    }
+    }
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
         return <div>Loading...</div>; // 데이터가 없을 때 로딩 표시
@@ -479,7 +540,7 @@ function CommunityView(){
                     )}
 
                     <div className="comments_list">
-                        {comments.map((comment) => (
+                        {comments.map((comment, i) => (
                             <div key={comment.comment_no} className="comment_container">
                                 <div className="comment_item">
                                     <div className="comment_top">
@@ -489,40 +550,93 @@ function CommunityView(){
                                         </div>
                                         <div className="comment_actions"> 
                                             <p className="comment_writedate">{comment.comment_writedate}</p>
-                                                <button onClick={() => handleCommentUpdate(comment)}>Edit</button>
-                                                <button onClick={() => handleCommentDelete(comment.comment_no)}>Del</button>
+                                            {
+                                                myid===comment.userid&&(
+                                                    <>
+                                                    <button onClick={() => handleCommentUpdate(comment)}>Edit</button>
+                                                    <button onClick={() => handleCommentDelete(comment.comment_no)}>Del</button>
+                                                    </>
+                                                )
+                                            }
                                                 {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
                                             </div>
                                         </div>
                                     <div className="comment_content">{comment.comment_content}</div>
-
                                     <div className="comment_info">
                                         {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
-                                        <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
+                                        {/* <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
                                             <input
                                                 type="text"
-                                                value={replyComment[comment.comment_no] || ""}
-                                                onChange={(e) => handleReplyChange(comment.comment_no, e.target.value)}
+                                                value={replyText}
+                                                onChange={handleReplyChange}
                                                 placeholder="대댓글을 입력하세요"
                                             />
                                             <button type="submit">답글 남기기</button>
-                                        </form>
-                                        <button  className="reply_open" onClick={() => toggleReplies(comment.comment_no)}>
-                                            {showReplies[comment.comment_no] ? "답글 숨기기" : "댓글 보기"}
+                                        </form> */}
+                                        <div onClick={()=>showCommentInput(i, 0)}>답글</div>
+                                        {
+                                            comment.reply_cnt!=0&&(
+                                                <button  className="reply_open" onClick={() => {toggleReplies(comment.comment_no); removeShowBtn(i)}} 
+                                                ref={(el) => (replyShowRender.current[i] = el)}
+                                                >
+                                            댓글 보기
                                         </button>
+                                            )
+                                        }
                                     </div>
-                                    
+                                    <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)} ref={(el) => { if (!commentInput.current[i]) {
+                    commentInput.current[i] = [];
+                  }
+                  commentInput.current[i][0] = el;} }>
+                                            <input
+                                                type="text"
+                                                value={replyText}
+                                                onChange={handleReplyChange}
+                                                placeholder="대댓글을 입력하세요"
+                                            />
+                                            <button type="submit">답글 남기기</button>
+                                    </form>
                                     {/* 대댓글 리스트 표시 */}
-                                    {showReplies[comment.comment_no] && replies[comment.comment_no] && (
+                                    {replyComment[comment.comment_no] && (
                                         <div className="replies">
-                                            {replies[comment.comment_no].map((reply) => (
-                                                <div key={reply.comment_no} className="reply_item">
-                                                    <div className="reply_top">
-                                                        <p>{reply.userid}</p>
-                                                        <p>{reply.comment_writedate}</p>
+                                            {replyComment[comment.comment_no].map((reply, j) => (
+                                                <>
+                                                <div  className="reply_item">
+                                                    <div className="comment_top">
+                                                        <div className="comment_user">
+                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            <p className="comment_writer_name">{reply.usernick}</p>
+                                                        </div>
+                                                        <div className="comment_actions"> 
+                                                            <p className="comment_writedate">{reply.reply_writedate}</p>
+                                                            {
+                                                                myid===reply.userid&&(
+                                                                    <>
+                                                                    <button onClick={() => handleReplyUpdate(reply)}>Edit</button>
+                                                                    <button onClick={() => handleReplyDelete(reply)}>Del</button>
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </div>
                                                     </div>
-                                                    <p>{reply.comment_content}</p>
+                                                    <div className="comment_content"><span className="tag">{reply.tag_usernick!=null?`@${reply.tag_usernick}`:""}</span>{reply.reply_content}</div>
+                                                        <div className="comment_info">
+                                                        <div onClick={()=>showCommentInput(i, j)}>답글</div>
+                                                            
+                                                        </div>
                                                 </div>
+                                                <form onSubmit={(e) => handleToReplySubmit(e, reply)} ref={(el) => (commentInput.current[i][j+1] = el)}>
+                                                    <input
+                                                        type="text"
+                                                        value={replyText}
+                                                        onChange={handleReplyChange}
+                                                        placeholder="대댓글을 입력하세요"
+                                                    />
+                                                    <button type="submit">답글 남기기</button>
+                                                </form>
+
+
+                                            </>
                                             ))}
                                         </div>
                                     )}

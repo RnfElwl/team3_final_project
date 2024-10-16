@@ -3,6 +3,7 @@ package com.ict.backend.controller;
 import com.ict.backend.service.CommentReplyService;
 import com.ict.backend.vo.CommentReplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +16,13 @@ public class CommentReplyController {
     @Autowired
     CommentReplyService service;
 
+
     // 대댓글 작성 API
     @PostMapping
     public CommentReplyVO saveReply(@RequestBody CommentReplyVO reply) {
-        System.out.println(reply);
+        System.out.println(reply.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        reply.setUserid(userid);
         service.saveReply(reply);
         return reply;
     }
@@ -26,6 +30,7 @@ public class CommentReplyController {
     // 대댓글 목록 조회 API
     @GetMapping("/{comment_no}")
     public List<CommentReplyVO> getReplies(@PathVariable int comment_no) {
+        System.out.println(comment_no);
         return service.getReplies(comment_no);
     }
 
@@ -33,6 +38,8 @@ public class CommentReplyController {
     @PutMapping("/{reply_no}")
     public void updateReply(@PathVariable int reply_no, @RequestBody CommentReplyVO reply) {
         reply.setReply_no(reply_no);
+        reply.setEdit_user(SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println(reply.toString());
         service.updateReply(reply);
     }
 
