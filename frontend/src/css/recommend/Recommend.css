@@ -28,7 +28,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 어두운 그림자 */
     border-radius: 8px;
     color: #e0e0e0; /* 밝은 텍스트 */
-    z-index: 1000;  /*다른 요소 위에 표시 */
+    /*z-index: 1;  다른 요소 위에 표시 */
 }
 
 .recommend .choice {
@@ -111,9 +111,9 @@
 }
 
 .recommend .next-button {
-    color: #48d1cdea ;
-    border: #48d1cdea solid 1px;
-    background-color: #f0f0f0;
+    color: #e0e0e0 ;
+    border: #e0e0e0 solid 1px;
+    background: none;
     border-radius: 15px;
     padding: 10px 15px;
     cursor: pointer;
@@ -121,7 +121,13 @@
 }
 
 .recommend .next-button.enabled {
-    background-color: #48d1cdea; /* 활성화된 버튼 색상 */
+    background:none;
+    color: #48d1cdea;
+    border: 1px solid #48d1cdea;
+}
+
+.recommend .next-button.enabled:hover{
+    background-color: #48d1cdea; 
     color: #f0f0f0;
 }
 
