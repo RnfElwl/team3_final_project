@@ -22,7 +22,7 @@ public interface CommunityService {
     int createCommunity(CommunityVO vo);
 
     //view
-    CommunityVO getCommunityView(int community_no);
+    CommunityVO getCommunityView(int community_no, String userid);
     void increaseHit(int community_no);
     List<CommunityVO> getTopViewedPosts();
 

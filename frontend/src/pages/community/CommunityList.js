@@ -211,7 +211,53 @@ function CommunityList() {
     
         return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
     };
+    function toggleFollow(user){
+        axios.post('http://localhost:9988/user/info/toggleFollow', {
+            follow_user_nick: user.usernick,
+            newStatus: user.follow === 1 ? "0" : "1"
+        })
+        .then(response => {
+            console.log(response.data); // 성공 응답 처리
+            communityListSetting();
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    // 로그인 필요 시 로그인 페이지로 리디렉션
+                    alert("팔로우 기능은 로그인이 필요합니다.");
+                    window.location.href = "/signin"; // 로그인 페이지 경로
+                } else {
+                    // 400 오류가 발생하면 상태 복구
+                    const restoredList = filteredCommunity.map((u) => {
+                        if (u.userick === user.usernick) {
+                            return {
+                                ...u,
+                                is_follower: u.follow === 1 ? "0" : "1", // 원래 상태로 복구
+                            };
+                        }
+                        return u;
+                    });
+                    setFilteredCommunity(restoredList);
+                    alert("팔로우 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                }
+            } else {
+                // 다른 에러 처리 (네트워크 오류 등)
+                console.error('Error toggling follow status:', error);
+                const restoredList = filteredCommunity.map((u) => {
+                    if (u.usernick === user.usernick) {
+                        return {
+                            ...u,
+                            is_follower: u.follow === 1 ? "0" : "1", // 원래 상태로 복구
+                        };
+                    }
+                    return u;
+                });
+                setFilteredCommunity(restoredList);
+                alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+            }
+        });
 
+    }
     return (
         <div className="community_list">
             <div className="container">
@@ -282,7 +328,7 @@ function CommunityList() {
                                 <div className="list_top">
                                     <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     <div className="writer_info">
-                                        <p className="writer_name">{communityItem.userid}</p>
+                                        <p className="writer_name">{communityItem.usernick}</p>
                                         <div className="list_info">
                                             <p className="writedate">{formatDate(communityItem.community_writedate)}</p>
                                             {/* <p className="location">{communityItem.loc}</p> */}
@@ -291,7 +337,9 @@ function CommunityList() {
                                     <div className="action_button_container">
                                         {userid !== communityItem.userid && (
                                             <>
-                                                <input type="button" value="follow" className="action_button" />
+                                                <input type="button" value={communityItem.follow==1?'following':'follow'} 
+                                                onClick={()=>{toggleFollow(communityItem)}}  
+                                                className="action_button" />
                                                 <button 
                                                     className="report_button" 
                                                     title="신고"
