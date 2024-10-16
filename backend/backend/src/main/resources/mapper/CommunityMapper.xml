@@ -10,8 +10,9 @@
 <!--        ORDER BY community_writedate DESC-->
 <!--    </select>-->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        select ct.community_no, ct.userid, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, i.image_url as community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
-        exists(select * from community_like_tbl clt2 where clt2.userid=#{param1} and clt2.community_no=ct.community_no) like_state
+        select ct.community_no, ct.userid, ut.usernick, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, i.image_url as community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
+        exists(select * from community_like_tbl clt2 where clt2.userid=#{param1} and clt2.community_no=ct.community_no) like_state,
+        exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid) as follow
         from community_tbl ct
         left outer join community_like_tbl clt on ct.community_no=clt.community_no
         left JOIN community_image_tbl i ON ct.community_img = i.image_no
@@ -29,8 +30,16 @@
 <!--        SELECT * FROM community_tbl WHERE community_no = #{community_no}-->
 <!--    </select>-->
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT c.community_no, c.userid, c.community_title, c.community_content, c.community_like, i.image_url as community_img, c.hit, c.loc, c.category, c.privacy from community_tbl c
-        join community_image_tbl i on c.community_img = i.image_no WHERE c.community_no = #{community_no}
+        SELECT c.community_no, c.userid, ut.usernick, it.image_url userprofile, c.community_title, c.community_content, i.image_url as community_img, c.hit, c.loc, c.category, c.privacy, count(clt.like_date) community_like,
+        exists(select * from community_like_tbl clt2 where clt2.userid=#{userid} and clt2.community_no=#{community_no}) like_state,
+        exists(select * from follower_tbl ft2 where ft2.userid=#{userid} and follower_userid=c.userid) as follow
+        from community_tbl c
+        join community_image_tbl i on c.community_img = i.image_no
+        left outer join community_like_tbl clt on c.community_no=clt.community_no
+        join user_tbl ut on c.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        WHERE c.community_no =#{community_no}
+        group by c.community_no
     </select>
     <update id="increaseHit" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl

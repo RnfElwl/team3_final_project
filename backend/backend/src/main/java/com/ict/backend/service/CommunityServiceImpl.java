@@ -42,8 +42,8 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public CommunityVO getCommunityView(int community_no) {
-        return dao.getCommunityView(community_no);
+    public CommunityVO getCommunityView(int community_no, String userid) {
+        return dao.getCommunityView(community_no, userid);
     }
 
     @Override

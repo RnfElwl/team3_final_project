@@ -94,7 +94,8 @@ public class CommunityController {
     //view
     @GetMapping("/view/{community_no}")
     public CommunityVO getCommunityView(@PathVariable("community_no") int community_no, @RequestHeader(value = "Host", required = false) String Host){
-        CommunityVO communityVO = service.getCommunityView(community_no);
+        String userid= SecurityContextHolder.getContext().getAuthentication().getName();
+        CommunityVO communityVO = service.getCommunityView(community_no, userid);
         System.out.println(communityVO.getCommunity_img());
         communityVO.setCommunity_img("http://" + Host +"/"+ communityVO.getCommunity_img());
         return communityVO;
@@ -126,7 +127,7 @@ public class CommunityController {
             System.out.println(userid);
             String no = "";
             int result = 0;
-            CommunityVO communityVO = service.getCommunityView(community_no);
+            CommunityVO communityVO = service.getCommunityView(community_no, userid);
             String img_url = communityVO.getCommunity_img();
             System.out.println(communityVO);
             System.out.println(img_url);

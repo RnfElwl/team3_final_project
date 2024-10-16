@@ -5,7 +5,7 @@ import {List, Search} from 'react-bootstrap-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './css/navigationbar.css';
-
+import { useAuth } from './TokenValidator';
 
 function Header() {
   const [nav, setNav] = useState(false);
@@ -37,6 +37,11 @@ function Header() {
     ? setIsChatting(true)
     : setIsChatting(false);
   }, [location.pathname]);
+  
+  // 로그인 여부 판단용
+  const { isAuthenticated, logout } = useAuth();
+
+  // 로그인 여부 판단용 여기까지
 
   if(isAdminPage){
     //관리자 헤더
@@ -105,8 +110,28 @@ function Header() {
             <div className='search'>
               <Search color={"#1C1C20"} size={20}/><input  type="text" />
             </div>
-            <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
-            <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>
+
+              {isAuthenticated ? (
+            // 토큰이 있는 경우: 로그아웃 버튼 표시
+              <div className='profile' style = {{display:'flex'}}>
+                <Link to="/mypage">
+                  <img
+                    src="/images/profile.png"
+                    alt="프로필 아이콘"
+                    style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px', cursor: 'pointer' }}
+                  />
+                </Link>
+                <button className='join_btn' onClick={logout}>로그아웃</button>
+              </div>
+              ) : (
+              // 토큰이 없는 경우: 로그인 및 회원가입 버튼 표시
+              <>
+                <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
+                <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>
+              </>
+              )}
+            {/* <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
+            <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div> */}
             
           </div>
       </header>

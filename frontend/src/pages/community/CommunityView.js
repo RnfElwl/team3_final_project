@@ -61,6 +61,7 @@ function CommunityView(){
             const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
                 params: { community_no, userid }
             });
+            
             console.log("좋아요 결과"+isLikedResponse.data);
             setLiked(isLikedResponse.data);
             // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
@@ -111,8 +112,9 @@ function CommunityView(){
                 .then(response => {
                     console.log(response.data); // API 응답 로그
                     setCommunity(response.data); // community 상태 업데이트
-                    setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
-                    //setLiked(response.data.liked);  초기 좋아요 상태 설정
+                    setLikesCount(response.data.community_like); // 초기 좋아요 수 설정
+                    setLiked(response.data.like_state==1?true:false);
+                    //setLiked(response.data.liked);  //초기 좋아요 상태 설정
                     //setHitCount(response.data.hitCount);        조회수 설정
                     
                 })
@@ -174,8 +176,10 @@ function CommunityView(){
             // 새로운 댓글 추가 로직
             const commentData = {
                 userid: myid, // 사용자 ID 사용
+                usernick: userData.usernick,
                 community_no: parseInt(community_no),
                 comment_content: newComment,
+                writerImage : userData.image_url,
                 // 추가 필드가 필요할 경우 여기에 추가
             };
     
@@ -336,7 +340,36 @@ function CommunityView(){
             [comment_no]: !prev[comment_no], // 해당 댓글의 대댓글 표시 여부 토글
         }));
     };
-    
+    function toggleFollow(user){
+        console.log(user);
+        axios.post('http://localhost:9988/user/info/toggleFollow', {
+            follow_user_nick: user.usernick,
+            newStatus: user.follow === 1 ? "0" : "1"
+        })
+        .then(response => {
+            console.log(response.data); // 성공 응답 처리
+            setCommunity((p)=>({...p, follow: user.follow=== 1 ? "0" : "1"}));
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    // 로그인 필요 시 로그인 페이지로 리디렉션
+                    alert("팔로우 기능은 로그인이 필요합니다.");
+                    window.location.href = "/signin"; // 로그인 페이지 경로
+                } else {
+                    // 400 오류가 발생하면 상태 복구
+                    setCommunity((p)=>({...p, follow: user.follow=== 1 ? "0" : "1"}));
+                    alert("팔로우 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                }
+            } else {
+                // 다른 에러 처리 (네트워크 오류 등)
+                console.error('Error toggling follow status:', error);
+                setCommunity((p)=>({...p, follow: user.follow=== 1 ? "0" : "1"}));
+                alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+            }
+        });
+
+    }
 
     // 데이터를 성공적으로 받아온 후에만 렌더링
     if (!community) {
@@ -364,7 +397,11 @@ function CommunityView(){
                     <div className="action_button_container">
                         {loggedInUserId !== null && loggedInUserId !== community.userid && (
                             <>
-                                <input type="button" value="follow" className="action_button" />
+                                <input type="button" 
+                                value={community.follow==1?'following':'follow'}
+                                 className="action_button" 
+                                 onClick={()=>{toggleFollow(community)}}  
+                                 />
                                 <button 
                                     className="report_button" 
                                     title="신고"
@@ -447,8 +484,8 @@ function CommunityView(){
                                 <div className="comment_item">
                                     <div className="comment_top">
                                         <div className="comment_user">
-                                            <img className="comment_writer_image" src={community.writerImage} alt="작성자" />
-                                            <p className="comment_writer_name">{community.userid}</p>
+                                            <img className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
+                                            <p className="comment_writer_name">{comment.usernick}</p>
                                         </div>
                                         <div className="comment_actions"> 
                                             <p className="comment_writedate">{comment.comment_writedate}</p>

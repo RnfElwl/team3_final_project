@@ -11,7 +11,10 @@
 
     <!-- 특정 댓글에 대한 대댓글 목록 조회 -->
     <select id="getReplies" parameterType="int" resultType="com.ict.backend.vo.CommentReplyVO">
-        SELECT * FROM reply_comment_tbl WHERE comment_no = #{comment_no}
+        SELECT *, it.image_url as writerImage, ut.usernick FROM reply_comment_tbl
+        join user_tbl ut on c.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        WHERE comment_no = #{comment_no}
     </select>
 
     <!-- 대댓글 수정 -->
