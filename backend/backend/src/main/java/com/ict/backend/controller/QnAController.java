@@ -62,9 +62,9 @@ public class QnAController {
     public ResponseEntity<List<QnAVO>> getQnAList(
             @PathVariable int qna_no,
             @RequestHeader(value = "Host", required = false) String Host) {
-//        String imageUrl="http://";
-        List<QnAVO> result = qnaService.getQnAView(qna_no);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+
+        List<QnAVO> qnaList = qnaService.getQnAView(qna_no);
+        return new ResponseEntity<>(qnaList, HttpStatus.OK);
     }
     //이미지 불러오기
     @GetMapping("/images/{foldername}/{filename}")
@@ -164,31 +164,56 @@ public class QnAController {
     }
     //수정
     @PostMapping("/viewEditOk/{qna_no}")
-    public void viewEdit(@PathVariable int qna_no, @ModelAttribute QnAVO editData, @RequestParam(value = "qna_img", required = false) MultipartFile[] qna_img){
+    public void viewEdit(
+            @PathVariable int qna_no,
+            @RequestPart QnAVO editData,  // JSON 데이터 처리
+            @RequestPart(value = "qna_img", required = false) MultipartFile[] qna_img) {
+
+        // 프론트에서 받아온 정보 확인
+        System.out.println("수정된 데이터: " + editData);
+        System.out.println("업로드된 파일: " + Arrays.toString(qna_img));
+
+        // qna_no 번호를 토대로 기존의 qna_img 경로 가져오기
+        Integer qnaPath = qnaService.qnaImgNumGet(qna_no);
+        System.out.println("qna이미지경로:"+qnaPath);
 
         try {
             if (qna_img != null && qna_img.length > 0) {
-                String filePath = qnaService.getImgPath(qna_no);
+                // 이미지 파일이 있을 경우 처리
                 for (MultipartFile file : qna_img) {
-                    String imgUrl = imgService.updateImage(file, "qna", filePath);
-                    // 필요한 경우 imgUrl을 editData에 추가할 수 있습니다.
+                    if (file != null && !file.isEmpty()) {
+                        if (qnaPath != null) {
+                            // 기존 이미지가 있을 경우 업데이트
+                            String updatedImgUrl = imgService.updateImage(file, "qna", String.valueOf(qnaPath));
+                            System.out.println("이미지 업데이트 경로: " + updatedImgUrl);
+                            qnaService.updateImgUrl(updatedImgUrl, qnaPath);
+                            editData.setQna_img(String.valueOf(qnaPath)); // 기존 경로 유지
+                        } else {
+                            // 기존 이미지가 없을 경우 새로 업로드
+                            String newImgUrl = imgService.uploadImage(file, "qna");
+                            System.out.println("새로운 이미지 경로: " + newImgUrl);
+                            Integer qna_i_no = qnaService.insertImgUrl(newImgUrl);
+                            editData.setQna_img(String.valueOf(qna_i_no)); // 새로운 경로 설정
+                        }
+                    }
                 }
             }
 
             // 수정된 데이터 처리
-            System.out.println("수정폼 도착 : " + editData);
-            String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-            editData.setUserid(userid);
-            editData.setQna_no(qna_no);
-            System.out.println("수정폼 set 후: " + editData);
+            System.out.println("수정 데이터 처리 중: " + editData);
+            String userid = SecurityContextHolder.getContext().getAuthentication().getName(); // 현재 로그인한 유저 ID 가져오기
+            editData.setUserid(userid); // 유저 ID 설정
+            editData.setQna_no(qna_no); // QnA 번호 설정
+            System.out.println("수정 후 데이터: " + editData);
 
+            // 데이터베이스 업데이트
             qnaService.qnaUpdate(editData);
-        }catch (Exception e) {
-            System.out.println(e); // 오류 발생 시 응답
+
+        } catch (Exception e) {
+            // 오류 발생 시 처리
+            log.error("수정 중 오류 발생", e); // 로그에 오류 기록
+            e.printStackTrace(); // 콘솔에 오류 출력
         }
-
-        System.out.println(editData);
-
     }
     @GetMapping("/viewDel/{qna_no}")
     public void qnaViewDel(@PathVariable int qna_no){
@@ -198,6 +223,7 @@ public class QnAController {
         qnaService.qnaDel(qna_no,userid);
         System.out.println("번호:"+qna_no+",유저아이디"+userid);
     }
+
 
 
 

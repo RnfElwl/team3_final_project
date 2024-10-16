@@ -12,14 +12,15 @@
     max-width: 1500px;
 }
 .User .info{
-    background-color: #232323;
-    opacity: 0.7;
+    background-color: #252525;
+    /* opacity: 0.7; */
     width: 100%;
     /* height: auto; */
     display: flex;
     padding : 10px 0;
     margin: 30px 0;
     flex-direction: column;
+    border-radius: 10px;
 }
 .User #userinfo div{
     color : white;
@@ -60,7 +61,7 @@
 .info #profile>span{
     color : white;
     font-weight: 800;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 .info #userinfo{
     font-size: 1.1em;
@@ -76,18 +77,23 @@
 #info_change{
     margin : 10px 20px 0 0;
 }
-.content_title{
+.User .content_title{
     color : white;
     display: flex;
     justify-content: space-between;
     margin : 0 30px;
+    margin-bottom: 20px;
+}
+.User .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
 }
  /* 슬라이더 쓰는 content는 height 높게 */
-.recent_watch .content_info, .bookmark .content_info{
+.User .recent_watch .content_info, .bookmark .content_info{
     width: 90%;
     height : 350px;
     /* border : 1px gray solid; */
-    margin: 10px auto;
+    margin: 30px auto;
 }
 .follower .content_info{
     width: 90%;

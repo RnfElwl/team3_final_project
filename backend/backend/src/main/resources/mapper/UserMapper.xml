@@ -135,20 +135,56 @@
 
     <select id="getFollowData" resultType = "map">
         SELECT
-        f1.follower_userid AS following_user,
-        u1.usernick AS following_user_nick,
-        i1.image_url AS following_user_image,
-        f2.userid AS follower_user,
-        u2.usernick AS follower_user_nick,
-        i2.image_url AS follower_user_image
-        FROM  follower_tbl AS f1
-        LEFT JOIN follower_tbl AS f2 ON f1.follower_userid = f2.userid AND f2.follower_userid = f1.userid
-        LEFT JOIN user_tbl AS u1 ON f1.follower_userid = u1.userid
-        LEFT JOIN image_tbl AS i1 ON i1.image_no = u1.userprofile
-        LEFT JOIN user_tbl AS u2 ON f2.userid = u2.userid
-        LEFT JOIN image_tbl AS i2 ON i2.image_no = u2.userprofile
-        WHERE f1.userid = #{userid};
+        <if test="endpoint == 'followers'">
+            f.userid AS follow_user,
+        </if>
+        <if test="endpoint == 'following'">
+            f.follower_userid AS follow_user,
+        </if>
+        u.usernick, CASE WHEN EXISTS (
+        <if test="endpoint == 'followers'">
+            SELECT 1 FROM follower_tbl f2 WHERE f2.userid = #{login_user} AND f2.follower_userid = f.userid
+        </if>
+        <if test="endpoint == 'following'">
+            SELECT 1 FROM follower_tbl f2 WHERE f2.userid = #{login_user} AND f2.follower_userid = f.follower_userid
+        </if>
+        ) THEN 1 ELSE 0 END AS is_follow, img.image_url FROM follower_tbl f JOIN user_tbl u
+        <if test="endpoint == 'followers'">
+            ON f.userid = u.userid
+        </if>
+        <if test="endpoint == 'following'">
+            ON f.follower_userid = u.userid
+        </if>
+        LEFT JOIN image_tbl img ON u.userprofile = img.image_no WHERE
+        <if test="endpoint == 'followers'">
+            f.follower_userid = #{userid}
+        </if>
+        <if test="endpoint == 'following'">
+            f.userid = #{userid}
+        </if>
     </select>
+
+
+    <insert id="insertFollow">
+        INSERT INTO follower_tbl (userid, follower_userid)
+        VALUES (#{loginUser}, #{followerUserId})
+    </insert>
+
+    <!-- 팔로우 취소 -->
+    <delete id="deleteFollow">
+        DELETE FROM follower_tbl
+        WHERE userid = #{loginUser}
+        AND follower_userid = #{followerUserId}
+    </delete>
+
+    <!-- 현재 팔로우 여부 확인 -->
+    <select id="isFollowing" resultType="int">
+        SELECT COUNT(1)
+        FROM follower_tbl
+        WHERE userid = #{loginUser}
+        AND follower_userid = #{followerUserId}
+    </select>
+
 
 
 </mapper>

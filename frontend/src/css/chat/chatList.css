@@ -115,6 +115,9 @@
 
 
 }
+.chatList .room .chat-search input{
+  width: 80%;
+}
 .chatList .room >div>input{
   width: 70%;
   padding: 5px;
@@ -186,13 +189,19 @@
 .chatList .chat_box_info{
   color: #f1f1f1;
 }
+.chatList .debate_img{
+  margin-top: 10px;
+}
 .chatList .chat_box_info{
   margin: 0px 10px;
 }
 
 .chatList .movie_list{
   display: flex;
+  position: relative;
+  height: 145px;
   overflow-x: auto;
+  margin: 10px 0 20px 0;
 }
 .chatList .movie_box{
   margin: 0 20px;

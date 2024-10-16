@@ -12,13 +12,14 @@
     max-width: 1500px;
 }
 .info{
-    background-color: #232323;
-    opacity: 0.7;
+    background-color: #252525;
+    /* opacity: 0.7; */
     width: 100%;
     /* height: auto; */
     display: flex;
     padding : 10px 0;
     margin: 30px 0;
+    border-radius: 10px;
 }
 .otherinfo{
     width: 100%;
@@ -31,48 +32,95 @@
     flex-direction: column;
     align-items: center;
 }
-.info #userinfo{
+.myPage .info #userinfo{
     flex-grow: 7;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    font-weight: 700;
+}
+.usertop{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 7;
+    height: 70%;
+    align-items: center;
+}
+.usertop p{
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color : #a5a5a5;
+}
+.usertop span{
+    color : #fff;
+}
+.usertop p:nth-child(1){
+    flex: 1;
+}
+.usertop p:nth-child(3){
+    flex : 2;
+}
+.usertop p:nth-child(2), .usertop p:nth-child(4) {
+    flex: 3;
+}
+.userbottom{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 3;
+    height: 30%;
+    color: #a5a5a5;
+}
+.userbottom span{
+    color : #fff;
 }
 
-.info #profile>img {
+.myPage .info #profile>img {
     max-width: 150px;
     width: 100%;
     object-fit: cover;
     border-radius: 50%;
     margin-top: 10px;
 }
-.info #profile>span{
+.myPage .info #profile>span{
     color : white;
     font-weight: 800;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
-.info #userinfo{
+.myPage .info #userinfo{
     font-size: 1.1em;
     margin: 20px 0 10px 0;
 }
-.info #userinfo>p{
+.myPage .info #userinfo>p{
     color : gray;
     font-weight: 550;
 }
-.info #userinfo>p>span{
+.myPage .info #userinfo>p>span{
     color : white;
 }
 #info_change{
     margin : 10px 20px 0 0;
 }
-.content_title{
+.myPage .content_title{
     color : white;
     display: flex;
     justify-content: space-between;
     margin : 0 30px;
+    margin-bottom: 20px;
+}
+.myPage .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
 }
  /* 슬라이더 쓰는 content는 height 높게 */
-.recent_watch .content_info, .bookmark .content_info{
+.myPage .recent_watch .content_info, .bookmark .content_info{
     width: 90%;
     height : 350px;
     /* border : 1px gray solid; */
-    margin: 10px auto;
+    margin: 30px auto;
 }
 .follower .content_info{
     width: 90%;
@@ -165,7 +213,24 @@
   th .fa-2x{
     font-size : 1.5em;
   }
-
+.noslide{
+    color : #a5a5a5;
+    font-size: 3.5em;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.noslide:hover{
+    border-top: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+}
+.noslide>p{
+    margin-top: 12px;
+    line-height: 24px;
+    font-size: 0.3em;
+}
 
 .content_info .table-dark th, .content_info .table-dark td{
     text-align: center;
@@ -238,4 +303,26 @@
     text-align: right; /* 우측 정렬 */
     font-size: 0.8em; /* 글씨 크기 작게 */
     color : white;
+}
+
+.myPage .modal-backdrop{
+    display: flex;
+    align-items: center;
+}
+.myPage .modal-content{
+    border-radius: 15px;
+    background-color: #252525;
+    max-width: 400px;
+    max-height: 900px;
+    height: 400px;
+    width: 100% !important;
+    margin : 0 auto;
+    overflow-y: auto;
+    color : white;
+}
+.myPage .modal-content h2{
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 800;
+    font-size: 20px;
 }

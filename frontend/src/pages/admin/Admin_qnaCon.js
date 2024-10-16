@@ -6,6 +6,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
+import $ from "jquery";
 
 import './../../css/admin/adminQnaCon.css';
 
@@ -99,6 +100,13 @@ function QnaCon() {
         setAllQnaChecked(newCheckedQnas.every(item => item === true));
       };
 
+    //Qna 답글 팝업 창 열기
+    const openAddQnaWindow = (e) => {
+        e.preventDefault();
+        window.open('http://localhost:3000/admin/', '_blank', 'width=600,height=400');
+    };
+      
+
     return (
         <div className="AdminQnaBody">
             <h3>QnA 관리</h3>
@@ -170,7 +178,7 @@ function QnaCon() {
                                 <th>{item.qna_writedate}</th>
                                 <th>{item.active_state === 0 ? <div>비활성</div>:<div>활성</div>}</th>
                                 <th>{item.qna_state === 1 ? 
-                                    (<button className="qnaAnswerModify-btn">답변 수정</button>)
+                                    (<button className="qnaAnswerModify-btn" onClick={openAddQnaWindow}>답변 수정</button>)
                                     :(<button className="qnaAnswerAdd-btn">답변 등록</button>)}</th>
                             </tr>
                         ))

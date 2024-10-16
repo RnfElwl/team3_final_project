@@ -32,26 +32,6 @@ function QnAEdit() {
     const [images, setImages] = useState([]);
     const fileInputRef = useRef(null);
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files); // FileList를 배열로 변환
-        setQna_img(files); // 상태에 파일 저장
-        const imagePreviews = files.map(file => URL.createObjectURL(file));
-        setImages(imagePreviews);
-
-        // 선택한 파일 정보 콘솔에 출력
-        files.forEach((file) => {
-            console.log('선택한 파일:', file.name);
-        });
-    };
-    //이미지 input 대체 핸들러
-    const handleImageClick = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click(); // 숨겨진 input을 클릭하는 동작
-        } else {
-            console.error("fileInputRef가 아직 초기화되지 않았습니다.");
-        }
-    };
-
     //데이터 불러오기
     useEffect(() => {
         axios.get(`http://localhost:9988/qna/viewEdit/${params}`)
@@ -85,6 +65,32 @@ function QnAEdit() {
             setQna_pwd(preQpwd);
         }
     }, [privacyQ]);
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files); // FileList를 배열로 변환
+        
+        const imagePreviews = files.map(file => URL.createObjectURL(file));
+        setImages(imagePreviews);
+        
+
+        // 선택한 파일 정보 콘솔에 출력
+        files.forEach((file) => {
+            console.log('선택한 파일:', file.name);
+            console.log('선택한 파일:',file);
+            setQna_img(file); // 상태에 파일 저장
+        });
+        
+        console.log("qna_img:"+files[0]);
+        
+    };
+    // console.log("qna_img:"+);
+    //이미지 input 대체 핸들러
+    const handleImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click(); // 숨겨진 input을 클릭하는 동작
+        } else {
+            console.error("fileInputRef가 아직 초기화되지 않았습니다.");
+        }
+    };
 
     //데이터 호출하여 아이템 등록시 밸류로 설정
     useEffect(() => {
@@ -117,24 +123,25 @@ function QnAEdit() {
     const handleSubmit = (e) => {
         e.preventDefault();
     
+        const editData = {
+            userid: userid,
+            qna_title: qna_title,
+            qna_content: qna_content,
+            head_title: head_title,
+            privacyQ: privacyQ,
+            qna_pwd: privacyQ === '1' ? qna_pwd : null,
+            qna_state: qna_state,
+            active_state: active_state,
+        };
+    
         const formData = new FormData();
-            formData.append('userid', userid);
-            formData.append('qna_title', qna_title);
-            formData.append('qna_content', qna_content);
-            formData.append('head_title', head_title);
-            formData.append('privacyQ', privacyQ);
-            formData.append('qna_pwd', privacyQ === '1' ? qna_pwd : null);
-            formData.append('qna_state', qna_state);
-            formData.append('active_state', active_state);
-
-            qna_img.forEach((img) => {
-                formData.append('qna_img', img);
-            });
-
+        formData.append("qna_img", qna_img);  // 파일을 추가
+        formData.append("editData", new Blob([JSON.stringify(editData)], { type: "application/json" }));
         
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
+            console.log('FormData 확인:');
+            formData.forEach((value, key) => {
+                console.log(key, value);
+            });
     
         if (!qna_title) {
             alert("제목을 입력해주세요.");
@@ -152,13 +159,9 @@ function QnAEdit() {
             alert('비밀번호를 반드시 4자리로 입력하세요.');
             return;
         }
-        // 이미지가 없으면 경고를 띄우되 폼을 제출할 수 있도록 수정
-        if (!qna_img) {
-            console.warn('이미지가 없습니다. 이미지가 없을 경우 원본 이미지가 유지됩니다.');
-        }
     
         console.log("hihi");
-    
+
         // 데이터 폼으로 보내기
         axios.post(`http://localhost:9988/qna/viewEditOk/${params}`, formData, {
             headers: {
@@ -166,6 +169,7 @@ function QnAEdit() {
             }
         })
         .then(() => {
+            console.log(formData);
             console.log('수정 성공');
             navigate(`/qna/view/${params}`);
         })
@@ -255,19 +259,23 @@ function QnAEdit() {
                         accept='image/*'
                         onChange={handleImageChange}
                         ref={fileInputRef}
-                        // style={{ display: 'none' }}
+                        style={{ display: 'none' }}
                     />
                     <div onClick={handleImageClick} style={{ cursor: 'pointer', border: '1px solid #ccc', padding: '10px', display: 'inline-block' }}>
-                        이미지 업로드하기
+                        이미지 수정하기
                     </div>
+
                     <div className='image-preview'>
-                            <img src={images} style={{ width:'50%',height:'auto', marginTop:'10px', objectFit: 'contain'}}
-                            className="film-strip" />
+                        {images=='http://localhost:9988/qna/null'?
+                            (<img src={images} style={{ width:'50%',height:'auto', marginTop:'10px', objectFit: 'contain', display:'none'}}
+                            className="film-strip" />):                            
+                            (<img src={images} style={{ width:'50%',height:'auto', marginTop:'10px', objectFit: 'contain',display:'block' }}
+                            className="film-strip" />)}
                     </div>
                 </div>
                     </div>
                     <div className='right-buttons'>
-                        <button type='submit'>수정 완료</button>
+                        <button type='submit'>문의 저장</button>
                     </div>
 
                 </div>
