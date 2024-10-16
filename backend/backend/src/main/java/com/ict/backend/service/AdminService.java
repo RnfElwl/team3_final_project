@@ -20,4 +20,7 @@ public interface AdminService {
     List<MemberVO> selectMemberMin();
     int getTotalRecord(PagingVO pagingVO);
     List<QnAVO> getQnAList(PagingVO pagingVO);
+    int insertQnaAnswer(QnAVO adminQAData);
+    int updateQnaActive(Integer activeState, List<Integer>qnaNos);
+    List<MemberVO> getMemList(PagingVO pagingVO);
 }

@@ -125,4 +125,33 @@ public class AdminController {
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
+    @PostMapping("/qnaAnswerWrite/{qna_no}")
+    public int qnaAnswerWrite(@PathVariable int qna_no,@RequestBody QnAVO adminQAData){
+        adminQAData.setQna_no(qna_no);
+        return adminService.insertQnaAnswer(adminQAData);
+    }
+    //qna active state Management
+    @PostMapping("/qnaActiveEdit")
+    public int qnaActiveEdit(
+            @RequestParam("active_state") Integer activeState,
+            @RequestParam("qna_no")List<Integer> qnaNos){
+        System.out.println("Active State: " + activeState);
+        System.out.println("Qna Numbers: " + qnaNos);
+
+        adminService.updateQnaActive(activeState, qnaNos);
+
+        return 1;
+    }
+
+    //Member ManageMent Part
+    @GetMapping("/MemList")
+    public ResponseEntity<Map<String, Object>> MemList(@ModelAttribute PagingVO pagingVO){
+        List<MemberVO> result = adminService.getMemList(pagingVO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("memList", result);
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+
 }

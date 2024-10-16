@@ -11,7 +11,7 @@ function QnAWrite() {
     const [qna_title, setQna_title] = useState(''); // 질문 제목
     const [qna_content, setQna_content] = useState(''); // 질문 내용
     const head_titleList = [
-        { value: '1', name: '상품' },
+        { value: '1', name: '영화' },
         { value: '2', name: '사이트' },
         { value: '3', name: '기타문의' }
     ];

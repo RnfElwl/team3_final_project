@@ -21,13 +21,31 @@ function QnA() {
     const [searchKey, setSearchKey] =useState('qna_title');
     const [searchWord, setSearchWord] = useState('');
     const navigate = useNavigate();
-
+    //전체페이지 계산
     const totalPage = Math.ceil(totalRecord / 12);
+    //페이지네이션 이동 함수
     const handlePageChange = (newPage) => {
         setNowPage(newPage);
     };
+    //게시글 정렬
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
+    //말머리 필터
+    const handleSearchClick = (e) => {
+        e.preventDefault();
+        setNowPage(1);
+        const searchValue = e.target.value;
+        setSearchKey('head_title');
+        setSearchWord(searchValue); 
+    };
+    //전체 전환
+    const handleSearchClickAll=(e)=>{
+        e.preventDefault();
+        setNowPage(1);
+        const searchValue=e.target.value;
+        setSearchKey('');
+        setSearchWord('');
+    }
 
     // 서버 토큰 확인 및 글 등록
     function checkid() {
@@ -58,7 +76,7 @@ function QnA() {
             .catch(error => {
                 console.error("데이터 로드 중 오류 발생:", error);
             });
-    }, [nowPage]);
+    }, [nowPage, searchKey,searchWord]);
     
     //검색 시 데이터 요청
     const handleSearchSubmit = (e) => {
@@ -74,6 +92,7 @@ function QnA() {
                 console.error("검색 중 오류 발생:", error);
             });
     };
+
 
     // 비밀글 모달
     const handlePrivateClick = (post) => {
@@ -150,6 +169,18 @@ function QnA() {
         setSortConfig({ key, direction });
     };
 
+    //페이지네이션 5개만 띄우기
+    const PAGE_GROUP_SIZE = 5;
+
+    // 페이지네이션 최대 5개일 때의 시작 페이지와 끝페이지 계산 후 리턴
+    const getPageGroup = () => {
+        const startPage = Math.floor((nowPage - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
+        const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPage);
+        return { startPage, endPage };
+      };
+
+    //계산한 시작페이지와 끝 페이지 반환
+    const { startPage, endPage } = getPageGroup();
 
     return (
         <div className="QnABody">
@@ -186,6 +217,20 @@ function QnA() {
                         </form>
                     </div>
                 </div>
+                <div className="category-filter">
+                    <button value='1'
+                        onClick={handleSearchClick}
+                        disabled={searchKey=='head_title'&&searchWord=='1'}>영화</button>
+                    <button value='2'
+                        onClick={handleSearchClick}
+                        disabled={searchKey=='head_title'&&searchWord=='2'}> 사이트</button>
+                    <button value='3'
+                        onClick={handleSearchClick}
+                        disabled={searchKey=='head_title'&&searchWord=='3'}> 기타</button>
+                    <button value='1'
+                        onClick={handleSearchClickAll}
+                        disabled={searchKey==''&&searchWord==''}> 전체</button>
+                </div>
                 <table className="table table-dark table-hover QnaTable">
                     <thead>
                         <tr>
@@ -204,7 +249,7 @@ function QnA() {
                                     <th>{item.qna_no}</th>
                                     <th>{item.userid.substring(0, 2) + item.userid.substring(2).replace(/./g, "*")}</th>
                                     <th className="qna_ht_th">
-                                        {item.head_title == 1 ? <div className="qna_ht">[상품]&nbsp;</div> :
+                                        {item.head_title == 1 ? <div className="qna_ht">[영화]&nbsp;</div> :
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                                 <div className="qna_ht">[기타]&nbsp;</div>)}
                                         {item.privacyQ === 0 ? (
@@ -251,45 +296,47 @@ function QnA() {
             )}
           
 
-            {/* 페이지네이션 */}
-            <div className="qna_pagination">
-                <button className="paging-btn"
-                    onClick={() => handlePageChange(1)} // 맨 처음 페이지로 가는 버튼
-                    disabled={nowPage === 1 || totalPage === 1}>
-                    <FontAwesomeIcon icon={faAngleDoubleLeft} />
-                </button>
-                <button className="paging-btn"
-                    onClick={() => handlePageChange(nowPage - 1)}
-                    disabled={nowPage === 1 || totalPage===1}>
-                    <FaChevronLeft />
-                </button>
+    {/* 페이지네이션 */}
+    <div className="qna_pagination">
+        <button className="paging-btn"
+        onClick={() => handlePageChange(1)} //맨처음 페이지로 이동
+        disabled={nowPage === 1 || totalPage === 1}> 
+        <FontAwesomeIcon icon={faAngleDoubleLeft} />
+        </button>
 
-                {totalPage === 1 ? (
-                    <button className="paging-btn" disabled>{1}</button>
-                ) : (
-                    Array.from({ length: totalPage }, (_, index) => (
-                        <button className="paging-btn"
-                            key={index + 1}
-                            onClick={() => handlePageChange(index + 1)}
-                            disabled={nowPage === index + 1}
-                        >
-                            {index + 1}
-                        </button>
-                    ))
-                )}
+        <button className="paging-btn"
+        onClick={() => handlePageChange(nowPage - 1)}//1페이지 전으로 이동
+        disabled={nowPage === 1 || totalPage === 1}>
+        <FaChevronLeft />
+        </button>
 
-                <button className="paging-btn"
-                    onClick={() => handlePageChange(nowPage + 1)}
-                    disabled={nowPage === totalPage || totalPage===1}>
-                    <FaChevronRight />
-                </button>
-                <button className="paging-btn"
-                    onClick={() => handlePageChange(totalPage)}
-                    disabled={nowPage === totalPage || totalPage === 1}>
-                    <FontAwesomeIcon icon={faAngleDoubleRight} />
-                </button>
-            </div>
-        </div>
+        {/* 페이지 배열 */}
+        {Array.from({ length: endPage - startPage + 1 }, (_, index) => {
+        const pageNumber = startPage + index;
+        return (
+            <button className="paging-btn-num"
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            disabled={nowPage === pageNumber}
+            >
+            {pageNumber}
+            </button>
+        );
+        })}
+
+        <button className="paging-btn"
+        onClick={() => handlePageChange(nowPage + 1)} //1페이지 후로 이동
+        disabled={nowPage === totalPage || totalPage === 1}>
+        <FaChevronRight />
+        </button>
+
+        <button className="paging-btn"
+        onClick={() => handlePageChange(totalPage)} //맨 끝 페이지로 이동
+        disabled={nowPage === totalPage || totalPage === 1}>
+        <FontAwesomeIcon icon={faAngleDoubleRight} />
+        </button>
+    </div>
+  </div>
     );
 }
 

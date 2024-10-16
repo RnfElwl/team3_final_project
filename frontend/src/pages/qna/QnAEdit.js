@@ -19,7 +19,7 @@ function QnAEdit() {
     const [qna_title, setQna_title] = useState('');
     const [qna_content, setQna_content] = useState('');
     const head_titleList = [
-        { value: "1", name: "상품" },
+        { value: "1", name: "영화" },
         { value: "2", name: "사이트" },
         { value: "3", name: "기타문의" }
     ];

@@ -131,4 +131,30 @@
             where ${searchKey} like '%${searchWord}%'
         </if>
     </select>
+    <update id="insertQnaAnswer">
+        update qna_tbl set
+        answer_user=#{answer_user},
+        qna_answer=#{qna_answer},
+        qna_state=#{qna_state},
+        qna_answer_date=now()
+        where qna_no=#{qna_no}
+    </update>
+    <update id="updateQnaActive">
+        UPDATE qna_tbl
+        SET active_state = #{activeState}
+        WHERE qna_no IN
+        <foreach item="qnaNo" collection="qnaNos" open="(" separator="," close=")">
+            #{qnaNo}
+        </foreach>
+    </update>
+    <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
+        select userid, username, usernick, gender,usertel, u.active_state,
+        count(r.reported_userid) as 'reported count',lastvisite,regiserdate
+        from user_tbl u left join report_tbl r on u.userid=r.reported_userid
+        <if test="searchWord!=null and searchWord!=''">
+        where #{searchKey} like '%${searchWord}%'
+        </if>
+        GROUP BY
+        u.userid, u.username, u.usernick, u.gender, u.usertel, u.active_state, u.lastvisite, u.regiserdate
+    </select>
 </mapper>

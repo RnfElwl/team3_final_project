@@ -21,4 +21,7 @@ public interface QnADAO {
     void insertImgUrl(ImageVO imgVO);
     Integer getPrevQnaNo(int qna_no); //이전 글 번호 가져오는거
     Integer getNextQnaNo(int qna_no);
+    String getPrevTitle(int prevNo);
+    String getNextTitle(int nextNo);
+
 }

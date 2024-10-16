@@ -47,7 +47,13 @@
     <select id="getPrevQnaNo" resultType="int">
         SELECT MAX(qna_no)
         FROM qna_tbl
-        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0);
+        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0)
+    </select>
+    <select id="getPrevTitle" resultType="String">
+        select qna_title from qna_tbl where qna_no=#{prevNo}
+    </select>
+    <select id="getNextTitle" resultType="String">
+        select qna_title from qna_tbl where qna_no=#{nextNo}
     </select>
     <select id="getNextQnaNo" resultType="int">
         SELECT MIN(qna_no)
@@ -78,6 +84,9 @@
         privacyQ=#{privacyQ},
         active_state=#{active_state},
         qna_pwd=#{qna_pwd}
+        <if test="qna_state==0">
+            ,qna_answer_date=null
+        </if>
         <if test="qna_img != null">
             , qna_img=#{qna_img}
         </if>
@@ -105,4 +114,5 @@
     <insert id="insertImgUrl" useGeneratedKeys="true" keyProperty="image_no">
         insert into image_tbl (image_url) values(#{image_url})
     </insert>
+
 </mapper>

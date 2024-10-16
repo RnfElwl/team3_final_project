@@ -31,19 +31,31 @@ public class QnAServiceImpl implements QnAService{
             Integer prevNo = getPrevData(qna.getQna_no());// 이전 QnA 번호 설정
             if (prevNo != null) { //값이 있을 경우
                 qna.setPrev_qna_no(prevNo);
+                String prevTitle=getPrevTitle(prevNo);
+                qna.setPrev_title(prevTitle);
             }else{ //값이 없을 경우
                 qna.setPrev_qna_no(0);
             }
 
             Integer nextNo = getNextData(qna.getQna_no());
-            if (prevNo != null) {
+            if (nextNo != null) {
                 qna.setNext_qna_no(nextNo);
+                String nextTitle=getNextTitle(nextNo);
+                qna.setNext_title(nextTitle);
             }else{
                 qna.setNext_qna_no(0);
             }
         }
 
         return qnaList;
+    }
+
+    private String getNextTitle(Integer nextNo) {
+        return dao.getNextTitle(nextNo);
+    }
+
+    private String getPrevTitle(Integer prevNo) {
+        return dao.getPrevTitle(prevNo);
     }
 
     private Integer getNextData(int qna_no) {
@@ -103,6 +115,7 @@ public class QnAServiceImpl implements QnAService{
         dao.insertImgUrl(imgVO);
         return imgVO.getImage_no();
     }
+
 
 
 //    @Override

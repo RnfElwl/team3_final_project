@@ -88,5 +88,20 @@ public class AdminServiceImpl implements AdminService{
         return dao.getQnAList(pagingVO);
     }
 
+    @Override
+    public int insertQnaAnswer(QnAVO adminQAData) {
+        return dao.insertQnaAnswer(adminQAData);
+    }
+
+    @Override
+    public int updateQnaActive(Integer activeState, List<Integer> qnaNos) {
+        return dao.updateQnaActive(activeState, qnaNos);
+    }
+
+    @Override
+    public List<MemberVO> getMemList(PagingVO pagingVO) {
+        return dao.getMemList(pagingVO);
+    }
+
 
 }
