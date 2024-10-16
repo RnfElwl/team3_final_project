@@ -10,4 +10,35 @@
         insert into prefer_tbl (userid, movie_genre, prefer_date)
         values (#{userid}, #{movie_genre}, now())
     </insert>
+    <select id="getMoviesByBookmarkCount" resultType="com.ict.backend.vo.MovieVO">
+        select * from bookmark_tbl as b
+        join movie_data_tbl as d on b.movie_no = d.movie_no
+        order by movie_code desc limit 20;
+    </select>
+    <select id="getMoviesByReleaseDate" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_data_tbl order by movie_code desc limit 20;
+    </select>
+    <select id="getMoviesByReviewCount" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_review_tbl as r
+        join movie_data_tbl as d on r.movie_no = d.movie_no
+        order by d.movie_code desc limit 20;
+
+    </select>
+    <select id="getMoviesByRating" resultType="com.ict.backend.vo.MovieVO">
+<!--        SELECT SQL_CALC_FOUND_ROWS m.*,-->
+<!--        IFNULL(AVG(r.rate), 0) AS avg_rating,-->
+<!--        COUNT(r.review_id) AS review_count-->
+<!--        FROM movie_data_tbl m-->
+<!--        LEFT JOIN movie_review_tbl r ON m.movie_id = r.movie_id-->
+<!--        WHERE m.movie_no = #{movie_no}-->
+<!--        GROUP BY m.movie_id-->
+<!--        ORDER BY avg_rating DESC-->
+        select * from movie_review_tbl as r
+        join movie_data_tbl as d on r.movie_no = d.movie_no
+        order by rate desc limit 20;
+
+    </select>
+    <select id="getMoviesByViewCount" resultType="com.ict.backend.vo.MovieVO">
+        SELECT * FROM movie_data_tbl ORDER BY hit DESC;
+    </select>
 </mapper>
