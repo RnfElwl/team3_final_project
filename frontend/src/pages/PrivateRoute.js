@@ -1,51 +1,33 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import axios from '../component/api/axiosApi';
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import jwt_decode from 'jwt-decode'; // JWT 해독 라이브러리 설치 필요: npm install jwt-decode
 
+// PrivateRoute 컴포넌트 정의
 const PrivateRoute = () => {
-    const [loading, setLoading] = useState(true);
-    const [accessStatus, setAccessStatus] = useState(null);
-    
-    const token = window.localStorage.getItem("token");
-    const apiPath = "http://localhost:9988/protected-resource"; // 고정된 API 경로
+  const token = localStorage.getItem('accessToken');
+  let isAuthenticated = false;
 
-    useEffect(() => {
-        const checkAccess = async () => {
-            if (!token) {
-                setAccessStatus('UNAUTHORIZED');
-            } else {
-                try {
-                    await axios.get(apiPath); // API 호출
-                    setAccessStatus('AUTHORIZED'); // 접근 허용
-                } catch (error) {
-                    if (error.response) {
-                        if (error.response.status === 403) {
-                            setAccessStatus('FORBIDDEN'); // 권한 없음
-                        } else if (error.response.status === 401) {
-                            setAccessStatus('UNAUTHORIZED'); // 인증 필요
-                        }
-                    }
-                }
-            }
-            setLoading(false);
-        };
+  if (token) {
+    try {
+      const decodedToken = jwt_decode(token);
+      const currentTime = Date.now() / 1000; // 현재 시간 (초 단위)
 
-        checkAccess();
-    }, [token]); // apiPath는 고정되므로 의존성 배열에서 제외
-
-    if (loading) {
-        return <div>Loading...</div>;
+      // decodedToken 예시: { userid: 'someUserId', role: 'USER', iat: 1692304567, exp: 1692308167 }
+      if (decodedToken.exp > currentTime) {
+        // 토큰 만료 시간이 현재 시간보다 크다면 유효한 토큰
+        isAuthenticated = true;
+      } else {
+        // 토큰이 만료되었으므로 localStorage에서 제거
+        localStorage.removeItem('accessToken');
+      }
+    } catch (error) {
+      console.error('Invalid token:', error);
+      // 토큰이 유효하지 않은 경우 (예: 구조가 잘못된 경우)
+      localStorage.removeItem('accessToken');
     }
+  }
 
-    if (accessStatus === 'UNAUTHORIZED') {
-        return <Navigate to="/login" />; // 로그인 페이지로 이동
-    }
-
-    if (accessStatus === 'FORBIDDEN') {
-        return <Outlet />; // 접근 허용 (mypage 등)
-    }
-
-    return <Outlet />; // 접근 허용
+  return isAuthenticated ? <Outlet /> : <Navigate to="/signin" />;
 };
 
 export default PrivateRoute;

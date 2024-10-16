@@ -43,27 +43,82 @@ function Signup() {
 
     const validateStep1 = () => {
         const newErrors = {};
-        if (!formData.userid) newErrors.userid = "아이디를 입력하세요.";
-        if (!formData.userpwd) newErrors.userpwd = "비밀번호를 입력하세요.";
-        if (formData.userpwd !== formData.confirmPassword) newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+        const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+        const pwdRegex = /^[a-zA-Z0-9!@#]{6,20}$/;
+
+        if (!formData.userid) {
+            newErrors.userid = "아이디를 입력하세요.";
+        } else if (!idRegex.test(formData.userid)) {
+            newErrors.userid = "아이디는 6~20자의 영문자와 숫자로 구성되어야 합니다.";
+        }
+
+        if (!formData.userpwd) {
+            newErrors.userpwd = "비밀번호를 입력하세요.";
+        } else if (!pwdRegex.test(formData.userpwd)) {
+            newErrors.userpwd = "비밀번호는 6~20자의 영문자, 숫자, 특수문자(!@#)로 구성되어야 합니다.";
+        }
+
+        if (formData.userpwd !== formData.confirmPassword) {
+            newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
+        }
         return newErrors;
     };
 
     const validateStep2 = () => {
         const newErrors = {};
-        if (!formData.username) newErrors.username = "이름을 입력하세요.";
-        if (!formData.useremail) newErrors.useremail = "이메일을 입력하세요.";
-        if (!formData.usertel) newErrors.usertel = "전화번호를 입력하세요.";
-        if (!formData.useraddr) newErrors.useraddr = "주소를 입력하세요.";
-        if (!formData.userbirth) newErrors.userbirth = "생년월일을 입력하세요.";
-        if (!formData.gender) alert("성별을 선택해주세요.");
+        const nameRegex = /^[가-힣]{2,10}$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]{2,20}@[a-zA-Z0-9.-]{2,10}\.[a-zA-Z]{2,5}$/;
+        const nickRegex = /^[a-zA-Z0-9가-힣]{2,20}$/;
+        const telRegex = /^\d{3}-\d{4}-\d{4}$/;
+        const birthRegex = /^\d{4}\.\d{2}\.\d{2}$/;
+
+        if (!formData.username) {
+            newErrors.username = "이름을 입력하세요.";
+        } else if (!nameRegex.test(formData.username)) {
+            newErrors.username = "이름은 2~10자의 한글로 구성되어야 합니다.";
+        }
+
+        if (!formData.useremail) {
+            newErrors.useremail = "이메일을 입력하세요.";
+        } else if (!emailRegex.test(formData.useremail)) {
+            newErrors.useremail = "유효한 이메일 주소를 입력하세요.";
+        }
+
+        if (!formData.usernick) {
+            newErrors.usernick = "닉네임을 입력하세요.";
+        } else if (!nickRegex.test(formData.usernick)) {
+            newErrors.usernick = "닉네임은 2~20자의 영문자, 숫자, 한글로 구성되어야 합니다.";
+        }
+
+        if (!formData.usertel) {
+            newErrors.usertel = "전화번호를 입력하세요.";
+        } else if (!telRegex.test(formData.usertel)) {
+            newErrors.usertel = "전화번호는 3자리-4자리-4자리 형식이어야 합니다.";
+        }
+
+        if (!formData.useraddr) {
+            newErrors.useraddr = "주소를 입력하세요.";
+        }
+
+        if (!formData.userbirth) {
+            newErrors.userbirth = "생년월일을 입력하세요.";
+        } else if (!birthRegex.test(formData.userbirth)) {
+            newErrors.userbirth = "생년월일은 YYYY.MM.DD 형식이어야 합니다.";
+        }
+
+        if (!formData.gender) {
+            alert("성별을 선택해주세요.");
+        }
+
         return newErrors;
     };
     // forcus out 시 아이디 체크
     const handleIdBlur = async () => {
         const userId = formData.userid;
-        if (userId.trim() === '') {
-            setIdCheckError('');
+        const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+
+        if (userId.trim() === '' || !idRegex.test(userId)) {
+            setIdCheckError('아이디는 6~20자의 영문자와 숫자로 구성되어야 합니다.');
             setIdCheckSuccess(false);
             return;
         }
@@ -84,12 +139,14 @@ function Signup() {
             setIdCheckSuccess(false);
         }
     };
+
     // forcus out 시 닉네임 체크
     const handleNicknameBlur = async () => {
         const nickname = formData.usernick;
-        console.log("닉네임 확인 중:", nickname);
-        if (nickname.trim() === '') {
-            setNickCheckError('');
+        const nickRegex = /^[a-zA-Z0-9가-힣]{2,20}$/;
+
+        if (nickname.trim() === '' || !nickRegex.test(nickname)) {
+            setNickCheckError('닉네임은 2~20자의 영문자, 숫자, 한글로 구성되어야 합니다.');
             setNickCheckSuccess(false);
             return;
         }
@@ -172,10 +229,10 @@ function Signup() {
     }, []);
 
     const breakpointColumnsObj = {
-        default: 5,   // 기본적으로 5개의 열로 구성
-        1100: 4,      // 화면 너비가 1100px 이하일 때 4개의 열로 구성
-        700: 3,       // 화면 너비가 700px 이하일 때 3개의 열로 구성
-        500: 2        // 화면 너비가 500px 이하일 때 2개의 열로 구성
+        default: 5,   
+        1100: 4,      
+        700: 3,       
+        500: 2        
     };
 
     return (

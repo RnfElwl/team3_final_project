@@ -386,10 +386,10 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
     }
     @PostMapping("/info/toggleFollow")
     public ResponseEntity<String> toggleFollow(@RequestBody Map<String, String> request) {
-        String follow_user_nick = request.get("follow_user_nick");
+        String follow_user_nick = request.get("follow_user_nick");  // 눌린 사람의 닉네임
         System.out.println("follow_user_nick : " + follow_user_nick);
-        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
-        MemberVO vo =  userService.getOtherUserInfo(follow_user_nick);
+        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();   // 로그인한 사용자
+        MemberVO vo =  userService.getOtherUserInfo(follow_user_nick);  //눌린 사람의 닉네임으로 그 사람의 아이디 찾기
         String follower_user_id = vo.getUserid();
         if (!login_user.equals("anonymousUser")) {
             try {

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import TokenValidator from './component/TokenValidator.js';
 
 import Home from './pages/Home';
 import Layout from './pages/Layout';
@@ -38,6 +39,7 @@ import User from './pages/mypage/User.js';
 function App() {
   return (
     <BrowserRouter>
+      <TokenValidator>
         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
@@ -75,6 +77,7 @@ function App() {
                 <Route path ="/user/info/" element={<User/>}/>
             </Route>
         </Routes>
+      </TokenValidator>
     </BrowserRouter>
   );
 }
