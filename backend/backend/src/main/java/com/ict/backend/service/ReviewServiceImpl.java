@@ -23,6 +23,21 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDAO.selectReviewsByMovieCode(movieCode);
     }
 
+    @Override
+    public ReviewVO getReviewById(int reviewId) {
+        return reviewDAO.selectReviewById(reviewId);
+    }
+
+    @Override
+    public void updateReview(int reviewId, ReviewVO updatedReview) {
+        // return 제거
+        reviewDAO.updateReview(reviewId, updatedReview.getMovie_review_content(), updatedReview.getRate());
+    }
+
+    @Override
+    public void deleteReview(int reviewId) {
+        reviewDAO.deleteReview(reviewId);
+    }
 
 
 }

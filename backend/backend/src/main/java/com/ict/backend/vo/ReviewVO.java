@@ -12,4 +12,5 @@ public class ReviewVO {
     private String movie_code;
 
 
+
 }

@@ -14,8 +14,8 @@
 
     <!-- 북마크 추가 -->
     <insert id="addBookmark">
-        INSERT INTO bookmark_tbl (userid, movie_no)
-        VALUES (#{userid}, #{movie_no})
+        INSERT INTO bookmark_tbl (userid, movie_no, bookmartk_date)
+        VALUES (#{userid}, #{movie_no}, NOW())
     </insert>
 
     <!-- 북마크 삭제 -->
