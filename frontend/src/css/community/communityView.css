@@ -415,3 +415,10 @@
     height: 35px;
     margin-left: 10px;
 }
+.community_view .reply_item{
+    margin-left: 30px;
+}
+
+.community_view .comment_input{
+    display: none;
+}

@@ -25,8 +25,8 @@ function CommunityView(){
     const isInitialRender = useRef(true); //1번만 호출 
     const replyShowRender = useRef([]);
     const commentInput = useRef([]);
-    let x = -1;
-    let y = -1;
+    const [x, setX] = useState(-1);
+    const [y, setY] = useState(-1);
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -313,18 +313,34 @@ function CommunityView(){
         if(replyText==""){
             return;
         }
+        const before = replyComment;
         const replyData = {
             comment_no: comment_no,
             reply_content: replyText,
         };
-        console.log(replyData);
         axios.post(`http://localhost:9988/community/comments/reply`, replyData)
             .then(response => {
+                console.log("Hihi")
                 setReplyComment((p)=>({ ...p,
                      [comment_no]: [...(p[comment_no] || []), response.data]})    );
             })
             .catch(error => {
-                console.error("Error submitting reply:", error);
+                if (error.response && error.response.status === 400) {
+                    if (error.response.data === "Need login") {
+                        // 로그인 필요 시 로그인 페이지로 리디렉션
+                        alert("답글 기능은 로그인이 필요합니다.");
+                        navigate("/signin"); // 로그인 페이지 경로
+                    } else {
+                        // 400 오류가 발생하면 상태 복구
+                        setReplyComment(before);
+                        alert("답글 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                    }
+                } else {
+                    // 다른 에러 처리 (네트워크 오류 등)
+                    console.error('Error toggling follow status:', error);
+                    setReplyComment(before);
+                    alert("답글 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+                }
             });
     };
     async function handleToReplySubmit(e, reply){
@@ -388,12 +404,16 @@ function CommunityView(){
         return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
     };
     function showCommentInput(i, j){
-        if(x!=-1 && y!=-1){
+        if(x!=-1 || y!=-1){
             commentInput.current[x][y].style.display = 'none';
         }
-            commentInput.current[i][j].style.display = 'block';
-            x = i;
-            y = j;
+        commentInput.current[i][j].style.display = 'block';
+
+        if(i==x, j==y){
+            commentInput.current[x][y].style.display = 'none';
+        }
+            setX(i);
+            setY(j);
     }
     
     function toggleFollow(user){
@@ -411,7 +431,7 @@ function CommunityView(){
                 if (error.response.data === "Need login") {
                     // 로그인 필요 시 로그인 페이지로 리디렉션
                     alert("팔로우 기능은 로그인이 필요합니다.");
-                    window.location.href = "/signin"; // 로그인 페이지 경로
+                    navigate("/signin"); // 로그인 페이지 경로
                 } else {
                     // 400 오류가 발생하면 상태 복구
                     setCommunity((p)=>({...p, follow: user.follow=== 1 ? "0" : "1"}));
@@ -584,10 +604,12 @@ function CommunityView(){
                                             )
                                         }
                                     </div>
-                                    <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)} ref={(el) => { if (!commentInput.current[i]) {
+                                    <form className="comment_input" onSubmit={(e) => handleReplySubmit(e, comment.comment_no)} ref={(el) => { if (!commentInput.current[i]) {
                     commentInput.current[i] = [];
+
                   }
-                  commentInput.current[i][0] = el;} }>
+                  commentInput.current[i][0] = el;
+                  } }>
                                             <input
                                                 type="text"
                                                 value={replyText}
@@ -621,11 +643,10 @@ function CommunityView(){
                                                     </div>
                                                     <div className="comment_content"><span className="tag">{reply.tag_usernick!=null?`@${reply.tag_usernick}`:""}</span>{reply.reply_content}</div>
                                                         <div className="comment_info">
-                                                        <div onClick={()=>showCommentInput(i, j)}>답글</div>
-                                                            
+                                                        <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
                                                         </div>
                                                 </div>
-                                                <form onSubmit={(e) => handleToReplySubmit(e, reply)} ref={(el) => (commentInput.current[i][j+1] = el)}>
+                                                <form className="comment_input" onSubmit={(e) => handleToReplySubmit(e, reply)} ref={(el) => (commentInput.current[i][j+1] = el)}>
                                                     <input
                                                         type="text"
                                                         value={replyText}

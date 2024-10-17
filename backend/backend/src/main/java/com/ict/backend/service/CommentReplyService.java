@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentReplyService {
 
-    void saveReply(CommentReplyVO reply);
+    boolean saveReply(CommentReplyVO reply);
 
     List<CommentReplyVO> getReplies(int reply_no);
 
