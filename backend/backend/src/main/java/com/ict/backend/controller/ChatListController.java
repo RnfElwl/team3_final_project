@@ -94,7 +94,15 @@ public class ChatListController {
     }
     @GetMapping("/roominfo")
     public ChatListVO selectRoomInfo(@RequestParam String chatlist_url){
-        return chatListService.selectChatRoom(chatlist_url);
+        ChatListVO vo = chatListService.selectChatRoom(chatlist_url);
+        if(vo.getChatlist_type() == 2){
+            String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+            ChatListVO vo2 = chatListService.selectSoloChatInfo(chatlist_url, userid);
+            vo.setUsernick(vo2.getUsernick());
+            vo.setChat_title(vo2.getChat_title());
+            vo.setUserprofile(vo2.getUserprofile());
+        }
+        return vo;
     }
     @GetMapping("/member-list")
     public List<ChatVO> selectChatMember(@RequestParam String chatlist_url){

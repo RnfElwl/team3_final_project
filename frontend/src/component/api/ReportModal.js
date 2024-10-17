@@ -6,6 +6,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
     function reportFormAdd(event){
         let idField = event.target.name;
         let idValue = event.target.value;
+        console.log(report);
         setReport(p=>{return {...p, [idField]:idValue}});
     }
     async function submitReport(e){{/* 신고 기능 */}

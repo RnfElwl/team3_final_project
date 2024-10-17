@@ -25,7 +25,6 @@ public class CommentReplyController {
         System.out.println(reply.toString());
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         reply.setUserid(userid);
-        service.saveReply(reply);
         if (!userid.equals("anonymousUser")) {
             try {
                 boolean isUpdated = service.saveReply(reply);

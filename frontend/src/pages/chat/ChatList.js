@@ -74,8 +74,10 @@ function ChantList(){
               'Content-Type': 'application/json'
             }
           });
+
           toggleRoom();
-          if(result == 1){
+          console.log(result);
+          if(result.status == 200){
             setChatList();
             setRoom(!room);
           }
@@ -219,57 +221,6 @@ function ChantList(){
                                         {val.usernick}
                                     </div>
                                     <div className="sub_content">
-                                        {val.chat_content}
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                            </div>
-                        </div>
-                        <div className="solochat chat_box">
-                        <div onClick={()=>openWindow(val.chatlist_url)}>
-                            <div className="chat_box-img">
-                                <img src={`http://localhost:9988/${val.image_url}`}/>
-                            </div>
-                            <div className="chat_box_info">
-                                <div>
-                                    {val.usernick}
-                                </div>
-                                <div>
-                                    {val.chat_content}
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                        </div>
-                    </div>
-                    <div className="solochat chat_box">
-                    <div onClick={()=>openWindow(val.chatlist_url)}>
-                        <div className="chat_box-img">
-                            <img src={`http://localhost:9988/${val.image_url}`}/>
-                        </div>
-                        <div className="chat_box_info">
-                            <div>
-                                {val.usernick}
-                            </div>
-                            <div>
-                                        {val.chat_content}
-                                    </div>
-                        </div>
-                    </div>
-                    <div>
-                    </div>
-                </div>
-                <div className="solochat chat_box">
-                            <div onClick={()=>openWindow(val.chatlist_url)}>
-                                <div className="chat_box-img">
-                                    <img src={`http://localhost:9988/${val.image_url}`}/>
-                                </div>
-                                <div className="chat_box_info">
-                                    <div>
-                                        {val.usernick}
-                                    </div>
-                                    <div>
                                         {val.chat_content}
                                     </div>
                                 </div>
