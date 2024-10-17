@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+
 @Mapper
 public interface ReviewDAO {
 
@@ -15,10 +16,10 @@ public interface ReviewDAO {
     List<ReviewVO> selectReviewsByMovieCode(@Param("movieCode") String movieCode);
 
     // 특정 리뷰 조회
-    ReviewVO selectReviewById(@Param("reviewId") int reviewId);
+    ReviewVO selectReviewById(@Param("movieReviewNo") int movieReviewNo);
 
     // 리뷰 수정
-    void updateReview(@Param("reviewId") int reviewId, @Param("movie_review_content") String movieReviewContent, @Param("rate") int rate);
+    void updateReview(ReviewVO reviewVO);
 
     // 리뷰 삭제
     void deleteReview(@Param("reviewId") int reviewId);

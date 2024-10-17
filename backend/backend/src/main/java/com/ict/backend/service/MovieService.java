@@ -2,6 +2,7 @@ package com.ict.backend.service;
 
 import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
+import com.ict.backend.vo.RatingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,4 +17,8 @@ public interface MovieService {
     // 이미지 가져오기
     List<String> getMovieImagesByCode(String movieCode);
 
+    // movie_code로 movie_no 받아오기
+    int getMovieNoByCode(String movieCode); // movieCode로 movieNo 조회
+    // 평균평점, 리뷰개수
+    RatingVO getRatingByMovieNo(int movieNo);
 }

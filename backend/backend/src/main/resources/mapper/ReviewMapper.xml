@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.ict.backend.dao.ReviewDAO">
 
     <!-- 리뷰 추가 -->
@@ -19,19 +20,20 @@
 
     <!-- 특정 리뷰 조회 -->
     <select id="selectReviewById" parameterType="int" resultType="com.ict.backend.vo.ReviewVO">
-        SELECT * FROM movie_review_tbl WHERE review_id = #{reviewId}
+        SELECT * FROM movie_review_tbl WHERE movie_review_no = #{movie_review_no}
     </select>
 
     <!-- 리뷰 수정 -->
-    <update id="updateReview">
+    <update id="updateReview" parameterType="com.ict.backend.vo.ReviewVO">
         UPDATE movie_review_tbl
-        SET movie_review_content = #{movie_review_content}, rate = #{rate}
-        WHERE review_id = #{reviewId}
+        SET movie_review_content = #{movie_review_content},
+            rate = #{rate}
+        WHERE movie_review_no = #{movie_review_no}
     </update>
 
     <!-- 리뷰 삭제 -->
     <delete id="deleteReview">
-        DELETE FROM movie_review_tbl WHERE review_id = #{reviewId}
+        DELETE FROM movie_review_tbl WHERE movie_review_no = #{param1}
     </delete>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.ict.backend.controller;
 import com.ict.backend.service.MovieService;
 import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
+import com.ict.backend.vo.RatingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,14 @@ public class MovieController {
         }
     }
 
+    // 평균평점과 리뷰 개수 가져오기
+    @GetMapping("/{movieCode}/rating")
+    public RatingVO getRating(@PathVariable("movieCode") String movieCode) {
+        // movieCode로 movieNo를 조회
+        int movieNo = movieService.getMovieNoByCode(movieCode);
+        // 조회된 movieNo로 평점 및 리뷰 개수 반환
+        return movieService.getRatingByMovieNo(movieNo);
+    }
 
 
 

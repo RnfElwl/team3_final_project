@@ -3,6 +3,7 @@ package com.ict.backend.service;
 import com.ict.backend.dao.MovieDAO;
 import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
+import com.ict.backend.vo.RatingVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,17 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<String> getMovieImagesByCode(String movieCode) {
         return movieDAO.getMovieImagesByCode(movieCode);
+    }
+
+    @Override
+    public int getMovieNoByCode(String movieCode) {
+        // movieCode를 통해 movieNo 조회
+        return movieDAO.getMovieNoByCode(movieCode);
+    }
+
+    @Override
+    public RatingVO getRatingByMovieNo(int movieNo) {
+        return movieDAO.getRatingByMovieNo(movieNo);
     }
 
 
