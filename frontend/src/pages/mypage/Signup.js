@@ -115,10 +115,10 @@ function Signup() {
     // forcus out 시 아이디 체크
     const handleIdBlur = async () => {
         const userId = formData.userid;
-        const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+        const idRegex = /^[a-z0-9]{6,20}$/;
 
         if (userId.trim() === '' || !idRegex.test(userId)) {
-            setIdCheckError('아이디는 6~20자의 영문자와 숫자로 구성되어야 합니다.');
+            setIdCheckError('6~20자의 영문 소문자와\n 숫자만 사용 가능합니다.');
             setIdCheckSuccess(false);
             return;
         }
@@ -127,7 +127,7 @@ function Signup() {
             const response = await axios.get(`http://localhost:9988/idcheck?userid=${userId}`);
             console.log("아이디 확인 응답:", response.data); // 디버깅 로그
             if (response.data === 1) {
-                setIdCheckError('아이디가 이미 사용 중입니다.');
+                setIdCheckError('사용할 수 없는 아이디입니다.');
                 setIdCheckSuccess(false);
             } else {
                 setIdCheckError('');
@@ -229,10 +229,12 @@ function Signup() {
     }, []);
 
     const breakpointColumnsObj = {
-        default: 6,   
-        1100: 4,      
-        700: 3,       
-        500: 2        
+        default: 6,
+        1650 : 5,   
+        1150: 4,      
+        860: 3,       
+        500: 2,
+        250 : 1
     };
 
     return (
@@ -271,7 +273,7 @@ function Signup() {
                                         </div>
                                         <div className="inputclass">
                                             <input type="text" name="userid" value={formData.userid} onChange={handleInputChange} onBlur={handleIdBlur} placeholder='아이디' />
-                                            {idCheckError && ( <div className="error-message" style={{ color: 'red' }}> {idCheckError} </div> )}
+                                            {idCheckError && ( <div className="error-message" style={{ maxWidth : "208px" }}> {idCheckError} </div> )}
                                             {idCheckSuccess && ( <div className="success-message" style={{ color: 'green' }}>사용 가능한 아이디입니다. </div> )} 
                                         </div>
                                         <div className="inputclass">
@@ -293,7 +295,7 @@ function Signup() {
                                         </div>
                                         <div className="inputclass" style={{ flexDirection: 'row' }}>
                                             <input type="text" name="username" value={formData.username} onChange={handleInputChange} placeholder='이름' />
-                                            {errors.username && <div className="error-message">{errors.username}</div>}
+                                            
                                             <div className="gen">
                                                 <div className={`gender-option ${formData.gender === '1' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '1' })} >
                                                     <label>남성</label>
@@ -303,6 +305,7 @@ function Signup() {
                                                 </div>
                                             </div>
                                         </div>
+                                        {errors.username && <div className="error-message">{errors.username}</div>}
                                         <div className="inputclass">
                                             <input type="text" name="useremail" value={formData.useremail} onChange={handleInputChange} placeholder='이메일' />
                                             {errors.useremail && <div className="error-message">{errors.useremail}</div>}
@@ -310,7 +313,7 @@ function Signup() {
                                         <div className="inputclass">
                                             <input type="text" name="usernick" value={formData.usernick} onChange={handleInputChange} onBlur={handleNicknameBlur} placeholder='닉네임' />
                                             {nickCheckError && (
-                                                <div className="error-message" style={{ color: 'red' }}> {nickCheckError} </div>
+                                                <div className="error-message" style={{ color: '#ff6347', maxWidth : "256px" }}> {nickCheckError} </div>
                                             )}
                                             {nickCheckSuccess && (
                                                 <div className="success-message" style={{ color: 'green' }}> 사용 가능한 닉네임입니다. </div>
@@ -320,30 +323,14 @@ function Signup() {
                                             <input type="text" name="usertel" value={formData.usertel} onChange={handleInputChange} placeholder='전화번호' />
                                             {errors.usertel && <div className="error-message">{errors.usertel}</div>}
                                         </div>
-                                        {isAddressModalOpen && (
-                                        <Modal onClose={() => setIsAddressModalOpen(false)} title="" className = "addrmodal">
-                                            <DaumPostcode 
-                                            theme={{
-                                                bgColor: "#252525", // 바탕 배경색
-                                                searchBgColor: "#252525", // 검색창 배경색
-                                                contentBgColor: "#252525", // 본문 배경색
-                                                pageBgColor: "#252525", // 페이지 배경색
-                                                textColor: "#ffffff", // 기본 글자색
-                                                queryTextColor: "#ffffff", // 검색창 글자색
-                                                postcodeTextColor: "#ff0000", // 우편번호 글자색
-                                                emphTextColor: "", // 강조 글자색
-                                                outlineColor: "#ffffff", // 테두리 색상
-                                            }}
-                                                onComplete={handleAddressSelect}/>
-                                            </Modal>
-                                        )}
+                                        
                                         <div hidden> 
                                             <span>우편번호</span>  
                                             <input type = "text" name = "zipcode" value = ""/> 
                                         </div>
                                         <div className="inputclass">
                                             <input type="text" name="useraddr" value={formData.useraddr} onChange={handleInputChange}
-                                            onClick={() => setIsAddressModalOpen(true)} placeholder='주소' />
+                                            onClick={() => setIsAddressModalOpen(true)} placeholder='주소' readOnly/>
                                             {errors.useraddr && <div className="error-message">{errors.useraddr}</div>}
                                         </div>
                                         <div> 
@@ -384,6 +371,23 @@ function Signup() {
                     </div>
                 </div>
             </div>
+            {isAddressModalOpen && (
+                <Modal onClose={() => setIsAddressModalOpen(false)} title="" className = "addrmodal">
+                    <DaumPostcode 
+                    theme={{
+                        bgColor: "#252525", // 바탕 배경색
+                        searchBgColor: "#252525", // 검색창 배경색
+                        contentBgColor: "#252525", // 본문 배경색
+                        pageBgColor: "#252525", // 페이지 배경색
+                        textColor: "#ffffff", // 기본 글자색
+                        queryTextColor: "#ffffff", // 검색창 글자색
+                        postcodeTextColor: "#ff0000", // 우편번호 글자색
+                        emphTextColor: "", // 강조 글자색
+                        outlineColor: "#ffffff", // 테두리 색상
+                    }}
+                        onComplete={handleAddressSelect}/>
+                    </Modal>
+                )}
         </div>
     );
 }

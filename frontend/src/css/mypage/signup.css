@@ -167,7 +167,7 @@ input[name="username"] {
 }
 
 .error-message {
-    color: red;
+    color: #ff6347;
     padding: 0 !important;
 }
 
@@ -177,4 +177,24 @@ input[name="username"] {
 
 .inputclass {
     flex-direction: column;
+}
+.addrmodal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw; /* 너비를 화면의 80%로 설정 */
+    max-width: 510px; /* 최대 너비 */
+    height: 70vh; /* 높이 */
+    max-height: 500px; /* 최대 높이 */
+    background-color: #252525;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+.addrmodal h2{
+    margin : 25px;
+}
+.addrmodal div{
+    height: 450px !important;
 }
