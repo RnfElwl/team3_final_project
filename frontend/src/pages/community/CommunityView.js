@@ -358,6 +358,7 @@ function CommunityView(){
             [reply.comment_no.comment_no]: [...(p[reply.comment_no.comment_no] || []), data]}));
         toggleReplies(reply.comment_no);
     }
+
     function openReport(e){{/* 신고 기능 */}
         const id = e.target.dataset.id;
         const userid = e.target.dataset.userid;
@@ -604,7 +605,9 @@ function CommunityView(){
                                             )
                                         }
                                     </div>
-                                    <form className="comment_input" onSubmit={(e) => handleReplySubmit(e, comment.comment_no)} ref={(el) => { if (!commentInput.current[i]) {
+                                    <form className="comment_input" onSubmit={(e) =>{ 
+                                        e.preventDefault();
+                                        handleReplySubmit(e, comment.comment_no)}} ref={(el) => { if (!commentInput.current[i]) {
                     commentInput.current[i] = [];
 
                   }
@@ -646,7 +649,9 @@ function CommunityView(){
                                                         <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
                                                         </div>
                                                 </div>
-                                                <form className="comment_input" onSubmit={(e) => handleToReplySubmit(e, reply)} ref={(el) => (commentInput.current[i][j+1] = el)}>
+                                                <form className="comment_input" onSubmit={(e) => {
+                                                    e.preventDefault();
+                                                    handleToReplySubmit(e, reply)}} ref={(el) => (commentInput.current[i][j+1] = el)}>
                                                     <input
                                                         type="text"
                                                         value={replyText}

@@ -297,6 +297,9 @@ const Chatting = () => {
         }
     };
     function pressKeyboard(e){
+        if(messageToSend==''){
+            return ;
+        }
         if(e.key==='Enter'){
             handleSendMessage();
         }
@@ -658,7 +661,7 @@ const Chatting = () => {
                         onChange={(e)=>setMessageToSend(e.target.value)}
                         placeholder="메시지 입력"
                         />
-                    <button onClick={handleSendMessage}>Send</button>
+                    <button onClick={handleSendMessage}>전송</button>
                 </div>
             </div>
                                 
