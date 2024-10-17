@@ -340,7 +340,7 @@
     justify-content: space-between;
     margin-top: 10px;
     /*margin-top: auto;  위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
-    border-top: 1px solid #ebe7e7a6; /* 위에 얇은 선 추가 */
+    border-top: 1px solid #ebe2e279; /* 위에 얇은 선 추가 */
     padding: 10px 0; /* 위아래 패딩 추가 */
 
 }

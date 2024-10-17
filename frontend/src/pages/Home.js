@@ -3,34 +3,63 @@ import '../css/Home.css';
 import axios from '../component/api/axiosApi';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { useNavigate } from 'react-router-dom';
-import image1 from '../img/05.jpeg';
-import image2 from '../img/2.png';
-import image3 from '../img/미스터 션샤인.png';
+import image1 from '../img/banner1.png';
+import image2 from '../img/banner2.png';
+import image3 from '../img/banner3.png';
+import image4 from '../img/banner4.png';
+import image5 from '../img/banner5.png';
+import image6 from '../img/banner6.png';
+import image7 from '../img/banner7.png';
+import image8 from '../img/banner8.png';
+import image9 from '../img/banner9.png';
+import image10 from '../img/banner10.png';
 
 // banner
-const images = [image1, image2, image3];
+const bannerData = [
+  { movieCode: 20163137, image: image1, title: 'Movie 1' },
+  { movieCode: 20163137, image: image2, title: 'Movie 2' },
+  { movieCode: 20224667, image: image3, title: 'Movie 3' },
+  { movieCode: 20224667, image: image4, title: 'Movie 4' },
+  { movieCode: 20224667, image: image5, title: 'Movie 5' },
+  { movieCode: 20203702, image: image6, title: 'Movie 6' },
+  { movieCode: 20203702, image: image7, title: 'Movie 7' },
+  { movieCode: 20249434, image: image8, title: 'Movie 8' },
+  { movieCode: 20205144, image: image9, title: 'Movie 9' },
+  { movieCode: 20205144, image: image10, title: 'Movie 10' },
+];
 
 function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
     }, 3000);
 
     return () => clearTimeout(timeout);
   }, [currentIndex]);
 
+  const handleBannerClick = (movieCode) => {
+    const currentMovie = bannerData[currentIndex];
+    navigate(`/movies/view/${currentMovie.movieCode}`); // 영화의 고유 ID로 페이지 이동
+  };
+
+  const handleIndicatorClick = (index) => {
+    setCurrentIndex(index);
+  };
+  
   return (
     <div className='home'>
         <div className="banner">
           <div className="banner-images" style={{ display: 'flex', overflow: 'hidden' }}>
-            {images.map((image, index) => (
+            {bannerData.map((movie, index) => (
               <img
                 key={index}
-                src={image}
-                alt={`Slide ${index}`}
+                src={movie.image}
+                alt={movie.title}
                 className="banner-image"
+                onClick={handleBannerClick}
                 style={{
                   minWidth: '100%',
                   transition: 'opacity 1s ease-in-out',
@@ -38,13 +67,22 @@ function Home() {
                   position: 'absolute',
                   top: 0,
                   left: 0,
+                  cursor: 'pointer',
                 }}
               />
             ))}
           </div>
           <div className="banner-indicators">
-            {images.map((_, index) => (
-              <span key={index} className={index === currentIndex ? 'active' : ''}>
+            {bannerData.map((_, index) => (
+              <span 
+                key={index} 
+                className={index === currentIndex ? 'active' : ''}
+                onClick={() => handleIndicatorClick(index)}
+                style={{
+                  cursor: 'pointer', 
+                  margin: '20px 7px',
+                }}  
+              >
                 ●
               </span>
             ))}
@@ -58,7 +96,7 @@ function Home() {
 function MovieList() {
   const [movies, setMovies] = useState([]);
   const [currentMovieIndexes, setCurrentMovieIndexes] = useState(Array(8).fill(0)); // 각 리스트에 대한 인덱스 배열
-  const moviesPerPage = 6; 
+  const moviesPerPage = 8; 
   const [hoveredListIndex, setHoveredListIndex] = useState(null); // 어떤 리스트에 마우스가 올라왔는지 저장
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Hook을 함수 컴포넌트 내부에서 호출
