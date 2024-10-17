@@ -139,8 +139,7 @@ const Chatting = () => {
         const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
             chatlist_url
         }});
-
-        console.log(result);
+        console.log(result.data);
         if(result.data.chatlist_type==1){
             const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
                 params: { movie_no: result.data.movie_no }
@@ -297,6 +296,9 @@ const Chatting = () => {
         }
     };
     function pressKeyboard(e){
+        if(messageToSend==''){
+            return ;
+        }
         if(e.key==='Enter'){
             handleSendMessage();
         }
@@ -314,7 +316,7 @@ const Chatting = () => {
             report_tbluuid:  id,
             reported_userid: userid,
             report_content: content,// 피신고자의 채팅 내용
-        })
+});
         toggleReport();
         setDefaultChat();
     }
@@ -453,7 +455,7 @@ const Chatting = () => {
             </div>
             <header className='chat_header'> 
                 <div className='room_box'>
-                <div className='room_img'><img src={roomInfo.movie_img_url}/></div>
+                <div className='room_img'><img src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
                     <div className='user_count' title="유저 목록" onClick={userToggle}>
@@ -631,9 +633,6 @@ const Chatting = () => {
                                                     <div className='chat_date'>
                                                     {(data.chat_date).substring(11, 16)}
                                                     </div>
-                                                    {/* <div className='chat_read'>
-                                                        1
-                                                    </div> */}
                                                     <div className='chat_report' >
                                                         <AiOutlineAlert size="25px" data-id={data.content_id} data-userid={data.userid} data-content={data.chat_content} onClick={openReport} />
                                                     </div>
@@ -658,7 +657,7 @@ const Chatting = () => {
                         onChange={(e)=>setMessageToSend(e.target.value)}
                         placeholder="메시지 입력"
                         />
-                    <button onClick={handleSendMessage}>Send</button>
+                    <button onClick={handleSendMessage}>전송</button>
                 </div>
             </div>
                                 

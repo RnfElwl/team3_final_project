@@ -189,7 +189,7 @@ function EditInfo() {
                         <form className='information' onSubmit={handleInfoSubmit}>
                             <div> 
                                 <span>이름</span> 
-                                <input type="text" name="username" value={formData.username} disabled />
+                                <input type="text" name="username" value={formData.username } disabled />
                             </div>
                             <div> 
                                 <span style={{ width: "141.8px" }}>비밀번호</span> 
@@ -261,7 +261,7 @@ function EditInfo() {
                                         name="useraddr" 
                                         value={formData.useraddr} 
                                         onChange={(e) => setFormData({ ...formData, useraddr: e.target.value })} 
-                                        onClick={() => setIsAddressModalOpen(true)}/> 
+                                        onClick={() => setIsAddressModalOpen(true)} readOnly/> 
                             </div>
                             <div> 
                                 <span>상세주소</span>  
@@ -289,7 +289,7 @@ function EditInfo() {
                                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                     <input type="password" id="confirmPassword" placeholder="비밀번호 확인" required />
                                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                                    <button type="submit" className="btn btn-secondary">변경하기</button>
+                                    <div id = "modal_submit" style ={{padding : '5px 0 0 0', justifyContent:'center'}}><button type="submit" className="btn btn-secondary">변경하기</button></div>
                                 </form>
                             </Modal>
                             )}

@@ -28,4 +28,5 @@ public interface ChatListDAO {
     public int updateSoloChatUserFirstConn(String chatlist_url, String userid, String first_conn);
     public ChatListVO selectSoloChatRoomCheck(String userid1, String userid2);
     public String selectUserReviewCheck(String userid, int movie_no);
+    public ChatListVO selectSoloChatInfo(String chatlist_url, String userid);
 }

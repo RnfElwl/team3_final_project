@@ -269,8 +269,8 @@ function Mypage() {
                             <p>이메일 : <span>{userInfo.useremail}</span></p>
                         </div>
                         <div className = "userbottom">
-                            <p onClick={() => handleOpenModal('following')}>팔로워 : <span>{userInfo.follower}</span></p>
-                            <p onClick={() => handleOpenModal('followers')}>팔로잉 : <span>{userInfo.following}</span></p>
+                            <p onClick={() => handleOpenModal('followers')}>팔로워 : <span>{userInfo.follower}</span></p>
+                            <p onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
                             <p>게시글 : <span>{userInfo.community}</span></p>
                             <p>댓글 : <span>{userInfo.comment}</span></p>
                         </div>
@@ -338,6 +338,7 @@ function Mypage() {
                     {/* 즐찾 회원 */}
                     {isModalOpen && (
                         <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        {currentList.length > 0 ? (
                         <ul className="user-list-ul">
                             {currentList.map((user, index) => {
                                 const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
@@ -360,6 +361,12 @@ function Mypage() {
                                 );
                             })}
                         </ul>
+                        ) : (
+                            <div className="noslide" style = {{height : "300px", marginTop : '20px'}}>
+                                <BsExclamationCircle />
+                                <p>{modalTitle}이 없습니다.</p>
+                            </div>
+                        )}
                     </Modal>
                         )}    
                     {/* 사등분 */}

@@ -11,10 +11,17 @@ import java.util.List;
 @Transactional
 public interface ReviewService {
 
-    void addReview(ReviewVO reviewVO);
-    List<ReviewVO> getReviewsByMovieCode(String movieCode);
-    ReviewVO getReviewById(int movieReviewNo);
+    // 리뷰 작성 여부 확인
+    boolean checkReviewExists(int movieNo, String userid);
 
+    // 리뷰 작성
+    void addReview(ReviewVO reviewVO);
+
+    // movieCode로 리뷰 목록 띄우기
+    List<ReviewVO> getReviewsByMovieCode(String movieCode);
+
+    // 특정 review 호출
+    ReviewVO getReviewById(int movieReviewNo);
 
     // 리뷰 수정
     void updateReview(ReviewVO updatedReview);

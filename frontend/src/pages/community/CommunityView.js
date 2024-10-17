@@ -34,7 +34,7 @@ function CommunityView(){
 
     const [userData, setUserData] = useState({});
     const [myid, setMyid] = useState("");
-
+    const [toggle, setToggle] = useState(1);
     const [showReplies, setShowReplies] = useState({}); // 각 댓글에 대한 대댓글 표시 여부 관리
     const [replyText, setReplyText] = useState("");
 
@@ -120,7 +120,6 @@ function CommunityView(){
                     setLiked(response.data.like_state==1?true:false);
                     //setLiked(response.data.liked);  //초기 좋아요 상태 설정
                     //setHitCount(response.data.hitCount);        조회수 설정
-                    
                 })
                 .catch(error => {
                     console.error("Error fetching community view:", error);
@@ -301,18 +300,13 @@ function CommunityView(){
 
     const toggleReplies = async (comment_no) => {
         const {data} = await  axios.get(`http://localhost:9988/community/comments/reply/${comment_no}`);
-        console.log(data)
         setReplyComment((p)=>({...p, [comment_no]:data}));
-        // setShowReplies((prev) => ({
-        //     ...prev,
-        //     [comment_no]: !prev[comment_no], // 해당 댓글의 대댓글 표시 여부 토글
-        // }));
     };
-    const handleReplySubmit = (e, comment_no) => {
-        e.preventDefault();
+    const handleReplySubmit = (comment_no) => {
         if(replyText==""){
             return;
         }
+        commentInput.current[x][y].style.display = "none"; 
         const before = replyComment;
         const replyData = {
             comment_no: comment_no,
@@ -320,9 +314,10 @@ function CommunityView(){
         };
         axios.post(`http://localhost:9988/community/comments/reply`, replyData)
             .then(response => {
-                console.log("Hihi")
-                setReplyComment((p)=>({ ...p,
-                     [comment_no]: [...(p[comment_no] || []), response.data]})    );
+                // setReplyComment((p)=>({ ...p,
+                //      [comment_no]: [...(p[comment_no] || []), response.data]})    );
+                toggleReplies(comment_no)
+                setReplyText("");
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
@@ -343,11 +338,13 @@ function CommunityView(){
                 }
             });
     };
-    async function handleToReplySubmit(e, reply){
-        e.preventDefault();
+    async function handleToReplySubmit(reply){
         if(replyText==""){
             return;
         }
+        
+        console.log(reply);
+        console.log(replyText);
         const replyData = {
             comment_no: reply.comment_no,
             reply_content: replyText,
@@ -355,9 +352,11 @@ function CommunityView(){
         };
         const {data} = await axios.post(`http://localhost:9988/community/comments/reply`, replyData);
         setReplyComment((p)=>({ ...p,
-            [reply.comment_no.comment_no]: [...(p[reply.comment_no.comment_no] || []), data]}));
+            [reply.comment_no]: [...(p[reply.comment_no] || []), data]}));
         toggleReplies(reply.comment_no);
+        commentInput.current[x][y].style.display = 'none';
     }
+
     function openReport(e){{/* 신고 기능 */}
         const id = e.target.dataset.id;
         const userid = e.target.dataset.userid;
@@ -404,16 +403,22 @@ function CommunityView(){
         return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
     };
     function showCommentInput(i, j){
-        if(x!=-1 || y!=-1){
-            commentInput.current[x][y].style.display = 'none';
+        if(j!=0 && y==0){
+            commentInput.current[x][0].style.display = 'none';
         }
-        commentInput.current[i][j].style.display = 'block';
-
-        if(i==x, j==y){
-            commentInput.current[x][y].style.display = 'none';
+        if(i==x && j==y){
+            if(commentInput.current[x][y].style.display=='block'){
+                commentInput.current[x][y].style.display = 'none';
+            }
+            else{
+                commentInput.current[x][y].style.display = 'block';
+            }
         }
-            setX(i);
-            setY(j);
+        else{
+            commentInput.current[i][j].style.display = 'block';
+        }
+        setX(i);
+        setY(j);
     }
     
     function toggleFollow(user){
@@ -604,12 +609,14 @@ function CommunityView(){
                                             )
                                         }
                                     </div>
-                                    <form className="comment_input" onSubmit={(e) => handleReplySubmit(e, comment.comment_no)} ref={(el) => { if (!commentInput.current[i]) {
-                    commentInput.current[i] = [];
+                                    <form className="comment_input" onSubmit={(e) =>{ 
+                                        e.preventDefault();
+                                        handleReplySubmit(comment.comment_no)}} ref={(el) => { if (!commentInput.current[i]) {
+                                                commentInput.current[i] = [];
 
-                  }
-                  commentInput.current[i][0] = el;
-                  } }>
+                                            }
+                                            commentInput.current[i][0] = el;
+                                            } }>
                                             <input
                                                 type="text"
                                                 value={replyText}
@@ -646,7 +653,9 @@ function CommunityView(){
                                                         <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
                                                         </div>
                                                 </div>
-                                                <form className="comment_input" onSubmit={(e) => handleToReplySubmit(e, reply)} ref={(el) => (commentInput.current[i][j+1] = el)}>
+                                                <form className="comment_input" onSubmit={(e) => {
+                                                    e.preventDefault();
+                                                    handleToReplySubmit(reply)}} ref={(el) => (commentInput.current[i][j+1] = el)}>
                                                     <input
                                                         type="text"
                                                         value={replyText}

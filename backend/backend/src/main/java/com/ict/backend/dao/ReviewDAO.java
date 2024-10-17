@@ -9,6 +9,9 @@ import java.util.List;
 @Mapper
 public interface ReviewDAO {
 
+    // 리뷰 작성 여부 확인
+    int countUserReview(@Param("movie_no") int movieNo, @Param("userid") String userid);
+
     // 리뷰 추가
     void insertReview(ReviewVO reviewVO);
 

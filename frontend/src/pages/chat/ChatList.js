@@ -1,7 +1,8 @@
 import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { BsExclamationCircle } from "react-icons/bs";
+import { Link, useNavigate } from 'react-router-dom';
 //import axios from "axios";
 import axios from "../../component/api/axiosApi"
 
@@ -68,15 +69,15 @@ function ChantList(){
     }
     async function createRoom(event){
         event.preventDefault();
-        console.log(formData);
-
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
             }
           });
+
           toggleRoom();
-          if(result == 1){
+          console.log(result);
+          if(result.status == 200){
             setChatList();
             setRoom(!room);
           }
@@ -146,6 +147,12 @@ function ChantList(){
                             </form>
                             <div className="movie_list">
                                 {
+                                    reviewList.length==0?<>
+                                    <div className="list_notice">
+                                        <BsExclamationCircle/>
+                                        <div>리뷰한 영화가 없거나 찾을수 없습니다.</div>
+                                    </div>
+                                    </>:
                                     reviewList.map((data, i)=>(
                                         <div className={`movie_box ${clickMovie==data.movie_no?'focus':''}`}>
                                             <div className="movie_img">
@@ -172,9 +179,10 @@ function ChantList(){
                 {
                         list.length==0&&(
                             <>
-
-                                 당신이 속한 채팅방이 없습니다
-
+                                <div className="list_notice">
+                                    <BsExclamationCircle/>
+                                    <div>채팅방이 없거나 찾을 수 없습니다.</div>
+                                </div>
                             </>
                         )
                     }
@@ -213,57 +221,6 @@ function ChantList(){
                                         {val.usernick}
                                     </div>
                                     <div className="sub_content">
-                                        {val.chat_content}
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                            </div>
-                        </div>
-                        <div className="solochat chat_box">
-                        <div onClick={()=>openWindow(val.chatlist_url)}>
-                            <div className="chat_box-img">
-                                <img src={`http://localhost:9988/${val.image_url}`}/>
-                            </div>
-                            <div className="chat_box_info">
-                                <div>
-                                    {val.usernick}
-                                </div>
-                                <div>
-                                    {val.chat_content}
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                        </div>
-                    </div>
-                    <div className="solochat chat_box">
-                    <div onClick={()=>openWindow(val.chatlist_url)}>
-                        <div className="chat_box-img">
-                            <img src={`http://localhost:9988/${val.image_url}`}/>
-                        </div>
-                        <div className="chat_box_info">
-                            <div>
-                                {val.usernick}
-                            </div>
-                            <div>
-                                        {val.chat_content}
-                                    </div>
-                        </div>
-                    </div>
-                    <div>
-                    </div>
-                </div>
-                <div className="solochat chat_box">
-                            <div onClick={()=>openWindow(val.chatlist_url)}>
-                                <div className="chat_box-img">
-                                    <img src={`http://localhost:9988/${val.image_url}`}/>
-                                </div>
-                                <div className="chat_box_info">
-                                    <div>
-                                        {val.usernick}
-                                    </div>
-                                    <div>
                                         {val.chat_content}
                                     </div>
                                 </div>

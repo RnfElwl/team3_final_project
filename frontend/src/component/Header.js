@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import axios from './api/axiosApi';
+// import axios from 'axios';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {List, Search} from 'react-bootstrap-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +10,9 @@ import { useAuth } from './TokenValidator';
 
 function Header() {
   const [nav, setNav] = useState(false);
+  const [myid, setMyid] = useState("");
+  const [searchWord, setSearchWord]=useState("");
+  const [userData, setUserData] = useState({});
   function closeNav(){
     setNav(false);
   }
@@ -16,6 +20,7 @@ function Header() {
     setNav(true);
   }
   const location =useLocation();
+  const navigate = useNavigate();
   const [isAdminPage, setIsAdminPage]=useState(false);
   const [isChatting, setIsChatting] = useState(false);
   const [isContentVisible1, setContentVisible1] = useState(false); // 하위 div의 표시 여부 상태
@@ -28,6 +33,22 @@ function Header() {
         setContentVisible2(prev => !prev); // 현재 상태를 반전
     };
 
+    async function getUser() {
+      try {
+          const result = await axios.get('http://localhost:9988/user/userinfo');
+          setMyid(result.data); // 사용자 ID 설정
+          console.log(result);
+          const params = { userid: result.data };
+          const result2 = await axios.get('http://localhost:9988/getUserData', { params });
+          setUserData(result2.data); // 사용자 데이터 설정
+      } catch (error) {
+          console.error("Error fetching user info:", error);
+      }
+  }  
+  useEffect(()=>{
+    getUser();
+  }, [])
+  
   useEffect(()=>{
     location.pathname.startsWith("/admin")
     ? setIsAdminPage(true)
@@ -40,7 +61,13 @@ function Header() {
   
   // 로그인 여부 판단용
   const { isAuthenticated, logout } = useAuth();
-
+  function hendleSearchInput(e){
+    setSearchWord(e.target.value);
+  }
+  function searchMovie(e){
+    e.preventDefault();
+    navigate("")//키워드로 영화검색
+  }
   // 로그인 여부 판단용 여기까지
 
   if(isAdminPage){
@@ -93,7 +120,9 @@ function Header() {
         </div>
         <div className='tab'>
           <div><Link to={'/categories'} onClick={closeNav}>카테고리</Link></div>
-          <div><Link to={'/chat'} onClick={closeNav}>채팅</Link></div>
+          {
+            myid!==''&&(<div><Link to={'/chat'} onClick={closeNav}>채팅</Link></div>)
+          }
           <div><Link to={'/qna'} onClick={closeNav}>QnA</Link></div>
           <div><Link to={'/community'} onClick={closeNav}>커뮤니티</Link></div>
           <div><Link to={'/recommend'} onClick={closeNav}>추천</Link></div>
@@ -107,16 +136,16 @@ function Header() {
           </div>
           
           <div className='right-info'>
-            <div className='search'>
-              <Search color={"#1C1C20"} size={20}/><input  type="text" />
-            </div>
+            <form className='search' onSubmit={searchMovie}>
+              <Search color={"#111120"} size={20}/><input  type="text" value={searchWord} onChange={hendleSearchInput}/>
+            </form>
 
               {isAuthenticated ? (
             // 토큰이 있는 경우: 로그아웃 버튼 표시
               <div className='profile' style = {{display:'flex'}}>
                 <Link to="/mypage">
                   <img
-                    src="/images/profile.png"
+                    src={`http://localhost:9988/${userData.image_url}`}
                     alt="프로필 아이콘"
                     style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px', cursor: 'pointer' }}
                   />
