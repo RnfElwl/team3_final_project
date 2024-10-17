@@ -5,6 +5,13 @@
 
 <mapper namespace="com.ict.backend.dao.ReviewDAO">
 
+    <!-- 특정 유저의 리뷰 작성 여부 확인 -->
+    <select id="countUserReview" resultType="int">
+        SELECT COUNT(*)
+        FROM movie_review_tbl
+        WHERE movie_no = #{movie_no} AND userid = #{userid}
+    </select>
+
     <!-- 리뷰 추가 -->
     <insert id="insertReview">
         INSERT INTO movie_review_tbl (userid, movie_no, movie_review_content, rate)

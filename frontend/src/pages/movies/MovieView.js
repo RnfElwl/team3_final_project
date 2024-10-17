@@ -13,11 +13,9 @@ function MovieView() {
   const [images, setImages] = useState([]);  // 이미지 목록 상태
   const [rating, setRating] = useState(0); // 별점 상태
   const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 추가
-  const [reviewText, setReviewText] = useState(''); // 한줄평 상태
   const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
   const location = useLocation(); // 현재 경로 가져오기 위해 사용
   const [userid, setUserId] = useState(null); // userid를 상태로 관리
-  const [isEditing, setIsEditing] = useState(false); // 리뷰 수정 상태
   const [editReviewText, setEditReviewText] = useState(''); // 수정할 리뷰 내용 저장
   const [editingReviewId, setEditingReviewId] = useState(null); // 수정 중인 리뷰의 ID를 저장
   const [movieNo, setMovieNo] = useState(null); // 영화 번호 상태
@@ -44,6 +42,7 @@ function MovieView() {
         const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
         setImages(imageResponse.data);
         
+      
         // 리뷰 정보 가져오기
         const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
         console.log('Fetched reviews:', reviewResponse.data); // 리뷰 데이터 로그로 확인
@@ -139,14 +138,41 @@ function MovieView() {
 
   // 리뷰 제출 함수
   const handleReviewSubmit = async () => {
-    console.log("Submitting review with userid:", userid);
+    
+    // 유저가 이미 리뷰를 작성했는지 확인
+    const existResponse = await axios.get(`http://localhost:9988/api/reviews/check`, {
+      params: {
+        movieNo: movie.movie_no,
+        userid: userid
+      }
+    });
+
+    const reviewExists = existResponse.data;
+
+    if (reviewExists) {
+      alert('하나의 영화에 대한 리뷰 작성은 한 번만 가능합니다');
+      return; // 중단
+    }
+
     const reviewText = reviewInputRef.current.textContent; // 입력된 텍스트 가져오기
     if (rating > 0 && reviewText) {
       try {
         if (!userid) {
-          console.error('User ID is missing');
+          alert("리뷰를 작성하려면 로그인하세요!");
           return;
         }
+
+        // 데이터 로그 추가
+      console.log("데이터가 잘가나?", {
+        userid,
+        movie_no: movie.movie_no,
+        movie_review_content: reviewText,
+        rate: rating,
+      });
+
+
+
+
         // 리뷰 서버로 전송
         const response = await axios.post('http://localhost:9988/api/reviews/add', {
           userid,
