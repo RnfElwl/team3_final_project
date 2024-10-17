@@ -32,8 +32,8 @@ font-size: 18px;
 }
 
 .nav-tabs .nav-link.active {
-color: #f1c40f; /* 활성화된 탭 색상 */
-border-bottom: 2px solid #f1c40f;
+color: #48d1cdea; /* 활성화된 탭 색상 */
+border-bottom: 2px solid #48d1cdea;
 }
 
 /* 카드 스타일 */

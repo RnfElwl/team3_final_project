@@ -20,6 +20,7 @@ public class ReviewController {
     @PostMapping("/add")
     public ResponseEntity<ReviewVO> addReview(@RequestBody ReviewVO reviewVO) {
 
+
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         System.out.println("Review received with userid: " + reviewVO.getUserid());
         movieReviewService.addReview(reviewVO);
@@ -36,37 +37,42 @@ public class ReviewController {
     }
 
     // 리뷰 수정
-    @PutMapping("/{reviewId}")
-    public ResponseEntity<String> updateReview(@PathVariable int reviewId, @RequestBody ReviewVO updatedReview) {
-        // 로그인된 사용자 정보 가져오기
+    @PutMapping("/{movieReviewNo}")
+    public ResponseEntity<String> updateReview(@RequestBody ReviewVO updatedReview) {
         String loggedInUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        ReviewVO existingReview = movieReviewService.getReviewById(reviewId);
+        System.out.println("Controller: Calling service to update review with reviewNo: " + updatedReview.toString());
 
-        if (existingReview != null && existingReview.getUserid().equals(loggedInUserId)) {
-            movieReviewService.updateReview(reviewId, updatedReview);
+        // 기존 리뷰 가져오기
+//        ReviewVO existingReview = movieReviewService.getReviewById(updatedReview.getMovie_review_no());
+//        System.out.println("Controller: Fetched existing review: " + existingReview);
+//
+//        (existingReview != null && existingReview.getUserid().equals(loggedInUserId)) {
+//            // 리뷰의 userid를 현재 로그인된 사용자로 설정 (보안 강화)
+//            updatedReview.setUserid(loggedInUserId);
+
+        try {
+            movieReviewService.updateReview(updatedReview); // 서비스 호출
             return ResponseEntity.ok("Review updated successfully");
-        } else {
+        } catch(Exception e){
             return ResponseEntity.status(401).body("You are not authorized to edit this review.");
         }
+
     }
 
     // 리뷰 삭제
-    @DeleteMapping("/{reviewId}")
-    public ResponseEntity<String> deleteReview(@PathVariable int reviewId) {
+    @DeleteMapping("/{movieReviewNo}")
+    public ResponseEntity<String> deleteReview(@PathVariable("movieReviewNo") int movieReviewNo) {
+
         // 로그인된 사용자 정보 가져오기
         String loggedInUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        ReviewVO existingReview = movieReviewService.getReviewById(reviewId);
+        System.out.println("있나?: " + movieReviewNo + loggedInUserId );
 
-        if (existingReview != null && existingReview.getUserid().equals(loggedInUserId)) {
-            movieReviewService.deleteReview(reviewId);
+        try{
+            movieReviewService.deleteReview(movieReviewNo);
             return ResponseEntity.ok("Review deleted successfully");
-        } else {
+        } catch(Exception e) {
             return ResponseEntity.status(401).body("You are not authorized to delete this review.");
         }
     }
-
-
-
-
 
 }

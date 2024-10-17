@@ -11,7 +11,7 @@
     </select>
 
     <!-- 연도별 범위에 따른 영화 리스트 가져오기 -->
-    <select id="getMoviesByYearRange" parameterType="map" resultType="MovieVO">
+    <select id="getMoviesByYearRange" parameterType="map" resultType="com.ict.backend.vo.MovieVO">
         SELECT * FROM movie_data_tbl
         WHERE
         <if test="yearRange == '2024'">
@@ -28,12 +28,12 @@
         </if>
     </select>
 
-    <!-- 국가별 영화 리스트 가져오기 -->
-    <select id="getMoviesByNation" parameterType="map" resultType="MovieVO">
+
+    <select id="getMoviesByNation" parameterType="map" resultType="com.ict.backend.vo.MovieVO">
         SELECT * FROM movie_data_tbl WHERE movie_nation = #{nation}
     </select>
 
-    <!-- 영화 코드를 기반으로 특정 영화의 상세 정보를 가져오는 쿼리 -->
+
     <select id="getMovieByCode" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
         SELECT
         movie_no,
@@ -64,6 +64,22 @@
         movie_img_tbl
         WHERE
         movie_code = #{movieCode}
-
     </select>
+
+
+    <select id="getMovieNoByCode" resultType="int">
+        SELECT movie_no
+        FROM movie_data_tbl
+        WHERE movie_code = #{movieCode}
+    </select>
+
+
+    <select id="getRatingByMovieNo" resultType="com.ict.backend.vo.RatingVO">
+        SELECT
+            AVG(rate) AS avg_rating,
+            COUNT(rate) AS review_count
+        FROM movie_review_tbl
+        WHERE movie_no = #{movieNo}
+    </select>
+
 </mapper>
