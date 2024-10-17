@@ -149,12 +149,19 @@
     </update>
     <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
         select userid, username, usernick, gender,usertel, u.active_state,
-        count(r.reported_userid) as 'reported count',lastvisite,regiserdate
+        count(r.reported_userid) as 'reported_count',lastvisite,regiserdate
         from user_tbl u left join report_tbl r on u.userid=r.reported_userid
         <if test="searchWord!=null and searchWord!=''">
-        where #{searchKey} like '%${searchWord}%'
+        where ${searchKey} like '%${searchWord}%'
         </if>
         GROUP BY
         u.userid, u.username, u.usernick, u.gender, u.usertel, u.active_state, u.lastvisite, u.regiserdate
+    </select>
+    <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
+        select report_userid, reported_userid, report_content, report_tblname, report_state,
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state from report_tbl
+        <if test="searchWord!=null and searchWord!=''">
+         where ${searchKey} like '%${searchWord}%'
+        </if>
     </select>
 </mapper>

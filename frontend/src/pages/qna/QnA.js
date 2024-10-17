@@ -217,7 +217,7 @@ function QnA() {
                         </form>
                     </div>
                 </div>
-                <div className="category-filter">
+                <div className="qna-category-filter">
                     <button value='1'
                         onClick={handleSearchClick}
                         disabled={searchKey=='head_title'&&searchWord=='1'}>영화</button>

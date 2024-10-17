@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { AiOutlineAlert } from "react-icons/ai";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReportModal from '../../component/api/ReportModal.js';
 
 function QnAView() {
     const [QnAView, setQnAView] = useState([]);
@@ -14,6 +15,10 @@ function QnAView() {
     const navigate = useNavigate();
     const item=QnAView[0];
     const [qnaImgSrc, setQnaImgSrc] = useState('');
+    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    const [defaultQna,setDefaultQna ]=useState('');
+
 
     //뷰페이지 데이터 요청
     useEffect(() => {
@@ -47,9 +52,6 @@ function QnAView() {
     const isTwoDaysPassed = currentDate - writeDate > twoDaysInMs;
     console.log(isTwoDaysPassed);
 
-
-
-
     //이미지 생성
     useEffect(() => {
         const fetchImage = async () => {
@@ -69,6 +71,7 @@ function QnAView() {
             fetchImage();
         }
     }, [item]);
+
 
     //아이디 체크
     function checkid(){
@@ -103,6 +106,24 @@ function QnAView() {
         window.location.href=`/qna/edit/${item.qna_no}`
     }
 
+    function openReport(e){{/* 신고 기능 */}
+    const id = e.target.dataset.id;
+    const userid = e.target.dataset.userid;
+    const content = e.target.dataset.content;
+    setReport({
+        report_tblname: 4, // 본인 테이블에 따라 다름
+        report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+        reported_userid: userid, // 피신고자id
+        report_content: content,// 피신고자의 채팅 내용
+    })
+    toggleReport();
+}
+
+// 모달창 열고 닫기 함수
+const toggleReport = () => {
+    setReportShow(!reportShow);
+};
+
 
     return(
     <div className="QnAViewBody">
@@ -130,9 +151,12 @@ function QnAView() {
             </tbody>
         </table>
         <div className="qnaItems">
-        {usersid !== item?.userid ?(<div><AiOutlineAlert onClick={checkid} size="35px"/></div>):null}
+        {usersid !== item?.userid ?(
+
+            <AiOutlineAlert size="35px" onClick={openReport} data-id={item?.qna_no}
+            data-userid={item?.userid} data-content={item?.qna_content}/>):null}
         {usersid === item?.userid || usersid==='admin1' ? (
-                <div><FontAwesomeIcon icon={faTrashCan} size ="2x" onClick={qnaDelete}/></div>
+                <div><FontAwesomeIcon icon={faTrashCan} size ="2x"onClick={qnaDelete}/></div>
             ) : null}
         {usersid === item?.userid && item?.qna_state === 0
          && !isTwoDaysPassed
@@ -141,6 +165,13 @@ function QnAView() {
                 <FontAwesomeIcon icon={faPenToSquare} size="2x" onClick={qnaEdit} />
             </div>
         ) : null}
+                <ReportModal    
+                        reportShow={reportShow}// 모달창 보이기 여부
+                        toggleReport={toggleReport} // 모달창 열고닫기 함수
+                        report={report}// 신고 데이터 변수
+                        setReport={setReport} // 신고 데이터 변수 세팅
+                        setDefaultList={setDefaultQna}
+                    />
         </div>
         <hr/>
         <div className="ansArea">
@@ -158,9 +189,6 @@ function QnAView() {
             :<div></div>} 
             {item?.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글 {item?.next_Title}</div>:<div></div>}
         </div>
-       
-    
-
     </div>
 
 

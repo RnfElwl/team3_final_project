@@ -18,5 +18,6 @@ public class ReportVO {
     private int edit_state;
     private String edit_user;
     private int user_state;
+    private int active_state;
 
 }

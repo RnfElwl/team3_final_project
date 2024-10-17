@@ -23,4 +23,5 @@ public interface AdminService {
     int insertQnaAnswer(QnAVO adminQAData);
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
+    List<ReportVO> getRepList(PagingVO pagingVO);
 }

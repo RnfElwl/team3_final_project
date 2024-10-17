@@ -103,5 +103,10 @@ public class AdminServiceImpl implements AdminService{
         return dao.getMemList(pagingVO);
     }
 
+    @Override
+    public List<ReportVO> getRepList(PagingVO pagingVO) {
+        return dao.getRepList(pagingVO);
+    }
+
 
 }
