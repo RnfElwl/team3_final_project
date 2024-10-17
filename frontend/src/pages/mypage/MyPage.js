@@ -21,9 +21,6 @@ function Mypage() {
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
     const [isLiked, setIsLiked] = useState(true);
-    const toggleLike = () => {
-        setIsLiked(!isLiked); // 클릭 시 상태 토글
-    };
     
     // 글, 댓글 불러올거
     const [tagName, setTagName] = useState("Tag1");
@@ -37,6 +34,10 @@ function Mypage() {
         addrdetail: '',
         userprofile : ''
     });
+    const [qnaList, setQnaList] = useState([]);
+    const [communityList, setCommunityList] = useState([]);
+    const [commentList, setcommentList] = useState([]);
+    const [likecommunityList, setlikeCommunityList] = useState([]);
     const [profileImageSrc, setProfileImageSrc] = useState('');
     const defaultProfileImage = profile;
 
@@ -90,6 +91,19 @@ function Mypage() {
                 following: response.data.following,
                 comment: response.data.comment,
             }));
+            if (Array.isArray(response.data.qnalist)) {
+                setQnaList(response.data.qnalist);
+              }
+              if (Array.isArray(response.data.commentlist)) {
+                setcommentList(response.data.commentlist);
+              }
+              if (Array.isArray(response.data.communitylist)) {
+                setCommunityList(response.data.communitylist);
+              }
+              if (Array.isArray(response.data.likecommunitylist)) {
+                setlikeCommunityList(response.data.likecommunitylist);
+                setLikeStatus(response.data.likecommunitylist.map(() => true));
+              }
         } catch (error) {
             console.error("Error fetching: ", error);
         }
@@ -124,31 +138,7 @@ function Mypage() {
     while (profileSlidesData.length < 7) {
         profileSlidesData.push({ imgSrc: "empty", usernick: "", className: "empty-slide" , userid : ""}); // 빈 슬라이드 추가
     }
-
-    const fetchData = async (tag) => {
-        let url;
-        if (tag === "Tag1") {
-          url = "http://localhost:9988/user/userinfo";  // 글 리스트 호출 URL
-        } else if (tag === "Tag2") {
-          url = "http://localhost:9988/api/comments";  // 댓글 리스트 호출 URL
-        }
     
-        try {
-            const response = await axios.get(url);
-            setList(response.data);
-        } catch (error) {
-            console.error("Error fetching data: ", error);
-        }
-    };
-    
-    const handleClickedTagName = (tag) => {
-        setTagName(tag);
-        fetchData(tag);
-    };
-      // 컴포넌트가 처음 렌더링될 때 Tag1 데이터를 자동으로 호출
-    //   useEffect(() => {
-    //     fetchData("Tag1");
-    //   }, []);
     // 모달용
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userList, setUserList] = useState([]); // 사용자 목록
@@ -235,6 +225,31 @@ function Mypage() {
                 alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
             }
         });
+    };
+
+    const [likeStatus, setLikeStatus] = useState(
+        likecommunityList.map(() => false)
+    );
+    const toggleLike = async (index, community) => {
+        console.log(index, community);
+        const previousLikeStatus = [...likeStatus];
+        try {
+            const response = await axios.get('http://localhost:9988/community/like/status', {
+                params: { community_no: community.community_no }
+            });
+
+            const isLiked = response.data;
+            const updatedLikeStatus = [...likeStatus];
+            updatedLikeStatus[index] = isLiked;
+            setLikeStatus(updatedLikeStatus);
+
+            console.log('좋아요 상태 변경 응답:', response.data);
+    
+            console.log('Toggle Like Response:', response.data);
+        } catch (error) {
+            console.error('Error toggling like:', error);
+            setLikeStatus(previousLikeStatus);
+        }
     };
 
     return (
@@ -347,28 +362,6 @@ function Mypage() {
                         </ul>
                     </Modal>
                         )}    
-                    {/* <div className = "follower">
-                        <div className = "content_title">
-                            <span>팔로워</span>
-                            {profileSlidesData.length >= 14 && (
-                                <Link to="/mypage/follower"> 더보기 {'>'}</Link>
-                            )}
-                        </div>
-                        <div className="content_info">
-
-                            <Slider {...AdaptiveHeightSettings}>
-                                {profileSlidesData.map((slide, index) => (
-                                    <div key={index}>
-                                        <a href={`/user/info/${slide.usernick}`}>
-                                            <img className="userprofile" src={slide.image_url || slide.imgSrc} alt="프로필" />
-                                            <p className="usernick">{slide.usernick || ""}</p>
-                                        </a>
-                                    </div>
-                                ))}
-                            </Slider>
-
-                        </div>
-                    </div> */}
                     {/* 사등분 */}
                     <div className = "board">
                         <div className = "write_4">
@@ -384,39 +377,22 @@ function Mypage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                {communityList.map((communitylist, index) => (
+                                    <tr key={index}>
                                         <th>
                                             <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                <li className="list_title"
+                                                    onClick={() => navigate(`/community/communityView/${communitylist.community_no}`)} style={{ cursor: 'pointer' }}>
+                                                    <div>{communitylist.community_title}</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}}/>
                                                 </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                                <li className="smaller-text">
+                                                <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(communitylist.community_content) }} />
+                                                </li>
                                             </ul>
                                         </th>
                                     </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
+                                    ))}
                                 </tbody>
                             </table>
                             </div>
@@ -435,39 +411,22 @@ function Mypage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                {commentList.map((commentlist, index) => (
+                                    <tr key={index}>
                                         <th>
                                             <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
+                                                <li className="list_title"
+                                                    onClick={() => navigate(`/community/communityView/${commentlist.community_no}`)} style={{ cursor: 'pointer' }}>
+                                                    <div>{commentlist.community_title}</div>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}}/>
                                                 </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                                <li className="smaller-text">
+                                                    <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(commentlist.community_content) }} />
+                                                </li>
                                             </ul>
                                         </th>
                                     </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
+                                    ))}
                                 </tbody>
                             </table>
                             </div>
@@ -485,51 +444,36 @@ function Mypage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                {likecommunityList.map((likecommunitylist, index) => (
+                                    <tr key={index}>
                                         <th>
                                             <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    {isLiked ? (
-                                                        <FaHeart onClick={toggleLike} />
+                                                <li className ="list_title"
+                                                 onClick={() => navigate(`/community/communityView/${likecommunitylist.community_no}`)} style={{ cursor: 'pointer' }}>
+                                                    <div>{likecommunitylist.community_title}</div>
+                                                    {likeStatus[index] ? (
+                                                        <FaHeart
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                toggleLike(index, likecommunitylist);
+                                                            }}
+                                                        />
                                                     ) : (
-                                                        <FaRegHeart onClick={toggleLike} />
+                                                        <FaRegHeart
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                toggleLike(index, likecommunitylist);
+                                                            }}
+                                                        />
                                                     )}
                                                 </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
+                                                <li className="smaller-text">
+                                                    <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(likecommunitylist.community_content) }} />
+                                                </li>
                                             </ul>
                                         </th>
                                     </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    {isLiked ? (
-                                                        <FaHeart onClick={toggleLike} />
-                                                    ) : (
-                                                        <FaRegHeart onClick={toggleLike} />
-                                                    )}
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div>전우치 존나 재미있는데</div>
-                                                    {isLiked ? (
-                                                        <FaHeart onClick={toggleLike} />
-                                                    ) : (
-                                                        <FaRegHeart onClick={toggleLike} />
-                                                    )}
-                                                </li>
-                                                <li className="smaller-text">재미있다 오늘 이렇게 재미있는거 처음보는거같은데</li>
-                                            </ul>
-                                        </th>
-                                    </tr>
+                                    ))}
                                 </tbody>
                             </table>
                             </div>
@@ -546,63 +490,32 @@ function Mypage() {
                                         
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div><span>[사이트] </span>영화 업데이트 언제 하나요</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">새로운 영화 좀 올려주세요 <div className="right-align">답변 없음</div></li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div><span>[사이트] </span> 서버가 느려요</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">서버가 느려요 <div className="right-align">답변 없음</div></li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <ul className="custom-list">
-                                                <li className ="list_title">
-                                                    <div><span>[사이트] </span>히히히</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={() => alert("delete")}/>
-                                                </li>
-                                                <li className="smaller-text">ㅇㅋ <div className="right-align">답변 됨</div></li>
-                                            </ul>
-                                        </th>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    <tbody>
+                                    {qnaList.map((qna, index) => (
+                                        <tr key={index}>
+                                            <th>
+                                                <ul className="custom-list">
+                                                    <li className="list_title"
+                                                    onClick={() => navigate(`/qna/view/${qna.qna_no}`)} style={{ cursor: 'pointer' }}>
+                                                        <div>
+                                                            <span>[{qna.head_title == 1 ? "영화" : (qna.head_title == 2 ? "사이트" : "기타")}] </span>
+                                                            {qna.qna_title}
+                                                        </div>
+                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}} />
+                                                    </li>
+                                                    <li className="smaller-text" style ={{display:'flex', justifyContent: 'space-between'}}>
+                                                        <div className = "text-content">{qna.qna_content}</div>
+                                                        <div className="right-align">{qna.qna_state == 1 ? "답변 됨" : "답변 없음"}</div>
+                                                    </li>
+                                                </ul>
+                                            </th>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    {/* 장바구니 */}
-                    {/* <div className = "cart">
-                        <div className = "content_title">
-                            <span>장바구니</span>
-                            <a href = "#"> 더보기 {'>'}</a>
-                        </div>
-                        <div className = "content_info">
-                        </div>
-                    </div> */}
-                    {/* 배송내역 */}
-                    {/* <div className = "delivery">
-                        <div className = "content_title">
-                            <span>배송내역</span>
-                            <a href = "#"> 더보기 {'>'}</a>
-                        </div>
-                        <div className = "content_info">
-                        </div>
-                    </div> */}
                 </div>            
             </div>
         </div>

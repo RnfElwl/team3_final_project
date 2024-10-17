@@ -38,4 +38,9 @@ public interface UserService {
     public List<Map<String, Object>> getFollowData(String login_user, String userid, String endpoint);
 
     boolean toggleFollow(String followerUserId, String loginUser);
+
+    public List<Map<String, String>> getCommunityList(String userid, String order, int limit);
+    public List<Map<String, String>> getCommentList(String userid, String order, int limit);
+    public List<Map<String, String>> getQnAList( String userid, String order, int limit);
+    public List<Map<String, String>> getLikeCommunityList(String userid, String order, int limit);
 }
