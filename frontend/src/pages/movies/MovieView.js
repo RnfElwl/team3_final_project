@@ -62,6 +62,27 @@ function MovieView() {
     fetchMovieData();
   }, [movieCode, userid]);
 
+  // 선호 정보 저장
+  useEffect(() => {
+    const saveUserPreference = async () => {
+      try {
+        const { data: movieGenre } = await axios.get(
+          `http://localhost:9988/api/prefer/genre/${movieCode}`
+        );
+
+        const response = await axios.post('http://localhost:9988/api/prefer/save', {
+          userid,
+          movie_genre: movieGenre          
+        });
+
+      } catch (error) {
+        console.error('Error saving user preference:', error);
+      }
+    };
+    if (userid) saveUserPreference();
+  }, [movieCode, userid]);
+
+
 
   // userid가 설정된 후에 북마크 상태를 가져오도록 useEffect 분리
   useEffect(() => {
