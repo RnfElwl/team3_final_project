@@ -246,6 +246,7 @@ function User() {
                 </div>
                 {isModalOpen && (
                 <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                {currentList.length > 0 ? (
                 <ul className="user-list-ul">
                     {currentList.map((user, index) => {
                         const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
@@ -268,6 +269,12 @@ function User() {
                         );
                     })}
                 </ul>
+                ) : (
+                    <div className="noslide" style = {{height : "300px", marginTop : '20px'}}>
+                        <BsExclamationCircle />
+                        <p>{modalTitle}이 없습니다.</p>
+                    </div>
+                )}
             </Modal>
             )}    
             </div>

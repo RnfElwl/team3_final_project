@@ -185,6 +185,68 @@
         AND follower_userid = #{followerUserId}
     </select>
 
+    <select id="getCommentList" resultType="map">
+        select ct.community_no, ct.community_title, ct.community_content from community_comment_tbl cc
+        join community_tbl ct on cc.community_no = ct.community_no
+        where cc.userid = #{userid}
+        <choose>
+            <when test="order == 'asc'">
+                order by comment_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by comment_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getCommunityList" resultType="map">
+        select community_no, community_title, community_content from community_tbl
+        where userid = #{userid}
+        <choose>
+            <when test="order == 'asc'">
+                order by community_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by community_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getQnAList" resultType="map">
+        select qna_no, head_title, qna_title, qna_content, qna_state from qna_tbl
+        where userid = #{userid}
+        <choose>
+            <when test="order == 'asc'">
+                order by qna_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by qna_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getLikeCommunityList" resultType="map">
+        select ct.community_no, ct.community_title, ct.community_content from community_like_tbl cl join community_tbl ct on cl.community_no = ct.community_no
+        where cl.userid = #{userid}
+        <choose>
+            <when test="order == 'asc'">
+                order by cl.like_date asc
+            </when>
+            <when test="order == 'desc'">
+                order by cl.like_date desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </select>
+
 
 
 </mapper>

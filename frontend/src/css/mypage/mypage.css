@@ -282,6 +282,7 @@
 .custom-list .list_title{
     display: flex;
     justify-content: space-between;
+    max-width: 500px;
 }
 .custom-list {
     list-style-type: none; /* 점 없애기 */
@@ -289,19 +290,43 @@
     text-align: left;
     margin: 0;
 }
-
+.list_title>div{
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .smaller-text {
     font-size: 0.9em; /* 글씨 크기 작게 */
     color: gray; /* 회색 */
     padding-left: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: block;
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.myPage .smaller-text>div{
+    height: 22px !important;
+}
+.smaller-text>div>p{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 30px;
+    margin: 0;
+}
+.text-content{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-width: 420px;
 }
 
 .right-align {
-    text-align: right; /* 우측 정렬 */
-    font-size: 0.8em; /* 글씨 크기 작게 */
+    text-align: right;
+    font-size: 0.8em;
     color : white;
 }
 

@@ -115,26 +115,22 @@ public class UserController {
         // 각 서비스에서 데이터 가져오기
         List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
         List<Map<String, String>> history = userService.getHistory(userid, 10);
-//        List<Map<String, String>> followers = userService.getfollower(userid, 14);
-        // 이미지 URL 처리
-//        for (Map<String, String> user : followers) {
-//            String imageUrl = user.get("image_url");
-//            if (imageUrl != null) {
-//                user.put("image_url", "http://" + Host +"/"+ imageUrl);
-////                user.put("image_url", "http://" + Host + "/user/" + imageUrl);
-//                System.out.println(user.toString());
-//            }
-//        }
+
         // 결과를 하나의 맵에 담기
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("bookmarks", bookmarks);
         responseData.put("history", history);
-//        responseData.put("followers", followers);
         responseData.put("bookmark_n", userService.getCountBookmarks(userid));
         responseData.put("follower", userService.getCountfollower(userid)); // 내가 팔로우 한 수
         responseData.put("following", userService.getCountfollowing(userid));   // 내가 팔로잉 한 수
         responseData.put("community", userService.getCountCommunity(userid));
         responseData.put("comment", userService.getCountComment(userid) + userService.getCountReplyComment(userid));
+        responseData.put("communitylist", userService.getCommunityList(userid, "desc", 3));
+        responseData.put("commentlist", userService.getCommunityList(userid, "desc", 3));
+        responseData.put("qnalist", userService.getQnAList(userid, "desc", 3));
+        responseData.put("likecommunitylist", userService.getLikeCommunityList(userid, "desc", 3));
+
+        System.out.println(responseData);
         return ResponseEntity.ok(responseData);
     }
     // 북마크한 정보 가져오기

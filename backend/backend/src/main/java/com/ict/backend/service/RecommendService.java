@@ -32,4 +32,5 @@ public interface RecommendService {
     List<MovieVO> getGender();
 
 
+
 }

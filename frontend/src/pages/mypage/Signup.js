@@ -229,7 +229,7 @@ function Signup() {
     }, []);
 
     const breakpointColumnsObj = {
-        default: 5,   
+        default: 6,   
         1100: 4,      
         700: 3,       
         500: 2        

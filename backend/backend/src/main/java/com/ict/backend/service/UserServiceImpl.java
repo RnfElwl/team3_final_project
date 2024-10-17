@@ -136,6 +136,46 @@ public class UserServiceImpl  implements UserService {
             return dao.insertFollow(loginUser, followerUserId) > 0;
         }
     }
+    @Override
+    public List<Map<String, String>> getCommunityList(String userid, String order, int limit){
+        if (!"asc".equalsIgnoreCase(order) && !"desc".equalsIgnoreCase(order)) {
+            order = null;
+        }
+        if (limit <= 0) {
+            limit = 0;
+        }
+        return dao.getCommunityList(userid, order, limit);
+    }
+    @Override
+    public List<Map<String, String>> getCommentList(String userid, String order, int limit){
+        if (!"asc".equalsIgnoreCase(order) && !"desc".equalsIgnoreCase(order)) {
+            order = null;
+        }
+        if (limit <= 0) {
+            limit = 0;
+        }
+        return dao.getCommentList(userid, order, limit);
+    }
+    @Override
+    public List<Map<String, String>> getQnAList(String userid,String order, int limit){
+        if (!"asc".equalsIgnoreCase(order) && !"desc".equalsIgnoreCase(order)) {
+            order = null;
+        }
+        if (limit <= 0) {
+            limit = 0;
+        }
+        return dao.getQnAList(userid, order, limit);
+    }
+    @Override
+    public List<Map<String, String>> getLikeCommunityList(String userid, String order, int limit){
+        if (!"asc".equalsIgnoreCase(order) && !"desc".equalsIgnoreCase(order)) {
+            order = null;
+        }
+        if (limit <= 0) {
+            limit = 0;
+        }
+        return dao.getLikeCommunityList(userid, order, limit);
+    }
 
 
 

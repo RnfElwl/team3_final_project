@@ -63,19 +63,31 @@ public class ImageController {
 
         // 서버에 저장된 이미지 파일들을 관리하는 예시입니다.
         // 실제 파일 위치나 데이터베이스 경로 정보를 사용하여 이미지 URL 생성
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/1JHAXXc8pacHGeX67jhBoPghrMv.jpg"));
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/3V4kLQg0kSqPLctI5ziYWabAZYF.jpg"));
         images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/nGeaz06pGANC01qrk2nOuEOOT3K.jpg"));
         images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/oGEJcbizXLYJL6ZQ0ylQDOTC3s9.jpg"));
-        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/4cnAaQG0E4CmtIsLxnmferfQkML.jpg"));
-        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wBsVETlndUADx0VN0VTtLn837PD.jpg"));
-        images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/IdHCGjWbJQF1LezD3uWuwe9NUk.jpg"));
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
-        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/WqgLrAbPnEfgn7WP7J2IvL1Z9V.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/ubcXF21nUkm1ijkH7ZFCm0pzkMm.jpg"));
         images.add(new ImageResponse("https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wBsVETlndUADx0VN0VTtLn837PD.jpg"));
 
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/dA1TGJPTVjlqPc8PiEE2PfvFBUp.jpg"));
+        images.add(new ImageResponse("https://image.tmdb.org/t/p/original/xx0VTrtvoRptaY3unl61Ecft8MI.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/rOPGYktxPcWpkwvhrT70Wm8u9Bv.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/tQUMGWbH9RpYnbKjszRFReHCI5z.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7qOhFQhvuCZ1hEJHJTWkFo75Vsm.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/kMu5jS1se94vYhZ0LVT8KgXA1os.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/1JHAXXc8pacHGeX67jhBoPghrMv.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7zV8FTYofAORGm0Umgh1mNNCym8.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w300_and_h450_bestv2/7qOhFQhvuCZ1hEJHJTWkFo75Vsm.jpg"));
+
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/hvcRBMF7XhhOIMFFizuCTn3AJeH.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/lgXIXfZiedBtGu2gbzaRdeGMEHm.jpg"));
+        images.add(new ImageResponse("https://media.themoviedb.org/t/p/w533_and_h300_bestv2/A2J1gek0KoP1MrULBmvsv3rMMQO.jpg"));
 
         // 더 많은 이미지를 추가
 

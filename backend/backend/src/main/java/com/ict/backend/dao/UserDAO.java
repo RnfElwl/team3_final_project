@@ -66,4 +66,13 @@ public interface UserDAO {
     int deleteFollow(@Param("loginUser") String loginUser, @Param("followerUserId") String followerUserId);
 
     int isFollowing(@Param("loginUser") String loginUser, @Param("followerUserId") String followerUserId);
+
+    public List<Map<String, String>> getCommunityList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
+    public List<Map<String, String>> getCommentList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
+    public List<Map<String, String>> getQnAList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
+    public List<Map<String, String>> getLikeCommunityList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
+
+
+
+
 }

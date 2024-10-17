@@ -3,7 +3,7 @@ import '../css/Home.css';
 import axios from '../component/api/axiosApi';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { useNavigate } from 'react-router-dom';
-import image1 from '../img/4.png';
+import image1 from '../img/05.jpeg';
 import image2 from '../img/2.png';
 import image3 from '../img/미스터 션샤인.png';
 
