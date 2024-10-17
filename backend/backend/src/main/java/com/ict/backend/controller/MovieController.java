@@ -43,6 +43,10 @@ public class MovieController {
     public List<MovieVO> getMoviesByNation(@PathVariable("nation") String nation) {
         return movieService.getMoviesByNation(nation);
     }
+    @GetMapping("/search/{word}")
+    public List<MovieVO> getMoviesBySearch(@PathVariable("word") String word){
+        return movieService.getMoviesBySearch(word);
+    }
 
     // MovieView 페이지
 //    @GetMapping("/{movieCode}")

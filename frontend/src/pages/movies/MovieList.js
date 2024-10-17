@@ -22,6 +22,8 @@ function MovieList() {
           url = `http://localhost:9988/api/movies/year/${id}`; // 연도별 영화 데이터
         } else if (type === 'nation') {
           url = `http://localhost:9988/api/movies/nation/${id}`; // 국가별 영화 데이터
+        }else if(type === 'search'){
+          url = `http://localhost:9988/api/movies/search/${id}`;
         }
 
         const response = await axios.get(url); // axios로 GET 요청

@@ -55,8 +55,9 @@
         WHERE
         movie_code = #{movieCode}
     </select>
-
-
+    <select id="getMoviesBySearch" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_data_tbl where movie_kor like '%${param1}%' or movie_eng like '%${param1}%';
+    </select>
     <select id="getMovieImagesByCode" parameterType="String" resultType="String">
         SELECT
         movie_img_url

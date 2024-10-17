@@ -69,7 +69,10 @@ function Header() {
   }
   function searchMovie(e){
     e.preventDefault();
-    navigate("")//키워드로 영화검색
+    if(searchWord == ""){
+      return;
+    }
+    navigate("/categories/search/"+searchWord)//키워드로 영화검색
   }
   // 로그인 여부 판단용 여기까지
   function tabClick(i){

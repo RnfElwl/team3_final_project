@@ -12,6 +12,7 @@ public interface MovieService {
     List<MovieVO> getMoviesByGenre(String genre);
     List<MovieVO> getMoviesByYearRange(String yearRange);
     List<MovieVO> getMoviesByNation(String nation);
+    List<MovieVO> getMoviesBySearch(String word);
     MovieVO getMovieByCode(String movieCode);
 
     // 이미지 가져오기

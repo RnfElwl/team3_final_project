@@ -18,6 +18,7 @@ public interface MovieDAO {
 
     List<MovieVO> getMoviesByNation(String nation);
     List<MovieVO> getMoviesByYearRange(String yearRange);
+    List<MovieVO> getMoviesBySearch(String word);
     // 영화 코드를 기반으로 영화 정보를 가져오는 메서드
     MovieVO getMovieByCode(@Param("movieCode") String movieCode);
 
