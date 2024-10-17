@@ -26,13 +26,14 @@
     <!-- 리뷰 수정 -->
     <update id="updateReview" parameterType="com.ict.backend.vo.ReviewVO">
         UPDATE movie_review_tbl
-        SET movie_review_content = #{movie_review_content}, rate = #{rate}
+        SET movie_review_content = #{movie_review_content},
+            rate = #{rate}
         WHERE movie_review_no = #{movie_review_no}
     </update>
 
     <!-- 리뷰 삭제 -->
     <delete id="deleteReview">
-        DELETE FROM movie_review_tbl WHERE movie_review_no = #{movie_review_no}
+        DELETE FROM movie_review_tbl WHERE movie_review_no = #{param1}
     </delete>
 
 </mapper>

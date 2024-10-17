@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {useParams, useLocation } from 'react-router-dom';
+import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; 
 import './../../css/movies/MovieView.css';
-import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; // 별 아이콘을 위해 react-icons 사용
-// import axios from 'axios';
 import axios from '../../component/api/axiosApi';
 
 function MovieView() {
-  
   
   const [reviews, setReviews] = useState([]);
   const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
@@ -45,7 +43,6 @@ function MovieView() {
         // 이미지 정보 가져오기
         const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
         setImages(imageResponse.data);
-
         
         // 리뷰 정보 가져오기
         const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
@@ -66,6 +63,7 @@ function MovieView() {
     fetchMovieData();
   }, [movieCode, userid]);
 
+
   // userid가 설정된 후에 북마크 상태를 가져오도록 useEffect 분리
   useEffect(() => {
     if (userid && movieCode) {
@@ -81,7 +79,6 @@ function MovieView() {
       fetchBookmarkStatus();
     }
   }, [userid, movieCode]);
-
 
 
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
@@ -138,6 +135,8 @@ function MovieView() {
     }
   }
 
+  //////////////////// 리뷰 관련 //////////////////////////
+
   // 리뷰 제출 함수
   const handleReviewSubmit = async () => {
     console.log("Submitting review with userid:", userid);
@@ -167,36 +166,39 @@ function MovieView() {
     }
   };
 
-      // 리뷰 수정 요청 전송
-      const handleUpdateReview = async (movie_review_no) => {
-        if (!movie_review_no) {
-          console.error('Error: movie_review_no is undefined or null');
-          return;
-        }
-        // 요청 데이터 확인
-        console.log('Updating review with data:', {
+    // 리뷰 수정 요청 전송
+    const handleUpdateReview = async (movie_review_no) => {
+      if (!movie_review_no) {
+        console.error('Error: movie_review_no is undefined or null');
+        return;
+      }
+      // 요청 데이터 확인
+      console.log('Updating review with data:', {
+        movie_review_content: editReviewText, // 리뷰 내용
+        rate: rating,                        // 별점
+        movie_review_no: movie_review_no      // 리뷰 번호 (고유 ID)
+      });
+      try {
+        const response = await axios.put(`http://localhost:9988/api/reviews/${movie_review_no}`, {
+          movie_review_no,
           movie_review_content: editReviewText, // 리뷰 내용
           rate: rating,                        // 별점
-          movie_review_no: movie_review_no      // 리뷰 번호 (고유 ID)
         });
-        try {
-          const response = await axios.put(`http://localhost:9988/api/reviews/${movie_review_no}`, {
-            movie_review_no,
-            movie_review_content: editReviewText, // 리뷰 내용
-            rate: rating,                        // 별점
-          });
-          console.log('Review updated:', response.data);
-  
-          // 리뷰 업데이트 후 다시 리스트를 새로고침
-          setReviews(reviews.map(review => review.movie_review_no === movie_review_no ? 
-            { ...review, movie_review_content: editReviewText } : review));
-            setEditingReviewId(null); // 수정 모드 종료
+        console.log('Review updated:', response.data);
 
-        } catch (error) {
-          console.error('Error updating review:', error);
-          console.error('Response:', error.response?.data);
-        }
-      };
+        // 리뷰 업데이트 후 다시 리스트를 새로고침
+        setReviews(reviews.map(review =>
+          review.movie_review_no === movie_review_no 
+          ? { ...review, movie_review_content: editReviewText, rate: rating}
+          : review
+          ));
+          setEditingReviewId(null); // 수정 모드 종료
+
+      } catch (error) {
+        console.error('Error updating review:', error);
+        console.error('Response:', error.response?.data);
+      }
+    };
 
       // 수정 모드로 전환
       const handleEditReview = (review) => {
@@ -213,7 +215,7 @@ function MovieView() {
       // 리뷰 삭제 요청 전송
       const handleDeleteReview = async (movie_review_no) => {
         try {
-          await axios.request(`http://localhost:9988/api/reviews/${movie_review_no}`);
+          await axios.delete(`http://localhost:9988/api/reviews/${movie_review_no}`);
           
           // 리뷰 삭제 후 리스트 업데이트
           setReviews(reviews.filter(review => review.movie_review_no !== movie_review_no));
@@ -266,6 +268,8 @@ function MovieView() {
               className="review-edit-input"
               onInput={(e) => setEditReviewText(e.target.textContent)}
               style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}
+
+                              
             >
               {editReviewText}
             </div>
@@ -289,11 +293,9 @@ function MovieView() {
       ));
     };
 
-    
     // 배우를 /가 아닌 , 로 구분
     const formattedCasts = movie.movie_casts.replace(/\//g, ', ');
     
-
     return (
         <div className="movie-view-container">
           <div className="movie-content">
@@ -340,25 +342,20 @@ function MovieView() {
                 </div>
               </div>
             </div>
-
-        
         <hr/>
         
         <div className="tab-content">
           <div className="movie-details-info">
-                            
               {/* 출연진 */}
               <div className="info-section">
                 <h3>출연진</h3>
                 <p>{formattedCasts}</p>
               </div>
-
               {/* 감독 */}
               <div className="info-section">
                 <h3>감독</h3>
                 <p>{movie.movie_directors}</p>
               </div>
-
             </div>
         </div>
 
@@ -371,14 +368,12 @@ function MovieView() {
             ))}
           </div>
         </div>
-
         {/* 사용자 평 섹션 */}
         <div className="review-section">
           <div className="review-header">
             <h2><b>'{movie.movie_kor}'</b>의 사용자 평</h2>
           </div>
            {/* 리뷰 입력 필드 */}
-
           <div className="review-input-section">
             <div className="profile-section">
               <img src="https://via.placeholder.com/50" alt="Profile" className="profile-img" />
@@ -415,7 +410,6 @@ function MovieView() {
               리뷰 등록
             </button>
           </div>
-        
           {/* 리뷰 리스트 */}
           <div className="review-section">
             {renderReviews()}

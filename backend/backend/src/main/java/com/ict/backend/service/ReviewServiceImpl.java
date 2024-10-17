@@ -30,9 +30,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateReview(ReviewVO reviewVO) {
-        System.out.println("Service - Updating review: " + reviewVO);
-        reviewDAO.updateReview(reviewVO);
+    public void updateReview(ReviewVO updatedReview) {
+        try {
+            // 리뷰 업데이트 실행
+            reviewDAO.updateReview(updatedReview);
+        } catch (Exception e) {
+            // SQL 예외 로그 출력
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update review", e);
+        }
     }
 
     @Override

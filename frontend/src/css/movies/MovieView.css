@@ -196,6 +196,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-right: 10px;
 }
 
 .profile-img {
@@ -220,7 +221,7 @@
 }
 
 .star {
-  font-size: 40px; /* 별 크기 증가 */
+  font-size: 38px; /* 별 크기 증가 */
   cursor: pointer;
   transition: color 0.2s ease-in-out; /* 부드러운 색 전환 */
 }
@@ -337,20 +338,22 @@
 .review-actions {
   display: flex;
   justify-content: flex-end; /* 오른쪽 정렬 */
-}
+} 
 
 .edit-btn, .delete-btn {
   padding: 8px 16px;
-  border: none;
+  border: 1px solid #48d1cdea;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #007bff;
   color: white;
+  background: none;
   
 }
 .delete-btn {
-  background-color: #dc3545;
+  background-color: none;
 }
 .edit-btn:hover, .delete-btn:hover {
   opacity: 0.8; /* 버튼에 호버 효과 */
+  background-color: #48d1cdea;
+
 }
