@@ -81,4 +81,7 @@ public class ChatListServiceImpl implements ChatListService {
     public String selectUserReviewCheck(String userid, int movie_no){
         return chatListDAO.selectUserReviewCheck(userid, movie_no);
     }
+    public ChatListVO selectSoloChatInfo(String chatlist_url, String userid){
+        return chatListDAO.selectSoloChatInfo(chatlist_url, userid);
+    }
 }

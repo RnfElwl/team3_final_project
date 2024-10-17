@@ -187,7 +187,7 @@
     top: 24px;
     background-color: #ffffff;
     color: gray;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 5px;
     max-height: 150px;
     overflow-y: auto;
@@ -195,10 +195,12 @@
 
 .chatting_room .user_info{
     display: flex;
+    margin: 8px 0;
 }
 .chatting_room .user_info img{
     width: 40px;
     height: 40px;
+    border-radius: 18px;
 }
 
 .chatting_room .user_list::-webkit-scrollbar{

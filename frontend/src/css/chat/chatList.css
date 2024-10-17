@@ -43,7 +43,7 @@
 }
 .chatList .chat-tab>.tab_focus{
   width: auto;
-  border-bottom: 2px solid #B6FFA1;
+  border-bottom: 2px solid #48d1cdea;
 
 }
 .chatList .chat-search>input{
