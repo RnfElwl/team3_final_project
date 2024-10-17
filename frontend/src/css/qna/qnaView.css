@@ -36,3 +36,74 @@
     width: 300px;
     height: 200px;
 }
+
+.QnAViewBody .report_button {
+    background: none;
+    border: none;
+}
+
+.QnAViewBody .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.QnAViewBody .report_show{
+    display: flex;
+}
+.QnAViewBody .report_hide{
+    display: none;
+}
+.QnAViewBody .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.QnAViewBody .report_window .chatting_report{
+    color: #1C1C20;
+    background-color: #f0f0f0;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    text-align: center;
+}
+.QnAViewBody .report_window .title h2{
+    font-size: 1.5em;
+    color: rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.QnAViewBody .report_window .report_radio{
+    gap: 10px;
+    display: flex;
+}
+.QnAViewBody .report_window .report_radio span{
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e1e20c2;
+}
+.QnAViewBody .report_window .sub_title textarea{
+    width: 100%;
+    height: 150px;
+    margin: 12px 0;
+}
+.QnAViewBody .report_window button{
+    border:1px solid rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    border-radius: 5px;
+    background: none;
+    color:rgba(235, 59, 59, 0.774);
+}
+.QnAViewBody .report_window button:hover{
+    background: rgba(235, 59, 59, 0.774);
+    color:#f0f0f0;
+}

@@ -50,34 +50,34 @@ function QnaCon() {
                 console.error("데이터 로드 중 오류 발생:", error);
             });
             //함수 안에서 ip및 get요청 보낸 시간 구하는 거
-            const res = axios.get('https://geolocation-db.com/json/')
-            .then((res) => {
-                // get 요청이 끝나서 주어진 ISO 8601 날짜 문자열
-                const endTime = new Date();
+            // const res = axios.get('https://geolocation-db.com/json/')
+            // .then((res) => {
+            //     // get 요청이 끝나서 주어진 ISO 8601 날짜 문자열
+            //     const endTime = new Date();
                 
-                // Date 객체로 변환
-                const date = new Date(endTime);
+            //     // Date 객체로 변환
+            //     const date = new Date(endTime);
 
-                // 한국 시간으로 변환
-                const options = {
-                    timeZone: 'Asia/Seoul',
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false // 24시간 형식
-                };
+            //     // 한국 시간으로 변환
+            //     const options = {
+            //         timeZone: 'Asia/Seoul',
+            //         year: 'numeric',
+            //         month: '2-digit',
+            //         day: '2-digit',
+            //         hour: '2-digit',
+            //         minute: '2-digit',
+            //         second: '2-digit',
+            //         hour12: false // 24시간 형식
+            //     };
 
-                const formatter = new Intl.DateTimeFormat('ko-KR', options);
-                const koreanDateString = formatter.format(date);
+            //     const formatter = new Intl.DateTimeFormat('ko-KR', options);
+            //     const koreanDateString = formatter.format(date);
 
                 
-                console.log("data : ", res, "요청 완료 시간:", endTime.toISOString())
-                console.log("한국 시간:", koreanDateString);
+            //     console.log("data : ", res, "요청 완료 시간:", endTime.toISOString())
+            //     console.log("한국 시간:", koreanDateString);
 
-            })
+            // })
     }, [nowPage, searchKey,searchWord]);
 
     //상태 검색
@@ -237,7 +237,6 @@ function QnaCon() {
                 </div>
             <table className="table table-dark table-hover AdminQnaTable">
                 <thead>
-                    <tr>
                         <th><input
                             type="checkbox"
                             checked={isAllQnaChecked}
@@ -250,22 +249,21 @@ function QnaCon() {
                         <th>등록일</th>
                         <th>상태</th>
                         <th>답변여부</th>
-                    </tr>
                 </thead>
                 <tbody>
                     {QnA.length > 0 ? (
                         QnA.map((item, index) => (
                             <tr key={index}>
-                                <th><input
+                                <td><input
                                     type="checkbox"
                                     checked={checkedQnas[index]}
                                     value={item?.qna_no|| ''}
                                     onChange={() => handleQnaChecked(index)}
                                     />
-                                    </th>
-                                <th>{item.qna_no}</th>
-                                <th>{item.userid}</th>
-                                <th className="adqna_ht_th">
+                                    </td>
+                                <td>{item.qna_no}</td>
+                                <td>{item.userid}</td>
+                                <td className="adqna_ht_th">
                                     {item.head_title == 1 ? <div className="qna_ht">[영화]&nbsp;</div> :
                                         (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                             <div className="qna_ht">[기타]&nbsp;</div>)}
@@ -279,15 +277,15 @@ function QnaCon() {
                                                 }
                                               }}>
                                             {item.qna_title}<AiFillLock /></Link>)}
-                                </th>
-                                <th>{item.qna_writedate}</th>
-                                <th>{item.active_state === 0 ? <div>비활성</div>:<div>활성</div>}</th>
-                                <th>{item.qna_state === 1 ? 
+                                </td>
+                                <td>{item.qna_writedate}</td>
+                                <td>{item.active_state === 0 ? <div >비활성</div>:<div>활성</div>}</td>
+                                <td>{item.qna_state === 1 ? 
                                     (<button className="qnaAnswerModify-btn"
                                         onClick={(e)=>{e.preventDefault(); openEditQnaAnsWindow(item.qna_no);}}>답변 수정</button>)
                                     :(<button className="qnaAnswerAdd-btn"
                                         onClick={(e)=>{e.preventDefault(); openAddQnaAnsWindow(item.qna_no);}}>
-                                            답변 등록</button>)}</th>
+                                            답변 등록</button>)}</td>
                             </tr>
                         ))
                     ) : (

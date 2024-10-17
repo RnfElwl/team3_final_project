@@ -190,3 +190,24 @@
     color:#394732;
     transform: scale(0.95); /* 클릭 시 크기 감소 */
 }
+
+/* 카테고리 필터 버튼 css */
+.qna-category-filter button{
+    background-color: #00ff9d00;
+    font-size: 1.2em;
+    color: rgb(187, 182, 182);
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border: none;
+    
+}
+
+.qna-category-filter button:hover{
+    color: white;
+    border-bottom: 2px solid #8DDC6B;
+}
+.qna-category-filter button:disabled{
+    color: white;
+    border-bottom: 2px solid #8DDC6B;
+}

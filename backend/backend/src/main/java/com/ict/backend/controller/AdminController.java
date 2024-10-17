@@ -22,28 +22,31 @@ public class AdminController {
     AdminService adminService;
 
     @GetMapping("/minDatas")
-    public Map<String, Integer> admin_mindata(){
-        Map<String, Integer> minMap=new HashMap<>();
-      //오늘 가입한 인원수
-        int dailySub=adminService.dailySubscriberSelect();
-      //오늘 작성한 커뮤니티글 수
-        int dailyCom=adminService.dailyCommunitySelect();
-      //오늘 작성한 문의글 수
-        int dailyQna=adminService.dailyQnaSelect();
-      //오늘 신고 수
-        int dailyRep=adminService.dailyRepSelect();
+    public Map<String, Integer> admin_mindata() {
+        Map<String, Integer> minMap = new HashMap<>();
+        //오늘 가입한 인원수
+        int dailySub = adminService.dailySubscriberSelect();
+        //오늘 작성한 커뮤니티글 수
+        int dailyCom = adminService.dailyCommunitySelect();
+        //오늘 작성한 문의글 수
+        int dailyQna = adminService.dailyQnaSelect();
+        //오늘 신고 수
+        int dailyRep = adminService.dailyRepSelect();
 
-        minMap.put("dSubscriber",dailySub);
-        minMap.put("dCommunity",dailyCom);
-        minMap.put("dQna",dailyQna);
-        minMap.put("dRep",dailyRep);
+        minMap.put("dSubscriber", dailySub);
+        minMap.put("dCommunity", dailyCom);
+        minMap.put("dQna", dailyQna);
+        minMap.put("dRep", dailyRep);
 
-      System.out.println("Result: "+minMap);
-      return minMap;
-    };
+        System.out.println("Result: " + minMap);
+        return minMap;
+    }
+
+    ;
+
     @GetMapping("/qna_dashboard/{qna_filter}")
-    public List<AdminVO> qna_dashboard(@PathVariable String qna_filter){
-        List<AdminVO> qnaDataList=new ArrayList<>();
+    public List<AdminVO> qna_dashboard(@PathVariable String qna_filter) {
+        List<AdminVO> qnaDataList = new ArrayList<>();
 
         switch (qna_filter) {
             case "월":
@@ -63,9 +66,10 @@ public class AdminController {
         log.info(qnaDataList.toString());
         return qnaDataList;
     }
+
     @GetMapping("/community_dashboard/{community_filter}")
-    public List<AdminVO> community_dashboard(@PathVariable String community_filter){
-        List<AdminVO> communityDataList=new ArrayList<>();
+    public List<AdminVO> community_dashboard(@PathVariable String community_filter) {
+        List<AdminVO> communityDataList = new ArrayList<>();
 
         switch (community_filter) {
             case "월":
@@ -85,24 +89,27 @@ public class AdminController {
         log.info(communityDataList.toString());
         return communityDataList;
     }
+
     @PostMapping("/qna_searchChart/")
-    public List<AdminVO> qna_searchChart(@RequestBody AdminDateVO dateList){
-        System.out.println("수정폼 도착"+dateList);
-        System.out.println("시작일:"+dateList);
+    public List<AdminVO> qna_searchChart(@RequestBody AdminDateVO dateList) {
+        System.out.println("수정폼 도착" + dateList);
+        System.out.println("시작일:" + dateList);
 
         return adminService.qnaSearch(dateList);
     }
+
     @PostMapping("/com_searchChart/")
-    public List<AdminVO> com_searchChart(@RequestBody AdminDateVO dateList){
-        System.out.println("수정폼 도착"+dateList);
-        System.out.println("시작일:"+dateList);
+    public List<AdminVO> com_searchChart(@RequestBody AdminDateVO dateList) {
+        System.out.println("수정폼 도착" + dateList);
+        System.out.println("시작일:" + dateList);
 
         return adminService.comSearch(dateList);
     }
+
     //멤버목록 확인
     @GetMapping("/mem_dashboard")
-    public List<MemberVO> getMemberList(){
-        List<MemberVO> result=adminService.selectMemberMin();
+    public List<MemberVO> getMemberList() {
+        List<MemberVO> result = adminService.selectMemberMin();
 
         return result;
     }
@@ -126,15 +133,16 @@ public class AdminController {
     }
 
     @PostMapping("/qnaAnswerWrite/{qna_no}")
-    public int qnaAnswerWrite(@PathVariable int qna_no,@RequestBody QnAVO adminQAData){
+    public int qnaAnswerWrite(@PathVariable int qna_no, @RequestBody QnAVO adminQAData) {
         adminQAData.setQna_no(qna_no);
         return adminService.insertQnaAnswer(adminQAData);
     }
+
     //qna active state Management
     @PostMapping("/qnaActiveEdit")
     public int qnaActiveEdit(
             @RequestParam("active_state") Integer activeState,
-            @RequestParam("qna_no")List<Integer> qnaNos){
+            @RequestParam("qna_no") List<Integer> qnaNos) {
         System.out.println("Active State: " + activeState);
         System.out.println("Qna Numbers: " + qnaNos);
 
@@ -145,7 +153,7 @@ public class AdminController {
 
     //Member ManageMent Part
     @GetMapping("/MemList")
-    public ResponseEntity<Map<String, Object>> MemList(@ModelAttribute PagingVO pagingVO){
+    public ResponseEntity<Map<String, Object>> MemList(@ModelAttribute PagingVO pagingVO) {
         List<MemberVO> result = adminService.getMemList(pagingVO);
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -154,4 +162,13 @@ public class AdminController {
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
+    @GetMapping("/repList")
+    public ResponseEntity<Map<String, Object>> RepList(@ModelAttribute PagingVO pagingVO) {
+        List<ReportVO> result = adminService.getRepList(pagingVO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("repList", result);
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
 }

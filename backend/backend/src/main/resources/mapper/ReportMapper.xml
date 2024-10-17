@@ -12,6 +12,10 @@
         insert into report_tbl(report_userid, reported_userid, report_content, report_tblname, report_tbluuid, report_type, report_reason)
         values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, #{report_tbluuid}, ${report_type}, #{report_reason});
     </if>
+    <if test="report_tblname==4">
+        insert into report_tbl(report_userid, reported_userid, report_content, report_tblname, report_tbluuid, report_type, report_reason)
+        values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, #{report_tbluuid}, ${report_type}, #{report_reason});
+    </if>
 </insert>
     <select id="selectBlockUuid">
 
