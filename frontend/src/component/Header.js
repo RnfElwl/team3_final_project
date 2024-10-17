@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from './api/axiosApi';
 // import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -13,6 +13,9 @@ function Header() {
   const [myid, setMyid] = useState("");
   const [searchWord, setSearchWord]=useState("");
   const [userData, setUserData] = useState({});
+  const underLine = useRef();
+  const [index, setIndex] = useState(0);
+  const tabList = useRef([]);
   function closeNav(){
     setNav(false);
   }
@@ -69,7 +72,16 @@ function Header() {
     navigate("")//키워드로 영화검색
   }
   // 로그인 여부 판단용 여기까지
-
+  function tabClick(i){
+    setIndex(i);
+  }
+  useEffect(() => {
+    const currentTab = tabList.current[index]; // 현재 활성 탭
+    if (currentTab && underLine.current) {
+      underLine.current.style.width = `${currentTab.offsetWidth}px`; // 밑줄 너비 설정
+      underLine.current.style.left = `${currentTab.offsetLeft}px`; // 밑줄 위치 설정
+    }
+  }, [index]);
   if(isAdminPage){
     //관리자 헤더
     return (
@@ -114,7 +126,7 @@ function Header() {
   //통상 헤더
   return (
       <>
-      <nav className={`home_nav ${nav?'nav_show':'nav_hide'}`}>
+      {/* <nav className={`home_nav ${nav?'nav_show':'nav_hide'}`}>
         <div className='logo'>
           <Link to={'/'}><div><img src=""/>로고</div></Link>
         </div>
@@ -128,11 +140,21 @@ function Header() {
           <div><Link to={'/recommend'} onClick={closeNav}>추천</Link></div>
         </div>
         <div className='close_box' onClick={closeNav}></div>
-      </nav>
+      </nav> */}
       <header className="Header">
           <div className='left-info'>
-            <List color={"#c2c2c2"} size={40} onClick={showNav}/>
+            {/* <List color={"#c2c2c2"} size={40} onClick={showNav}/> */}
             <Link to={'/'}><div><img src=""/>로고</div></Link>
+            <div className='tab'>
+          <div className={`${index==0?'focus':''}`}><Link to={'/categories'} onClick={()=>{tabClick(0)}} ref={(el) => (tabList.current[0] = el)} >카테고리</Link></div>
+          {
+            myid!==''&&(<div className={`${index==0?'focus':''}`}><Link to={'/chat'} onClick={()=>{tabClick(1)}} ref={(el) => (tabList.current[1] = el)}>채팅</Link></div>)
+          }
+          <div className={`${index==0?'focus':''}`}><Link to={'/qna'} onClick={()=>{tabClick(2)}} ref={(el) => (tabList.current[2] = el)}>QnA</Link></div>
+          <div className={`${index==0?'focus':''}`}><Link to={'/community'} onClick={()=>{tabClick(3)}} ref={(el) => (tabList.current[3] = el)}>커뮤니티</Link></div>
+          <div className={`${index==0?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(4)}} ref={(el) => (tabList.current[4] = el)}>추천</Link></div>
+        </div>
+        <div className='under_line' ref={underLine}></div>
           </div>
           
           <div className='right-info'>

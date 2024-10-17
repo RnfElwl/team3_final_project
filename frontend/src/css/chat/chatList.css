@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #444946;
+  background-color: #272731;
   max-width: 1200px;
   width: 50%;
   height: 40px;
@@ -49,7 +49,7 @@
 .chatList .chat-search>input{
   width:90%;
   border-width: 0;
-  background-color: #444946;
+  background-color: #272731;
   color: #f1f1f1;
 }
 .chatList .chat-search>input{

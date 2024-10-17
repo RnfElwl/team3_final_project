@@ -57,12 +57,14 @@ input:focus {
   }
 }
 .Header{
+  position: fixed;
+  top: 0px;
   background-color: #1C1C20;
   width:100%;
   display: flex;
   align-items: center;
   height: 56px;
-  padding: 12px 40px;
+  padding: 0 40px;
   justify-content: space-between;
   box-sizing: border-box;
   z-index: 100;
@@ -71,7 +73,37 @@ input:focus {
   display: flex;
   align-items: center;
   color: #f1f1f1;
+  height: 100%;
+  width: 50%;
 }
+.Header .tab{
+  height: 100%;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 50%;
+}
+.Header .tab >div:hover{
+  border-bottom: 2px solid #727272;
+}
+.Header .tab >.focus{
+  color: #48d1cdea;
+}
+.Header .tab >div{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+}
+.Header .under_line{
+  position: absolute;
+  bottom: 0px;
+  height: 2px;
+  background-color: #48d1cdea;
+  transition: left 0.3s, width 0.3s;
+}
+
 .Header .right-info{
   display: flex;
   align-items: center;
