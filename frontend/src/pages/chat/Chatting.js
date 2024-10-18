@@ -137,13 +137,15 @@ const Chatting = () => {
         console.log(receivedMessages)
       }, [receivedMessages, client]);
       async function getRoomInfo(){
-        const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
-            chatlist_url
-        }});
-        console.log(result.data);
-        if(result.data.chatlist_type==1){
-            const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
-                params: { movie_no: result.data.movie_no }
+        try{
+
+            const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
+                chatlist_url
+            }});
+            console.log(result.data);
+            if(result.data.chatlist_type==1){
+                const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
+                    params: { movie_no: result.data.movie_no }
             });
             console.log("---------------")
             console.log(data);
@@ -153,6 +155,9 @@ const Chatting = () => {
             }
         }
         setRoomInfo(result.data);
+        }catch(e){
+            console.log(e);
+        }
       }
       
       async function dateMsgSend(){// 로컬 날짜 메시지 출력
@@ -182,6 +187,7 @@ const Chatting = () => {
         }
     }
     async function soloChatCheck(){
+        try{
         const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
         if(data==0){
             console.log("왜 있어~~~~~")
@@ -189,36 +195,56 @@ const Chatting = () => {
             window.close();
         }
         setDefaultChat();
+        
         return data;
+    }catch(e){
+        console.log(e);
+    }
     }
     async function setDefaultChat(){ // 채팅 기본 값 세팅
+        try{
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
         
         setReceivedMessages(data);
-        
+        }catch(e){
+            console.log(e);
+        }
     }
 
     async function setDefaultSchdule(){
+        try{
         const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
         setScheduleList(data);
+    }catch(e){
+        console.log(e);
+    }
     }
     async function setDefaultMember(){
+        try{
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
             chatlist_url
         }});
         setMemberList(data);
+    }catch(e){
+        console.log(e);
+    }
     }
     
     async function getUser(){// 자기 정보 가져오기
+        try{
         const result = await axios.get('http://localhost:9988/user/userinfo');
         setMyid(result.data);
         const params = {userid : result.data};
         const result2 = await axios.get('http://localhost:9988/getUserData', {params});
         setUserData(result2)
+    }catch(e){
+        console.log(e);
+    }
     }
 
     async function userListAdd(mqttClient){
         if(mqttClient){
+            try{
             const result = await axios.get('http://localhost:9988/user/userinfo');
             setMyid(result.data);
             const params = {userid : result.data};
@@ -248,6 +274,9 @@ const Chatting = () => {
                 setReceivedMessages(receivedMessages)
                 
                 mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            }
+            }catch(e){
+                console.log(e);
             }
         }
     }
@@ -284,6 +313,9 @@ const Chatting = () => {
                 chat_date: now,
                 chat_type: 1
             } 
+            try{
+
+            
             const result = await axios.post("http://localhost:9988/chat/add", data);
             if(result.data==1){
                 console.log("성공");
@@ -293,6 +325,9 @@ const Chatting = () => {
             
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
+        }catch(e){
+            console.log(e);
+        }
             
         }
     };
@@ -336,6 +371,7 @@ const Chatting = () => {
     }
     async function scheduleCreateSubmit(e){
         e.preventDefault();
+        try{
         const {data} = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
         setScheduleCreate(false);
         if(data>=1){
@@ -344,6 +380,9 @@ const Chatting = () => {
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
         }
+    }catch(e){
+        console.log(e);
+    }
     }
     function scheduleFormAdd(event){
         let idField = event.target.name;
@@ -383,6 +422,7 @@ const Chatting = () => {
     }
     async function setScheduleVote(e){
         e.preventDefault();
+        try{
         const {data} = await axios.post('http://localhost:9988/chat/schedule/voting', voteForm);
         if(data>=1){
             const info = {
@@ -390,9 +430,13 @@ const Chatting = () => {
             } 
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
         }
+    }catch(e){
+        console.log(e);
+    }
     } 
     async function setDefaultVote(id, value){
         console.log(id, value)
+        try{
         const {data} = await axios.get("http://localhost:9988/chat/vote/list", {params:{
             schedule_id: id,
             vote_value: value
@@ -401,6 +445,9 @@ const Chatting = () => {
         if(data.length !=0){
             setVoteUserWindow(true);
             setVoteList(data);
+        }
+        }catch(e){
+            console.log(e);
         }
     }
     function moveUserPage(usernick){
@@ -416,6 +463,7 @@ const Chatting = () => {
           }
     }
     async function exitRoom(){
+        try{
         if(roomInfo.chatlist_type==1){
             const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
                 headers: {
@@ -447,6 +495,9 @@ const Chatting = () => {
                 }
             });
         }
+    }catch(e){
+        console.log(e);
+    }
         window.close();
     }
     return (
@@ -527,11 +578,19 @@ const Chatting = () => {
                 <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
                 <form className='schedule_create_form' onSubmit={scheduleCreateSubmit}>
                     <h2>일정 만들기</h2>
-                    <div>
+                    <div className='shcedule_inputs'>
+                        <div>
                         제목 <input type="text" name="schedule_title" onChange={scheduleFormAdd}/>
-                        날짜 <input type='date' name="day" onChange={scheduleFormAdd}/>
-                        시간 <input type="time" name="time" onChange={scheduleFormAdd}/>
-                        설명 <input tpye="text" name="schedule_addr" onChange={scheduleFormAdd}/>
+                        </div>
+                        <div>
+
+                        날짜  <input type='date' name="day" onChange={scheduleFormAdd}/>
+
+                        시간  <input type="time" name="time" onChange={scheduleFormAdd}/>
+                        </div>
+                        <div>
+                        설명  <input tpye="text" name="schedule_addr" onChange={scheduleFormAdd}/>
+                        </div>
                     </div>
                     <button type='submit'>일정 생성</button>
                 </form>
@@ -692,12 +751,13 @@ const Chatting = () => {
                 <div className='chatting_input'>
                     <input
                         type="text"
+                        
                         value={messageToSend}
                         onKeyDown={pressKeyboard}
                         onChange={(e)=>setMessageToSend(e.target.value)}
                         placeholder="메시지 입력"
                         />
-                    <button onClick={handleSendMessage}>전송</button>
+                    <button className={`${messageToSend==''?'':'onText'}`} onClick={handleSendMessage}>전송</button>
                 </div>
             </div>
                                 

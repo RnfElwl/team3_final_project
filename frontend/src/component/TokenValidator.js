@@ -26,13 +26,15 @@ const TokenValidator = ({ children }) => {
           setIsAuthenticated(true);
         } else {
           // 만료된 토큰일 경우 로그아웃 처리
-          localStorage.clear();
+          localStorage.removeItem("token");
+          //localStorage.clear();
           setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Invalid token:', error);
         // 잘못된 토큰일 경우 로그아웃 처리
-        localStorage.clear();
+        localStorage.removeItem("token");
+        //localStorage.clear();
         setIsAuthenticated(false);
       }
     } else {
