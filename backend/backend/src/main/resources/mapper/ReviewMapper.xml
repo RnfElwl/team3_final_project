@@ -20,7 +20,9 @@
 
     <!-- 영화에 대한 리뷰 조회 -->
     <select id="selectReviewsByMovieCode" resultType="ReviewVO">
-        SELECT * FROM movie_review_tbl
+        SELECT mrt.*, ut.usernick, it.image_url as userprofile FROM movie_review_tbl mrt
+        join user_tbl ut on mrt.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
         WHERE movie_no = (SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode})
         ORDER BY movie_review_writedate DESC
     </select>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {useParams, useLocation } from 'react-router-dom';
+import {useParams, useLocation, Link } from 'react-router-dom';
 import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; 
 import './../../css/movies/MovieView.css';
 import axios from '../../component/api/axiosApi';
@@ -16,6 +16,7 @@ function MovieView() {
   const [isFavorite, setIsFavorite] = useState(false); // 찜하기 상태 추가
   const location = useLocation(); // 현재 경로 가져오기 위해 사용
   const [userid, setUserId] = useState(null); // userid를 상태로 관리
+  const [userData, setUserData] = useState({});
   const [editReviewText, setEditReviewText] = useState(''); // 수정할 리뷰 내용 저장
   const [editingReviewId, setEditingReviewId] = useState(null); // 수정 중인 리뷰의 ID를 저장
   const [movieNo, setMovieNo] = useState(null); // 영화 번호 상태
@@ -37,7 +38,10 @@ function MovieView() {
         console.log(response.data); // API 응답 데이터 콘솔에 출력
         setMovie(response.data.movieVO); // 영화 데이터를 상태에 저장
         setUserId(response.data.userid);
-
+        const userid = response.data.userid;
+        const result2 = await axios.get('http://localhost:9988/getUserData', { params:{userid }});
+        
+        setUserData(result2.data);
         // 이미지 정보 가져오기
         const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
         setImages(imageResponse.data);
@@ -276,8 +280,15 @@ function MovieView() {
       return reviews.map((review) => (
         <div key={review.movie_review_no} className="review">
           <div className="profile-section">
-          <img src={review.profileImg} alt="User profile" className="profile-img" />
-          <span className="nickname">{review.userid}</span>
+            {review.userid==userid? 
+            <Link to={`/mypage`}>
+              <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
+            </Link>:
+            <Link to={`/user/info/${review.usernick}`}>
+              <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
+            </Link>}
+          
+          <span className="nickname">{review.usernick}</span>
           </div>
           <div className="review-content">
             {/* 항상 표시되는 별점*/}
@@ -423,8 +434,8 @@ function MovieView() {
            {/* 리뷰 입력 필드 */}
           <div className="review-input-section">
             <div className="profile-section">
-              <img src="https://via.placeholder.com/50" alt="Profile" className="profile-img" />
-              <span className="nickname">{userid}</span>
+              <img src={`http://localhost:9988/${userData.image_url}`} alt="Profile" className="profile-img" />
+              <span className="nickname">{userData.usernick}</span>
             </div>
             <div className="rating-and-review">
               <div className="star-rating">

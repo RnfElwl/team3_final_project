@@ -11,5 +11,7 @@ public class ReviewVO {
     private String movie_review_content;
     private int rate;
     private String movie_code;
+    private String userprofile;
+    private String usernick;
 
 }
