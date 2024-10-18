@@ -84,6 +84,16 @@ input:focus {
   justify-content: space-around;
   width: 50%;
 }
+/*  */
+.Header .tab a:hover{
+  color: #48d1cdea;
+  font-weight: bold;
+}
+.Header .tab a:focus{
+  color: #f1f1f1;
+  font-weight: bolder;
+}
+/*  */
 .Header .tab >div:hover{
   border-bottom: 2px solid #727272;
 }
