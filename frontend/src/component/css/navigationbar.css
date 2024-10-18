@@ -83,6 +83,7 @@ input:focus {
   align-items: center;
   justify-content: space-around;
   width: 50%;
+  gap: 30px;
 }
 /*  */
 .Header .tab a:hover{

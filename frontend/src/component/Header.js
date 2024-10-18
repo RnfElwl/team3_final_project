@@ -156,14 +156,14 @@ function Header() {
             {/* <List color={"#c2c2c2"} size={40} onClick={showNav}/> */}
             <Link to={'/'} onClick={()=>{tabClick(0)}}><div><img src="../../logo3.png" width={"170px"}/></div></Link>
             <div className='tab'>
-            <div className={`${index==0?'focus':''}`}><Link to={'/'} onClick={()=>{tabClick(0)}} ref={(el) => (tabList.current[0] = el)} >홈</Link></div>
-            <div className={`${index==1?'focus':''}`}><Link to={'/categories'} onClick={()=>{tabClick(1)}} ref={(el) => (tabList.current[1] = el)} >카테고리</Link></div>
+            <div className={`${index==0?'focus':''}`}><Link to={'/'} onClick={()=>{tabClick(0)}} ref={(el) => (tabList.current[0] = el)} >Home</Link></div>
+            <div className={`${index==1?'focus':''}`}><Link to={'/categories'} onClick={()=>{tabClick(1)}} ref={(el) => (tabList.current[1] = el)} >Movie</Link></div>
             {
-              myid!==''&&(<div className={`${index==2?'focus':''}`}><Link to={'/chat'} onClick={()=>{tabClick(2)}} ref={(el) => (tabList.current[2] = el)}>채팅</Link></div>)
+              myid!==''&&(<div className={`${index==2?'focus':''}`}><Link to={'/chat'} onClick={()=>{tabClick(2)}} ref={(el) => (tabList.current[2] = el)}>Chat</Link></div>)
             }
             <div className={`${index==3?'focus':''}`}><Link to={'/qna'} onClick={()=>{tabClick(3)}} ref={(el) => (tabList.current[3] = el)}>QnA</Link></div>
-            <div className={`${index==4?'focus':''}`}><Link to={'/community'} onClick={()=>{tabClick(4)}} ref={(el) => (tabList.current[4] = el)}>커뮤니티</Link></div>
-            <div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>추천</Link></div>
+            <div className={`${index==4?'focus':''}`}><Link to={'/community'} onClick={()=>{tabClick(4)}} ref={(el) => (tabList.current[4] = el)}>Community</Link></div>
+            <div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>
           </div>
           <div className='under_line' ref={underLine}></div>
           </div>
