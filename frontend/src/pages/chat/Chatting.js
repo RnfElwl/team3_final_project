@@ -308,10 +308,7 @@ const Chatting = () => {
     function scrollBottom(){
         chatting_box.current.scrollTop = chatting_box.current.scrollHeight+10000;
     }
-    function openReport(e){{/* 신고 기능 */}
-        const id = e.target.dataset.id;
-        const userid = e.target.dataset.userid;
-        const content = e.target.dataset.content;
+    function openReport(id, userid, content){{/* 신고 기능 */}  
         setReport({
             report_tblname: 3,
             report_tbluuid:  id,
@@ -677,7 +674,7 @@ const Chatting = () => {
                                                     {(data.chat_date).substring(11, 16)}
                                                     </div>
                                                     <div className='chat_report' >
-                                                        <AiOutlineAlert size="25px" data-id={data.content_id} data-userid={data.userid} data-content={data.chat_content} onClick={openReport} />
+                                                        <AiOutlineAlert size="25px" onClick={()=>openReport(data.content_id, data.userid, data.chat_content)} />
                                                     </div>
                                                 </div>
                                             </div>

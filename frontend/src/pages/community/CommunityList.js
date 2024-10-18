@@ -46,7 +46,8 @@ function CommunityList() {
         axios.get('http://localhost:9988/community/list', {
             params: { sortType } // sortType을 params로 전달
         })
-            .then(response => {
+        .then(response => {
+                console.log(response.data);
                 console.log(response.data);
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
@@ -86,6 +87,7 @@ function CommunityList() {
 
     useEffect(() => {
         // 게시글 데이터 가져오기
+        console.log(community_no)
         axios.get(`http://localhost:9988/community/view/${community_no}`)
             .then(response => {
                 console.log(response.data); // API 응답 로그
@@ -173,17 +175,19 @@ function CommunityList() {
         
     };
 
-    function openReport(e){{/* 신고 기능 */}
-        const id = e.target.dataset.id;
-        const userid = e.target.dataset.userid;
-        const content = e.target.dataset.content;
-        setReport({
-            report_tblname: 2, // 본인 테이블에 따라 다름
-            report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
-            reported_userid: userid, // 피신고자id
-            report_content: content,// 피신고자의 채팅 내용
-        })
-        toggleReport();
+    function openReport(id, userid, content){{/* 신고 기능 */}
+        if(userid){
+            console.log(id, userid, content);
+            setReport({
+                report_tblname: 2, // 본인 테이블에 따라 다름
+                report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+                reported_userid: userid, // 피신고자id
+                report_content: content,// 피신고자의 채팅 내용
+            })
+            toggleReport();
+        }else{
+            alert("로그인 후 이용 가능합니다");
+        }
     }
 
     // 모달창 열고 닫기 함수
@@ -359,7 +363,11 @@ function CommunityList() {
                             </Link>  
                             <div className="content"> 
                                 <div className="list_top">
-                                    <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                    {userid==communityItem.userid?<Link to="/mypage">
+                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                    </Link>:<Link to={`/user/info/${communityItem.usernick}`}>
+                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                    </Link>}
                                     <div className="writer_info">
                                         <p className="writer_name">{communityItem.usernick}</p>
                                         <div className="list_info">
@@ -376,10 +384,7 @@ function CommunityList() {
                                                 <button 
                                                     className="report_button" 
                                                     title="신고"
-                                                    onClick={(e) => openReport(e)} 
-                                                    data-id={communityItem.community_no}
-                                                    data-userid={communityItem.userid}
-                                                    data-content={communityItem.community_title}
+                                                    onClick={() => openReport(communityItem.community_no, communityItem.userid, communityItem.community_title)} 
                                                 >
                                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
                                                 </button>

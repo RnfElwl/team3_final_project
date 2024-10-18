@@ -206,7 +206,9 @@ function MovieView() {
           rate: rating,
         });
         // 새로운 리뷰 추가 후 상태 업데이트
-        setReviews([response.data, ...reviews]); // 최신 리뷰가 상단에 추가
+        const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
+        console.log('Fetched reviews:', reviewResponse.data); // 리뷰 데이터 로그로 확인
+        setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
         // 리뷰 입력 초기화
         reviewInputRef.current.textContent = ''; // 리뷰 입력 초기화
         setIsPlaceholderVisible(true); // placeholder 다시 표시
