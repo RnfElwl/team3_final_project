@@ -19,13 +19,15 @@ function CommunityList() {
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
 
-    const [topViewedPosts, setTopViewedPosts] = useState([]);
     const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
 
     const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
     const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All Posts");
+
+    const [communityList, setCommunityList] = useState([]);
+    const [sortType, setSortType] = useState("latest");
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -40,12 +42,15 @@ function CommunityList() {
                 return "기타";
         }
     };
-    function communityListSetting(){
-        axios.get('http://localhost:9988/community/list')
+    function communityListSetting(sortType){
+        axios.get('http://localhost:9988/community/list', {
+            params: { sortType } // sortType을 params로 전달
+        })
             .then(response => {
                 console.log(response.data);
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
+                setCommunityList(response.data);
                 
                 // 카테고리별 게시물 수 계산
                 const counts = response.data.reduce((acc, item) => {
@@ -149,10 +154,10 @@ function CommunityList() {
 
     // 좋아요 처리
     const handleLikeToggle = async (no) => {
-        // if (!userid) {
-        //     console.error('사용자가 로그인하지 않았습니다.');
-        //     return; // userid가 없으면 처리 중지
-        // }
+        if (!userid) {
+            alert('로그인 후 이용가능한 서비스입니다.');
+            return; // userid가 없으면 처리 중지
+        }
 
         try {
             
@@ -257,7 +262,30 @@ function CommunityList() {
             }
         });
 
-    }
+    }useEffect(() => {
+        communityListSetting();
+    }, []);
+
+    useEffect(() => {
+        setFilteredCommunity(communityList); // communityList가 변경될 때마다 업데이트
+    }, [communityList]);
+
+    const sortCommunityList = (type) => {
+        let sortedList;
+
+        if (type === "latest") {
+            sortedList = [...communityList].sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
+        } else if (type === "hit") {
+            sortedList = [...communityList].sort((a, b) => b.hit - a.hit);
+        } else if (type === "like") {
+            sortedList = [...communityList].sort((a, b) => b.community_like - a.community_like);
+        }
+
+        setCommunityList(sortedList);
+        setSortType(type);
+    };
+    
+
     return (
         <div className="community_list">
             <div className="container">
@@ -308,6 +336,11 @@ function CommunityList() {
                             </div>   
                         )}
                     </div>
+                    <select onChange={(e) => sortCommunityList(e.target.value)} value={sortType}>
+                        <option value="latest">최신순</option>
+                        <option value="hit">조회순</option>
+                        <option value="like">인기순</option>
+                    </select>
                     <Link to="/community/CommunityWrite">
                         <input className="write" type="button" value="New Post" />
                     </Link>

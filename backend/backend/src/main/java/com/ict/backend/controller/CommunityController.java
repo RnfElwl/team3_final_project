@@ -33,9 +33,9 @@ public class CommunityController {
 //        return service.getCommunityList(pageable);
 //    }
     @GetMapping("/list")
-    public List<CommunityVO> getCommunityList(@RequestHeader(value = "Host", required = false) String Host){
+    public List<CommunityVO> getCommunityList(@RequestHeader(value = "Host", required = false) String Host, String sortType){
             String userid= SecurityContextHolder.getContext().getAuthentication().getName();
-        List<CommunityVO> vo = service.getCommunityList(userid);
+        List<CommunityVO> vo = service.getCommunityList(userid, sortType);
         for (CommunityVO community : vo) {
             if (community.getCommunity_img() != null) {
                 community.setCommunity_img("http://" + Host +"/"+ community.getCommunity_img());
