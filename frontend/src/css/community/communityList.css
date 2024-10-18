@@ -70,21 +70,26 @@
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 .community_list .category_counts{
-    margin: 20px;
+    margin-right: auto;
+    margin-left: 20px;
 }
 
-.community_list .write {
+.community_list select option{
+    background-color: #1C1C20;
+    color: #48d1cdea ; /* 글자색 */
+}
+
+.community_list .write,  .community_list select{
     padding: 5px 15px; /* 버튼 패딩 */
     background: none;
     color: #48d1cdea ; /* 글자색 */
     border: #48d1cdea solid 1px;
     border-radius: 5px;
     cursor: pointer; /* 커서 포인터 */
-    margin: 0 15px;
+    margin: 0 10px;
     height: 100%; /* 부모 요소 높이에 맞추기 */
     display: flex;
     align-items: center; /* 버튼 내용 가운데 정렬 */
@@ -153,10 +158,6 @@
 /* 내용 */
 
 .community_list .content {
-    /* max-width: 650px;
-    min-width: 450px;
-    height: 180px;
-    margin-top: 20px; */
     padding: 15px;
     flex-grow: 1; /* 내용이 차지할 수 있는 공간을 확장 */
     display: flex;
@@ -167,10 +168,6 @@
 .community_list .list_top {
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
-    /* justify-content: space-between; */
-    /* max-width: 750px;
-    min-width: 550px; */
-    /* width: 100%; */
 }
 
 .community_list .writer_image {
@@ -339,7 +336,6 @@
     display: flex; /* 플렉스 레이아웃 */
     justify-content: space-between;
     margin-top: 10px;
-    /*margin-top: auto;  위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
     border-top: 1px solid #ebe2e279; /* 위에 얇은 선 추가 */
     padding: 10px 0; /* 위아래 패딩 추가 */
 

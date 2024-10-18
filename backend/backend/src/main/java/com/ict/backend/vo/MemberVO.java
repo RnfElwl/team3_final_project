@@ -27,4 +27,5 @@ public class MemberVO {
     private String ROLE_ADMIN;
     private int active_state;
     private int reported_count;
+    private String lastvisite;
 }
