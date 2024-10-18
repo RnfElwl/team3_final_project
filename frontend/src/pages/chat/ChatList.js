@@ -1,13 +1,15 @@
 import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef  } from 'react';
 import { BsExclamationCircle } from "react-icons/bs";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 //import axios from "axios";
 import axios from "../../component/api/axiosApi"
 
 
 function ChantList(){
+    const navigate = useNavigate();
+    const navigateRef = useRef(navigate);
     const [list, setList] = useState([]);
     const [room, setRoom] = useState(false);
     const [formData, setFormData] = useState({});
@@ -18,6 +20,9 @@ function ChantList(){
     const [reviewSearch, setReviewSearch] = useState("");
     useEffect(() => {
         setChatList();
+        window.navigateToPage = (path) => {
+            navigateRef.current(path); // 경로 이동
+          };
     }, []);
     async function setSoloChatList(){
         const {data} = await axios.get("http://localhost:9988/chat/soloChatList", {
@@ -28,7 +33,6 @@ function ChantList(){
                 keyWord: search
             }
           });
-          console.log(data);
           setList(data);
     }
     async function setChatList(){
@@ -173,8 +177,8 @@ function ChantList(){
                 {/* <Link to={'chattest'}>채팅 테스트</Link> */}
                 <div className={`chatList_list ${tabValue==1?'open':'solo'}`}>
                 <div className="chat-tab">
-                    <div className={tabValue==1 && 'tab_focus'} onClick={()=>{setChatList(); setTabValue(1);}}>오픈채팅</div>
-                    <div className={tabValue==2 && 'tab_focus'} onClick={()=>{setSoloChatList(); setTabValue(2)}}>1대1채팅</div>
+                    <div className={tabValue==1 && 'tab_focus'} onClick={()=>{setChatList();setList([]); setTabValue(1); }}>오픈채팅</div>
+                    <div className={tabValue==2 && 'tab_focus'} onClick={()=>{setSoloChatList();setList([]); setTabValue(2);}}>1대1채팅</div>
                 </div>
                 {
                         list.length==0&&(

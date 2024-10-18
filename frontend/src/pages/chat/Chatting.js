@@ -9,6 +9,7 @@ import { IoPerson, IoExitOutline, IoCloseSharp  } from "react-icons/io5";
 import { FaCalendarCheck } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import ReportModal from '../../component/api/ReportModal.js';
+import { BsExclamationCircle } from "react-icons/bs";
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -405,6 +406,12 @@ const Chatting = () => {
             setVoteList(data);
         }
     }
+    function moveUserPage(usernick){
+        if (window.opener) {
+            window.opener.navigateToPage(`/user/info/${usernick}`);  // 부모 창 이동
+            window.close();  // 팝업 닫기
+          }
+    }
     async function exitRoom(){
         if(roomInfo.chatlist_type==1){
             const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
@@ -531,26 +538,36 @@ const Chatting = () => {
                         <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
                         <div className='vote_user_box'>
                             <h2>{vote_state==1?'참여 목록':'불참 목록'}</h2>
+                            <div className='vote_user_list'>
                             {
                                 voteList.map((data, index)=>(
-                                <div className='vote_user_info'>
+                                    <div className='vote_user_info'>
                                     <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
                                     <div>{data.usernick}</div>
                                 </div>
                                 ))
                             }
+                            </div>
                            
                         </div>
                     </div>
+                    <div className='state_box'>
+
                     <div>진행중</div>
                 {
+                    newTag.length==0?<>
+                    <div className="list_notice">
+                                    <BsExclamationCircle/>
+                                    <div>현재 일정이 없습니다.</div>
+                                </div>
+                    </>:
                     newTag.map((data, index)=>(
                         <div className='schedule'>
                         <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                         <div className='schedule_info'>
                             <div className='schedule_title'>{data.schedule_title}</div>
                             <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
-                            <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
+
                             <div className='schedule_addr'>{data.schedule_addr}</div>
                         </div>
 
@@ -566,17 +583,25 @@ const Chatting = () => {
                         </form>
                     </div>
                     ))
+                    
+                }
+                </div>
+                <div className='state_box'>
 
-                    }
                     <div>이전 목록</div>
                     {
+                        oldTag.length==0?<>
+                        <div className="list_notice">
+                                    <BsExclamationCircle/>
+                                    <div>이전 일정이 없습니다.</div>
+                                </div>
+                        </>:
                         oldTag.map((data, index)=>(
                             <div className='schedule'>
                                 <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
                                 <div className='schedule_info'>
                                     <div className='schedule_title'>{data.schedule_title}</div>
                                     <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
-                                    <div className='schedule_date'>{(data.schedule_date).substring(0, 16)}</div>
                                     <div className='schedule_addr'>{data.schedule_addr}</div>
                                 </div>
                                     <div className='schedule_voting'>
@@ -593,6 +618,7 @@ const Chatting = () => {
                             </div>
                         ))
                     }
+                    </div>
                 </div>
             </div>
             
@@ -622,7 +648,7 @@ const Chatting = () => {
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
+                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >

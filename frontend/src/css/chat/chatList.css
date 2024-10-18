@@ -184,6 +184,7 @@
 .chatList .solo .chat_box-img img{
   object-fit: cover;
   width: 60px;
+  height: 60px;
   border-radius: 18px;
 }
 .chatList .open .chat_box-img img{
@@ -195,9 +196,12 @@
 .chatList .chat_box_info{
   color: #f1f1f1;
 }
+.chatList .chat_box_info .sub_content{
+  color: #b8b8c5;
+}
 .chatList .debate_img{
   margin-top: 10px;
-}
+} 
 .chatList .chat_box_info{
   margin: 0px 10px;
 }

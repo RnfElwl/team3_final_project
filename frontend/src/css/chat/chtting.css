@@ -396,12 +396,25 @@
     z-index: 2;
 }
 .chatting_room .vote_user_box{
+    border-radius: 10px;
     background-color: aliceblue;
     padding: 50px;
     z-index: 3;
     color: #1C1C20;;
-    overflow: auto;
     
+}
+.chatting_room .vote_user_info img{
+    border-radius: 13px;
+}
+.chatting_room .vote_user_info{
+    margin: 5px;
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_user_list{
+    margin-top: 20px;
+    overflow-y: auto;
+    max-height: 110px;
 }
 .chatting_room .room_box{
     display: flex;
@@ -413,6 +426,17 @@
 .chatting_room .room_img{
     width: 40px;
     height: 40px;
+}
+.chatting_room .state_box{
+    margin-top: 30px;
+}
+.chatting_room .list_notice{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    color: #4a4a52;
 }
 .chatting_room .room_img img{
     width: 40px;
