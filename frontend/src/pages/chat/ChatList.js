@@ -25,6 +25,9 @@ function ChantList(){
           };
     }, []);
     async function setSoloChatList(){
+        try{
+
+           
         const {data} = await axios.get("http://localhost:9988/chat/soloChatList", {
             headers: {
               'Content-Type': 'application/json'
@@ -34,8 +37,12 @@ function ChantList(){
             }
           });
           setList(data);
+        }catch(e){
+            console.log(e)
+        }     
     }
     async function setChatList(){
+        try{
         const result = await axios.get("http://localhost:9988/chat/openChatList", {
             headers: {
               'Content-Type': 'application/json'
@@ -45,6 +52,9 @@ function ChantList(){
             }
           });
           setList(result.data);
+        }catch(e){
+            console.log(e)
+        }    
     }
     function setRoomFormData(event){
         let idField = event.target.name;
@@ -63,6 +73,7 @@ function ChantList(){
         
     }
     async function reviewDefault(){
+        try{
         const {data} = await axios.get("http://localhost:9988/chat/review-list", {
             params:{
                 keyWord: reviewSearch
@@ -70,9 +81,14 @@ function ChantList(){
         });
         setReviewList(data);
         console.log(data);
+        }
+        catch(e){
+            console.log(e);
+        }
     }
     async function createRoom(event){
         event.preventDefault();
+        try{
         const result = await axios.post("http://localhost:9988/chat/create", formData, {
             headers: {
               'Content-Type': 'application/json'
@@ -85,6 +101,10 @@ function ChantList(){
             setChatList();
             setRoom(!room);
           }
+        }
+        catch(e){
+            console.log(e);
+        }
     }
     function openWindow(url){
         const popupWindow = window.open(

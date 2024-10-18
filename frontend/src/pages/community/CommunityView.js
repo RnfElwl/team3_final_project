@@ -2,7 +2,7 @@ import "../../css/community/communityView.css";
 import React, { useState, useEffect, useRef } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
-import { useParams, useNavigate} from 'react-router-dom';
+import { useParams, useNavigate, Link} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
@@ -302,7 +302,7 @@ function CommunityView(){
         const {data} = await  axios.get(`http://localhost:9988/community/comments/reply/${comment_no}`);
         setReplyComment((p)=>({...p, [comment_no]:data}));
     };
-    const handleReplySubmit = (comment_no) => {
+    const handleReplySubmit = (comment_no, i) => {
         if(replyText==""){
             return;
         }
@@ -318,6 +318,7 @@ function CommunityView(){
                 //      [comment_no]: [...(p[comment_no] || []), response.data]})    );
                 toggleReplies(comment_no)
                 setReplyText("");
+                removeShowBtn(i);
             })
             .catch(error => {
                 if (error.response && error.response.status === 400) {
@@ -466,7 +467,13 @@ function CommunityView(){
         <div className="community_view">
             <div className="container">
                 <div className="view_top">
-                    <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
+                    {myid==community.userid?
+                    <Link to={`/mypage`}>
+                        <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
+                    </Link>:<Link to={`/user/info/${community.usernick}`}>
+                        <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
+                    </Link>}
+                    
                     <div className="writer_info">
                         <p className="writer_name">{community.userid}</p>
                         <div className="list_info">
@@ -570,7 +577,15 @@ function CommunityView(){
                                 <div className="comment_item">
                                     <div className="comment_top">
                                         <div className="comment_user">
+                                            {myid==comment.userid?
+                                             <Link to="/mypage">
+                                             <img className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
+                                             </Link>:
+                                            <Link to={`/user/info/${comment.usernick}`}>
                                             <img className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
+                                            </Link>
+                                        }
+                                           
                                             <p className="comment_writer_name">{comment.usernick}</p>
                                         </div>
                                         <div className="comment_actions"> 
@@ -611,7 +626,7 @@ function CommunityView(){
                                     </div>
                                     <form className="comment_input" onSubmit={(e) =>{ 
                                         e.preventDefault();
-                                        handleReplySubmit(comment.comment_no)}} ref={(el) => { if (!commentInput.current[i]) {
+                                        handleReplySubmit(comment.comment_no, i)}} ref={(el) => { if (!commentInput.current[i]) {
                                                 commentInput.current[i] = [];
 
                                             }
@@ -633,7 +648,14 @@ function CommunityView(){
                                                 <div  className="reply_item">
                                                     <div className="comment_top">
                                                         <div className="comment_user">
-                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                        {myid==reply.userid?
+                                             <Link to="/mypage">
+                                             <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                             </Link>:
+                                            <Link to={`/user/info/${comment.usernick}`}>
+                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                            </Link>
+                                        }
                                                             <p className="comment_writer_name">{reply.usernick}</p>
                                                         </div>
                                                         <div className="comment_actions"> 
