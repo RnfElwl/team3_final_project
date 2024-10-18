@@ -219,7 +219,20 @@ function Signup() {
         const fetchImages = async () => {
             try {
                 const response = await axios.get('http://localhost:9988/get-masonry-images');
-                setImages(response.data);
+                const fetchedImages = response.data;
+
+                const processedImages = await Promise.all(
+                  fetchedImages.map(async (image) => {
+                    const brightness = await checkImageBrightness(image.src);
+                    return {
+                      ...image,
+                      isBright: brightness > 128,
+                    };
+                  })
+                );
+                console.log("Processed Images:", processedImages);
+                setImages(processedImages);
+                // setImages(response.data);
             } catch (error) {
                 console.error('이미지 불러오기 중 오류 발생:', error);
             }
@@ -227,6 +240,39 @@ function Signup() {
     
         fetchImages();
     }, []);
+    // 체도 확인하는 작업
+    const checkImageBrightness = (url) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = url;
+          img.crossOrigin = "Anonymous";
+    
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+    
+            canvas.width = img.width;
+            canvas.height = img.height;
+    
+            context.drawImage(img, 0, 0, img.width, img.height);
+            const imageData = context.getImageData(0, 0, img.width, img.height);
+            const data = imageData.data;
+    
+            let brightnessSum = 0;
+            for (let i = 0; i < data.length; i += 4) {
+              const r = data[i];
+              const g = data[i + 1];
+              const b = data[i + 2];
+              const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+              brightnessSum += brightness;
+            }
+    
+            const avgBrightness = brightnessSum / (img.width * img.height);
+            console.log(`Image URL: ${url}, Avg Brightness: ${avgBrightness}`);
+            resolve(avgBrightness);
+          };
+        });
+      };
 
     const breakpointColumnsObj = {
         default: 6,
@@ -246,15 +292,35 @@ function Signup() {
                 columnClassName="masonry-grid-column-background"
             >
                 {images.map((image, index) => (
+                <div key={index} className="background-image-container">
+                    
+                    <img
+                    src={image.srcurl}
+                    alt={`Background ${index}`}
+                    style={{
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'cover',
+                        opacity: image.isBright ? 0.6 : 1 // 밝은 이미지의 경우 불투명도 낮춤
+                    }}
+                    />
+                </div>
+                ))}
+            </Masonry>
+             {/* 기존 Masonty */}
+            {/* <Masonry
+                breakpointCols={breakpointColumnsObj}
+                className="masonry-grid-background"
+                columnClassName="masonry-grid-column-background"
+            >
+                {images.map((image, index) => (
                     <div key={index} className="background-image-container">
-                        <img
-                            src={image.src}
-                            alt={`Background ${index}`}
+                        <img src={image.src} alt={`Background ${index}`}
                             style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
                         />
                     </div>
                 ))}
-            </Masonry>
+            </Masonry> */}
             <div className="signup">
                 <div className="container">
                     <div className="signupinfo">
@@ -274,7 +340,7 @@ function Signup() {
                                         <div className="inputclass">
                                             <input type="text" name="userid" value={formData.userid} onChange={handleInputChange} onBlur={handleIdBlur} placeholder='아이디' />
                                             {idCheckError && ( <div className="error-message" style={{ maxWidth : "208px" }}> {idCheckError} </div> )}
-                                            {idCheckSuccess && ( <div className="success-message" style={{ color: 'green' }}>사용 가능한 아이디입니다. </div> )} 
+                                            {idCheckSuccess && ( <div className="success-message" style={{ color: '#398e39' }}>사용 가능한 아이디입니다. </div> )} 
                                         </div>
                                         <div className="inputclass">
                                             <input type="password" name="userpwd" value={formData.userpwd} onChange={handleInputChange} placeholder='비밀번호' />
@@ -316,7 +382,7 @@ function Signup() {
                                                 <div className="error-message" style={{ color: '#ff6347', maxWidth : "256px" }}> {nickCheckError} </div>
                                             )}
                                             {nickCheckSuccess && (
-                                                <div className="success-message" style={{ color: 'green' }}> 사용 가능한 닉네임입니다. </div>
+                                                <div className="success-message" style={{ color: '#398e39' }}> 사용 가능한 닉네임입니다. </div>
                                             )}
                                         </div>
                                         <div className="inputclass">

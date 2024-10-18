@@ -1,5 +1,7 @@
 package com.ict.backend.service;
 
+import com.ict.backend.dao.ImageDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -12,9 +14,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+    @Autowired
+    ImageDAO imageDAO;
+
     String currentDir = System.getProperty("user.dir");
     private final Path UPLOAD_DIR = Paths.get(currentDir, "images").normalize();
 
@@ -114,5 +120,14 @@ public class ImageServiceImpl implements ImageService {
         if (Files.exists(path)) {
             Files.delete(path); // 파일 삭제
         }
+    }
+
+    @Override
+    public List<String> getPosterImages(){
+        return imageDAO.getPosterImages();
+    }
+    @Override
+    public List<String> getCutImages(){
+        return imageDAO.getCutImages();
     }
 }

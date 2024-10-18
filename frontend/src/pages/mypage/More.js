@@ -4,7 +4,7 @@ import axios from '../../component/api/axiosApi';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import '../../css/mypage/more.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { BsExclamationCircle } from "react-icons/bs";
 
 
@@ -54,7 +54,7 @@ function More() {
                     {data.length > 0 ? (
                     data.map((item, index) => (
                         <div key={index} className="moviecontent">
-                            <a href={`/movies/view/${item.movie_code}`}>
+                            <Link to={`/movies/view/${item.movie_code}`}>
                             <div className="moiveimage">
                                     <img src={item.movie_link} alt="이미지" />
                                     {more === "bookmarked" && (
@@ -70,7 +70,7 @@ function More() {
                             <div className="moivetitle">
                                 <span>{item.movie_kor}</span>
                             </div>
-                            </a>
+                            </Link>
                         </div>
                     ))
                 ) : (

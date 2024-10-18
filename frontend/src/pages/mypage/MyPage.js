@@ -153,7 +153,7 @@ function Mypage() {
         console.log(userInfo.usernick);
         console.log(type);
         try {
-            const endpoint = type === 'following' ? 'following' : 'followers';
+            const endpoint = type === 'following' ? 'followers' : 'following';
             const response = await axios.get(`http://localhost:9988/user/info/f/${endpoint}`, {
                 params:  {usernick: userInfo.usernick}
             });
@@ -293,9 +293,9 @@ function Mypage() {
                             <Slider {...SliderSettings}>
                                 {recentSlidesData.map((slide, index) => (
                                     <div key={index}>
-                                        <a href={`/movies/view/${slide.movie_code}`}>
+                                        <Link to={`/movies/view/${slide.movie_code}`}>
                                             <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                        </a>
+                                        </Link>
                                     </div>
                                 ))}
                             </Slider>
@@ -321,9 +321,9 @@ function Mypage() {
                             <Slider {...SliderSettings}>
                                 {bookmarkSlidesData.map((slide, index) => (
                                     <div key={index}>
-                                        <a href={`/movies/view/${slide.movie_code}`}>
+                                        <Link to={`/movies/view/${slide.movie_code}`}>
                                             <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                        </a>
+                                        </Link>
                                     </div>
                                 ))}
                             </Slider>
@@ -344,13 +344,14 @@ function Mypage() {
                                 const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
                                 return (
                                     <li key={index} className="user-list">
-                                        <a href={`/user/info/${user.follow_user_nick}`}>
+                                        <Link to={`/user/info/${user.follow_user_nick}`} onClick={()=>setIsModalOpen(false)}>
                                             <img src={user.follow_user_image} alt={user.follow_user_nick} />
                                             <span>{user.follow_user_nick}</span>
-                                        </a>
+                                        </Link>
                                         <button 
                                             style={{ 
-                                                backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', 
+                                                backgroundColor: isMutual ? '#f7f7f7' : 'transparent',
+                                                border : isMutual? '' : '1px solid white',
                                                 color: isMutual ? 'black' : 'white' 
                                             }}
                                             onClick={() => toggleFollow(user)}

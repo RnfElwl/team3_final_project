@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,6 @@ import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/User.css';
 import profile from '../../img/profile.png';
 import Modal from '../../component/api/Modal';
-import { Link } from 'react-router-dom';
 
 
 function User() {
@@ -196,7 +195,7 @@ function User() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                      <div id = "info_change">
-                        <button className="btn btn-secondary" onClick={createSoloRoom} style ={{zIndex:"10"}}><FontAwesomeIcon icon={faPenToSquare} />채팅하기</button>
+                        
                     </div>
                     <div id = "profile">
                         <img src = {userInfo.userprofile} alt = {profile}/>
@@ -204,6 +203,7 @@ function User() {
                     </div>
                     <div className = "followingBtn">
                         <button className="btn btn-secondary">팔로우</button>
+                        <button className="btn btn-secondary" onClick={createSoloRoom} style ={{marginLeft : "10px"}}>채팅하기</button>
                     </div>
                     <div id = "userinfo">
                         <div onClick={() => handleOpenModal('following')}>
@@ -226,11 +226,11 @@ function User() {
                         <div className="content_info">
                             {bookmarkSlidesData.length > 0 ?( 
                                 <Slider {...SliderSettings}>
-                                    {bookmarkSlidesData.reverse().map((slide, index) => (
+                                    {bookmarkSlidesData.map((slide, index) => (
                                         <div key={index}>
-                                            <a href={`/movies/view/${slide.movie_code}`}>
+                                            <Link to={`/movies/view/${slide.movie_code}`}>
                                                 <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                            </a>
+                                            </Link>
                                         </div>
                                     ))}
                                 </Slider>
@@ -252,13 +252,15 @@ function User() {
                         const isMutual = user.is_follower === "1"; // 개별 사용자에 대한 팔로우 상태 확인
                         return (
                             <li key={index} className="user-list">
-                                <a href={`/user/info/${user.follow_user_nick}`}>
+                                <Link to={`/user/info/${user.follow_user_nick}`} onClick={()=>setIsModalOpen(false)}>
                                     <img src={user.follow_user_image} alt={user.follow_user_nick} />
                                     <span>{user.follow_user_nick}</span>
-                                </a>
+                                    
+                                </Link>
                                 <button 
                                     style={{ 
-                                        backgroundColor: isMutual ? '#f7f7f7' : '#3b5998', 
+                                        backgroundColor: isMutual ? '#f7f7f7' : 'transparent',
+                                        border : isMutual? '' : '1px solid white',
                                         color: isMutual ? 'black' : 'white' 
                                     }}
                                     onClick={() => toggleFollow(user)}
