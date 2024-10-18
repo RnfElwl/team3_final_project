@@ -250,7 +250,7 @@
     height: 100px;
 }
 .chatting_room .schedule:hover{
-    background-color: rgb(255, 146, 164);
+    background-color: #242429;
 }
 
 .chatting_room .schedule>*:nth-child(1){
