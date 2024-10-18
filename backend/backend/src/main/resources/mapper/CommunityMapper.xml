@@ -19,6 +19,7 @@
         join user_tbl ut on ct.userid=ut.userid
         left join image_tbl it on ut.userprofile=it.image_no
         where ct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{param1} and rt.report_tblname=2)
+        and (privacy=0 or exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid)=privacy or ct.userid=#{param1})
         group by ct.community_no
         ORDER BY community_writedate DESC
     </select>

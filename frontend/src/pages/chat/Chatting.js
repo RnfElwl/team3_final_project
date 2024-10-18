@@ -412,6 +412,12 @@ const Chatting = () => {
             window.close();  // 팝업 닫기
           }
     }
+    function moveMyPage(){
+        if (window.opener) {
+            window.opener.navigateToPage(`/mypage`);  // 부모 창 이동
+            window.close();  // 팝업 닫기
+          }
+    }
     async function exitRoom(){
         if(roomInfo.chatlist_type==1){
             const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
@@ -473,10 +479,17 @@ const Chatting = () => {
                             {
                                 memberList.map((data, index)=>(
                                 <>
+                                {
+                                    myid==data.userid?
                                     <div className='user_info'>
-                                        <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
+                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                        <div>{data.usernick}</div>
+                                    </div>:
+                                    <div className='user_info'>
+                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
+                                    }
                                 </>
                             ))
                         }
@@ -541,8 +554,12 @@ const Chatting = () => {
                             <div className='vote_user_list'>
                             {
                                 voteList.map((data, index)=>(
+                                    myid==data.userid?
                                     <div className='vote_user_info'>
-                                    <div><img src={`http://localhost:9988/${data.userprofile}`}/></div>
+                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                    <div>{data.usernick}</div>
+                                </div>:<div className='vote_user_info'>
+                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                     <div>{data.usernick}</div>
                                 </div>
                                 ))
@@ -644,7 +661,7 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>

@@ -146,7 +146,7 @@
         vote_value = VALUES(vote_value);
     </insert>
     <select id="selectVoteList" resultType="com.ict.backend.vo.MemberVO">
-        select ut.usernick, it.image_url userprofile from schedule_vote sv
+        select sv.userid, ut.usernick, it.image_url userprofile from schedule_vote sv
         join user_tbl ut on ut.userid=sv.userid
         join image_tbl it on ut.userprofile=it.image_no
         where sv.schedule_id=#{schedule_id} and vote_value=${vote_value}
