@@ -23,7 +23,7 @@
     border-radius: 10px;
 }
 .User #userinfo div{
-    color : white;
+    color : #f1f1f1;
 }
 .followingBtn{
     margin-top: 10px;
@@ -61,7 +61,7 @@
 }
 .info #profile>span{
     margin-top : 10px;
-    color : white;
+    color : #f1f1f1;
     font-weight: 800;
     font-size: 1.2em;
 }
@@ -74,13 +74,13 @@
     font-weight: 550;
 }
 .info #userinfo>p>span{
-    color : white;
+    color : #f1f1f1;
 }
 #info_change{
     margin : 10px 20px 0 0;
 }
 .User .content_title{
-    color : white;
+    color : #f1f1f1;
     display: flex;
     justify-content: space-between;
     margin : 0 30px;
@@ -108,7 +108,7 @@
     margin: 10px auto;
 }
 .content_info  h3{
-    color : white;
+    color : #f1f1f1;
 }
 .content_info div{
     height: 100%;
@@ -122,7 +122,7 @@
     overflow: hidden;
 }
 .slick-dots li.slick-active button:before{
-    color : white;
+    color : #f1f1f1;
 }
 .slick-dots li button:before{
     color : gray;
@@ -167,7 +167,7 @@
     object-fit: cover;
 }
 .follower .usernick{
-    color : white;
+    color : #f1f1f1;
     text-align: center;
     width: 115px;
 }
@@ -207,7 +207,7 @@
     width: 100% !important;
     margin : 0 auto;
     overflow-y: auto;
-    color : white;
+    color : #f1f1f1;
 }
 .User .modal-content h2{
     text-align: center;

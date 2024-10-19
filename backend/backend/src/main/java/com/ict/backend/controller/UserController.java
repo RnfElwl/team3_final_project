@@ -321,6 +321,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         String userprofile = "http://" + Host +"/" + vo.getUserprofile();
 
         Map<String, Object> userdata = new HashMap<>();
+        userdata.put("userid", userid);
         userdata.put("usernick", vo.getUsernick());
         userdata.put("userprofile", userprofile);
         userdata.put("bookmarks", userService.getCountBookmarks(userid));

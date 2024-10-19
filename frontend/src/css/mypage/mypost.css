@@ -1,0 +1,161 @@
+.myposttitle{
+    background-color: #252525;
+    /* opacity: 0.7; */
+    width: 100%;
+    /* height: auto; */
+    display: flex;
+    padding : 10px 0;
+    margin: 30px 0;
+}
+.mypostinfo .myposttitle span{
+    color : white;
+    font-size: 3em;
+}
+
+.MyPost .otherinfo{
+    /* height: 70vh; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: linear-gradient(#252525 40%, #1C1C20);
+    /* border: 1px solid white; */
+}
+/* 필터 영역 */
+/* .MyPost .otherinfo .filterbutton{
+    margin: 30px 0;
+    width: 90%;
+    border: 1px solid white;
+} */
+/* 컨테이너 기본 스타일 */
+.filterbutton {
+    width: 100%; 
+    padding: 20px;
+  }
+  
+  /* 상단 탭 버튼 스타일 */
+  .tabs {
+    max-width: 190px;
+    padding : 2px 0;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 10px;
+    background-color: #3f3a3a;
+    border-radius: 3px;
+  }
+  
+  .filterbutton .tab {
+    padding: 5px 10px;
+    /* border: 1px solid #ddd;
+    background-color: #d4d1d1;
+    color: black; */
+    border: 1px solid #353434;
+    background-color: #3f3e3e;
+    color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .tab.active {
+    background-color: #ddd;
+    color: #0b0c0f;
+    font-weight: 550;
+  }
+  
+  /* 두 번째 버튼 그룹 */
+  .sub-buttons {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 10px;
+  }
+  
+  .sub-button {
+    padding: 2px 6px;
+    /* border: 1px solid #ddd;
+    background-color: #d4d1d1;
+    color: black; */
+    border: 1px solid #353434;
+    background-color: #3f3e3e;
+    color: #f1f1f1;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 300;
+  }
+  .sub-button.active{
+    background-color: #f1f1f1;
+    color: #0b0c0f;
+    font-weight: 550;
+  }
+  
+  /* 검색 바 스타일 */
+  .search-bar {
+    max-width: 400px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .dropdown {
+    padding: 5px;
+    border: 1px solid #353434;
+    background-color: #3f3e3e;
+    color : #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .search-input {
+    padding: 5px;
+    border: 1px solid #353434;
+    background-color: #3f3e3e;
+    border-radius: 4px;
+    flex: 1;
+  }
+  
+  .search-button {
+    padding: 5px 10px;
+    color: #f1f1f1;
+    background-color: #353434;
+    border: 1px solid #3f3e3e;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+/* 테이블 영역 */
+.MyPost .otherinfo table{
+    width: 90%;
+    text-align: center;
+}
+.MyPost .otherinfo table>thead>th{
+    background: linear-gradient(#252525 40%, #1C1C20);
+}
+.MyPost .otherinfo table>tbody>tr>th{
+    background: #252525;
+}
+
+.pagination{
+    margin: 0 auto;
+    max-width: 1200px;
+    width: 100%;
+    background: linear-gradient(#252525 40%, #1C1C20);
+    height: 50px;
+}
+
+
+
+/* 정보 없을 시 표시할내용 */
+.noInfo{
+    width: 100%;
+    height: 100%;
+    color : #fff;
+    display: flex;
+}
+.noInfo div{
+    font-size: 4em;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.noInfo>div>p{
+    margin-top: 20px;
+    font-size: 0.6em;
+}

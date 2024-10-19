@@ -230,7 +230,7 @@ function Signup() {
                     };
                   })
                 );
-                console.log("Processed Images:", processedImages);
+                //console.log("Processed Images:", processedImages);
                 setImages(processedImages);
                 // setImages(response.data);
             } catch (error) {
@@ -268,7 +268,7 @@ function Signup() {
             }
     
             const avgBrightness = brightnessSum / (img.width * img.height);
-            console.log(`Image URL: ${url}, Avg Brightness: ${avgBrightness}`);
+            //console.log(`Image URL: ${url}, Avg Brightness: ${avgBrightness}`);
             resolve(avgBrightness);
           };
         });

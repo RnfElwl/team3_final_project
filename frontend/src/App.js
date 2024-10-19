@@ -36,6 +36,7 @@ import SeeMore from './pages/mypage/SeeMore.js'
 import RecentWatch from './pages/mypage/RecentWatch.js'
 import BookMarked from './pages/mypage/BookMarked.js';
 import User from './pages/mypage/User.js';
+import MyPost from './pages/mypage/MyPost.js';
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
                 <Route path = "/mypage/recentwatch" element={<RecentWatch/>}/>
                 <Route path ="/user/info/:usernick" element={<User/>}/>
                 <Route path ="/user/info/" element={<User/>}/>
+                <Route path = "/mypage/mypost" element={<MyPost/>}/>
             </Route>
         </Routes>
       </TokenValidator>

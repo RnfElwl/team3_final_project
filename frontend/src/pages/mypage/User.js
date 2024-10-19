@@ -169,7 +169,7 @@ function User() {
         const formData = {
             'chat_title': '고구마1234',//데이터 안씀  그냥넣는 값
             'chatlist_type': 2,
-            'user2': 'flower1234', // 상대 유저 아이디 이게 중요
+            'user2': userInfo.userid, // 상대 유저 아이디 이게 중요
             'chatlist_img': '1' //데이터 안씀 그냥넣는 값
         }
         const {data} = await axios.post("http://localhost:9988/chat/create", formData, {
