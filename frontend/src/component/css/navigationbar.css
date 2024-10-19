@@ -63,11 +63,12 @@ input:focus {
   width:100%;
   display: flex;
   align-items: center;
-  height: 56px;
-  padding: 0 40px;
+  height: 60px;
+  padding: 0 20px;
   justify-content: space-between;
   box-sizing: border-box;
   z-index: 100;
+  min-width: 1220px;
 }
 .Header .left-info{
   display: flex;
@@ -121,7 +122,7 @@ input:focus {
 
 }
 .Header .right-info>*{
-  margin-left: 30px;
+  margin-left: 20px;
 }
 .Header .search{
   display: flex;
@@ -130,35 +131,68 @@ input:focus {
   padding: 5px 20px;
   border-radius: 10px;
   height: 40px;
+  width: 300px;
 }
 .Header .search input{
   background-color: #272731;
   color: #f1f1f1;
 }
 
-.Header .login_btn{
+.Header .login_btn a{
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 100px;
+  width: 80px;
   height: 40px;
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: #0b0c0f;
+  background:none;
+  border: 1px solid #f1f1f1;
 }
-.Header .join_btn{
-  border: 0;
+.Header .login_btn a:hover{
+  color:#1C1C20;
+  font-weight: bold;
+  background-color: #f1f1f1;
+}
+.Header .join_btn a{
+  color: #48d1cdea;
+  font-weight: bold;
+  border: 1px solid #48d1cdea;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 110px;
+  width: 80px;
   height: 40px;
   padding: 5px 10px;  
   border-radius: 5px;
-  background-color: #00d382;
+  background:none;
+}
+.Header .join_btn{
+  color: #48d1cdea;
+  font-weight: bold;
+  border: 1px solid #48d1cdea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 80px;
+  height: 40px;
+  padding: 5px 10px;  
+  border-radius: 5px;
+  background:none;
+}
+
+.Header .join_btn a:hover{
   color: #f1f1f1;
+  font-weight: bold;
+  background-color: #48d1cdea; 
+}
+.Header .join_btn:hover{
+  color: #f1f1f1;
+  font-weight: bold;
+  background-color: #48d1cdea; 
 }
 .nav-bar {
     position: absolute;

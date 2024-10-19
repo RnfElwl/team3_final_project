@@ -154,7 +154,7 @@ function Header() {
       <header className="Header">
           <div className='left-info'>
             {/* <List color={"#c2c2c2"} size={40} onClick={showNav}/> */}
-            <Link to={'/'} onClick={()=>{tabClick(0)}}><div><img src="../../logo3.png" width={"170px"}/></div></Link>
+            <Link to={'/'} onClick={()=>{tabClick(0)}}><div><img src="../../logo3.png" width={"200px"} /></div></Link>
             <div className='tab'>
             <div className={`${index==0?'focus':''}`}><Link to={'/'} onClick={()=>{tabClick(0)}} ref={(el) => (tabList.current[0] = el)} >Home</Link></div>
             <div className={`${index==1?'focus':''}`}><Link to={'/categories'} onClick={()=>{tabClick(1)}} ref={(el) => (tabList.current[1] = el)} >Movie</Link></div>
@@ -184,13 +184,13 @@ function Header() {
                     style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px', cursor: 'pointer' }}
                   />
                 </Link>
-                <button className='join_btn' onClick={logout}>로그아웃</button>
+                <button className='join_btn' onClick={logout}>Logout</button>
               </div>
               ) : (
               // 토큰이 없는 경우: 로그인 및 회원가입 버튼 표시
               <>
-                <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
-                <div className='join_btn'><Link to={'/signup'}>회원가입</Link></div>
+                <div className='login_btn'><Link to={'/signin'}>Login</Link></div>
+                <div className='join_btn'><Link to={'/signup'}>Join</Link></div>
               </>
               )}
             {/* <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>

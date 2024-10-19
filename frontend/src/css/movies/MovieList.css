@@ -1,25 +1,25 @@
 .movie-list-wrapper {
   background-color: #1C1C20; 
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
+  justify-content: center; 
   padding-top: 20px;
 }
 
 .movie-list-container {
-  max-width: 1200px; /* 최대 너비를 1200px로 설정 */
-  width: 100%; /* 화면 크기에 맞게 너비가 확장되지만, 1200px을 넘지 않음 */
+  max-width: 1200px;
+  width: 100%; 
 }
 .movie-list-container > h2 {
-  color: white;
+  color: #f0f0f0;
   margin-bottom: 20px;
 }
 .movie-list-title {
-  color: white; /* 영화 목록 제목 색상 */
+  color: #f0f0f0;
   text-align: center;
   margin-bottom: 20px;
 }
 .row{
-  border-top: 1px solid #48d1cdea;
+  border-top: 1px solid #f0f0f0;
   padding: 20px;
 
 }
@@ -28,8 +28,11 @@
   overflow: hidden;
   transition: transform 0.2s ease;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
-  /* background-color: #333; 영화 카드 배경색 */
-  height: 300px; /* 카드의 세로 길이 조정 */
+  /* background-color: #333; */
+  height: 300px; 
+  /* white-space: nowrap;    
+  overflow: hidden;    
+  text-overflow: ellipsis;   */
 }
 
 .movie-card:hover {
@@ -38,8 +41,8 @@
 
 .movie-poster {
   width: 100%;
-  height: 250px; /* 포스터 크기 조정 */
-  object-fit: cover; /* 이미지가 꽉 차도록 설정 */
+  height: 250px;
+  object-fit: cover; 
   
 }
 
@@ -49,7 +52,7 @@
 }
 
 .movie-title, .movie-subtitle, .movie-date {
-  color: white; /* 텍스트 흰색으로 통일 */
+  color: white; 
 }
 
 .movie-title {
@@ -58,13 +61,5 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
-
-
-
-
-
-
-
-
 
 

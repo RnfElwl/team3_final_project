@@ -6,51 +6,63 @@
     justify-content: flex-start; /* 위쪽에 배치 */
     align-items: flex-start;
     padding-top: 40px; /* 위쪽 여백 조절 */
+    max-width: 1920px;
 }
 
-.content-container {
+.page-container .content-container {
     max-width: 1200px; /* 중앙 1200px */
+    min-width: 760px;
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    color: #fff; /* 글씨 색상 흰색 */
+    color: #f0f0f0; /* 글씨 색상 흰색 */
 }
 
   /* 링크 관련 스타일 */
-a.card-link {
+.page-containera .card-link {
     text-decoration: none; /* 링크 밑줄 제거 */
     color: inherit; /* 링크 색상 상속 */
 }
 
   /* 탭 스타일 */
-.nav-tabs .nav-link {
-color: #fff; /* 탭 기본 색상 */
-/* background-color: transparent; */
-border: none;
-cursor: pointer;
-font-size: 18px;
+.page-container .nav-tabs .nav-link {
+    background: none;
+    border: 1px solid #48d1cdea;
+    border-bottom: #f0f0f0;
+    cursor: pointer;
+    font-size: 18px;
+    color: #f0f0f0;
 }
-
-.nav-tabs .nav-link.active {
-color: #48d1cdea; /* 활성화된 탭 색상 */
-border-bottom: 2px solid #48d1cdea;
+.page-container .nav-tabs .nav-link:hover{
+    color: #f0f0f0;
+    font-weight: bold;
+}
+.page-container .nav-tabs .nav-link.active {
+    background-color: #48d1cdea;
+    color: #f0f0f0;
+    font-weight: bold;
 }
 
 /* 카드 스타일 */
-.card {
+.page-container .card {
 /* background-image: url("https://img.freepik.com/free-vector/watercolor-mint-background_23-2150238643.jpg?t=st=1728614442~exp=1728618042~hmac=1098098cc9adff8d05d35cb12c73935670ad79457a2421e69635aa38b6b11199&w=826"); */
-border: none;
-transition: transform 0.3s ease; /* hover 애니메이션 */
+    border: none;
 }
 
-.card:hover {
-transform: scale(1.05); /* hover 시 카드 크기 커짐 */
+.page-container .card:hover {
+    transform: scale(1.05); /* hover 시 카드 크기 커짐 */
 }
 
 /* 카드 내부 텍스트 스타일 */
-.card-title {
-color: #464040; /* 카드 제목 색상 */
-font-size: 18px;
+.page-container .card-title {
+    color: #464040; /* 카드 제목 색상 */
+    font-size: 18px;
+    padding: 10px 0;
+    margin: 0;
+}
+.page-container .card-title:hover {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 /* 반응형 스타일 */

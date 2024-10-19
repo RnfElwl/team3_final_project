@@ -603,17 +603,7 @@ function CommunityView(){
                                         </div>
                                     <div className="comment_content">{comment.comment_content}</div>
                                     <div className="comment_info">
-                                        {/* <button onClick={() => handleLikeComment(comment.comment_no)}>좋아요 {likes[comment.comment_no]}</button> */}
-                                        {/* <form onSubmit={(e) => handleReplySubmit(e, comment.comment_no)}>
-                                            <input
-                                                type="text"
-                                                value={replyText}
-                                                onChange={handleReplyChange}
-                                                placeholder="대댓글을 입력하세요"
-                                            />
-                                            <button type="submit">답글 남기기</button>
-                                        </form> */}
-                                        <div onClick={()=>showCommentInput(i, 0)}>답글</div>
+                                        <button onClick={()=>showCommentInput(i, 0)} className="recomment">답글</button>
                                         {
                                             comment.reply_cnt!=0&&(
                                                 <button  className="reply_open" onClick={() => {toggleReplies(comment.comment_no); removeShowBtn(i)}} 
@@ -623,7 +613,7 @@ function CommunityView(){
                                         </button>
                                             )
                                         }
-                                    </div>
+                                        </div>
                                     <form className="comment_input" onSubmit={(e) =>{ 
                                         e.preventDefault();
                                         handleReplySubmit(comment.comment_no, i)}} ref={(el) => { if (!commentInput.current[i]) {
