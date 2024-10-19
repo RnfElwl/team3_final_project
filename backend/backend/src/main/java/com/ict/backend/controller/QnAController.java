@@ -63,8 +63,18 @@ public class QnAController {
             @PathVariable int qna_no,
             @RequestHeader(value = "Host", required = false) String Host) {
 
+
         List<QnAVO> qnaList = qnaService.getQnAView(qna_no);
         return new ResponseEntity<>(qnaList, HttpStatus.OK);
+    }
+    @PostMapping("/view/{qna_no}")
+    public ResponseEntity<?> privateViewCheck(@RequestBody QnAVO passCheck){
+        System.out.println("패스체크"+passCheck);
+        int passCheckOk= qnaService.passWriteChk(passCheck);
+
+        System.out.println("값이 맞니?"+passCheckOk);
+
+        return new ResponseEntity<>(passCheckOk, HttpStatus.OK);
     }
     //이미지 불러오기
     @GetMapping("/images/{foldername}/{filename}")

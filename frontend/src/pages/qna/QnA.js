@@ -82,7 +82,7 @@ function QnA() {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         setNowPage(1);
-        axios.get(`http://localhost:9988/qna/list?nowPage=1&searchKey=${searchKey}&searchWord=${searchWord}`)
+        axios.get(`http://localhost:9988/qna/list?nowPage=1&searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
             .then(response => {
                 console.log(response.data);
                 setQnA(response.data.qnaList);
@@ -119,11 +119,29 @@ function QnA() {
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
         if (privatePost && password === privatePost.qna_pwd) {
-            setIsPasswordCheck(true);
-            navigate(`/qna/view/${privatePost.qna_no}`);
+            setIsPasswordCheck(true);   
+            axios.post(`http://localhost:9988/qna/view/${privatePost.qna_no}`,
+                {
+                    qna_no: privatePost.qna_no,
+                    privacyCheckWord: privatePost.qna_pwd
+                })
+            .then((response)=>{
+                console.log(response.data);
+                const result = response.data;
+
+                if(response.data==1){
+                    console.log(result);
+                    // console.log(privatePost.qna_no);
+                    navigate(`/qna/view/${privatePost.qna_no}`, { state: {result} });
+                }
+            }).catch((error)=>{
+                console.error('인증 실패',error);
+            });
         } else {
-            alert("비밀번호가 틀렸습니다!");
-            setIsPasswordCheck(false);
+            const result = 0;
+            navigate(`/qna/view/${privatePost.qna_no}`, { state: {result} });
+            // alert("비밀번호가 틀렸습니다!");
+            // setIsPasswordCheck(false);
         }
     };
     const handlesearchKeyChange = (e) => { //검색키 처리
@@ -253,7 +271,8 @@ function QnA() {
                                             (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
                                                 <div className="qna_ht">[기타]&nbsp;</div>)}
                                         {item.privacyQ === 0 ? (
-                                            <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
+                                            <div onClick={() => navigate(`/qna/view/${item.qna_no}`, { state: { privacyQ: item.privacyQ } })} >{item.qna_title}</div>
+                                            // <Link to={`/qna/view/${item.qna_no}`}>{item.qna_title}</Link>
                                         ) : (
                                             <div className="qna_pwt" onClick={() => handlePrivateClick(item)}>
                                                 비밀글입니다. <AiFillLock />

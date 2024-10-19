@@ -4,20 +4,41 @@
     padding-left: 210px;
     padding-right: 10px;
     margin: 0 auto;
-    color:white;
+    color:#f1f1f1;
   }
 /* 검색 css */
-.adminSearchForm form{
+.adminSearchForm{
   display: flex;
+  justify-content: space-between;
 }
 .adminSearchForm input[type="radio"]{
   display: none;
 }
-.adminSearchForm label{
-  background-color: #00FF9C;
-  padding: 10px;
-  margin: 5px;
+.adminQnaEdit{
+  text-align: right;
 }
+/* qna상태 저장 css */
+.qna_active_edit_form{
+  display: flex;
+  align-items: center;
+}
+.qna_active_editopt{
+  appearance: none;
+  width: 100px;
+  height: 35px;
+  font-size: 1em;
+  padding: 5px;
+  margin-right: 10px;
+  white-space:nowrap;
+  border-radius: 5px;
+  text-align: center;
+}
+.qna_active_title{
+  font-size: 21px;
+  line-height: 24px;
+  margin-right: 10px;
+}
+/* qna 답변 등록 css */
 .qnaAnswerModify-btn{
   background-color: rgb(182, 255, 161);
   color: rgb(46, 91, 43);
@@ -56,7 +77,7 @@
 
 .AdminQnaTable th {
   background-color: #343a40; /* Dark header background */
-  color: white; /* Text color */
+  color: #f1f1f1; /* Text color */
 }
 
 .AdminQnaTable tr:nth-child(even) {
@@ -95,4 +116,10 @@
   font-size: 18px;
   color: #f8d7da;
   background-color: #343a40;
+}
+
+/* 타이틀 css */
+.adqna_ht_th{
+  display: flex;
+  margin: 0;
 }

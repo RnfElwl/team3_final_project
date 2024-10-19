@@ -114,11 +114,13 @@ function MemCon(){
         axios.post('http://localhost:9988/admin/memActiveEdit', formData)
             .then(response => {
                 console.log('성공:', response.data);
+                if (response.data === 1) {
+                    window.location.reload();
+                }
             })
             .catch(error => {
                 console.error('오류 발생:', error);
             });
-
       }
 
 
@@ -198,11 +200,12 @@ function MemCon(){
                                 <td>{item.gender == 1 ? "남" : "여"}</td>
                                 <td>{item.usertel ? item.usertel : "-"}</td>
                                 <td className={item.active_state === 1 ? "status-active" : "status-inactive"}>
-                                    {item.active_state === 1 ? "활성" : "비활성"}
+                                    {item.active_state === 1 ? "활성" :
+                                    item.active_state===2? "정지":"비활성"}
                                 </td>
                                 <td>{item.regiserdate}</td>
                                 <td>{item.reported_count}</td>
-                                <td>{item.last_login}</td>
+                                <td>{item.lastvisite}</td>
                             </tr>
                         ))
                     ) : (

@@ -7,11 +7,46 @@ import './../../css/admin/adminComCon.css';
 
 function ComCon(){
     const [CommunityActivity, setCommunityActivity]=useState(0);
+    const [Community, setCommunity]=useState([]);
+    const [nowPage, setNowPage] = useState(1);
+    const [totalRecord, setTotalRecord] = useState(0);
+    const [searchKey, setSearchKey]=useState('');
+    const [searchWord, setSearchWord]=useState('');
+    const [active_state, setActive_state]=useState('');
+    const [orderColumn, setOrderColumn]=useState('');
+    const [orderType, setOrderType]=useState('');
+    const navigate = useNavigate();
+    //전체페이지
+    const totalPage = Math.ceil(totalRecord / 12);
+    //페이지네이션
+    const handlePageChange = (newPage) => {
+        setNowPage(newPage);
+    };
 
+    const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}`// + 
+    // `&searchKey=${searchKey}` + 
+    // `&searchWord=${encodeURIComponent(searchWord)}` + 
+    // `&active_state=${active_state}` + 
+    // `&orderColumn=${orderColumn}` + 
+    // `&orderType=${orderType}`;
+
+    //커뮤니티 탭
     const handleComTap=(e) => {
         e.preventDefault();
-        setCommunityActivity(e.target.value);  // 상태가 바뀌면 컴포넌트가 다시 렌더링되어 또 상태를 업데이트...
-    }; 
+        setCommunityActivity(e.target.value);
+    };
+
+    useEffect(() => {
+        axios.get(`http://localhost:9988/admin/comList?nowPage=${nowPage}&searchKey=${searchKey || ''}&searchWord=${encodeURIComponent(searchWord || '')}`)
+            .then(response => {
+                console.log(response.data);
+                setCommunity(response.data.comList);
+                setTotalRecord(response.data.comTotalPages);
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
+            });
+    }, [nowPage, searchKey, searchWord]);
 
     return(
         <div className="AdminComBody">

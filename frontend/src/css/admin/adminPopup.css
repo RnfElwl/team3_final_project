@@ -1,6 +1,6 @@
 
 /* qnaAns 바디*/
-.QnaAnsWriteBody{
+.QnaAnsWriteBody, .RepAnsWriteBody{
     color: rgb(199, 197, 197);
 }
 /* qnaAns 타이틀 */

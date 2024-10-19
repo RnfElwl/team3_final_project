@@ -49,7 +49,7 @@ function QnaAnsWrite(){
         const formData={
             answer_user:answer_user,
             qna_state:qna_state,
-            qna_answer:qna_answer      
+            qna_answer:qna_answer
         };
 
         console.log('form데이터 확인:',formData);
@@ -71,6 +71,9 @@ function QnaAnsWrite(){
             }else{
                 console.log('답글이 성공적으로 등록 되었습니다.',response.data);
                 alert('답글 등록 완료');
+                if (window.opener) {
+                    window.opener.location.reload();
+                }
                 window.close();
             }
         }).catch((error)=>{

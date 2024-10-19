@@ -8,7 +8,7 @@ function Layout() {
   const location = useLocation();
 
   // 헤더를 숨길 경로를 배열로 지정
-  const hideHeaderRoutes = ['/admin/adminQAns'];
+  const hideHeaderRoutes = ['/admin/adminQAns','/admin/repAns/'];
 
   // 현재 경로가 hideHeaderRoutes에 포함된 경로로 시작하는지 확인
   const shouldHideHeader = hideHeaderRoutes.some((route) =>

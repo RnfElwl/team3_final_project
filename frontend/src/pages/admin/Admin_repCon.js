@@ -9,6 +9,7 @@ function RepCon(){
     const [report, setReport]=useState([]);
     const [searchKey, setSearchKey]=useState('report_userid');
     const [searchWord, setSearchWord]=useState('');
+    const [checkedReps, setCheckedReps] = useState(new Array(report.length).fill(false));
     //신고리스트 불러오기
     useEffect(()=>{
         axios.get(`http://localhost:9988/admin/repList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
@@ -18,6 +19,38 @@ function RepCon(){
             setReport(response.data.repList);
         })
     },[searchKey, searchWord]);
+
+       //Qna 답글 팝업 창 열기
+       const openAddReportAnsWindow = (report_no) => {
+        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=584');
+    };
+
+    //팝업 창으로 데이터 전송
+
+    //체크 전체 관리
+    const [isAllRepChecked, setAllRepChecked] = useState(false);
+    const handleAllRepChecked = () => {
+        const newCheckedState = !isAllRepChecked;
+        setAllRepChecked(newCheckedState);
+        setCheckedReps(new Array(report.length).fill(newCheckedState));  
+      };
+    // 모든 항목의 체크 상태를 동일하게 변경
+    const handleRepChecked = (index) => {
+        const newCheckedReps = [...checkedReps];
+        newCheckedReps[index] = !newCheckedReps[index]; // 해당 항목의 체크 상태 변경
+        setCheckedReps(newCheckedReps);
+
+        // 모든 항목이 체크되었는지 확인하여 전체 체크박스 상태 동기화
+        setAllRepChecked(newCheckedReps.every(item => item === true));
+    };
+
+    //useEffect를 사용하여 QnA 데이터가 변경될 때 체크 상태 초기화
+    useEffect(() => {
+        setCheckedReps(new Array(report.length).fill(false)); // QnA 데이터 변경 시 체크 상태 초기화
+        setAllRepChecked(false); // 전체 체크박스 상태 초기화
+    }, [report]);
+
+
     
     
     return(
@@ -31,16 +64,19 @@ function RepCon(){
                         <th>
                             <input
                             type="checkbox"
-                            />
+                            checked={isAllRepChecked}
+                            onChange={handleAllRepChecked}/>
                         </th>
+                        <th>No.</th>
                         <th>신고자</th>
                         <th>피신고자</th>
                         <th>신고된 글</th>
                         <th>신고 유형</th>
                         <th>신고 사유</th>
                         <th>신고 위치</th>
-                        <th>신고 수리 시간</th>
+                        <th>신고 시간</th>
                         <th>신고 수리 여부</th>
+                        <th>신고 수리 시간</th>
                         <th>신고 수리 담당자</th>
                         <th>신고 유효성</th>
                         <th>경고 적용</th>
@@ -53,8 +89,11 @@ function RepCon(){
                         <th>
                         <input
                             type="checkbox"
-                            />
+                            checked={checkedReps[index]}
+                            value={item.report_no || ''}
+                            onChange={() => handleRepChecked(index)}/>
                         </th>
+                        <th>{item.report_no}</th>
                         <th>{item.report_userid}</th>
                         <th>{item.reported_userid}</th>
                         <th>
@@ -67,15 +106,19 @@ function RepCon(){
                             item.report_type == 2? "비매너 행위":
                             item.report_type == 3? "기타": ""}</th>
                         <th>{item.report_reason}</th>
-                        <th>{item.report_tblname ==1? "리뷰":
-                             item.report_tblname ==2? "커뮤니티":
-                             item.report_tblname ==3? "채팅":
-                             item.report_tblname ==4? "QnA":""}</th>
+                        <th>{item.report_tblname ==1? (<div>리뷰:{item.report_tblno}</div>):
+                             item.report_tblname ==2? (<div>커뮤니티:{item.report_tblno}</div>):
+                             item.report_tblname ==3? (<div>채팅:{item.report_tbluuid}</div>):
+                             item.report_tblname ==4? (<div>문의:{item.report_tblno}</div>):""}</th>
                         <th>{item.report_date}</th>
                         <th>{item.edit_state==0? "처리중":"처리됨"}</th>
+                        <th>{item.edit_date}</th>
                         <th>{item.edit_user}</th>
                         <th>{item.active_state!=1? "무효":"유효"}</th>
-                        <th><button>신고적용</button></th>
+                        <th>{item.edit_state==0?(<button className="repAnswerModify-btn"
+                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리</button>)
+                                    :(<button className="repAnswerAdd-btn"
+                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리 수정</button>)}</th>
                     </tr>)))
                     :(<tr>검색한 내용을 포함한 신고내역이 존재하지 않습니다.</tr>)}
                 </tbody>

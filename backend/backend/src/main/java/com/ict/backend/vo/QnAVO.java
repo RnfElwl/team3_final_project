@@ -28,4 +28,9 @@ public class QnAVO {
     private Integer next_qna_no;
     private String prev_title;
     private String next_title;
+    private String prev_privacyQ;
+    private String next_privacyQ;
+
+    //비밀글 체크를 위한 데이터
+    private String privacyCheckWord;
 }

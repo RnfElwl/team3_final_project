@@ -4,15 +4,11 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.ReportDAO">
 <insert id="insertReport">
-    <if test="report_tblname==1 or report_tblname == 2">
+    <if test="report_tblname==1 or report_tblname == 2 or report_tblname==4">
         insert into report_tbl(report_userid, reported_userid, report_content, report_tblname, report_tblno, report_type, report_reason)
         values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, ${report_tblno}, ${report_type}, #{report_reason});
     </if>
     <if test="report_tblname==3">
-        insert into report_tbl(report_userid, reported_userid, report_content, report_tblname, report_tbluuid, report_type, report_reason)
-        values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, #{report_tbluuid}, ${report_type}, #{report_reason});
-    </if>
-    <if test="report_tblname==4">
         insert into report_tbl(report_userid, reported_userid, report_content, report_tblname, report_tbluuid, report_type, report_reason)
         values (#{report_userid}, #{reported_userid}, #{report_content}, ${report_tblname}, #{report_tbluuid}, ${report_type}, #{report_reason});
     </if>
