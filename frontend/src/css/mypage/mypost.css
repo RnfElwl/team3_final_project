@@ -66,6 +66,7 @@
   .sub-buttons {
     display: flex;
     gap: 3px;
+    margin-left : 15px;
     margin-bottom: 10px;
   }
   

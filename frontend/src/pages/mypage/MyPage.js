@@ -12,11 +12,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/mypage.css';
 import profile from '../../img/profile.png';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Modal from '../../component/api/Modal';
 
 function Mypage() {
+
     const [recentSlidesData, setRecentSlides] = useState([]);
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
