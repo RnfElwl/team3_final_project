@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import '../../css/mypage/more.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { BsExclamationCircle } from "react-icons/bs";
+import { FaRegBookmark} from 'react-icons/fa';
 
 
 function More() {

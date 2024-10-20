@@ -369,8 +369,12 @@ function Mypage() {
                             </div>
                         )}
                     </Modal>
-                        )}    
+                        )}
                     {/* 사등분 */}
+                    <div className = "content_title" style={{margin : "50px auto 0 auto"}}>
+                            <span></span>
+                            <Link to="mypost"> 더보기 {'>'}</Link>
+                    </div>
                     <div className = "board">
                         <div className = "write_4">
                             <div className = "content_title">
@@ -457,7 +461,7 @@ function Mypage() {
                                         <th>
                                             <ul className="custom-list">
                                                 <li className ="list_title"
-                                                 onClick={() => navigate(`/community/communityView/${likecommunitylist.community_no}`)} style={{ cursor: 'pointer' }}>
+                                                    onClick={() => navigate(`/community/communityView/${likecommunitylist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{likecommunitylist.community_title}</div>
                                                     {likeStatus[index] ? (
                                                         <FaHeart
