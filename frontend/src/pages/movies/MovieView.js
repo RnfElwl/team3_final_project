@@ -28,56 +28,96 @@ function MovieView() {
   const reviewInputRef = useRef(null);
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true); // 상태 추가
 
-  // 처음 시작할때 불러올 값들
+  // 1. 영화 정보 가져오기
   useEffect(() => {
     const fetchMovieData = async () => {
-      setLoading(true); // 로딩 상태 시작
       try {
-        // 영화 정보 가져오기
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
-        console.log(response.data); // API 응답 데이터 콘솔에 출력
-        setMovie(response.data.movieVO); // 영화 데이터를 상태에 저장
-        setUserId(response.data.userid);
-        const userid = response.data.userid;
-        const result2 = await axios.get('http://localhost:9988/getUserData', { params:{userid }});
-        
-        setUserData(result2.data);
-        // 이미지 정보 가져오기
-        const imageResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
-        setImages(imageResponse.data);
-        
-      
-        // 리뷰 정보 가져오기
-        const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
-        console.log('Fetched reviews:', reviewResponse.data); // 리뷰 데이터 로그로 확인
-        setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
-
-        // 평균 평점과 리뷰 개수 가져오기
-        const ratingResponse = await axios.get(`http://localhost:9988/api/movies/${movieCode}/rating`);
-        console.log('Rating info:', ratingResponse.data); // API 응답 데이터 확인
-        setRatingInfo(ratingResponse.data); // 상태에 평점 정보 저장
-        
+        console.log("영화정보 가져오기 성공"); // API 응답 확인
+        setMovie(response.data.movieVO); // 영화 데이터 상태에 저장
+        setUserId(response.data.userid); // 유저 ID 상태에 저장
       } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false); // 로딩 상태 종료
+        console.error("Error fetching movie data:", error);
       }
     };
     fetchMovieData();
-  }, [movieCode, userid]);
+  }, [movieCode]);
+
+  // 2. 유저 데이터 가져오기
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const result = await axios.get('http://localhost:9988/getUserData', { params: { userid } });
+        console.log("유저데이터 가져오기 성공")
+        setUserData(result.data); // 유저 데이터 상태에 저장
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (userid) fetchUserData(); // 유저 ID가 있을 때만 호출
+  }, [userid]);
+
+  // 3. 이미지 정보 가져오기
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
+        console.log("이미지 가져오기 성공")
+        setImages(response.data); // 이미지 데이터 상태에 저장
+      } catch (error) {
+        console.error("이미지 가져오기 실패: ", error);
+      }
+    };
+    fetchImages();
+  }, [movieCode]);
+
+  // 4. 리뷰 정보 가져오기
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
+        console.log("리뷰 정보 가져오기 성공"); // 리뷰 데이터 확인
+        setReviews(response.data); // 리뷰 상태에 저장
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, [movieCode]);
+
+  // 5. 평균 평점과 리뷰 개수 가져오기
+  useEffect(() => {
+    const fetchRatingInfo = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}/rating`);
+        console.log("평점정보 가져오기 성공"); // 평점 정보 확인
+        setRatingInfo(response.data); // 평점 상태에 저장
+      } catch (error) {
+        console.error("Error fetching rating info:", error);
+      }
+    };
+    fetchRatingInfo();
+  }, [movieCode]);
+
+  // 로딩 상태 관리
+  useEffect(() => {
+    const isLoading = !movie || !images || !reviews || !ratingInfo;
+    setLoading(isLoading); // 필요한 데이터가 모두 로드될 때까지 로딩
+  }, [movie, images, reviews, ratingInfo]);
+
 
   // 선호 정보 저장
   useEffect(() => {
     const saveUserPreference = async () => {
       try {
-        const { data: movieGenre } = await axios.get(
-          `http://localhost:9988/api/prefer/genre/${movieCode}`
-        );
-
+        const { data: movieGenre } = await axios.get(`http://localhost:9988/api/prefer/genre/${movieCode}`);
+        console.log("영화장르 가져오기 성공");
         const response = await axios.post('http://localhost:9988/api/prefer/save', {
           userid,
           movie_genre: movieGenre          
         });
+        console.log("선호장르 저장하기 성공");
 
       } catch (error) {
         console.error('Error saving user preference:', error);
@@ -87,14 +127,13 @@ function MovieView() {
   }, [movieCode, userid]);
 
 
-
   // userid가 설정된 후에 북마크 상태를 가져오도록 useEffect 분리
   useEffect(() => {
     if (userid && movieCode) {
       const fetchBookmarkStatus = async () => {
         try {
           const bookmarkResponse = await axios.get(`http://localhost:9988/api/bookmarks/add/${movieCode}`);
-          console.log(bookmarkResponse.data);
+          console.log("북마크 정보 가져오기 성공");
           setIsFavorite(bookmarkResponse.data.isFavorite); // 북마크 여부 설정
         } catch (error) {
           console.error("Error fetching bookmark status:", error);
@@ -105,11 +144,7 @@ function MovieView() {
   }, [userid, movieCode]);
 
 
-  if (loading) return <div>Loading...</div>; // 로딩 중일 때 표시
-  if (!movie) return <div>No movie data available</div>; // 데이터가 없을 때 표시
-
-
-  // 찜하기 토글 함수
+  // 북마크 토글 함수
   const toggleFavorite = async () => {
     try {
       if (isFavorite) {
@@ -121,19 +156,17 @@ function MovieView() {
         if (response.status === 200) {
           setIsFavorite(false);
         }
-        
       } else {
         // 북마크 추가 API 호출
         const response = await axios.post('http://localhost:9988/api/bookmarks/add', {
           userid,
           movie_no: movie.movie_no
-        
         });
         console.log(response.data); // 응답 데이터만 출력
         if (response.status === 200) {
           setIsFavorite(true);
         }
-        console.log("success");
+        console.log("북마크 추가 성공");
         }
     } catch (error) {
       console.error('Error updating bookmark:', error);
@@ -171,14 +204,11 @@ function MovieView() {
         userid: userid
       }
     });
-
     const reviewExists = existResponse.data;
-
     if (reviewExists) {
       alert('하나의 영화에 대한 리뷰 작성은 한 번만 가능합니다');
-      return; // 중단
+      return;
     }
-
     const reviewText = reviewInputRef.current.textContent; // 입력된 텍스트 가져오기
     if (rating > 0 && reviewText) {
       try {
@@ -186,17 +216,6 @@ function MovieView() {
           alert("리뷰를 작성하려면 로그인하세요!");
           return;
         }
-
-        // 데이터 로그 추가
-      console.log("데이터가 잘가나?", {
-        userid,
-        movie_no: movie.movie_no,
-        movie_review_content: reviewText,
-        rate: rating,
-      });
-
-
-
         // 리뷰 서버로 전송
         const response = await axios.post('http://localhost:9988/api/reviews/add', {
           userid,
@@ -206,7 +225,7 @@ function MovieView() {
         });
         // 새로운 리뷰 추가 후 상태 업데이트
         const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
-        console.log('Fetched reviews:', reviewResponse.data); // 리뷰 데이터 로그로 확인
+        console.log("내가 쓴 리뷰 불러오기 성공"); // 리뷰 데이터 로그로 확인
         setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
         // 리뷰 입력 초기화
         reviewInputRef.current.textContent = ''; // 리뷰 입력 초기화
@@ -224,19 +243,13 @@ function MovieView() {
         console.error('Error: movie_review_no is undefined or null');
         return;
       }
-      // 요청 데이터 확인
-      console.log('Updating review with data:', {
-        movie_review_content: editReviewText, // 리뷰 내용
-        rate: rating,                        // 별점
-        movie_review_no: movie_review_no      // 리뷰 번호 (고유 ID)
-      });
       try {
         const response = await axios.put(`http://localhost:9988/api/reviews/${movie_review_no}`, {
           movie_review_no,
           movie_review_content: editReviewText, // 리뷰 내용
           rate: rating,                        // 별점
         });
-        console.log('Review updated:', response.data);
+        console.log('리뷰 수정 성공', response.data);
 
         // 리뷰 업데이트 후 다시 리스트를 새로고침
         setReviews(reviews.map(review =>
@@ -260,7 +273,6 @@ function MovieView() {
         // 리뷰의 영화 정보 설정
         setMovieNo(review.movie_no);  // 영화 번호 설정
         setMovieCode(review.movie_code);  // 영화 코드 설정
-
       };
       
     
@@ -268,12 +280,16 @@ function MovieView() {
       const handleDeleteReview = async (movie_review_no) => {
         try {
           await axios.delete(`http://localhost:9988/api/reviews/${movie_review_no}`);
-          
           // 리뷰 삭제 후 리스트 업데이트
           setReviews(reviews.filter(review => review.movie_review_no !== movie_review_no));
         } catch (error) {
           console.error('Error deleting review:', error);
         }
+      };
+
+      // div 글쓰기 오류 해결
+      const handleInput = () => {
+        setEditReviewText(reviewInputRef.current.textContent); // ref로 content 가져오기
       };
   
     // 리뷰 컴포넌트
@@ -325,10 +341,10 @@ function MovieView() {
             <div
               contentEditable
               className="review-edit-input"
-              onInput={(e) => setEditReviewText(e.target.textContent)}
-              style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}
-
-                              
+              ref={reviewInputRef}
+              onInput={handleInput}
+              style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}                 
+                        
             >
               {editReviewText}
             </div>
@@ -353,35 +369,40 @@ function MovieView() {
     };
 
     // 배우를 /가 아닌 , 로 구분
-    const formattedCasts = movie.movie_casts.replace(/\//g, ', ');
+    const formattedCasts = movie?.movie_casts ? movie.movie_casts.replace(/\//g, ', ') : '출연진 정보 없음';
     
     return (
         <div className="movie-view-container">
           <div className="movie-content">
             <div className="contents-box">
               <div className="movie-image">
+              {movie?.movie_link ? (
                 <img src={movie.movie_link} alt={movie.movie_kor} />
-              </div>
+              ) : (
+                <p>이미지 없음</p>
+              )}
+            </div>
 
               {/* 영화 제목과 버튼들 */}
               <div className="movie-details">
                 <div className="movie-title">
-                    <h1>{movie.movie_kor}</h1>
+                    <h1>{movie?.movie_kor || '영화 제목 없음'}</h1>
                 </div>
 
                 <div className="movie-info">
                     <div className="rating-info">
-                        <FaStar className="star-icon" />  {ratingInfo.avg_rating.toFixed(1)} ({ratingInfo.review_count}) {/* 평균 평점과 평점 개수 */}
+                        <FaStar className="star-icon"/>
+                        {ratingInfo.avg_rating?.toFixed(1) || 0} ({ratingInfo.review_count || 0}) {/* 평균 평점과 평점 개수 */}
                     </div>
                     <div className="info-details">
-                        <span>{movie.movie_genre}</span> {/* 장르 */}
-                        <span>| {movie.opened_year}년</span> {/* 개봉년도 */}
-                        <span>| {movie.movie_showtime}분</span> {/* 러닝타임 */}
-                        <span>| {movie.movie_grade}</span> {/* 관람등급 */}
+                    <span>{movie?.movie_genre || '장르 없음'}</span>
+                    <span>| {movie?.opened_year || '개봉 연도 미상'}년</span>
+                    <span>| {movie?.movie_showtime || '시간 미상'}분</span>
+                    <span>| {movie?.movie_grade || '등급 미정'}</span>
                     </div>
                     {/* 시놉시스 */}
                     <div className="info-synops">
-                      {movie.movie_synops}
+                      {movie?.movie_synops || '줄거리 정보 없음'}
                     </div>
                 </div>
 
@@ -413,24 +434,27 @@ function MovieView() {
               {/* 감독 */}
               <div className="info-section">
                 <h3>감독</h3>
-                <p>{movie.movie_directors}</p>
+                <p>{movie?.movie_directors || '감독 정보 없음'}</p>
               </div>
             </div>
         </div>
 
         {/* 이미지 표시 섹션 */}
-        <div className="image-gallery">
-          <h3>관련 이미지</h3>
-          <div className="image-row">
-            {images.slice(0, 3).map((img, index) => (
-              <img key={index} src={img} alt={`관련 이미지 ${index + 1}`} className="gallery-image" />
-            ))}
+        {images.length > 0 && (
+          <div className="image-gallery">
+            <h3>관련 이미지</h3>
+            <div className="image-row">
+              {images.slice(0, 3).map((img, index) => (
+                <img key={index} src={img} alt={`관련 이미지 ${index + 1}`} className="gallery-image" />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
         {/* 사용자 평 섹션 */}
         <div className="review-section">
           <div className="review-header">
-            <h2><b>'{movie.movie_kor}'</b>의 사용자 평</h2>
+            <h2><b>'{movie?.movie_kor || '영화 제목 없음'}'</b>의 사용자 평</h2>
           </div>
            {/* 리뷰 입력 필드 */}
           <div className="review-input-section">

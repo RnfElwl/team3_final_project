@@ -2,7 +2,7 @@
   background-color: #1C1C20; 
   display: flex;
   justify-content: center; 
-  padding-top: 20px;
+  padding-top: 40px;
 }
 
 .movie-list-container {
@@ -11,7 +11,8 @@
 }
 .movie-list-container > h2 {
   color: #f0f0f0;
-  margin-bottom: 20px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #f0f0f0;
 }
 .movie-list-title {
   color: #f0f0f0;
@@ -19,8 +20,9 @@
   margin-bottom: 20px;
 }
 .row{
-  border-top: 1px solid #f0f0f0;
-  padding: 20px;
+  /* border-top: 1px solid #f0f0f0; */
+  padding-top: 30px;
+  
 
 }
 .movie-card {
