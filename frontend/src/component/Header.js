@@ -102,7 +102,7 @@ function Header() {
       <>
       <header className="Header">
           <div className='admin_header'>
-             <div><img src=""/><Link to={'/admin'}>관리자페이지</Link></div>
+             <div><Link to={'/'}><img src="../../logo3.png" width={"200px"} /></Link><Link to={'/admin'}>관리자페이지</Link></div>
           </div>
       </header>
         <div className="admin_navList">
@@ -123,10 +123,11 @@ function Header() {
                 <div className="admin_minNav">
                   <Link to={'/admin/qnaCon'}>QnA</Link>
                   <Link to={'/admin/comCon'}>Community</Link>
+                  <Link to={'/admin/movCon'}>Movie</Link>
                 </div>
               )}
           <div className="admin_nav"><Link to={'/admin/repCon'}>신고 관리</Link></div>
-          <div className="admin_nav"><Link to={'#'}>통계</Link></div>
+          
         </div>
       </>
     );
