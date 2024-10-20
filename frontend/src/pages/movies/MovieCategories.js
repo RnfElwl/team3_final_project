@@ -24,7 +24,7 @@ function MovieCategories() {
     { id: '코미디', name: '코미디' },
     { id: '범죄', name: '범죄' },
     { id: '전쟁', name: '전쟁' },
-    { id: '공포(호러)/', name: '공포(호러)' },
+    { id: '공포(호러)', name: '공포(호러)' },
     { id: '가족', name: '가족' },
     { id: '사극', name: '사극' },
     { id: 'SF', name: 'SF' },
@@ -45,7 +45,6 @@ function MovieCategories() {
     { id: '일본', name: '일본' },
     { id: '북유럽', name: '북유럽' },
     { id: '남미', name: '남미' }
-    
     
     ];
 
@@ -70,7 +69,7 @@ function MovieCategories() {
   return (
     <div className="page-container"> {/* 페이지 전체 배경 */}
       <div className="content-container"> {/* 1200px 중앙 정렬 div */}
-        <h1>Movie Categories</h1>
+        <h1>카테고리</h1>
 
         {/* 탭 네비게이션 */}
         <ul className="nav nav-tabs mt-3">
@@ -101,7 +100,7 @@ function MovieCategories() {
         </ul>
 
         {/* 탭 콘텐츠 */}
-        <div className="row mt-4">
+        {/* <div className="row mt-4">
           {currentCategories.map(category => (
             <div key={category.id} className="col-6 col-sm-4 col-md-2 mb-4">
               <Link to={`/categories/${activeTab}/${category.id}`} className="card-link">
@@ -111,9 +110,9 @@ function MovieCategories() {
                   </div>
                 </div>
               </Link>
-            </div>
-          ))}
-        </div>
+            </div> */}
+          {/* ))} */}
+        {/* </div> */}
       </div>
     </div>
   );

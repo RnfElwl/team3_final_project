@@ -3,7 +3,7 @@
     background-color: #1C1C20; 
     min-height: 100vh;
     display: flex;
-    justify-content: flex-start; /* 위쪽에 배치 */
+    justify-content: center; /* 위쪽에 배치 */
     align-items: flex-start;
     padding-top: 40px; /* 위쪽 여백 조절 */
     max-width: 1920px;
@@ -19,7 +19,7 @@
 }
 
   /* 링크 관련 스타일 */
-.page-containera .card-link {
+.page-container .card-link {
     text-decoration: none; /* 링크 밑줄 제거 */
     color: inherit; /* 링크 색상 상속 */
 }
@@ -28,10 +28,9 @@
 .page-container .nav-tabs .nav-link {
     background: none;
     border: 1px solid #48d1cdea;
-    border-bottom: #f0f0f0;
     cursor: pointer;
     font-size: 18px;
-    color: #f0f0f0;
+    color: #f0f0f0; 
 }
 .page-container .nav-tabs .nav-link:hover{
     color: #f0f0f0;
@@ -55,6 +54,7 @@
 
 /* 카드 내부 텍스트 스타일 */
 .page-container .card-title {
+    
     color: #464040; /* 카드 제목 색상 */
     font-size: 18px;
     padding: 10px 0;

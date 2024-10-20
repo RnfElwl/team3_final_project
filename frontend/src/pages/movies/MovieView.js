@@ -197,7 +197,6 @@ function MovieView() {
 
 
 
-
         // 리뷰 서버로 전송
         const response = await axios.post('http://localhost:9988/api/reviews/add', {
           userid,
