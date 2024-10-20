@@ -132,10 +132,10 @@ function QnaCon() {
     const openAddQnaAnsWindow = (qna_no) => {
         window.open(`http://localhost:3000/admin/adminQAns/${qna_no}`, '_blank', 'width=600,height=584');
     };
-    //Qna 답글 수정 팝업 창 열기
-    const openEditQnaAnsWindow = (qna_no) => {
-        window.open(`http://localhost:3000/admin/adminQAns/${qna_no}`, '_blank', 'width=600, height=584');
-    }
+    // //Qna 답글 수정 팝업 창 열기
+    // const openEditQnaAnsWindow = (qna_no) => {
+    //     window.open(`http://localhost:3000/admin/adminQAns/${qna_no}`, '_blank', 'width=600, height=584');
+    // }
 
     //페이지네이션
     //페이지네이션 5개만 띄우기
@@ -221,14 +221,16 @@ function QnaCon() {
                                     <td>{item.qna_no}</td>
                                     <td>{item.userid}</td>
                                     <td>
-                                        <div className="adqna_ht_th">
-                                        {item.head_title == 1 ? <div className="qna_ht">[영화]&nbsp;</div> :
-                                            (item.head_title == 2 ? <div className="qna_ht">[사이트]&nbsp;</div> :
-                                                <div className="qna_ht">[기타]&nbsp;</div>)}
-                                            <div>
+                                        {item.head_title == 1 ? <span className="qna_ht">[영화]&nbsp;</span> :
+                                            (item.head_title == 2 ? <span className="qna_ht">[사이트]&nbsp;</span> :
+                                                <span className="qna_ht">[기타]&nbsp;</span>)}
                                             {item.privacyQ === 0 ?
-                                                (<div  onClick={(e)=>navigate(`/qna/view/${item.qna_no}`, { state: { privacyQ: item.privacyQ } })}>{item.qna_title}</div>)
-                                                : (<div
+                                                (<span className="qna_tableTitle"  
+                                                    onClick={(e)=>navigate(`/qna/view/${item.qna_no}`,
+                                                                { state: { privacyQ: item.privacyQ } })}>
+                                                        {item.qna_title}</span>)
+                                                : (<span
+                                                    className="qna_tableTitle" 
                                                     onClick={(e) => {
                                                         const isConfirmed = window.confirm("해당 글은 비밀글입니다. 확인하시겠습니까?");
                                                         if (isConfirmed) {
@@ -237,9 +239,7 @@ function QnaCon() {
                                                             e.preventDefault(); // 취소를 눌렀을 때 링크 이동을 막음
                                                         }
                                                     }}>
-                                                    {item.qna_title}<AiFillLock /></div>)}
-                                            </div>        
-                                        </div>
+                                                    {item.qna_title}<AiFillLock /></span>)}       
                                     </td>
                                     <td>{item.qna_writedate}</td>
                                     <td>{item.active_state === 0 ? <div >비활성</div> : <div>활성</div>}</td>

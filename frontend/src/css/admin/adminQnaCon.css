@@ -73,6 +73,16 @@
   vertical-align: middle;
   padding: 12px;
   border: 1px solid #444;
+  white-space: nowrap;
+
+}
+.AdminQnaTable td:nth-child(4) {
+  text-align: left;
+  max-width: 300px;
+  overflow: hidden;
+  word-wrap: normal;
+  text-overflow: ellipsis;
+  
 }
 
 .AdminQnaTable th {
@@ -119,7 +129,11 @@
 }
 
 /* 타이틀 css */
-.adqna_ht_th{
-  display: flex;
-  margin: 0;
+
+.qna_ht{
+  width: 20%;
+}
+.qna_tableTitle{
+  width: auto;
+  cursor: pointer;
 }

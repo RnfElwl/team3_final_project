@@ -180,7 +180,7 @@ function MemCon(){
                         <th>전화번호</th>
                         <th>상태</th>
                         <th>가입일</th>
-                        <th>신고 횟수</th>
+                        <th>신고 누적</th>
                         <th>마지막 로그인</th>
                     </tr>
                 </thead>

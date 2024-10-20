@@ -40,6 +40,14 @@
   text-align: left !important;
   margin: 5px 0;
 }
+.AdminGoHome{
+  position: fixed;
+  bottom: 0;
+  width: 200px;
+  height: 60px;
+}
+
+/* 관리자 body */
 
 .adminBody{
   max-width: 1920px;

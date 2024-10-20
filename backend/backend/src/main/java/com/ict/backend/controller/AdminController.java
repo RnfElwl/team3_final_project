@@ -173,6 +173,7 @@ public class AdminController {
         return 1;
     }
 
+    //Report ManageMent Part
     @GetMapping("/repList")
     public ResponseEntity<Map<String, Object>> RepList(@ModelAttribute PagingVO pagingVO) {
         List<ReportVO> result = adminService.getRepList(pagingVO);
@@ -181,6 +182,12 @@ public class AdminController {
         resultMap.put("repList", result);
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+    @GetMapping("/getReport/{report_no}")
+    public ResponseEntity<List<ReportVO>> getRep(@PathVariable int report_no){
+
+        List<ReportVO> reportList=adminService.getRepView(report_no);
+        return new ResponseEntity<>(reportList, HttpStatus.OK);
     }
 
     @GetMapping("/comList")

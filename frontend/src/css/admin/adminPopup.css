@@ -40,12 +40,12 @@
     z-index: 1; /* 이미지가 위에 보이도록 z-index 추가 */
   }
 /* 폼 css */
-.QAWForm{
+.QAWForm, .RAWForm{
     margin: 10px;
     text-align: center;
 }
 /* 폼 textarea css */
-.QAWContent{
+.QAWContent, .RAWContent{
     margin: 0 auto;
     max-width: 400px;
     width: 100%;
@@ -64,3 +64,9 @@
     font-weight: 900;
 }
 
+/*---------- 신고처리 폼 css ---------*/
+.reportViewTable{
+    margin: 0 auto;
+    max-width: 500px;
+    width: 100%;
+}

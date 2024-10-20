@@ -109,6 +109,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public List<ReportVO> getRepView(int report_no) {
+        return dao.getRepView(report_no);
+    }
+
+    @Override
     public int updateMemActive(Integer activeState, List<String> userids) {
         return dao.updateMemActive(activeState, userids);
     }

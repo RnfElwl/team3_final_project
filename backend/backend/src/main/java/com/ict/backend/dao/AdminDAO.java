@@ -24,6 +24,7 @@ public interface AdminDAO {
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
     List<ReportVO> getRepList(PagingVO pagingVO);
+    List<ReportVO> getRepView(int report_no);
     int updateMemActive(Integer activeState, List<String> userids);
     List<CommunityVO> getComList(PagingVO pagingVO);
     int getTotalComRecord(PagingVO pagingVO);
