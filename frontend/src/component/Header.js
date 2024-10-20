@@ -123,6 +123,7 @@ function Header() {
                 <div className="admin_minNav">
                   <Link to={'/admin/qnaCon'}>QnA</Link>
                   <Link to={'/admin/comCon'}>Community</Link>
+                  <Link to={'/admin/movCon'}>Movie</Link>
                 </div>
               )}
           <div className="admin_nav"><Link to={'/admin/repCon'}>신고 관리</Link></div>

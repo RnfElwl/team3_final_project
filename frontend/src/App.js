@@ -20,6 +20,7 @@ import AdminQnaCon from './pages/admin/Admin_qnaCon.js'
 import AdminQAns from './pages/admin/Admin_qnaAnsWrite.js'
 import AdminComCon from './pages/admin/Admin_comCon.js'
 import AdminMemCon from './pages/admin/Admin_memCon.js'
+import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
 import QNA from './pages/qna/QnA'
@@ -62,6 +63,7 @@ function App() {
                 <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
                 <Route path='/admin/memCon' element={<AdminMemCon/>}/>
+                <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
