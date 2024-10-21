@@ -336,7 +336,7 @@
     display: flex; /* 플렉스 레이아웃 */
     justify-content: space-between;
     margin-top: 10px;
-    border-top: 1px solid #ebe2e279; /* 위에 얇은 선 추가 */
+    border-top: 1px solid #4d4a4a79; /* 위에 얇은 선 추가 */
     padding: 10px 0; /* 위아래 패딩 추가 */
 
 }
