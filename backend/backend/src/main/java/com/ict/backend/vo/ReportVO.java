@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReportVO {
+    private int report_no;
     private String report_userid;
     private String reported_userid;
     private String report_content;

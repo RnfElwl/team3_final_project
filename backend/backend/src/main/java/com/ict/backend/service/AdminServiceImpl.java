@@ -79,8 +79,8 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public int getTotalRecord(PagingVO pagingVO) {
-        return dao.getTotalRecord(pagingVO);
+    public int getTotalQnARecord(PagingVO pagingVO) {
+        return dao.getTotalQnARecord(pagingVO);
     }
 
     @Override
@@ -106,6 +106,26 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<ReportVO> getRepList(PagingVO pagingVO) {
         return dao.getRepList(pagingVO);
+    }
+
+    @Override
+    public List<ReportVO> getRepView(int report_no) {
+        return dao.getRepView(report_no);
+    }
+
+    @Override
+    public int updateMemActive(Integer activeState, List<String> userids) {
+        return dao.updateMemActive(activeState, userids);
+    }
+
+    @Override
+    public List<CommunityVO> getComList(PagingVO pagingVO) {
+        return dao.getComList(pagingVO);
+    }
+
+    @Override
+    public int getTotalComRecord(PagingVO pagingVO) {
+        return dao.getTotalComRecord(pagingVO);
     }
 
 

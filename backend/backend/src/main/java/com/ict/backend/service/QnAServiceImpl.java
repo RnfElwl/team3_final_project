@@ -33,6 +33,8 @@ public class QnAServiceImpl implements QnAService{
                 qna.setPrev_qna_no(prevNo);
                 String prevTitle=getPrevTitle(prevNo);
                 qna.setPrev_title(prevTitle);
+                String prevPrivacyQ=getPrevPrivacyQ(prevNo);
+                qna.setPrev_privacyQ(prevPrivacyQ);
             }else{ //값이 없을 경우
                 qna.setPrev_qna_no(0);
             }
@@ -42,12 +44,22 @@ public class QnAServiceImpl implements QnAService{
                 qna.setNext_qna_no(nextNo);
                 String nextTitle=getNextTitle(nextNo);
                 qna.setNext_title(nextTitle);
+                String nextPrivacyQ=getNextPrivacyQ(nextNo);
+                qna.setNext_privacyQ(nextPrivacyQ);
             }else{
                 qna.setNext_qna_no(0);
             }
         }
 
         return qnaList;
+    }
+
+    private String getNextPrivacyQ(Integer nextNo) {
+        return dao.getNextPrivacyQ(nextNo);
+    }
+
+    private String getPrevPrivacyQ(Integer prevNo) {
+        return dao.getPrevPrivacyQ(prevNo);
     }
 
     private String getNextTitle(Integer nextNo) {
@@ -115,7 +127,11 @@ public class QnAServiceImpl implements QnAService{
         dao.insertImgUrl(imgVO);
         return imgVO.getImage_no();
     }
-
+//큐앤에이 비밀글 체크
+    @Override
+    public int passWriteChk(QnAVO passCheck) {
+        return dao.passWriteChk(passCheck);
+    }
 
 
 //    @Override

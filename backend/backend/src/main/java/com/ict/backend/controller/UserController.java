@@ -1,6 +1,7 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.dto.CustomUserDetails;
+import com.ict.backend.service.FilterService;
 import com.ict.backend.service.ImageService;
 import com.ict.backend.service.UserService;
 import com.ict.backend.vo.MemberVO;
@@ -39,6 +40,8 @@ public class UserController {
     UserService userService;
     @Autowired
     ImageService imageService;
+    @Autowired
+    FilterService filterService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -403,6 +406,56 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Need login");
         }
     }
+    @GetMapping("/myposts/{tab}")
+    public ResponseEntity<Map<String, Object>> getMyPosts(@PathVariable String tab,
+                                                          @RequestParam("column") String column,
+                                                          @RequestParam("order") String order,
+                                                          @RequestParam(value = "searchType", required = false) String searchType,
+                                                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                                          @RequestParam(value = "offset", required = false) int offset) {
+        System.out.println("request : " + tab + " " + column + " " + order + " " + searchType + " " + searchKeyword + " " + offset);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userid);
 
+        if (!userid.equals("anonymousUser")) {
+            try {
+                int postcnt = 0;
+                List<Map<String, Object>> postData;
+                System.out.println("tab : " + tab);
+//                postcnt = filterService.TotalFilterCount(tab, column, userid, searchType, searchKeyword);
+//                postData = filterService.TotalFilter(tab, column, userid, order, searchType, searchKeyword, offset);
+                if("community".equals(tab)){
+                    System.out.println("column : " + column);
+                    if("like".equals(column)){
+                        postcnt = filterService.CommunityLikeFilterCount(column, userid, searchType, searchKeyword);
+                        postData = filterService.CommunityLikeFilter(column, userid, order, searchType, searchKeyword, offset);
+                    }else{
+                        postcnt = filterService.CommunityFilterCount(column, userid, searchType, searchKeyword);
+                        postData = filterService.CommunityFilter(column, userid, order, searchType, searchKeyword, offset);
+                    }
+                } else if("review".equals(tab)){
+                    postcnt = filterService.MovieFilterCount(column, userid, searchType, searchKeyword);
+                    postData = filterService.MovieFilter(column, userid, order, searchType, searchKeyword, offset);
+                }else{
+                    postcnt = filterService.QnAFilterCount(column, userid, searchType, searchKeyword);
+                    postData = filterService.QnAFilter(column, userid, order, searchType, searchKeyword, offset);
+                }
+
+                System.out.println(postData);
+
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("posts", postcnt);
+                responseData.put("postdata", postData);
+                System.out.println(responseData);
+
+                // 반환하도록 수정
+                return ResponseEntity.ok(responseData);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Error updating follow status"));
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "Need login"));
+        }
+    }
 
 }

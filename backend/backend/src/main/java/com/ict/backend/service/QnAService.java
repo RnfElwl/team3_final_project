@@ -18,5 +18,6 @@ public interface QnAService {
     Integer qnaImgNumGet(int qna_no);
     void updateImgUrl(String updatedImgUrl, int qnaPath);
     Integer insertImgUrl(String newImgUrl);
+    int passWriteChk(QnAVO passCheck);
 //    String getQnaImg(int qna_no);
 }

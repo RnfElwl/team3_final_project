@@ -23,5 +23,8 @@ public interface QnADAO {
     Integer getNextQnaNo(int qna_no);
     String getPrevTitle(int prevNo);
     String getNextTitle(int nextNo);
+    String getPrevPrivacyQ(int prevNo);
+    String getNextPrivacyQ(int nextNo);
+    int passWriteChk(QnAVO passCheck);
 
 }

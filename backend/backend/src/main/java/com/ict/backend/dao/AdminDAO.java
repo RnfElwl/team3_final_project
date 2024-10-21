@@ -18,10 +18,14 @@ public interface AdminDAO {
     int dailyQnaSelect();
     int dailyRepSelect();
     List<MemberVO> selectMemberMin();
-    int getTotalRecord(PagingVO pagingVO);
+    int getTotalQnARecord(PagingVO pagingVO);
     List<QnAVO> getQnAList(PagingVO pagingVO);
     int insertQnaAnswer(QnAVO adminQAData);
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
     List<ReportVO> getRepList(PagingVO pagingVO);
+    List<ReportVO> getRepView(int report_no);
+    int updateMemActive(Integer activeState, List<String> userids);
+    List<CommunityVO> getComList(PagingVO pagingVO);
+    int getTotalComRecord(PagingVO pagingVO);
 }

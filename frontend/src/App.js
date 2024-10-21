@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Redirect } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TokenValidator from './component/TokenValidator.js';
+import ScrollToTop from './component/ScrollToTop.js';
 
 import Home from './pages/Home';
 import Layout from './pages/Layout';
@@ -20,7 +21,9 @@ import AdminQnaCon from './pages/admin/Admin_qnaCon.js'
 import AdminQAns from './pages/admin/Admin_qnaAnsWrite.js'
 import AdminComCon from './pages/admin/Admin_comCon.js'
 import AdminMemCon from './pages/admin/Admin_memCon.js'
+import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
+import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
 import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'
 import MvShopping from './pages/shopping/MvShopping.js'    
@@ -32,9 +35,6 @@ import QNAEdit from './pages/qna/QnAEdit.js'
 import Recommend from './pages/recommend/Recommend.js';
 import EditInfo from './pages/mypage/EditInfo.js';
 import Signup from './pages/mypage/Signup.js'; 
-import SeeMore from './pages/mypage/SeeMore.js'
-import RecentWatch from './pages/mypage/RecentWatch.js'
-import BookMarked from './pages/mypage/BookMarked.js';
 import User from './pages/mypage/User.js';
 import MyPost from './pages/mypage/MyPost.js';
 
@@ -42,6 +42,7 @@ function App() {
   return (
     <BrowserRouter>
       <TokenValidator>
+        <ScrollToTop />
         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route path='/' element={<Home/>}></Route>
@@ -61,7 +62,9 @@ function App() {
                 <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
                 <Route path='/admin/memCon' element={<AdminMemCon/>}/>
+                <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
+                <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
@@ -72,10 +75,7 @@ function App() {
                 <Route path = '/signup' element = {<Signup/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
-                <Route path = "/mypage/more" element={<SeeMore/>}/>
                 <Route path = "/mypage/:more" element={<More/>}/>
-                <Route path = "/mypage/bookmarked" element={<BookMarked/>}/>
-                <Route path = "/mypage/recentwatch" element={<RecentWatch/>}/>
                 <Route path ="/user/info/:usernick" element={<User/>}/>
                 <Route path ="/user/info/" element={<User/>}/>
                 <Route path = "/mypage/mypost" element={<MyPost/>}/>

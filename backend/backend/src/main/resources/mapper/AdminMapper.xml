@@ -125,7 +125,7 @@
         order by qna_writedate desc
         limit ${onePageRecord} offset ${offset}
     </select>
-    <select id="getTotalRecord" resultType="int">
+    <select id="getTotalQnARecord" resultType="int">
         select count(qna_no) from qna_tbl
         <if test="searchWord!=null and searchWord!=''">
             where ${searchKey} like '%${searchWord}%'
@@ -158,10 +158,58 @@
         u.userid, u.username, u.usernick, u.gender, u.usertel, u.active_state, u.lastvisite, u.regiserdate
     </select>
     <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
-        select report_userid, reported_userid, report_content, report_tblname, report_state,
-        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state from report_tbl
+        select report_no,report_userid, reported_userid, report_content, report_tblname, report_state,
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
         <if test="searchWord!=null and searchWord!=''">
-         where ${searchKey} like '%${searchWord}%'
+            AND ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
         </if>
     </select>
+    <select id="getRepView" resultType="com.ict.backend.vo.ReportVO">
+        select report_no,report_userid, reported_userid, report_content, report_tblname, report_state,
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
+        where report_no=${report_no}
+    </select>
+    <update id="updateMemActive">
+        UPDATE user_tbl
+        SET active_state = #{activeState}
+        WHERE userid IN
+        <foreach item="useridd" collection="userids" open="(" separator="," close=")">
+            #{useridd}
+        </foreach>
+    </update>
+
+    <select id="getComList" parameterType="map" resultType="com.ict.backend.vo.CommunityVO">
+        SELECT c.community_no, c.userid, c.community_title, c.community_content,
+        COUNT(cl.community_no) AS community_like, c.community_writedate, c.hit,
+        c.edit_date, c.edit_state, c.edit_user, c.active_state, c.category, c.privacy
+        FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
+
+
+        <where>
+            -- 검색 조건 (searchKey, searchWord)
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+
+             -- 상태 필터 (active_state)
+            <if test="activeStateChk != null and activeStateChk != ''">
+                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')
+            </if>
+        </where>
+
+        GROUP BY c.community_no, c.userid, c.community_title, c.community_content,
+        c.community_writedate, c.hit, c.edit_date,
+        c.edit_state, c.edit_user, c.active_state,
+        c.category, c.privacy
+        LIMIT #{onePageRecord} OFFSET #{offset}
+
+
+    </select>
+    <select id="getTotalComRecord" resultType="int">
+        select count(*) from community_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+
 </mapper>

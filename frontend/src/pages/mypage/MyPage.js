@@ -12,11 +12,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/mypage.css';
 import profile from '../../img/profile.png';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Modal from '../../component/api/Modal';
 
 function Mypage() {
+
     const [recentSlidesData, setRecentSlides] = useState([]);
     const [bookmarkSlidesData, setBookmarkSlides] = useState([]);
     const [profileSlidesData, setProfileSlides] = useState([]);
@@ -369,8 +369,12 @@ function Mypage() {
                             </div>
                         )}
                     </Modal>
-                        )}    
+                        )}
                     {/* 사등분 */}
+                    <div className = "content_title" style={{margin : "50px auto 0 auto"}}>
+                            <span></span>
+                            <Link to="mypost"> 더보기 {'>'}</Link>
+                    </div>
                     <div className = "board">
                         <div className = "write_4">
                             <div className = "content_title">
@@ -457,7 +461,7 @@ function Mypage() {
                                         <th>
                                             <ul className="custom-list">
                                                 <li className ="list_title"
-                                                 onClick={() => navigate(`/community/communityView/${likecommunitylist.community_no}`)} style={{ cursor: 'pointer' }}>
+                                                    onClick={() => navigate(`/community/communityView/${likecommunitylist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{likecommunitylist.community_title}</div>
                                                     {likeStatus[index] ? (
                                                         <FaHeart

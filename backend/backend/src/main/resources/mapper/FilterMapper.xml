@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.FilterDAO">
+    <!-- 커뮤니티 관련 글 통으로 들고 올때 사용   -->
+    <!-- 위에서부터 작성글, 댓글, 대댓글 순   -->
+    <select id = "CommunityFilter" resultType="map">
+        SELECT result.no, result.title, result.content as content, u.usernick, DATE_FORMAT(result.writedate, '%Y.%m.%d') as writedate, result.orderdate, result.type, result.reply_no
+        FROM (
+        <if test="column == 'all' or column == 'community'">
+        SELECT community_no as no, community_title as title, community_content as content, userid, community_writedate as writedate, community_writedate as orderdate, "community" type, null as reply_no
+        from community_tbl
+        where userid = #{userid} and active_state = 1
+        </if>
+        <if test="column == 'all'">
+        UNION
+        </if>
+        <if test="column == 'all' or column == 'comment'">
+        SELECT DISTINCT ct.community_no as no, ct.community_title as title, cct.comment_content AS content, ct.userid, ct.community_writedate as writedate, cct.comment_writedate AS orderdate, "comment" type, null reply_no
+        FROM community_comment_tbl cct
+        JOIN community_tbl ct ON cct.community_no = ct.community_no
+        WHERE cct.userid = #{userid} and cct.active_state = 1
+
+        UNION
+
+        SELECT DISTINCT ct.community_no as no, ct.community_title as title, rc.reply_content AS content, ct.userid, ct.community_writedate as writedate, rc.reply_writedate AS orderdate, "reply" type, rc.reply_no
+        FROM reply_comment_tbl rc
+        JOIN community_comment_tbl cct ON rc.comment_no = cct.comment_no
+        JOIN community_tbl ct ON ct.community_no = cct.community_no
+        WHERE rc.userid = #{userid} and rc.active_state = 1
+        </if>
+        ) AS result
+        JOIN user_tbl u ON result.userid = u.userid
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+
+            ORDER BY orderdate
+            <choose>
+                <when test="orderType == 'asc'">
+                    ASC
+                </when>
+                <otherwise>
+                    DESC
+                </otherwise>
+            </choose>
+        limit 10 offset ${offset};
+    </select>
+
+    <select id="CommunityFilterCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+        <if test="column == 'all' or column == 'community'">
+            SELECT community_no as no, community_title as title, community_content as content, userid, community_writedate as writedate, community_writedate as orderdate, "community" type, null as reply_no
+            from community_tbl
+            where userid = #{userid} and active_state = 1
+        </if>
+        <if test="column == 'all'">
+            UNION
+        </if>
+        <if test="column == 'all' or column == 'comment'">
+            SELECT DISTINCT ct.community_no as no, ct.community_title as title, cct.comment_content AS content, ct.userid, ct.community_writedate as writedate, cct.comment_writedate AS orderdate, "comment" type, null reply_no
+            FROM community_comment_tbl cct
+            JOIN community_tbl ct ON cct.community_no = ct.community_no
+            WHERE cct.userid = #{userid} and cct.active_state = 1
+
+            UNION
+
+            SELECT DISTINCT ct.community_no as no, ct.community_title as title, rc.reply_content AS content, ct.userid, ct.community_writedate as writedate, rc.reply_writedate AS orderdate, "reply" type, rc.reply_no
+            FROM reply_comment_tbl rc
+            JOIN community_comment_tbl cct ON rc.comment_no = cct.comment_no
+            JOIN community_tbl ct ON ct.community_no = cct.community_no
+            WHERE rc.userid = #{userid} and rc.active_state = 1
+        </if>
+        ) AS result
+        JOIN user_tbl u ON result.userid = u.userid
+        <if test="searchWord != null and searchWord != ''">
+            WHERE ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+        </if>
+    </select>
+
+    <select id="CommunityLikeFilter" resultType="map">
+        SELECT result.no, result.title, result.content, result.writedate, u.usernick
+        FROM (
+        SELECT
+        ct.community_no AS no,
+        ct.community_title AS title,
+        ct.community_content AS content,
+        DATE_FORMAT(ct.community_writedate, '%Y.%m.%d') AS writedate,
+        cl.like_date AS orderdate,
+        ct.userid
+        FROM community_like_tbl cl
+        JOIN community_tbl ct ON ct.community_no = cl.community_no
+        WHERE cl.userid = #{userid}
+        ) AS result
+        JOIN user_tbl u ON result.userid = u.userid
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+        ORDER BY orderdate
+        <choose>
+            <when test="orderType == 'asc'">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+        limit 10 offset ${offset};
+    </select>
+
+    <select id="CommunityLikeFilterCount" resultType="int">
+        SELECT count(*)
+        FROM (
+        SELECT
+        ct.community_no AS no,
+        ct.community_title AS title,
+        ct.community_content AS content,
+        DATE_FORMAT(ct.community_writedate, '%Y.%m.%d') AS writedate,
+        cl.like_date AS orderdate,
+        ct.userid
+        FROM community_like_tbl cl
+        JOIN community_tbl ct ON ct.community_no = cl.community_no
+        WHERE cl.userid = #{userid}
+        ) AS result
+        JOIN user_tbl u ON result.userid = u.userid
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+    </select>
+
+    <select id = "MovieFilter" resultType="map">
+        SELECT *
+        From(
+        SELECT
+        md.movie_no as no,
+        md.movie_code,
+        md.movie_kor as title,
+        mr.movie_review_content as content,
+        mr.rate as rate,
+        DATE_FORMAT(mr.movie_review_writedate, '%Y.%m.%d') as writedate,
+        mr.movie_review_writedate as orderdate,
+        mr.movie_review_no
+        FROM movie_review_tbl mr
+        JOIN movie_data_tbl md on mr.movie_no = md.movie_no
+        WHERE userid = #{userid}
+        ) AS result
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+        <choose>
+            <when test="column == 'rate'">
+                ORDER BY rate
+            </when>
+            <otherwise>
+                ORDER BY orderdate
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="orderType == 'asc'">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+        limit 10 offset ${offset};
+    </select>
+    <select id = "MovieFilterCount" resultType="int">
+        SELECT count(*)
+        From(
+        SELECT
+        md.movie_no as no,
+        md.movie_code,
+        md.movie_kor as title,
+        mr.movie_review_content as content,
+        mr.rate as rate,
+        DATE_FORMAT(mr.movie_review_writedate, '%Y.%m.%d') as writedate,
+        mr.movie_review_writedate as orderdate,
+        mr.movie_review_no
+        FROM movie_review_tbl mr
+        JOIN movie_data_tbl md on mr.movie_no = md.movie_no
+        WHERE userid = #{userid}
+        ) AS result
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+    </select>
+    <select id ="QnAFilter" resultType="map">
+        select *
+        from(
+        select qna_no as no,
+        head_title,
+        qna_title as title,
+        qna_content as content,
+        DATE_FORMAT(qna_writedate, '%Y.%m.%d') as writedate,
+        qna_state,
+        qna_writedate as orderdate
+        from qna_tbl
+        where userid = #{userid}
+        ) as result
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+        <choose>
+            <when test="column == 'answer'">
+                ORDER BY qna_state
+            </when>
+            <otherwise>
+                ORDER BY orderdate
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="orderType == 'asc'">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+        limit 10 offset ${offset};
+    </select>
+
+    <select id ="QnAFilterCount" resultType="int">
+        select count(*)
+        from(
+        select qna_no as no,
+        head_title,
+        qna_title as title,
+        qna_content as content,
+        DATE_FORMAT(qna_writedate, '%Y.%m.%d') as writedate,
+        qna_state,
+        qna_writedate as orderdate
+        from qna_tbl
+        where userid = #{userid}
+        ) as result
+        <if test="searchWord!=null and searchWord!=''">
+            WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
+        </if>
+    </select>
+
+
+</mapper>

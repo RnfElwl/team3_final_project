@@ -27,6 +27,7 @@ function Signup() {
     const [nickCheckSuccess, setNickCheckSuccess] = useState(false);
     const [idCheckError, setIdCheckError] = useState(''); // 아이디 오류 메시지 상태
     const [idCheckSuccess, setIdCheckSuccess] = useState(false); // 아이디 성공 메시지 상태
+    const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -232,9 +233,11 @@ function Signup() {
                 );
                 //console.log("Processed Images:", processedImages);
                 setImages(processedImages);
+                setLoading(false); // 이미지 로드 완료 후 로딩 상태 변경
                 // setImages(response.data);
             } catch (error) {
                 console.error('이미지 불러오기 중 오류 발생:', error);
+                setLoading(false); // 오류 발생 시에도 로딩 상태 변경
             }
         };
     
@@ -284,7 +287,13 @@ function Signup() {
     };
 
     return (
-        <div className="signup-background">
+        <div className="signup-background" style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}>
+             {loading ? (
+                <div className="loading-overlay">
+                    <div class="spinner-border text-info"></div>
+                </div>
+            ) : (
+                <>
             {/* Masonry 배경 */}
             <Masonry
                 breakpointCols={breakpointColumnsObj}
@@ -437,6 +446,8 @@ function Signup() {
                     </div>
                 </div>
             </div>
+            </>
+            )}
             {isAddressModalOpen && (
                 <Modal onClose={() => setIsAddressModalOpen(false)} title="" className = "addrmodal">
                     <DaumPostcode 

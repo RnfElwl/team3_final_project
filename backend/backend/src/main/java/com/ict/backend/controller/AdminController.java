@@ -115,14 +115,14 @@ public class AdminController {
     }
 
     //QnA Management part
-    @GetMapping("/qnaCon/list")
+    @GetMapping("/qnaList")
     public ResponseEntity<Map<String, Object>> getAdminQnAList(@ModelAttribute PagingVO pagingVO) {
         System.out.println("Input: " + pagingVO);
         System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
         System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
 
         List<QnAVO> result = adminService.getQnAList(pagingVO);
-        int qnaTotalPages = adminService.getTotalRecord(pagingVO);
+        int qnaTotalPages = adminService.getTotalQnARecord(pagingVO);
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("qnaList", result);
@@ -161,7 +161,19 @@ public class AdminController {
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
+    @PostMapping("/memActiveEdit")
+    public int memActiveEdit(
+            @RequestParam("active_state") Integer activeState,
+            @RequestParam("userid") List<String> userids) {
+        System.out.println("Active State: " + activeState);
+        System.out.println("Mem userid: " + userids);
 
+        adminService.updateMemActive(activeState, userids);
+
+        return 1;
+    }
+
+    //Report ManageMent Part
     @GetMapping("/repList")
     public ResponseEntity<Map<String, Object>> RepList(@ModelAttribute PagingVO pagingVO) {
         List<ReportVO> result = adminService.getRepList(pagingVO);
@@ -170,5 +182,30 @@ public class AdminController {
         resultMap.put("repList", result);
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+    @GetMapping("/getReport/{report_no}")
+    public ResponseEntity<List<ReportVO>> getRep(@PathVariable int report_no){
+
+        List<ReportVO> reportList=adminService.getRepView(report_no);
+        return new ResponseEntity<>(reportList, HttpStatus.OK);
+    }
+
+    @GetMapping("/comList")
+    public ResponseEntity<Map<String, Object>> ComList(@ModelAttribute PagingVO pagingVO){
+        pagingVO.setOnePageRecord(7);
+        List<CommunityVO> result=adminService.getComList(pagingVO);
+        int comTotalPages = adminService.getTotalComRecord(pagingVO);
+        System.out.println("Input: " + pagingVO);
+        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
+        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+
+
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("comList", result);
+        resultMap.put("comTotalPages", comTotalPages);
+        System.out.println("Result: " + resultMap);
+
+        return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
 }

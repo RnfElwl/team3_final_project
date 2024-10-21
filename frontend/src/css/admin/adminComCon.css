@@ -4,7 +4,7 @@
     padding-left: 210px;
     padding-right: 10px;
     margin: 0 auto;
-    color:white;
+    color:#f1f1f1;
   }
 
 .AdCom-tapMenu button{
@@ -13,3 +13,65 @@
   border: none;
   font-size: 1.2em;
 }
+/* 테이블 css */
+.AdminComTable, .AdminComMenTable {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 50px;
+}
+.AdminComTable th,
+.AdminComTable td,
+.AdminComMenTable th,
+.AdminComMenTable td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px;
+  border: 1px solid #444;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;  
+}
+.AdminComTable td:nth-child(4){
+  white-space: nowrap;     
+  overflow: hidden;         
+  text-overflow: ellipsis;  
+  max-width: 200px;        
+}
+
+.AdminComTable th,
+.AdminComMenTable th {
+  background-color: #343a40; /* Dark header background */
+  color: #f1f1f1; /* Text color */
+}
+
+.AdminComTable tr:nth-child(even),
+.AdminComMenTable tr:nth-child(even) {
+  background-color: #2c2f33; /* Alternate row color */
+}
+
+.AdminComTable tr:nth-child(odd),
+.AdminComMenTable tr:nth-child(odd) {
+  background-color: #212529; /* Default row color */
+}
+
+.AdminComTable input[type="checkbox"],
+.AdminComMenTable input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.AdminComTable tbody tr:hover,
+.AdminComMenTable tbody tr:hover {
+  background-color: #495057; /* Hover color */
+}
+
+.AdminComTable td,
+.AdminComMenTable td {
+  color: #f8f9fa;
+}
+
+/* ---------댓글 테이블 css---------- */

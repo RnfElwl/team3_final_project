@@ -28,12 +28,16 @@ function Header() {
   const [isChatting, setIsChatting] = useState(false);
   const [isContentVisible1, setContentVisible1] = useState(false); // 하위 div의 표시 여부 상태
   const [isContentVisible2, setContentVisible2] = useState(false); // 하위 div의 표시 여부 상태
+  const [isContentVisible3, setContentVisible3] = useState(false); // 하위 div의 표시 여부 상태
 
     const toggleContent1 = () => {
         setContentVisible1(prev => !prev); // 현재 상태를 반전
     };
     const toggleContent2 = () => {
         setContentVisible2(prev => !prev); // 현재 상태를 반전
+    };
+    const toggleContent3 = () => {
+      setContentVisible3(prev => !prev); // 현재 상태를 반전
     };
 
     async function getUser() {
@@ -79,8 +83,8 @@ function Header() {
     setIndex(i);
   }
   useEffect(() => {
-    if(index == -1){
-      underLine.current.style.display = `none`; // 밑줄 너비 설정
+    if(index == -1 || location.pathname.startsWith("/admin")){
+      // underLine.current.style.display = `none`; // 밑줄 너비 설정
       
     }
     else{
@@ -98,7 +102,7 @@ function Header() {
       <>
       <header className="Header">
           <div className='admin_header'>
-             <div><img src=""/><Link to={'/admin'}>관리자페이지</Link></div>
+             <div><Link to={'/'}><img src="../../logo3.png" width={"200px"} /></Link><Link to={'/admin'}>관리자페이지</Link></div>
           </div>
       </header>
         <div className="admin_navList">
@@ -119,10 +123,11 @@ function Header() {
                 <div className="admin_minNav">
                   <Link to={'/admin/qnaCon'}>QnA</Link>
                   <Link to={'/admin/comCon'}>Community</Link>
+                  <Link to={'/admin/movCon'}>Movie</Link>
                 </div>
               )}
-          <div className="admin_nav"><Link to={'#'}>신고 관리</Link></div>
-          <div className="admin_nav"><Link to={'#'}>통계</Link></div>
+          <div className="admin_nav"><Link to={'/admin/repCon'}>신고 관리</Link></div>
+          
         </div>
       </>
     );

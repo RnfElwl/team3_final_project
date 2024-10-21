@@ -1,3 +1,4 @@
+
 .myposttitle{
     background-color: #252525;
     /* opacity: 0.7; */
@@ -14,6 +15,7 @@
 
 .MyPost .otherinfo{
     /* height: 70vh; */
+    max-width: 1200px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -44,11 +46,9 @@
     border-radius: 3px;
   }
   
+  
   .filterbutton .tab {
     padding: 5px 10px;
-    /* border: 1px solid #ddd;
-    background-color: #d4d1d1;
-    color: black; */
     border: 1px solid #353434;
     background-color: #3f3e3e;
     color: #f1f1f1;
@@ -60,11 +60,13 @@
     color: #0b0c0f;
     font-weight: 550;
   }
+
   
   /* 두 번째 버튼 그룹 */
   .sub-buttons {
     display: flex;
     gap: 3px;
+    margin-left : 15px;
     margin-bottom: 10px;
   }
   
@@ -119,16 +121,33 @@
   }
 
 /* 테이블 영역 */
-.MyPost .otherinfo table{
-    width: 90%;
-    text-align: center;
+.MyPost .otherinfo table {
+  width: 90%;
+  max-width: 1080px;
+  text-align: center;
 }
-.MyPost .otherinfo table>thead>th{
-    background: linear-gradient(#252525 40%, #1C1C20);
+
+.MyPost .otherinfo table > thead > th {
+  background: linear-gradient(#252525 40%, #1C1C20);
 }
-.MyPost .otherinfo table>tbody>tr>th{
-    background: #252525;
+.MyPost .otherinfo table > tbody > tr > td {
+  background: #252525;
+  font-weight: 300;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  max-width: 10px;
 }
+.MyPost .otherinfo table > tbody > tr > td div>p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 98%;
+  margin: 0;
+}
+
+
 
 .pagination{
     margin: 0 auto;
@@ -159,3 +178,9 @@
     margin-top: 20px;
     font-size: 0.6em;
 }
+
+.MyPost .pagination{
+  justify-content: center;
+  margin: 10px auto;
+}
+

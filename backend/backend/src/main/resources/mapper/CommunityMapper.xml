@@ -20,6 +20,7 @@
         left join image_tbl it on ut.userprofile=it.image_no
         where ct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{param1} and rt.report_tblname=2)
         and (privacy=0 or exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid)=privacy or ct.userid=#{param1})
+        and ct.active_state=1
         group by ct.community_no
         ORDER BY
             case
@@ -73,10 +74,10 @@
 
     </update>
     <delete id="deleteCommentsByCommunityNo" parameterType="int">
-        DELETE FROM community_comment_tbl WHERE community_no = #{community_no}
+        update community_comment_tbl set active_state=0 WHERE community_no = #{community_no}
     </delete>
     <delete id="deleteCommunity" parameterType="int">
-        delete from community_tbl where community_no = #{community_no}
+        update community_tbl set active_state=0 where community_no = #{community_no}
     </delete>
     <!-- 좋아요 있는지 확인 -->
     <select id="isLiked" parameterType="com.ict.backend.vo.CommunityLikeVO" resultType="int">

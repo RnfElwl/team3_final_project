@@ -65,6 +65,7 @@ function LoginPage() {
         window.location = "/";
       })
       .catch((error) => {
+        alert("로그인 실패");
         console.error('Login failed:', error);
       });
   };

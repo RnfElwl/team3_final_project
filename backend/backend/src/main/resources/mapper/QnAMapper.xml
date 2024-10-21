@@ -47,18 +47,24 @@
     <select id="getPrevQnaNo" resultType="int">
         SELECT MAX(qna_no)
         FROM qna_tbl
-        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0)
+        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0) and privacyQ not in (1)
     </select>
     <select id="getPrevTitle" resultType="String">
         select qna_title from qna_tbl where qna_no=#{prevNo}
     </select>
-    <select id="getNextTitle" resultType="String">
-        select qna_title from qna_tbl where qna_no=#{nextNo}
+    <select id="getPrevPrivacyQ" resultType="String">
+        select privacyQ from qna_tbl where qna_no=#{prevNo}
     </select>
     <select id="getNextQnaNo" resultType="int">
         SELECT MIN(qna_no)
         FROM qna_tbl
-        WHERE qna_no <![CDATA[>]]> #{qna_no} AND active_state not IN (0);
+        WHERE qna_no <![CDATA[>]]> #{qna_no} AND active_state not IN (0) and privacyQ not in (1);
+    </select>
+    <select id="getNextTitle" resultType="String">
+        select qna_title from qna_tbl where qna_no=#{nextNo}
+    </select>
+    <select id="getNextPrivacyQ" resultType="String">
+        select privacyQ from qna_tbl where qna_no=#{nextNo}
     </select>
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl
@@ -114,5 +120,9 @@
     <insert id="insertImgUrl" useGeneratedKeys="true" keyProperty="image_no">
         insert into image_tbl (image_url) values(#{image_url})
     </insert>
+    <select id="passWriteChk" resultType="int">
+        SELECT COUNT(*) FROM qna_tbl
+        WHERE qna_no=#{qna_no} and qna_pwd = #{privacyCheckWord}
+    </select>
 
 </mapper>

@@ -2,7 +2,7 @@
     margin: 0 auto;
     margin-bottom: 40px;
     max-width: 1200px;
-    color:white;
+    color:#f1f1f1;
 }
 @media(max-width:577px){
     .QnABody{
@@ -20,7 +20,7 @@
     font-size: 1.2em;
 }
 .tr-right-info div{
-    color:#FFE700;
+    color:#48d1cdea;
 }
 
 /* 테이블 css */
@@ -52,7 +52,7 @@
     color: #48d1cdea;
 }
 .qna_ht_th a:link, .qna_ht_th a:hover,.qna_ht_th a:visited {
-    color: white;
+    color: #f1f1f1;
 }
 .qna_pwt{
     cursor: pointer;
@@ -61,7 +61,7 @@
 /* 검색키 css */
 .qnaSearchSelect{
     appearance: none;
-    width: 70px;
+    width: 100px;
     height: 35px;
     font-size: 1em;
     padding: 5px;
@@ -89,6 +89,9 @@
     padding: 10px;
     background:none;
     color: #48d1cdea;
+    background-color: #48d1cdea;
+    color: #205e5cea;
+    border:none;
     border-radius: 5px;
     font-weight: 900;
     border: 1px solid #48d1cdea;
@@ -113,7 +116,7 @@
 }
 
 .private-content div {
-    background: white;
+    background: #f1f1f1;
     padding: 20px;
     border-radius: 8px;
     color:black;
@@ -167,13 +170,15 @@
 .paging-btn-num:disabled {
     background-color: #48d1cdea; /* 비활성화 시 색상 */
     cursor: not-allowed;
-    color: #394732;
+    color: #194644ea;
     opacity: 0.6; /* 비활성화 시 투명도 조절 */
 }
 
 .paging-btn-num:not(:disabled):hover {
     background-color: #48d1cdea; /* 호버 시 색상 */
     color:#394732;
+    background-color: #51e4dfea; /* 호버 시 색상 */
+    color:#194644ea;
     transform: scale(1.05); /* 호버 시 크기 증가 */
 }
 
@@ -185,12 +190,21 @@
 .paging-btn:not(:disabled):hover {
     background-color: #48d1cdea; /* 호버 시 색상 */
     color:#394732;
+    background-color: #51e4dfea; /* 클릭 시 색상 */
+    color:#194644ea;
+    transform: scale(0.95); /* 클릭 시 크기 감소 */
+}
+.paging-btn:not(:disabled):hover {
+    background-color: #51e4dfea; /* 호버 시 색상 */
+    color:#194644ea;
     transform: scale(1.05); /* 호버 시 크기 증가 */
 }
 
 .paging-btn:not(:disabled):active {
     background-color: #48d1cdea; /* 클릭 시 색상 */
     color:#394732;
+    background-color: #51e4dfea; /* 클릭 시 색상 */
+    color:#194644ea;
     transform: scale(0.95); /* 클릭 시 크기 감소 */
 }
 
@@ -206,6 +220,7 @@
     
 }
 
+
 .qna-category-filter button:disabled{
     color: #f1f1f1;
     border-bottom: 2px solid #48d1cdea;
@@ -213,4 +228,12 @@
 }
 .qna-category-filter button:hover{
     border-bottom: 2px solid #48d1cdea;
+}
+.qna-category-filter button:hover{
+    color: #f1f1f1;
+    border-bottom: 2px solid #a1adadea;
+}
+.qna-category-filter button:disabled{
+    color: #f1f1f1;
+    border-bottom: 2px solid #51e4dfea;
 }
