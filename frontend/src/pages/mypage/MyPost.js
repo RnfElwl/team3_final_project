@@ -117,7 +117,7 @@ function MyPost() {
                 params.searchKeyword = searchKeyword;
             }
     
-            const response = await axios.get(`/user/myposts/${tab}`, { params });
+            const response = await axios.get(`http://localhost:9988/user/myposts/${tab}`, { params });
             console.log(response.data.postdata);
             setSortedData(response.data.postdata);
             setTotalRecord(response.data.posts);
@@ -161,8 +161,9 @@ function MyPost() {
         }
         navigate(path);
     };
+
     const [likeStatus, setLikeStatus] = useState(Array(10).fill(true));
-    
+
     const toggleLike = async (index, community) => {
         console.log(index, community);
         const previousLikeStatus = [...likeStatus];
@@ -285,6 +286,7 @@ function MyPost() {
 
                         {/* 두 번째 버튼 그룹 */}
                         <div className="sub-buttons">
+                            <div>
                             {tabData[activeTab].display.map((button, index) => (
                             <button
                                 key={button}
@@ -295,18 +297,20 @@ function MyPost() {
                                     {activeSubButton === button && (sortOrder === 1 ? <HiSortDescending /> : <HiSortAscending />)}
                             </button>
                             ))}
+                            </div>
+                            {/* 제목 선택 및 검색 */}
+                            <div className="search-bar">
+                                <select className="dropdown" value={searchType} onChange={handleSearchTypeChange}>
+                                    <option value="title">제목</option>
+                                    {activeTab === "게시글" && <option value="usernick">작성자</option>}
+                                    <option value="content">내용</option>
+                                </select>
+                                <input type="text" placeholder="검색어 입력" className="search-input" value={searchKeyword} onChange={handleSearchKeywordChange} />
+                                <button className="search-button" onClick={handleSearchClick}>검색</button>
+                            </div>
                         </div>
 
-                        {/* 제목 선택 및 검색 */}
-                        <div className="search-bar">
-                            <select className="dropdown" value={searchType} onChange={handleSearchTypeChange}>
-                                <option value="title">제목</option>
-                                {activeTab === "게시글" && <option value="usernick">작성자</option>}
-                                <option value="content">내용</option>
-                            </select>
-                            <input type="text" placeholder="검색어 입력" className="search-input" value={searchKeyword} onChange={handleSearchKeywordChange} />
-                            <button className="search-button" onClick={handleSearchClick}>검색</button>
-                        </div>
+                        
 
                     </div>
 

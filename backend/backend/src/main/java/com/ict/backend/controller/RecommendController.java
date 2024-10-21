@@ -59,15 +59,18 @@ public class RecommendController {
     }
     @GetMapping("/genre")
     public List<MovieVO> getGenre(){
-        return service.getGenre();
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "id");
     }
     @GetMapping("/age")
     public List<MovieVO> getAge(){
-        return service.getAge();
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "age");
     }
     @GetMapping("/gender")
     public List<MovieVO> getGender(){
-        return service.getGender();
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "gender");
     }
 //    @GetMapping("/homeList")
 //    public  List<MovieVO> getMovies(
