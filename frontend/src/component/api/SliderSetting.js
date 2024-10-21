@@ -48,6 +48,14 @@ export const SliderSettings = {
   ]
 };
 
+export const HomeSliderSettings = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 8,
+  slidesToScroll: 8,
+  initialSlide: 0,
+}
 // export default SliderSettings;
 
 // 멀티 가능한 슬라이더

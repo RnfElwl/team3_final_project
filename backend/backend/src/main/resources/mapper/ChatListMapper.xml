@@ -25,13 +25,15 @@
         join user_tbl ut on cul2.userid=ut.userid
         left join image_tbl it on it.image_no=ut.userprofile
         LEFT JOIN (
-        SELECT chatlist_url, chat_content
-        FROM chat_content_tbl
-        WHERE (chatlist_url, chat_date) IN (
-        SELECT chatlist_url, MAX(chat_date)
+        SELECT c1.chatlist_url, c1.chat_content
+        FROM chat_content_tbl c1
+        JOIN (
+        SELECT chatlist_url, MAX(chat_date) AS latest_date
         FROM chat_content_tbl
         GROUP BY chatlist_url
-        )
+        ) c2
+        ON c1.chatlist_url = c2.chatlist_url
+        AND c1.chat_date = c2.latest_date group by chatlist_url, chat_content
         ) cm
         ON clt.chatlist_url = cm.chatlist_url
         where cul.userid=#{param1} and cul2.userid!=#{param1} and clt.chatlist_type=2

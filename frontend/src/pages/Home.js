@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/Home.css';
 import axios from '../component/api/axiosApi';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import image1 from '../img/banner1.png';
 import image2 from '../img/banner2.png';
 import image3 from '../img/banner3.png';
@@ -13,7 +13,8 @@ import image7 from '../img/banner7.png';
 import image8 from '../img/banner8.png';
 import image9 from '../img/banner9.png';
 import image10 from '../img/banner10.png';
-
+import {HomeSliderSettings} from "../component/api/SliderSetting";
+import Slider from "react-slick";
 // banner
 const bannerData = [
   { movieCode: 20163137, image: image1, title: 'Movie 1' },
@@ -193,32 +194,64 @@ function MovieList() {
           <div className="loading">Loading...</div> // 로딩 UI
         ) : (
           category.map((category, index) => ( 
-            <div key={`category-${index}`} className='category_list'> 
+            <>
+            
+            {
+              movies[index].length==0? <></>
+              :
+              <div key={`category-${index}`} className='category_list'> 
               <h3>{category}</h3>
-              <div className="movie-grid"
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}> 
-                <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 100}%)` }}>
-                  {movies[index] && movies[index].slice(currentMovieIndexes[index], currentMovieIndexes[index] + moviesPerPage).map(movie => (
-                    <div key={movie.movie_code || movie.id} className="movie-item">
-                      <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)} />
-                    </div>
-                  ))}
-                </div>
-                <button 
-                  onClick={() => handlePrev(index)} 
-                  disabled={currentMovieIndexes[index] === 0} 
-                  className='buttonPrev' 
-                  style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＜</button>
-                <button 
-                  onClick={() => handleNext(index)}
-                  disabled={currentMovieIndexes[index] + moviesPerPage >= (movies[index]?.length || 0)} 
-                  className='buttonNext' 
-                  style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＞</button>
-              </div>
-            </div>
-          ))
-        )}
+              {movies.length > 0 ? (
+                <Slider {...HomeSliderSettings}>
+                {movies[index].map((slide, index) => (
+                  <div key={index}>
+                                      {console.log(slide)}
+                                        <Link to={`/movies/view/${slide.movie_code}`}>
+                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                        </Link>
+                                    </div>
+                                ))}
+                                </Slider>
+                              ) 
+                              
+                              : 
+                              (
+                                // <div className="noslide">
+                                //     <BsExclamationCircle />
+                                //     <p>시청기록이 없습니다</p>
+                                // </div>
+                                <>
+                                </>
+                              )
+                              
+                            }
+                            
+                            
+                            {/* <div className="movie-grid"
+                              onMouseEnter={() => handleMouseEnter(index)}
+                              onMouseLeave={handleMouseLeave}> 
+                              <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 100}%)` }}>
+                              {movies[index] && movies[index].slice(currentMovieIndexes[index], currentMovieIndexes[index] + moviesPerPage).map(movie => (
+                                <div key={movie.movie_code || movie.id} className="movie-item">
+                                <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)} />
+                                </div>
+                                ))}
+                                </div>
+                                <button 
+                                onClick={() => handlePrev(index)} 
+                                disabled={currentMovieIndexes[index] === 0} 
+                                className='buttonPrev' 
+                                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＜</button>
+                                <button 
+                                onClick={() => handleNext(index)}
+                                disabled={currentMovieIndexes[index] + moviesPerPage >= (movies[index]?.length || 0)} 
+                                className='buttonNext' 
+                                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＞</button>
+                                </div> */}
+                                </div>
+                              }
+                              </>))
+                            )}
       </div>
     </div>
   );

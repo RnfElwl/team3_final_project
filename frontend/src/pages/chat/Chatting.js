@@ -190,7 +190,6 @@ const Chatting = () => {
         try{
         const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
         if(data==0){
-            console.log("왜 있어~~~~~")
             navigate("/");
             window.close();
         }
