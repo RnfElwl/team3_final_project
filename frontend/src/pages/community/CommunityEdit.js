@@ -120,6 +120,11 @@ function CommunityEdit() {
 
         try {
             const postData = new FormData();
+
+            // 기존 이미지 데이터 가져오기
+        // const response = await axios.get(`http://localhost:9988/community/view/${community_no}`);
+        // const existingPost = response.data;
+
             postData.append('userid', userid);
             postData.append('community_title', title);
             postData.append('community_content', content);
@@ -127,12 +132,22 @@ function CommunityEdit() {
             postData.append('loc', selectedPlace ? selectedPlace.place_name : null);
             postData.append('category', parseInt(category, 10));
             postData.append('privacy', parseInt(privacy, 10));
-            
-            com_img.forEach((img, index) => {
-                postData.append(`community_img`, img);
-            });
+            postData.append('community_img', image);
+
+            // const existingImage = existingPost.community_img;
+
+            // if (com_img.length > 0) {
+            //     // 새로운 이미지가 선택된 경우
+            //     com_img.forEach((img, index) => {
+            //         postData.append(`community_img`, img);
+            //     });
+            // } else if (existingImage) {
+            //     postData.append('community_img', existingImage); // 기존 이미지 전송
+                
+            // }
+
             console.log(postData);
-            // const result = await axios.post('http://localhost:9988/community/create', postData);
+            
             const result = await axios.put(`http://localhost:9988/community/edit/${community_no}`, postData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', // multipart/form-data 헤더를 설정
@@ -148,13 +163,13 @@ function CommunityEdit() {
             alert('게시글 수정에 실패했습니다.');
         }
 
-        let finalContent = content;
-    if (finalContent.startsWith('<p>') && finalContent.endsWith('</p>')) {
-        finalContent = finalContent.slice(3, -4);
-    }
+    //     let finalContent = content;
+    // if (finalContent.startsWith('<p>') && finalContent.endsWith('</p>')) {
+    //     finalContent = finalContent.slice(3, -4);
+    // }
 
     // 최종 처리된 데이터를 사용해 제출
-    console.log(finalContent);
+    // console.log(finalContent);
     };
 
     return (
