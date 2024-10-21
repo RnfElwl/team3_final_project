@@ -7,7 +7,7 @@ import { BsExclamationCircle } from "react-icons/bs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Slider from "react-slick";
 import { SliderSettings, AdaptiveHeightSettings } from '../../component/api/SliderSetting';
-import { recentSlides, bookmarkSlides, useprofileSlides  } from '../../component/api/SliderSetting';
+// import { recentSlides, bookmarkSlides, useprofileSlides  } from '../../component/api/SliderSetting';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/mypage/mypage.css';
@@ -42,20 +42,25 @@ function Mypage() {
     const defaultProfileImage = profile;
 
     useEffect(() => {   // 제일 처음 사용자 이미지 값 불러오기
-        const fetchUserInfo = async () => {
-            try {
-                const response = await axios.get("http://localhost:9988/user/mypageinfo");
-                const userInfo = response.data;
 
-                const updatedUserInfo = {
-                ...userInfo,
-                };
+        fetchUserInfo();
+        fetchtotaldata();
+    
+    }, []);
+    const fetchUserInfo = async () => {
+        try {
+            const response = await axios.get("http://localhost:9988/user/mypageinfo");
+            const userInfo = response.data;
 
-            setUserInfo(updatedUserInfo);
-            setProfileImageSrc(updatedUserInfo.userprofile || defaultProfileImage);
-            console.log(profileImageSrc);
+            const updatedUserInfo = {
+            ...userInfo,
+            };
 
-            console.log(updatedUserInfo);
+        setUserInfo(updatedUserInfo);
+        setProfileImageSrc(updatedUserInfo.userprofile || defaultProfileImage);
+        console.log(profileImageSrc);
+
+        console.log(updatedUserInfo);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 console.log(error.response.data); // "Access denied." 메시지 확인
@@ -67,6 +72,7 @@ function Mypage() {
             }
         }
     };
+
     const fetchtotaldata = async () => {
         try {
             const response = await axios.get("http://localhost:9988/user/totaldata"); // Change to your bookmarks API
@@ -108,12 +114,6 @@ function Mypage() {
             console.error("Error fetching: ", error);
         }
     };
-    
-    fetchUserInfo();
-    fetchtotaldata();
-    
-
-    }, []);
 
     const handleProfileImageError = () => {
         setProfileImageSrc(defaultProfileImage); // 이미지 로드 실패 시 기본 이미지로 설정
@@ -125,7 +125,7 @@ function Mypage() {
     // 데이터를 초기화하는 useEffect 추가
     useEffect(() => {
         // 초기 데이터 설정
-        setRecentSlides(recentSlides);
+        // setRecentSlides(recentSlides);
         //setBookmarkSlides(bookmarkSlides);
         // setProfileSlides(useprofileSlides);
     }, []);
@@ -251,6 +251,52 @@ function Mypage() {
             setLikeStatus(previousLikeStatus);
         }
     };
+    const toggledelete = async (index, info, type) => {
+        console.log(index, info, type);
+        let params = {};
+    
+        // type에 따라 params 값 설정
+        if (type === "qna") {
+            params = { no: info.qna_no };
+        } else if (type === "community") {
+            params = { no: info.community_no };
+        } else if (type === "comment") {
+            params = { no: info.comment_no };
+        }
+        console.log(params);
+    
+        try {
+            const response = await axios.get(`http://localhost:9988/user/del/${type}`, {
+                params: params
+            });
+    
+            if (response.status === 200) {
+                console.log('삭제 성공:', response.data);
+                // 필요 시 전체 데이터를 다시 가져오는 로직
+                fetchUserInfo();
+                fetchtotaldata();
+            } else {
+                alert("삭제 실패");
+                console.log('삭제 실패:', response.data);
+            }
+        
+        } catch (error) {
+            if (error.response && error.response.status === 500) {
+                console.error('서버 에러:', error.response.data);
+            } else if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    console.log("로그인 필요, 로그인 페이지로 이동");
+                    window.location.href = "/signin";
+                } else {
+                    console.error('잘못된 요청:', error.response.data);
+                }
+            } else {
+                console.error('알 수 없는 오류:', error.message);
+            }
+        }
+    
+    };
+    
 
     return (
         <div className="myPage">
@@ -363,7 +409,7 @@ function Mypage() {
                             })}
                         </ul>
                         ) : (
-                            <div className="noslide" style = {{height : "300px", marginTop : '20px'}}>
+                            <div className="noslide no-hover" style = {{height : "300px", marginTop : '20px'}}>
                                 <BsExclamationCircle />
                                 <p>{modalTitle}이 없습니다.</p>
                             </div>
@@ -388,6 +434,7 @@ function Mypage() {
                                         
                                     </tr>
                                 </thead>
+                                {communityList.length > 0 ? (
                                 <tbody>
                                 {communityList.map((communitylist, index) => (
                                     <tr key={index}>
@@ -396,7 +443,7 @@ function Mypage() {
                                                 <li className="list_title"
                                                     onClick={() => navigate(`/community/communityView/${communitylist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{communitylist.community_title}</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete"); toggledelete(index, communitylist, "community");}}/>
                                                 </li>
                                                 <li className="smaller-text">
                                                 <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(communitylist.community_content) }} />
@@ -406,6 +453,12 @@ function Mypage() {
                                     </tr>
                                     ))}
                                 </tbody>
+                                ) : (
+                                    <div className="noslide no-hover" style = {{height : "190px", marginTop : '20px'}}>
+                                        <BsExclamationCircle />
+                                        <p>작성한 게시글이 없습니다.</p>
+                                    </div>
+                                )}
                             </table>
                             </div>
                         </div>
@@ -422,6 +475,7 @@ function Mypage() {
                                         
                                     </tr>
                                 </thead>
+                                {communityList.length > 0 ? (
                                 <tbody>
                                 {commentList.map((commentlist, index) => (
                                     <tr key={index}>
@@ -430,7 +484,7 @@ function Mypage() {
                                                 <li className="list_title"
                                                     onClick={() => navigate(`/community/communityView/${commentlist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{commentlist.community_title}</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete"); toggledelete(index, commentlist, "comment");}}/>
                                                 </li>
                                                 <li className="smaller-text">
                                                     <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(commentlist.community_content) }} />
@@ -440,6 +494,12 @@ function Mypage() {
                                     </tr>
                                     ))}
                                 </tbody>
+                                ) : (
+                                    <div className="noslide no-hover" style = {{height : "190px", marginTop : '20px'}}>
+                                        <BsExclamationCircle />
+                                        <p>작성한 댓글이 없습니다.</p>
+                                    </div>
+                                )}
                             </table>
                             </div>
                         </div>
@@ -455,6 +515,7 @@ function Mypage() {
                                         
                                     </tr>
                                 </thead>
+                                {likecommunityList.length > 0 ? (
                                 <tbody>
                                 {likecommunityList.map((likecommunitylist, index) => (
                                     <tr key={index}>
@@ -487,6 +548,12 @@ function Mypage() {
                                     </tr>
                                     ))}
                                 </tbody>
+                                ) : (
+                                    <div className="noslide no-hover" style = {{height : "190px", marginTop : '20px'}}>
+                                        <BsExclamationCircle />
+                                        <p>좋아요한 게시글이 없습니다.</p>
+                                    </div>
+                                )}
                             </table>
                             </div>
                         </div>
@@ -502,18 +569,19 @@ function Mypage() {
                                         
                                     </tr>
                                 </thead>
+                                    {qnaList.length > 0 ? (
                                     <tbody>
                                     {qnaList.map((qna, index) => (
                                         <tr key={index}>
                                             <th>
                                                 <ul className="custom-list">
                                                     <li className="list_title"
-                                                    onClick={() => navigate(`/qna/view/${qna.qna_no}`)} style={{ cursor: 'pointer' }}>
+                                                    onClick={() => navigate(`/qna/view/${qna.qna_no}`, { state: { result: 1 } })} style={{ cursor: 'pointer' }}>
                                                         <div>
                                                             <span>[{qna.head_title == 1 ? "영화" : (qna.head_title == 2 ? "사이트" : "기타")}] </span>
                                                             {qna.qna_title}
                                                         </div>
-                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete")}} />
+                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("working"); toggledelete(index, qna, "qna");}} />
                                                     </li>
                                                     <li className="smaller-text" style ={{display:'flex', justifyContent: 'space-between'}}>
                                                         <div className = "text-content">{qna.qna_content}</div>
@@ -524,6 +592,12 @@ function Mypage() {
                                         </tr>
                                     ))}
                                     </tbody>
+                                    ) : (
+                                        <div className="noslide no-hover" style = {{height : "190px", marginTop : '20px'}}>
+                                            <BsExclamationCircle />
+                                            <p>작성한 문의글이 없습니다.</p>
+                                        </div>
+                                    )}
                                 </table>
                             </div>
                         </div>

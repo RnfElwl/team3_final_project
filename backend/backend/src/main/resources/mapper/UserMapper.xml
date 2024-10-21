@@ -186,9 +186,9 @@
     </select>
 
     <select id="getCommentList" resultType="map">
-        select ct.community_no, ct.community_title, ct.community_content from community_comment_tbl cc
+        select ct.community_no, ct.community_title, ct.community_content, comment_no from community_comment_tbl cc
         join community_tbl ct on cc.community_no = ct.community_no
-        where cc.userid = #{userid}
+        where cc.userid = #{userid} and cc.active_state = 1
         <choose>
             <when test="order == 'asc'">
                 order by comment_writedate asc
@@ -203,7 +203,7 @@
     </select>
     <select id="getCommunityList" resultType="map">
         select community_no, community_title, community_content from community_tbl
-        where userid = #{userid}
+        where userid = #{userid} and active_state = 1
         <choose>
             <when test="order == 'asc'">
                 order by community_writedate asc
@@ -218,7 +218,7 @@
     </select>
     <select id="getQnAList" resultType="map">
         select qna_no, head_title, qna_title, qna_content, qna_state from qna_tbl
-        where userid = #{userid}
+        where userid = #{userid} and active_state = 1
         <choose>
             <when test="order == 'asc'">
                 order by qna_writedate asc

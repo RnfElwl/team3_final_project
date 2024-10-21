@@ -134,8 +134,10 @@ function MyPost() {
             setIsSearching(false);
         }
     };
-    
-    
+
+    useEffect(() => {
+        setNowPage(1);
+    }, [activeTab, activeSubButton]);
 
     useEffect(() => {
         console.log("호출");
@@ -159,13 +161,92 @@ function MyPost() {
         }
         navigate(path);
     };
+    const [likeStatus, setLikeStatus] = useState(Array(10).fill(true));
+    
+    const toggleLike = async (index, community) => {
+        console.log(index, community);
+        const previousLikeStatus = [...likeStatus];
+
+        // 먼저 로컬에서 좋아요 상태를 토글하여 사용자에게 즉각적인 피드백 제공
+        const updatedLikeStatus = [...likeStatus];
+        updatedLikeStatus[index] = !updatedLikeStatus[index];
+        setLikeStatus(updatedLikeStatus);
+
+        try {
+            // 서버에 요청을 보내서 좋아요 상태 변경
+            const response = await axios.get('http://localhost:9988/community/like/status', {
+                params: { community_no: community.no }
+            });
+        } catch (error) {
+            console.error('Error toggling like:', error);
+            
+            // 오류가 발생할 경우 이전 상태로 되돌리기
+            setLikeStatus(previousLikeStatus);
+        }
+    };
+    const toggledelete = async (info, type, subtype) => {
+        console.log(info, type, subtype);
+        if(info.type == "reply"){
+            console.log("reply :", info.type);
+        }
+        else{
+            console.log(info.type);
+        }
+        let params = {};
+    
+        // type에 따라 params 값 설정
+        if (type === "qna") {
+            params = { no: info.no };
+        } else if (type === "community") {
+            if(info.type == "reply"){
+                params = {no : info.reply_no, subtype : info.type};
+            }else if(info.type == "comment"){
+                params = {no : info.reply_no, subtype : info.type};
+            }else{
+                params = { no: info.no, subtype : info.type};
+            }
+        } else if (type === "review") {
+            params = { no: info.movie_review_no };
+        }
+        console.log("hi : ",params);
+    
+        try {
+            const response = await axios.get(`http://localhost:9988/user/del/${type}`, {
+                params: params
+            });
+    
+            if (response.status === 200) {
+                console.log('삭제 성공:', response.data);
+                // 필요 시 전체 데이터를 다시 가져오는 로직
+            } else {
+                alert("삭제 실패");
+                console.log('삭제 실패:', response.data);
+            }
+        
+        } catch (error) {
+            if (error.response && error.response.status === 500) {
+                console.error('서버 에러:', error.response.data);
+            } else if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    console.log("로그인 필요, 로그인 페이지로 이동");
+                    window.location.href = "/signin";
+                } else {
+                    console.error('잘못된 요청:', error.response.data);
+                }
+            } else {
+                console.error('알 수 없는 오류:', error.message);
+            }
+        }
+    
+    };
+
 
     // 페이지네이션 영역
     
         //페이지네이션 이동 함수
         const handlePageChange = (newPage) => {
             setNowPage(newPage);
-            fetchData(tabNames[activeTab], tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)], sortOrder === 1 ? "desc" : "asc", searchType, searchKeyword);
+            //fetchData(tabNames[activeTab], tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)], sortOrder === 1 ? "desc" : "asc", searchType, searchKeyword);
         };
             //페이지네이션 5개만 띄우기
     const PAGE_GROUP_SIZE = 5;
@@ -257,11 +338,25 @@ function MyPost() {
                                             <td className="col-md-2">{data.writedate || "N/A"}</td>
                                             <td className="col-md-1" onClick={(e) => e.stopPropagation()}> {/* 상위 tr의 클릭 이벤트 전파 방지 */}
                                                 {activeTab === "게시글" && activeSubButton === "좋아요" ? (
-                                                    <FaHeart onClick={() => alert("Like clicked")} />
-                                                ) : (
-                                                    activeTab === "QnA" && new Date() - new Date(data.writedate) > 2 * 24 * 60 * 60 * 1000 ? null : (
-                                                      <FaTrashCan onClick={() => alert("Delete clicked")} />
+                                                    likeStatus[index] ? (
+                                                        <FaHeart
+                                                            onClick={(event) => {
+                                                                event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 방지
+                                                                toggleLike(index, data);
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <FaRegHeart
+                                                            onClick={(event) => {
+                                                                event.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되지 않도록 방지
+                                                                toggleLike(index, data);
+                                                            }}
+                                                        />
                                                     )
+                                                ) : (
+                                                    
+                                                      <FaTrashCan onClick={() => {alert("Delete clicked"); toggledelete(data, tabNames[activeTab], tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)])}} />
+                                                    
                                                 )}
                                             </td>
                                         </tr>
