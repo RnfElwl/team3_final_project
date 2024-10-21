@@ -134,7 +134,7 @@ function QnAWrite() {
     return (
         <div className='QnAWriteBody'>
             <form className='QnAWriteform' onSubmit={handleSubmit}>
-                <h2 style={{textAlign:"left"}}>질의응답(QnA) 작성</h2>
+                <h2 style={{textAlign:"left", marginTop:"30px"}}>질의응답(QnA) 작성</h2>
                 <hr />
                 <div className='qna_titleArea'>
                     <input type='hidden'

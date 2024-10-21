@@ -213,7 +213,7 @@ function QnA() {
                             <FaSearch
                                 onClick={handleSearchSubmit}
                                 size="30px"
-                                style={{ cursor: 'pointer', color:'rgb(0, 255, 156)' }} />
+                                style={{ cursor: 'pointer', color:'#48d1cdea' }} />
                         </form>
                     </div>
                 </div>
