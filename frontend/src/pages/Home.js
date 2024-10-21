@@ -205,7 +205,6 @@ function MovieList() {
                 <Slider {...HomeSliderSettings}>
                 {movies[index].map((slide, index) => (
                   <div key={index}>
-                                      {console.log(slide)}
                                         <Link to={`/movies/view/${slide.movie_code}`}>
                                             <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
                                         </Link>
