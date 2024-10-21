@@ -97,7 +97,7 @@ function Home() {
 function MovieList() {
   const [movies, setMovies] = useState([]);
   const [currentMovieIndexes, setCurrentMovieIndexes] = useState(Array(8).fill(0)); // 각 리스트에 대한 인덱스 배열
-  const moviesPerPage = 8; 
+  const [moviesPerPage, setMoviesPerPage] = useState(8); // 초기값 8개
   const [hoveredListIndex, setHoveredListIndex] = useState(null); // 어떤 리스트에 마우스가 올라왔는지 저장
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Hook을 함수 컴포넌트 내부에서 호출
@@ -188,30 +188,27 @@ function MovieList() {
   };
 
   return (
-    <div className="movie-list"> 
-      <div className='container'>
+    <div className='movie-list'> 
         {loading ? ( // 로딩 상태에 따라 다른 UI 표시
           <div className="loading">Loading...</div> // 로딩 UI
         ) : (
           category.map((category, index) => ( 
             <>
-            
-            {
-              movies[index].length==0? <></>
-              :
-              <div key={`category-${index}`} className='category_list'> 
+            {movies[index].length==0? <></> :
+              <div key={`category-${index}`} className='category_list'
+                onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시
+                onMouseLeave={handleMouseLeave} // 마우스 나가면
+              > 
               <h3>{category}</h3>
               {movies.length > 0 ? (
-                <Slider {...HomeSliderSettings}>
+                <Slider {...HomeSliderSettings} >
                 {movies[index].map((slide, index) => (
-                  <div key={index}>
-                                      {console.log(slide)}
-                                        <Link to={`/movies/view/${slide.movie_code}`}>
-                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                        </Link>
-                                    </div>
+                   <Link to={`/movies/view/${slide.movie_code}`} key={index} className='movie-item'>
+                   <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                 </Link>
                                 ))}
                                 </Slider>
+                                
                               ) 
                               
                               : 
@@ -252,7 +249,6 @@ function MovieList() {
                               }
                               </>))
                             )}
-      </div>
     </div>
   );
 }

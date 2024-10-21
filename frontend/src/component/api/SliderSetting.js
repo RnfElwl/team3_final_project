@@ -55,6 +55,22 @@ export const HomeSliderSettings = {
   slidesToShow: 8,
   slidesToScroll: 8,
   initialSlide: 0,
+  // responsive: [
+  //   {
+  //     breakpoint: 1780,
+  //     settings: {
+  //       slidesToShow: 6, 
+  //       slidesToScroll: 6,
+  //     }
+  //   },
+  //   {
+  //     breakpoint: 920,
+  //     settings: {
+  //       slidesToShow: 4, 
+  //       slidesToScroll: 4,
+  //     }
+  //   },
+  // ]
 }
 // export default SliderSettings;
 
