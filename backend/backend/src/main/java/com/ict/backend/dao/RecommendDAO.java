@@ -7,6 +7,7 @@ import com.ict.backend.vo.ReviewVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RecommendDAO {
 
@@ -29,4 +30,10 @@ public interface RecommendDAO {
     List<MovieVO> getAge();
 
     List<MovieVO> getGender();
+
+    List<Map<String, Object>> getGenerByUser(@Param("userId") String userId);
+    List<Map<String, Object>> getGenerByAge(@Param("userId") String userId);
+    List<Map<String, Object>> getGenerByGender(@Param("userId") String userId);
+
+    List<MovieVO> getMoviesByGenre(@Param("genre") String genre, @Param("count") int count);
 }

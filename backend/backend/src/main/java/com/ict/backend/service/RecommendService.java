@@ -31,6 +31,6 @@ public interface RecommendService {
 
     List<MovieVO> getGender();
 
-
+    List<MovieVO> getRecommendedMovies(String userId, String type);
 
 }

@@ -17,7 +17,7 @@
         UNION
         </if>
         <if test="column == 'all' or column == 'comment'">
-        SELECT DISTINCT ct.community_no as no, ct.community_title as title, cct.comment_content AS content, ct.userid, ct.community_writedate as writedate, cct.comment_writedate AS orderdate, "comment" type, null reply_no
+        SELECT DISTINCT ct.community_no as no, ct.community_title as title, cct.comment_content AS content, ct.userid, ct.community_writedate as writedate, cct.comment_writedate AS orderdate, "comment" type, comment_no reply_no
         FROM community_comment_tbl cct
         JOIN community_tbl ct ON cct.community_no = ct.community_no
         WHERE cct.userid = #{userid} and cct.active_state = 1
@@ -144,7 +144,7 @@
         mr.movie_review_no
         FROM movie_review_tbl mr
         JOIN movie_data_tbl md on mr.movie_no = md.movie_no
-        WHERE userid = #{userid}
+        WHERE userid = #{userid} and mr.active_state = 1
         ) AS result
         <if test="searchWord!=null and searchWord!=''">
             WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
@@ -181,7 +181,7 @@
         mr.movie_review_no
         FROM movie_review_tbl mr
         JOIN movie_data_tbl md on mr.movie_no = md.movie_no
-        WHERE userid = #{userid}
+        WHERE userid = #{userid} and mr.active_state = 1
         ) AS result
         <if test="searchWord!=null and searchWord!=''">
             WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
@@ -198,7 +198,7 @@
         qna_state,
         qna_writedate as orderdate
         from qna_tbl
-        where userid = #{userid}
+        where userid = #{userid} and active_state = 1
         ) as result
         <if test="searchWord!=null and searchWord!=''">
             WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')
@@ -233,7 +233,7 @@
         qna_state,
         qna_writedate as orderdate
         from qna_tbl
-        where userid = #{userid}
+        where userid = #{userid} and active_state = 1
         ) as result
         <if test="searchWord!=null and searchWord!=''">
             WHERE ${searchKey} like CONCAT('%', #{searchWord}, '%')

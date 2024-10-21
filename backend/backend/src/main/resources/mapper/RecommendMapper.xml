@@ -11,17 +11,20 @@
         values (#{userid}, #{movie_genre}, now())
     </insert>
     <select id="getMoviesByBookmarkCount" resultType="com.ict.backend.vo.MovieVO">
-        select * from bookmark_tbl as b
-        join movie_data_tbl as d on b.movie_no = d.movie_no
-        order by movie_code desc limit 20;
+        select movie_link, movie_kor,  b.movie_no from bookmark_tbl as b
+        right join movie_data_tbl as d on b.movie_no = d.movie_no
+        group by d.movie_no
+        order by count(b.movie_no)
+        desc limit 20
     </select>
     <select id="getMoviesByReleaseDate" resultType="com.ict.backend.vo.MovieVO">
         select * from movie_data_tbl order by movie_code desc limit 20;
     </select>
     <select id="getMoviesByReviewCount" resultType="com.ict.backend.vo.MovieVO">
-        select * from movie_review_tbl as r
-        join movie_data_tbl as d on r.movie_no = d.movie_no
-        order by d.movie_code desc limit 20;
+        select d.movie_link, d.movie_kor,  d.movie_no, count(r.movie_no) from movie_review_tbl as r
+        right join movie_data_tbl as d on r.movie_no = d.movie_no
+        group by d.movie_no
+        order by count(r.movie_no) desc limit 20;
 
     </select>
     <select id="getMoviesByRating" resultType="com.ict.backend.vo.MovieVO">
@@ -33,12 +36,110 @@
 <!--        WHERE m.movie_no = #{movie_no}-->
 <!--        GROUP BY m.movie_id-->
 <!--        ORDER BY avg_rating DESC-->
-        select * from movie_review_tbl as r
-        join movie_data_tbl as d on r.movie_no = d.movie_no
-        order by rate desc limit 20;
+        select d.movie_link, d.movie_kor,  d.movie_no, avg(rate) from movie_review_tbl as r
+        right join movie_data_tbl as d on r.movie_no = d.movie_no
+        group by d.movie_no
+        order by avg(r.rate) desc limit 20;
 
     </select>
     <select id="getMoviesByViewCount" resultType="com.ict.backend.vo.MovieVO">
-        SELECT * FROM movie_data_tbl ORDER BY hit DESC;
+        SELECT * FROM movie_data_tbl ORDER BY hit DESC limit 20
+    </select>
+
+
+
+    <!-- 추천용 mapper -->
+    <!--  아이디로 가져오기  -->
+    <select id="getGenerByUser" parameterType="String" resultType="Map">
+        WITH genre_ratios AS (
+        SELECT movie_genre AS genre, COUNT(*) * 1.0 / (SELECT COUNT(*) FROM prefer_tbl WHERE userid = #{userId}) AS genre_ratio
+        FROM prefer_tbl
+        WHERE userid = #{userId}
+        GROUP BY movie_genre
+        ORDER BY genre_ratio DESC
+        LIMIT 3
+        ),
+        total_top3_ratio AS (
+        SELECT SUM(genre_ratio) AS total_ratio
+        FROM genre_ratios
+        )
+        SELECT genre, (genre_ratio / (SELECT total_ratio FROM total_top3_ratio)) * 100 AS adjusted_genre_ratio
+        FROM genre_ratios
+        ORDER BY adjusted_genre_ratio DESC;
+    </select>
+    <!--  나이대로 가져오기  -->
+    <select id="getGenerByAge" parameterType="String" resultType="Map">
+        WITH user_age_group AS (
+        SELECT CASE
+        WHEN TIMESTAMPDIFF(YEAR, userbirth, CURDATE()) BETWEEN 20 AND 29 THEN '20대'
+        WHEN TIMESTAMPDIFF(YEAR, userbirth, CURDATE()) BETWEEN 30 AND 39 THEN '30대'
+        WHEN TIMESTAMPDIFF(YEAR, userbirth, CURDATE()) BETWEEN 40 AND 49 THEN '40대'
+        ELSE '기타'
+        END AS age_group
+        FROM user_tbl
+        WHERE userid = #{userId}
+        ),
+        age_group_preferences AS (
+        SELECT movie_genre AS genre, COUNT(*) * 1.0 / (SELECT COUNT(*) FROM prefer_tbl p, user_tbl u
+        WHERE p.userid = u.userid
+        AND (CASE
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 20 AND 29 THEN '20대'
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 30 AND 39 THEN '30대'
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 40 AND 49 THEN '40대'
+        ELSE '기타'
+        END) = (SELECT age_group FROM user_age_group)) AS genre_ratio
+        FROM prefer_tbl p
+        JOIN user_tbl u ON p.userid = u.userid
+        WHERE (CASE
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 20 AND 29 THEN '20대'
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 30 AND 39 THEN '30대'
+        WHEN TIMESTAMPDIFF(YEAR, u.userbirth, CURDATE()) BETWEEN 40 AND 49 THEN '40대'
+        ELSE '기타'
+        END) = (SELECT age_group FROM user_age_group)
+        GROUP BY movie_genre
+        ORDER BY genre_ratio DESC
+        LIMIT 3
+        ),
+        total_top3_ratio AS (
+        SELECT SUM(genre_ratio) AS total_ratio
+        FROM age_group_preferences
+        )
+        SELECT genre, (genre_ratio / (SELECT total_ratio FROM total_top3_ratio)) * 100 AS adjusted_genre_ratio
+        FROM age_group_preferences
+        ORDER BY adjusted_genre_ratio DESC;
+    </select>
+    <!--  성별로 가져오기  -->
+    <select id="getGenerByGender" parameterType="map" resultType="Map">
+        WITH user_gender AS (
+        SELECT gender
+        FROM user_tbl
+        WHERE userid = #{userId}
+        ),
+        gender_preferences AS (
+        SELECT movie_genre AS genre, COUNT(*) * 1.0 / (SELECT COUNT(*) FROM prefer_tbl p, user_tbl u
+        WHERE p.userid = u.userid
+        AND u.gender = (SELECT gender FROM user_gender)) AS genre_ratio
+        FROM prefer_tbl p
+        JOIN user_tbl u ON p.userid = u.userid
+        WHERE u.gender = (SELECT gender FROM user_gender)
+        GROUP BY movie_genre
+        ORDER BY genre_ratio DESC
+        LIMIT 3
+        ),
+        total_top3_ratio AS (
+        SELECT SUM(genre_ratio) AS total_ratio
+        FROM gender_preferences
+        )
+        SELECT genre, (genre_ratio / (SELECT total_ratio FROM total_top3_ratio)) * 100 AS adjusted_genre_ratio
+        FROM gender_preferences
+        ORDER BY adjusted_genre_ratio DESC;
+    </select>
+
+    <select id="getMoviesByGenre" parameterType="map" resultType="com.ict.backend.vo.MovieVO">
+        SELECT *
+        FROM movie_data_tbl
+        WHERE movie_genre = #{genre}
+        ORDER BY RAND()
+        LIMIT #{count}
     </select>
 </mapper>

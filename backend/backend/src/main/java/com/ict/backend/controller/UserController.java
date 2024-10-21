@@ -1,9 +1,7 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.dto.CustomUserDetails;
-import com.ict.backend.service.FilterService;
-import com.ict.backend.service.ImageService;
-import com.ict.backend.service.UserService;
+import com.ict.backend.service.*;
 import com.ict.backend.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,16 @@ public class UserController {
     ImageService imageService;
     @Autowired
     FilterService filterService;
+    @Autowired
+    CommunityService communityService;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    CommentReplyService commentReplyService;
+    @Autowired
+    QnAService qnAService;
+    @Autowired
+    ReviewService reviewService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -129,13 +137,46 @@ public class UserController {
         responseData.put("community", userService.getCountCommunity(userid));
         responseData.put("comment", userService.getCountComment(userid) + userService.getCountReplyComment(userid));
         responseData.put("communitylist", userService.getCommunityList(userid, "desc", 3));
-        responseData.put("commentlist", userService.getCommunityList(userid, "desc", 3));
+        responseData.put("commentlist", userService.getCommentList(userid, "desc", 3));
         responseData.put("qnalist", userService.getQnAList(userid, "desc", 3));
         responseData.put("likecommunitylist", userService.getLikeCommunityList(userid, "desc", 3));
 
         System.out.println(responseData);
         return ResponseEntity.ok(responseData);
     }
+    @GetMapping("/del/{type}")
+    public ResponseEntity<String> delinfo(@PathVariable String type,
+                                          @RequestParam(value = "no") int no,
+                                          @RequestParam(value = "subtype", required = false )String subtype) {
+        System.out.println(type + ", " + no+ ", " + subtype);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!userid.equals("anonymousUser")){
+            try {
+                if (type.equals("qna")) {
+                    qnAService.qnaDel(no, userid);
+                } else if (type.equals("community")) {
+                    if(subtype.equals("comment")){
+                        commentService.deleteComment(no);
+                    }else if(subtype.equals("reply")){
+                        commentReplyService.deleteReply(no);
+                    }else {
+                        communityService.deleteCommunity(no);
+                    }
+                } else if (type.equals("review")) {
+                    reviewService.deleteReview(no);
+                }
+                else {
+                    commentService.deleteComment(no);
+                }
+                return ResponseEntity.ok("Delete successful");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Delete failed: " + e.getMessage());
+            }
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Need login");
+        }
+    }
+
     // 북마크한 정보 가져오기
     @GetMapping("/bookmarks")
     public ResponseEntity<List<Map<String, String>>> getBookmarks() {

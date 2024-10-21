@@ -136,6 +136,15 @@ function MovieList() {
             case '새로 올라온 컨텐츠':
               response = await axios.get(`http://localhost:9988/recommend/release`);
               break;
+            case '추천 장르':
+              response = await axios.get(`http://localhost:9988/recommend/genre`);
+              break;
+            case '회원님의 나이를 고려한 컨텐츠':
+              response = await axios.get(`http://localhost:9988/recommend/age`);
+              break;
+            case '회원님의 성별을 고려한 컨텐츠':
+              response = await axios.get(`http://localhost:9988/recommend/gender`);
+              break;
             default:
               response = { data: [] }; // 기본값
           }
@@ -203,9 +212,12 @@ function MovieList() {
               {movies.length > 0 ? (
                 <Slider {...HomeSliderSettings} >
                 {movies[index].map((slide, index) => (
-                   <Link to={`/movies/view/${slide.movie_code}`} key={index} className='movie-item'>
-                   <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                 </Link>
+                  <div key={index}>
+                                      {console.log(slide)}
+                                        <Link to={`/movies/view/${slide.movie_code}`}>
+                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                        </Link>
+                                    </div>
                                 ))}
                                 </Slider>
                                 

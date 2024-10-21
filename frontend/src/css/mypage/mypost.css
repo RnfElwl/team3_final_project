@@ -36,7 +36,9 @@
   
   /* 상단 탭 버튼 스타일 */
   .tabs {
-    max-width: 190px;
+    max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
     padding : 2px 0;
     display: flex;
     justify-content: center;
@@ -44,10 +46,12 @@
     margin-bottom: 10px;
     background-color: #3f3a3a;
     border-radius: 3px;
+    margin-bottom: 20px;
   }
   
   
   .filterbutton .tab {
+    width: 33.3%;
     padding: 5px 10px;
     border: 1px solid #353434;
     background-color: #3f3e3e;
@@ -64,9 +68,13 @@
   
   /* 두 번째 버튼 그룹 */
   .sub-buttons {
+    max-width: 1080px;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0 auto;
     display: flex;
     gap: 3px;
-    margin-left : 15px;
+    /* margin-left : 15px; */
     margin-bottom: 10px;
   }
   
@@ -105,6 +113,7 @@
   
   .search-input {
     padding: 5px;
+    color : #f1f1f1;
     border: 1px solid #353434;
     background-color: #3f3e3e;
     border-radius: 4px;
