@@ -222,4 +222,11 @@ public class AdminController {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         return adminService.updateMovieActive(active_state, movie_no, userid);
     }
+    @PostMapping("/movie/edit")
+    public int movieDataUpdate(@RequestBody MovieVO movieVO){
+        System.out.println(movieVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        movieVO.setEdit_user(userid);
+        return adminService.updateMovieData(movieVO);
+    }
 }

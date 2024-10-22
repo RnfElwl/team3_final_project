@@ -6,3 +6,82 @@
     margin: 0 auto;
     color:#f1f1f1;
 }
+
+.AdminMovBody .eidt_form{
+    width: 600px;
+    background-color: #1C1C20;
+    padding: 40px 20px;
+    border-radius: 20px;
+    color: #f1f1f1;
+}
+
+.AdminMovBody .eidt_form span{
+    margin-right: 10px;
+}
+
+.AdminMovBody .eidt_form select {
+    width: 150px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+  }
+
+  .AdminMovBody .movie_title{
+    width: 100%;
+    display: flex;
+
+  }
+  .AdminMovBody .movie_title input{
+    width: 80% !important;
+  }
+  .AdminMovBody .movie_title>div>input
+  .AdminMovBody .eidt_form option {
+    background: #1C1C20;
+    color: #f1f1f1;
+    padding: 3px 0;
+  }
+  .AdminMovBody .eidt_form .mini_select{
+    display: flex;
+  }
+  .AdminMovBody .eidt_form .mini_select > div{
+    margin: 5px;
+  }
+  .AdminMovBody .eidt_form .mini_select > div>select{
+    width: 100px;
+  }
+
+  .AdminMovBody .eidt_form .edit_column{
+    margin: 15px;
+  }
+  .AdminMovBody .eidt_form .casts input{
+    width: 400px !important; 
+  }
+  .AdminMovBody .eidt_form .edit_column input{
+    border-radius: 4px;
+    width: 150px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+  }
+  .AdminMovBody .eidt_form .edit_column textarea{
+    border-radius: 4px;
+    width: 400px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    height: 200px;
+  }

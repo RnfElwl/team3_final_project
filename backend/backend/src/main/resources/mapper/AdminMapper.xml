@@ -229,4 +229,10 @@
             #{no}
         </foreach>
     </update>
+    <update id="updateMovieData">
+        update movie_data_tbl set movie_kor=#{movie_kor}, movie_eng=#{movie_eng}, movie_type=#{movie_type}, movie_genre=#{movie_genre}, movie_nation=#{movie_nation},
+        movie_showtime=${movie_showtime}, opened_year=${opened_year}, movie_directors=#{movie_directors}, movie_grade=#{movie_grade}, movie_synops=#{movie_synops},
+        movie_casts=#{movie_casts}, edit_user=#{edit_user}
+        where movie_no=${movie_no}
+    </update>
 </mapper>

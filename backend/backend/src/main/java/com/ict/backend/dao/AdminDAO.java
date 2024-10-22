@@ -30,4 +30,5 @@ public interface AdminDAO {
     int getTotalComRecord(PagingVO pagingVO);
     List<MovieVO> selectAdminMovieList(MovieVO movieVO);
     int updateMovieActive(Integer active, List<Integer> movie_no, String userid);
+    int updateMovieData(MovieVO movieVO);
 }

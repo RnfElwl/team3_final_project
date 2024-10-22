@@ -133,4 +133,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public int updateMovieActive(Integer active, List<Integer> movie_no, String userid){return dao.updateMovieActive(active, movie_no, userid);}
+
+    @Override
+    public int updateMovieData(MovieVO movieVO){return dao.updateMovieData(movieVO);}
 }
