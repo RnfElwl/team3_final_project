@@ -14,8 +14,10 @@ function AdminMovieCon(){
     const [checkedMovie, setCheckedMovie] = useState(new Array(movie.length).fill(false));
     const [editActive_state, setEditActive_state]=useState('1');
     const [isAllMovieChecked, setAllMovieChecked] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
+    const [editForm, setEditForm] = useState({});
+    const [clickNo, setClickNo] = useState();
     const handleAllMovieChecked = () => {
         const newCheckedState = !isAllMovieChecked;
         setAllMovieChecked(newCheckedState);
@@ -33,7 +35,18 @@ function AdminMovieCon(){
     useEffect(()=>{
         getMovieList();
     }, []);
+    useEffect(()=>{
+        setEditFormData();
+    }, [clickNo]);
+    async function setEditFormData(){
+        try{
 
+            const {data} = await axios.get(`http://localhost:9988/api/movies/${clickNo}}`);
+            setEditForm(data);
+        }catch(e){
+            console.log(e);
+        }
+    }
     const editActiveStateSubmit = (e) => {
         e.preventDefault();
 
@@ -130,8 +143,9 @@ function AdminMovieCon(){
         {isModalOpen && (
                         <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
                         {1===1?
-                        <>
-                        </>
+                        <div>
+
+                        </div>
                         : (
                             <div className="noslide no-hover" style = {{height : "300px", marginTop : '20px'}}>
                                 <BsExclamationCircle />
@@ -171,9 +185,9 @@ function AdminMovieCon(){
                         <th>관람등급</th>
                         <th>조회수</th>
                         <th>수정날짜</th>
-                        {/* <th>수정여부</th> */}
                         <th>수정유저</th>
                         <th>활성화</th>
+                        <th>수정</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -201,6 +215,7 @@ function AdminMovieCon(){
                             {/* <td>{item.edit_state}</td> */}
                             <td>{item.edit_user}</td>
                             <td>{item.active_state}</td>
+                            <td><button onClick={()=>setClickNo(item.movie_no)}>수정하기</button></td>
 
                         </tr>
                        ))
