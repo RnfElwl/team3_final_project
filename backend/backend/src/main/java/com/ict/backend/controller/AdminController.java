@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -215,10 +216,10 @@ public class AdminController {
         return new ResponseEntity<>(movieList, HttpStatus.OK);
     }
     @PostMapping("/movieActiveEdit")
-    public int memActiveEdit(@RequestParam int activeState, @RequestParam int movie_no) {
-        System.out.println("Active State: " + activeState);
+    public int movieActiveEdit(@RequestParam Integer active_state, @RequestParam List<Integer> movie_no) {
+        System.out.println("Active State: " + active_state);
         System.out.println("Mem userid: " + movie_no);
-
-        return adminService.updateMovieActive(activeState, movie_no);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return adminService.updateMovieActive(active_state, movie_no, userid);
     }
 }

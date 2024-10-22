@@ -132,5 +132,5 @@ public class AdminServiceImpl implements AdminService{
     public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}
 
     @Override
-    public int updateMovieActive(int active, int movie_no){return dao.updateMovieActive(active, movie_no);}
+    public int updateMovieActive(Integer active, List<Integer> movie_no, String userid){return dao.updateMovieActive(active, movie_no, userid);}
 }

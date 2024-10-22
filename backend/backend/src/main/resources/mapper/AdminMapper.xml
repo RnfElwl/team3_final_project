@@ -222,8 +222,9 @@
     </select>
     <update id="updateMovieActive">
         UPDATE movie_data_tbl
-        SET active_state = ${param1}
-        WHERE userid IN
+        SET active_state = ${param1},
+        edit_user=#{param3}
+        WHERE movie_no IN
         <foreach item="no" collection="movie_no" open="(" separator="," close=")">
             #{no}
         </foreach>

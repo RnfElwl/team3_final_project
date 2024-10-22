@@ -47,16 +47,14 @@ function AdminMovieCon(){
         
         formData.append('active_state',editActive_state);
 
-        formData.forEach((value, key) => {
-            console.log("키:",key,"값: "+value);
-        });
-
-        console.log(formData);
+        // formData.forEach((value, key) => {
+        //     console.log("키:",key,"값: "+value);
+        // });
         axios.post('http://localhost:9988/admin/movieActiveEdit', formData)
             .then(response => {
-                console.log('성공:', response.data);
-                if (response.data === 1) {
-                    window.location.reload();
+                console.log('성공:', response.data); 
+                if (response.data >= 1) {
+                    getMovieList();
                 }
             })
             .catch(error => {
@@ -156,7 +154,7 @@ function AdminMovieCon(){
                         <th>관람등급</th>
                         <th>조회수</th>
                         <th>수정날짜</th>
-                        <th>수정여부</th>
+                        {/* <th>수정여부</th> */}
                         <th>수정유저</th>
                         <th>활성화</th>
                     </tr>
@@ -183,7 +181,7 @@ function AdminMovieCon(){
                             <td>{item.movie_grade}</td>
                             <td>{item.hit}</td>
                             <td>{item.edit_date}</td>
-                            <td>{item.edit_state}</td>
+                            {/* <td>{item.edit_state}</td> */}
                             <td>{item.edit_user}</td>
                             <td>{item.active_state}</td>
 
