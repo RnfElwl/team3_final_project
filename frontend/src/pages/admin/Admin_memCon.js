@@ -2,7 +2,6 @@ import axios from "../../component/api/axiosApi";
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import $ from "jquery";
-import { debounce } from 'lodash';
 
 import './../../css/admin/adminMemCon.css'
 
@@ -95,12 +94,15 @@ function MemCon(){
 
         const formData =new FormData();
 
+        const selectedMemIds = [];
+
         checkedMems.forEach((isChecked, index) => {
             if (isChecked) {
-                const userid = member[index]?.userid; // 체크된 항목의 qna_no를 가져옵니다.
+                const userid = member[index]?.userid; 
                 ; 
                 if (userid) {
-                    formData.append('userid', userid); // qna_no를 폼 데이터에 추가합니다.           
+                    formData.append('userid', userid);  
+                    selectedMemIds.push(userid);          
                 }
             }
         });
@@ -114,7 +116,7 @@ function MemCon(){
         axios.post('http://localhost:9988/admin/memActiveEdit', formData)
             .then(response => {
                 console.log('성공:', response.data);
-                if (response.data === 1) {
+                if (response.data === selectedMemIds.length) {
                     window.location.reload();
                 }
             })
@@ -155,7 +157,7 @@ function MemCon(){
                 </form>
             </div>    
         </div>
-        <form className="adminQnaEdit" onSubmit={editActiveStateSubmit}>
+        <form className="adminMemEdit" onSubmit={editActiveStateSubmit}>
             <div>              
                 <select
                     value={editActive_state}

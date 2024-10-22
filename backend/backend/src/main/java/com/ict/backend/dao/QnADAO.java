@@ -13,7 +13,7 @@ public interface QnADAO {
     int qnaInsert(QnAVO qnaData);
     List<QnAVO> getQnAViewEdit(int qna_no);
     void qnaUpdate(QnAVO editData);
-    void qnaDel(int qna_no, String userid);
+    int qnaDel(int qna_no, String userid);
     int uploadImage(String imageUrl);
     String getImgPath(int qna_no);
     Integer qnaImgNumGet(int qna_no);

@@ -32,8 +32,13 @@ public interface AdminService {
     int insertUserBan(BanVO banvo);
     int updateUserBan(BanVO banvo);
     int updateMemActive(Integer activeState, List<String> userids);
+    int updateMemActiveOne(Integer activeState, String userid);
     List<CommunityVO> getComList(PagingVO pagingVO);
     int getTotalComRecord(PagingVO pagingVO);
+    List<CommentVO> getComMenList(PagingVO pagingVO);
+    int getTotalComMenRecord(PagingVO pagingVO);
+    List<CommentReplyVO> getReplyList(PagingVO pagingVO);
+    int getTotalComRepRecord(PagingVO pagingVO);
     List<MovieVO> selectAdminMovieList(MovieVO movieVO);
     int updateMovieActive(Integer active, List<Integer> movie_no, String userid);
     int updateMovieData(MovieVO movieVO);

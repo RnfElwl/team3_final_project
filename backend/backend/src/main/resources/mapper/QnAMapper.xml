@@ -99,7 +99,10 @@
         where qna_no=#{qna_no} and userid=#{userid}
     </update>
     <update id="qnaDel">
-        update qna_tbl set active_state=0 where qna_no=#{qna_no} and userid=#{userid}
+        update qna_tbl set active_state=0 where qna_no=#{qna_no}
+        <if test="userid!='admin1'">
+            and userid=#{userid}
+        </if>
     </update>
     <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
         INSERT INTO image_tbl (image_url) VALUES (#{image_url})

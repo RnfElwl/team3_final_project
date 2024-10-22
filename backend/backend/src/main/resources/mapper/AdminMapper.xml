@@ -233,13 +233,17 @@
             #{useridd}
         </foreach>
     </update>
+    <update id="updateMemActiveOne">
+        UPDATE user_tbl
+        SET active_state = ${activeState}
+        WHERE userid = #{userid}
+    </update>
 
     <select id="getComList" parameterType="map" resultType="com.ict.backend.vo.CommunityVO">
         SELECT c.community_no, c.userid, c.community_title, c.community_content,
         COUNT(cl.community_no) AS community_like, c.community_writedate, c.hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state, c.category, c.privacy
         FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
-
 
         <where>
             -- 검색 조건 (searchKey, searchWord)
@@ -262,6 +266,40 @@
 
     <select id="getTotalComRecord" resultType="int">
         select count(*) from community_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <select id="getComMenList" resultType="com.ict.backend.vo.CommentVO">
+        SELECT c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
+        COUNT(rc.userid) AS reply_cnt, c.edit_date, c.edit_user, c.active_state
+        FROM community_comment_tbl c
+        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no  -- LEFT JOIN을 사용
+        <where>
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
+        GROUP BY c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
+        c.edit_date, c.edit_state, c.edit_user, c.active_state
+    </select>
+    <select id="getTotalComMenRecord" resultType="int">
+        select count(*) from community_comment_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <select id="getReplyList" resultType="com.ict.backend.vo.CommentReplyVO">
+        SELECT reply_no, userid, comment_no, reply_content,reply_writedate,
+        edit_date,edit_user,active_state,tag_usernick FROM reply_comment_tbl
+        <where>
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getTotalComRepRecord" resultType="int">
+        select count(*) from reply_comment_tbl
         <if test="searchWord != null and searchWord != ''">
             where ${searchKey} like '%${searchWord}%'
         </if>

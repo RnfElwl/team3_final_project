@@ -98,12 +98,15 @@ function QnaCon() {
 
         const formData = new FormData();
 
+        const selectedQnaNos = [];
+
         checkedQnas.forEach((isChecked, index) => {
             if (isChecked) {
                 const qna_no = QnA[index]?.qna_no; // 체크된 항목의 qna_no를 가져옵니다.
                 ;
                 if (qna_no) {
-                    formData.append('qna_no', qna_no); // qna_no를 폼 데이터에 추가합니다.           
+                    formData.append('qna_no', qna_no); // qna_no를 폼 데이터에 추가합니다. 
+                    selectedQnaNos.push(qna_no);          
                 }
             }
         });
@@ -117,7 +120,7 @@ function QnaCon() {
         axios.post('http://localhost:9988/admin/qnaActiveEdit', formData)
             .then(response => {
                 console.log('성공:', response.data);
-                if (response.data === 1) {
+                if (response.data === selectedQnaNos.length) {
                     window.location.reload();
                 }
             })

@@ -121,9 +121,14 @@ function QnAView() {
     function qnaDelete() {
         if(window.confirm('해당 문의글을 삭제하시겠습니까?')) {
             axios.get(`http://localhost:9988/qna/viewDel/${itemQ.qna_no}`)
-                .then(() => {
-                    alert('삭제가 완료되었습니다. 목록으로 이동합니다.');
-                    navigate('/qna');  // 삭제 성공 시 목록으로 이동
+                .then((response) => {
+                    if(response.data>0){
+                        alert('삭제가 완료되었습니다. 목록으로 이동합니다.');
+                        // console.log(response.data);
+                        navigate('/qna');  // 삭제 성공 시 목록으로 이동
+                    }else{
+                        alert('삭제가 실패되었습니다.')
+                    }
                 })
                 .catch(error => {
                     console.error('삭제 실패', error);

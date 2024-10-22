@@ -153,6 +153,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public int updateMemActiveOne(Integer activeState, String userid) {
+        return dao.updateMemActiveOne(activeState, userid);
+    }
+
+    @Override
     public List<CommunityVO> getComList(PagingVO pagingVO) {
         return dao.getComList(pagingVO);
     }
@@ -160,6 +165,26 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public int getTotalComRecord(PagingVO pagingVO) {
         return dao.getTotalComRecord(pagingVO);
+    }
+
+    @Override
+    public List<CommentVO> getComMenList(PagingVO pagingVO) {
+        return dao.getComMenList(pagingVO);
+    }
+
+    @Override
+    public int getTotalComMenRecord(PagingVO pagingVO) {
+        return dao.getTotalComMenRecord(pagingVO);
+    }
+
+    @Override
+    public List<CommentReplyVO> getReplyList(PagingVO pagingVO) {
+        return dao.getReplyList(pagingVO);
+    }
+
+    @Override
+    public int getTotalComRepRecord(PagingVO pagingVO) {
+        return dao.getTotalComRepRecord(pagingVO);
     }
 
 

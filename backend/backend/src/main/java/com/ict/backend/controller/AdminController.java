@@ -208,9 +208,12 @@ public class AdminController {
 
     @GetMapping("/comList")
     public ResponseEntity<Map<String, Object>> ComList(@ModelAttribute PagingVO pagingVO){
-        pagingVO.setOnePageRecord(7);
         List<CommunityVO> result=adminService.getComList(pagingVO);
+        List<CommentVO> resultCo=adminService.getComMenList(pagingVO);
+        List<CommentReplyVO> resultre=adminService.getReplyList(pagingVO);
         int comTotalPages = adminService.getTotalComRecord(pagingVO);
+        int comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
+        int comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
         System.out.println("Input: " + pagingVO);
         System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
         System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
@@ -220,6 +223,10 @@ public class AdminController {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("comList", result);
         resultMap.put("comTotalPages", comTotalPages);
+        resultMap.put("comMenList",resultCo);
+        resultMap.put("comMenTotalPages",comMenTotalPages);
+        resultMap.put("replyList",resultre);
+        resultMap.put("comRepTotalPages",comReplyTotalPages);
         System.out.println("Result: " + resultMap);
 
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
@@ -264,7 +271,9 @@ public class AdminController {
                 System.out.println("정지 업데이트 됨"+updateBanCnt);
             } else { //밴테이블에 동일한 reported_user가 없을때
                 int insertBanCnt = adminService.insertUserBan(banvo);
+                int updateMemActive=adminService.updateMemActiveOne(2,reported_userid);
                 System.out.println("정지 추가 됨"+insertBanCnt);
+                System.out.println("유저 활동 변경됨"+updateMemActive);
             }
         }
 
