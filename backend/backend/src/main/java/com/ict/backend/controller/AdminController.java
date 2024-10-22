@@ -139,7 +139,7 @@ public class AdminController {
         return adminService.insertQnaAnswer(adminQAData);
     }
 
-    //qna active state Management
+    //qna active state Management Part
     @PostMapping("/qnaActiveEdit")
     public int qnaActiveEdit(
             @RequestParam("active_state") Integer activeState,
@@ -147,12 +147,12 @@ public class AdminController {
         System.out.println("Active State: " + activeState);
         System.out.println("Qna Numbers: " + qnaNos);
 
-        adminService.updateQnaActive(activeState, qnaNos);
+        int updatedCount =  adminService.updateQnaActive(activeState, qnaNos);
 
-        return 1;
+        return updatedCount;
     }
 
-    //Member ManageMent Part
+    //Member Management Part
     @GetMapping("/MemList")
     public ResponseEntity<Map<String, Object>> MemList(@ModelAttribute PagingVO pagingVO) {
         List<MemberVO> result = adminService.getMemList(pagingVO);
@@ -169,12 +169,22 @@ public class AdminController {
         System.out.println("Active State: " + activeState);
         System.out.println("Mem userid: " + userids);
 
-        adminService.updateMemActive(activeState, userids);
+        int updatedCount = adminService.updateMemActive(activeState, userids);
 
-        return 1;
+        return updatedCount;
+    }
+    //Banned Member Management Part
+    @GetMapping("/banMemList")
+    public ResponseEntity<Map<String, Object>> BanMemList(@ModelAttribute PagingVO pagingVO) {
+        List<BanVO> result = adminService.getBanMemList(pagingVO);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("banMemList", result);
+
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
-    //Report ManageMent Part
+    //Report Management Part
     @GetMapping("/repList")
     public ResponseEntity<Map<String, Object>> RepList(@ModelAttribute PagingVO pagingVO) {
         List<ReportVO> result = adminService.getRepList(pagingVO);
@@ -189,6 +199,11 @@ public class AdminController {
 
         List<ReportVO> reportList=adminService.getRepView(report_no);
         return new ResponseEntity<>(reportList, HttpStatus.OK);
+    }
+    @GetMapping("/getBanData/{reported_userid}")
+    public ResponseEntity<List<BanVO>> getBanData(@PathVariable String reported_userid){
+        List<BanVO> BanList=adminService.getBanData(reported_userid);
+        return new ResponseEntity<>(BanList, HttpStatus.OK);
     }
 
     @GetMapping("/comList")
@@ -209,6 +224,53 @@ public class AdminController {
 
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
+    @PostMapping("/repAnsWrite/{report_no}")
+    public int RepManagement(@PathVariable("report_no") Integer report_no,
+                             @RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> updateData = (Map<String, Object>) requestBody.get("updateData");
+        Map<String, Object> insertData = (Map<String, Object>) requestBody.get("insertData");
+
+        System.out.println(updateData);
+        System.out.println(insertData);
+
+        String edit_user = String.valueOf(updateData.get("edit_user"));
+        Integer edit_state = Integer.valueOf(String.valueOf(updateData.get("edit_state")));
+        Integer active_state = Integer.valueOf(String.valueOf(updateData.get("active_state")));
+        //추가 데이터
+        String reported_userid = String.valueOf(insertData.get("reported_userid"));
+        String start_banDate = String.valueOf(insertData.get("start_banDate"));
+        String stop_banDate = String.valueOf(insertData.get("stop_banDate"));
+        String banContent = String.valueOf(insertData.get("banContent"));
+
+        BanVO banvo = new BanVO();
+        banvo.setUserid(reported_userid);
+        banvo.setStart_banDate(start_banDate);
+        banvo.setStop_banDate(stop_banDate);
+        banvo.setBanContent(banContent);
+
+        System.out.println("edit_state type: " + updateData.get("edit_state").getClass().getName());
+        System.out.println("active_state type: " + updateData.get("active_state").getClass().getName());
+
+
+        int updateCnt = adminService.updateUserReport(report_no, edit_user, active_state, edit_state);
+        int banChk = adminService.banChk(reported_userid);
+
+        System.out.println("업데이트 횟수:" + updateCnt);
+        System.out.println("밴테이블에 있는지 카운트:" + banChk);
+        if (active_state != 0) {
+            if (banChk > 0) {//밴테이블에 동일한 reported_user가 있을 때
+                System.out.println(banvo);
+                int updateBanCnt=adminService.updateUserBan(banvo);
+                System.out.println("정지 업데이트 됨"+updateBanCnt);
+            } else { //밴테이블에 동일한 reported_user가 없을때
+                int insertBanCnt = adminService.insertUserBan(banvo);
+                System.out.println("정지 추가 됨"+insertBanCnt);
+            }
+        }
+
+        return updateCnt;
+    }
+
     @GetMapping("/movieList")
     public ResponseEntity<List<MovieVO>> selectAdminMovieList(MovieVO movieVO){
         System.out.println(movieVO.toString());

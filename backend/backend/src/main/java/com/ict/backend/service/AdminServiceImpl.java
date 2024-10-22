@@ -2,6 +2,7 @@ package com.ict.backend.service;
 
 import com.ict.backend.dao.AdminDAO;
 import com.ict.backend.vo.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,7 @@ public class AdminServiceImpl implements AdminService{
         return dao.insertQnaAnswer(adminQAData);
     }
 
+    @Transactional
     @Override
     public int updateQnaActive(Integer activeState, List<Integer> qnaNos) {
         return dao.updateQnaActive(activeState, qnaNos);
@@ -101,6 +103,11 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public List<MemberVO> getMemList(PagingVO pagingVO) {
         return dao.getMemList(pagingVO);
+    }
+
+    @Override
+    public List<BanVO> getBanMemList(PagingVO pagingVO) {
+        return dao.getBanMemList(pagingVO);
     }
 
     @Override
@@ -113,6 +120,33 @@ public class AdminServiceImpl implements AdminService{
         return dao.getRepView(report_no);
     }
 
+    @Override
+    public List<BanVO> getBanData(String reported_userid) {
+        return dao.getBanData(reported_userid);
+    }
+
+    @Transactional
+    @Override
+    public int updateUserReport(Integer report_no, String edit_user, Integer active_state, Integer edit_state) {
+        return dao.updateUserReport(report_no,edit_user, active_state, edit_state);
+    }
+
+    @Override
+    public int banChk(String reported_userid) {
+        return dao.banChk(reported_userid);
+    }
+
+    @Override
+    public int insertUserBan(BanVO banvo) {
+        return dao.insertUserBan(banvo);
+    }
+
+    @Override
+    public int updateUserBan(BanVO banvo) {
+        return dao.updateUserBan(banvo);
+    }
+
+    @Transactional
     @Override
     public int updateMemActive(Integer activeState, List<String> userids) {
         return dao.updateMemActive(activeState, userids);
@@ -127,6 +161,7 @@ public class AdminServiceImpl implements AdminService{
     public int getTotalComRecord(PagingVO pagingVO) {
         return dao.getTotalComRecord(pagingVO);
     }
+
 
     @Override
     public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}
