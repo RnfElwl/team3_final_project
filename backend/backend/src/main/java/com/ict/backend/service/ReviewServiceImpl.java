@@ -39,8 +39,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     // 리뷰 띄우기
     @Override
-    public List<ReviewVO> getReviewsByMovieCode(String movieCode) {
-        return reviewDAO.selectReviewsByMovieCode(movieCode);
+    public List<ReviewVO> getReviewsByMovieCode(String movieCode, String userid) {
+        return reviewDAO.selectReviewsByMovieCode(movieCode, userid);
     }
 
     // 특정 리뷰 선택

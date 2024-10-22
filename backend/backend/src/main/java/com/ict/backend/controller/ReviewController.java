@@ -45,7 +45,8 @@ public class ReviewController {
     public ResponseEntity<List<ReviewVO>> getReviewsByMovie(@PathVariable String movieCode) {
 
         System.out.println("Fetching reviews for movieCode: " + movieCode); // 요청 로그 확인
-        List<ReviewVO> reviews = reviewService.getReviewsByMovieCode(movieCode);
+        String userid =  SecurityContextHolder.getContext().getAuthentication().getName();
+        List<ReviewVO> reviews = reviewService.getReviewsByMovieCode(movieCode, userid);
         return ResponseEntity.ok(reviews);
     }
 

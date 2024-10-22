@@ -16,7 +16,7 @@ public interface ReviewDAO {
     void insertReview(ReviewVO reviewVO);
 
     // 특정 영화 리뷰 조회
-    List<ReviewVO> selectReviewsByMovieCode(@Param("movieCode") String movieCode);
+    List<ReviewVO> selectReviewsByMovieCode(@Param("movieCode") String movieCode, @Param("userid") String userid);
 
     // 특정 리뷰 조회
     ReviewVO selectReviewById(@Param("movieReviewNo") int movieReviewNo);
