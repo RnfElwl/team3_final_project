@@ -29,5 +29,6 @@ public interface MovieDAO {
 
     // movie_no에 따라 평균별점과 리뷰개수
     RatingVO getRatingByMovieNo(int movieNo);
-
+    int updateMovieHit(int movie_no);
+    int insertMovieHiStory(String userid, int movie_no);
 }

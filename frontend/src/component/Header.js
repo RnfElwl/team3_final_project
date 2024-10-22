@@ -113,7 +113,7 @@ function Header() {
               {isContentVisible1 && (
                 <div className="admin_minNav">
                   <Link to={'/admin/memCon'}>활동 멤버</Link>
-                  <Link to={'#'}>비활성화 멤버</Link>
+                  <Link to={'/admin/banMemCon'}>정지 멤버</Link>
                 </div>
               )}
           <div className="admin_nav"><Link to={'#'} onClick={toggleContent2}>컨텐츠 관리&nbsp;

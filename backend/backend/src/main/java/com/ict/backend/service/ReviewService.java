@@ -18,7 +18,7 @@ public interface ReviewService {
     void addReview(ReviewVO reviewVO);
 
     // movieCode로 리뷰 목록 띄우기
-    List<ReviewVO> getReviewsByMovieCode(String movieCode);
+    List<ReviewVO> getReviewsByMovieCode(String movieCode, String userid);
 
     // 특정 review 호출
     ReviewVO getReviewById(int movieReviewNo);

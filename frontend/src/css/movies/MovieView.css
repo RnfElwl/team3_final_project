@@ -357,3 +357,76 @@
   background-color: #48d1cdea;
 
 }
+
+.movie-view-container .report_button {
+  background: none;
+  border: none;
+}
+
+.movie-view-container .report_window{
+  display: none; /* 필요 시 JavaScript로 제어 */
+  width: 100vw;
+  height: 100vh;
+  position: fixed; /* 변경된 부분 */
+  justify-content: center;
+  align-items: center; 
+  top: 0px;
+  left: 0px;
+  z-index: 999; /* 다른 요소 위에 표시하도록 설정 */
+}
+.movie-view-container .report_show{
+  display: flex;
+}
+.movie-view-container .report_hide{
+  display: none;
+}
+.movie-view-container .report_window .report_close{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background-color: #5555555b;
+  z-index: 1;
+}
+.movie-view-container .report_window .chatting_report{
+  color: #1C1C20;
+  background-color: #f0f0f0;
+  padding: 50px;
+  z-index: 2;
+  border-radius: 10px;
+  width: 450px;
+  height: 400px;
+  text-align: center;
+}
+.movie-view-container .report_window .title h2{
+  font-size: 1.5em;
+  color: rgba(235, 59, 59, 0.774);
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+.movie-view-container .report_window .report_radio{
+  gap: 10px;
+  display: flex;
+}
+.movie-view-container .report_window .report_radio span{
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e1e20c2;
+}
+.movie-view-container .report_window .sub_title textarea{
+  width: 100%;
+  height: 150px;
+  resize: none;
+  margin: 12px 0;
+}
+.movie-view-container .report_window button{
+  border:1px solid rgba(235, 59, 59, 0.774);
+  font-weight: bold;
+  border-radius: 5px;
+  background: none;
+  color:rgba(235, 59, 59, 0.774);
+}
+.movie-view-container .report_window button:hover{
+  background: rgba(235, 59, 59, 0.774);
+  color:#f0f0f0;
+}

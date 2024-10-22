@@ -11,7 +11,7 @@
         values (#{userid}, #{movie_genre}, now())
     </insert>
     <select id="getMoviesByBookmarkCount" resultType="com.ict.backend.vo.MovieVO">
-        select movie_link, movie_kor,  b.movie_no from bookmark_tbl as b
+        select movie_link, movie_kor,  b.movie_no, d.movie_code from bookmark_tbl as b
         right join movie_data_tbl as d on b.movie_no = d.movie_no
         group by d.movie_no
         order by count(b.movie_no)
@@ -21,7 +21,7 @@
         select * from movie_data_tbl order by movie_code desc limit 20;
     </select>
     <select id="getMoviesByReviewCount" resultType="com.ict.backend.vo.MovieVO">
-        select d.movie_link, d.movie_kor,  d.movie_no, count(r.movie_no) from movie_review_tbl as r
+        select d.movie_link, d.movie_kor,  d.movie_no, d.movie_code, count(r.movie_no) from movie_review_tbl as r
         right join movie_data_tbl as d on r.movie_no = d.movie_no
         group by d.movie_no
         order by count(r.movie_no) desc limit 20;
@@ -36,7 +36,7 @@
 <!--        WHERE m.movie_no = #{movie_no}-->
 <!--        GROUP BY m.movie_id-->
 <!--        ORDER BY avg_rating DESC-->
-        select d.movie_link, d.movie_kor,  d.movie_no, avg(rate) from movie_review_tbl as r
+        select d.movie_link, d.movie_kor,  d.movie_no, d.movie_code, avg(rate) from movie_review_tbl as r
         right join movie_data_tbl as d on r.movie_no = d.movie_no
         group by d.movie_no
         order by avg(r.rate) desc limit 20;

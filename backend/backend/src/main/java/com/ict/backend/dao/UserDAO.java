@@ -5,6 +5,7 @@ import com.ict.backend.vo.MemberVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,8 @@ public interface UserDAO {
     public List<Map<String, String>> getQnAList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
     public List<Map<String, String>> getLikeCommunityList(@Param("userid") String userid, @Param("order") String order, @Param("limit") int limit);
 
-
+    public String findidByNameAndEmail(@Param("username") String username, @Param("useremail") String useremail);
+    public int findpwdByNameAndEmailAndId(@Param("userid") String userid, @Param("username") String username, @Param("useremail") String useremail);
 
 
 }

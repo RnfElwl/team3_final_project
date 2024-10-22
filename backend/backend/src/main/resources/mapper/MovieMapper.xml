@@ -82,5 +82,10 @@
         FROM movie_review_tbl
         WHERE movie_no = #{movieNo}
     </select>
-
+    <update id="updateMovieHit">
+        update movie_data_tbl set hit=hit+1 where movie_no=${param1}
+    </update>
+    <insert id="insertMovieHiStory">
+        insert into history_sec_tbl(userid, movie_no) values(#{param1}, ${param2})
+    </insert>
 </mapper>

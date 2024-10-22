@@ -24,7 +24,8 @@
         join user_tbl ut on mrt.userid=ut.userid
         left join image_tbl it on ut.userprofile=it.image_no
         WHERE movie_no = (SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode}) and mrt.active_state=1
-        ORDER BY movie_review_writedate DESC
+        and mrt.movie_review_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=1)
+        ORDER BY movie_review_writedate DESC;
     </select>
 
     <!-- 특정 리뷰 조회 -->

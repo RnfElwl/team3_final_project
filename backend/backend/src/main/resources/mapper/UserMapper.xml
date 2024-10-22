@@ -247,6 +247,13 @@
         </if>
     </select>
 
+    <select id="findidByNameAndEmail">
+        select userid from user_tbl where username = #{username} and useremail = #{useremail}
+    </select>
+    <select id="findpwdByNameAndEmailAndId" resultType="int">
+        select count(*) from user_tbl where userid = #{userid} and username = #{username} and useremail = #{useremail}
+    </select>
+
 
 
 </mapper>

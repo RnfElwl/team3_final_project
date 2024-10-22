@@ -177,7 +177,16 @@ public class UserServiceImpl  implements UserService {
         return dao.getLikeCommunityList(userid, order, limit);
     }
 
+    @Override
+    public String findidByNameAndEmail(String username, String useremail){
+        return dao.findidByNameAndEmail(username, useremail);
+    }
 
+    @Override
+    public boolean findpwdByNameAndEmailAndId(String userid, String username, String useremail) {
+        int count = dao.findpwdByNameAndEmailAndId(userid, username, useremail);  // MyBatis가 반환하는 것은 int
+        return count > 0;  // count가 1 이상이면 true, 0이면 false 반환
+    }
 
 
 

@@ -73,8 +73,8 @@ dependencies {
 	// Spring Boot Starter Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-
-
+	// 메일 관련
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 
 }

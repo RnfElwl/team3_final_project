@@ -149,26 +149,82 @@
     </update>
     <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
         select userid, username, usernick, gender,usertel, u.active_state,
-        count(r.reported_userid) as 'reported_count',lastvisite,regiserdate
+        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate
         from user_tbl u left join report_tbl r on u.userid=r.reported_userid
         <if test="searchWord!=null and searchWord!=''">
-        where ${searchKey} like '%${searchWord}%'
+            where ${searchKey} like '%${searchWord}%'
         </if>
         GROUP BY
         u.userid, u.username, u.usernick, u.gender, u.usertel, u.active_state, u.lastvisite, u.regiserdate
     </select>
+    <select id="getBanMemList" resultType="com.ict.backend.vo.BanVO">
+        SELECT
+        b.userid,
+        u.username,
+        u.usernick,
+        DATE_FORMAT(b.start_banDate, '%Y-%m-%d') as start_banDate,
+        DATE_FORMAT(b.stop_banDate, '%Y-%m-%d') as stop_banDate,
+        u.active_state,
+        DATE_FORMAT(u.regiserdate, '%Y-%m-%d') as regiserdate,
+        COUNT(CASE WHEN r.active_state = 1 THEN r.reported_userid END) AS reported_count
+        FROM
+        ban_tbl b
+        JOIN
+        user_tbl u ON b.userid = u.userid
+        LEFT JOIN
+        report_tbl r ON u.userid = r.reported_userid
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+        GROUP BY
+        b.userid,
+        u.username,
+        u.usernick,
+        b.start_banDate,
+        b.stop_banDate,
+        u.active_state;
+    </select>
     <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
-        select report_no,report_userid, reported_userid, report_content, report_tblname, report_state,
+        select report_no,report_userid, reported_userid, report_content, report_tblname,
         report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
         <if test="searchWord!=null and searchWord!=''">
             AND ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
         </if>
     </select>
     <select id="getRepView" resultType="com.ict.backend.vo.ReportVO">
-        select report_no,report_userid, reported_userid, report_content, report_tblname, report_state,
-        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
-        where report_no=${report_no}
+        select report_no,report_userid, reported_userid, report_content, report_tblname, report_date,
+        report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid
+        from report_tbl where report_no=${report_no}
     </select>
+    <select id="getBanData" resultType="com.ict.backend.vo.BanVO">
+        select userid, start_banDate, stop_banDate, banContent, editBanDate
+        from ban_tbl where userid=#{reported_userid}
+    </select>
+
+    <update id="updateUserReport">
+        update report_tbl
+        set edit_user = #{edit_user},
+        active_state = #{active_state},
+        edit_state = #{edit_state},
+        edit_date = now()
+        where report_no = #{report_no}
+    </update>
+
+    <select id="banChk" resultType="int">
+        select COUNT(userid) FROM ban_tbl WHERE userid=#{reported_userid}
+    </select>
+    <insert id="insertUserBan">
+        insert ban_tbl values(#{userid},#{start_banDate},#{stop_banDate},#{banContent},now())
+    </insert>
+    <update id="updateUserBan">
+        update ban_tbl set
+        start_banDate=#{start_banDate},
+        stop_banDate=#{stop_banDate},
+        banContent=#{banContent},
+        editBanDate=now()
+        where userid=#{userid}
+    </update>
+
     <update id="updateMemActive">
         UPDATE user_tbl
         SET active_state = #{activeState}
@@ -191,7 +247,7 @@
                 ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
 
-             -- 상태 필터 (active_state)
+            -- 상태 필터 (active_state)
             <if test="activeStateChk != null and activeStateChk != ''">
                 ${activeStateChk} like CONCAT('%', #{stateChk}, '%')
             </if>
@@ -202,9 +258,8 @@
         c.edit_state, c.edit_user, c.active_state,
         c.category, c.privacy
         LIMIT #{onePageRecord} OFFSET #{offset}
-
-
     </select>
+
     <select id="getTotalComRecord" resultType="int">
         select count(*) from community_tbl
         <if test="searchWord != null and searchWord != ''">
@@ -228,5 +283,11 @@
         <foreach item="no" collection="movie_no" open="(" separator="," close=")">
             #{no}
         </foreach>
+    </update>
+    <update id="updateMovieData">
+        update movie_data_tbl set movie_kor=#{movie_kor}, movie_eng=#{movie_eng}, movie_type=#{movie_type}, movie_genre=#{movie_genre}, movie_nation=#{movie_nation},
+        movie_showtime=${movie_showtime}, opened_year=${opened_year}, movie_directors=#{movie_directors}, movie_grade=#{movie_grade}, movie_synops=#{movie_synops},
+        movie_casts=#{movie_casts}, edit_user=#{edit_user}
+        where movie_no=${movie_no}
     </update>
 </mapper>

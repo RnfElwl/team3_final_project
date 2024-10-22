@@ -3,6 +3,7 @@ import com.ict.backend.service.MovieService;
 import com.ict.backend.vo.MovieImgVO;
 import com.ict.backend.vo.MovieVO;
 import com.ict.backend.vo.RatingVO;
+import com.sun.tools.jconsole.JConsoleContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +91,24 @@ public class MovieController {
         return movieService.getRatingByMovieNo(movieNo);
     }
 
+    @PostMapping("/hit")
+    public int insertMovieHit(@RequestBody MovieVO movieVO){
+        int no = movieVO.getMovie_no();
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        String genre = movieVO.getMovie_genre();
+        try{
+        movieService.updateMovieHit(no);
+        if(userid == "anonymousUser"){
+            return 1;
+        }
+        movieService.insertMovieHiStory(userid, no);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }
+
+        return 1;
+    }
 
 
 

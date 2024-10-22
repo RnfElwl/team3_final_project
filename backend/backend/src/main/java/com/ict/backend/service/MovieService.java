@@ -22,4 +22,9 @@ public interface MovieService {
     int getMovieNoByCode(String movieCode); // movieCode로 movieNo 조회
     // 평균평점, 리뷰개수
     RatingVO getRatingByMovieNo(int movieNo);
+
+    int updateMovieHit(int movie_no);
+    int insertMovieHiStory(String userid, int movie_no);
+
+
 }

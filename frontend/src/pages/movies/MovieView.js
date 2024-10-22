@@ -3,6 +3,8 @@ import {useParams, useLocation, Link } from 'react-router-dom';
 import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; 
 import './../../css/movies/MovieView.css';
 import axios from '../../component/api/axiosApi';
+import ReportModal from '../../component/api/ReportModal';
+import { AiOutlineAlert } from "react-icons/ai";
 
 function MovieView() {
   
@@ -22,12 +24,14 @@ function MovieView() {
   const [movieNo, setMovieNo] = useState(null); // 영화 번호 상태
   const [movieCodeState, setMovieCode] = useState(null); // 영화 코드 상태
   const [ratingInfo, setRatingInfo] = useState({ avg_rating: 0, review_count: 0 }); // 평점 정보 상태
+  const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+  const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
 
   
   // Ref로 contentEditable 요소를 제어
   const reviewInputRef = useRef(null);
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true); // 상태 추가
-
+let once = 0;
   // 1. 영화 정보 가져오기
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -105,7 +109,13 @@ function MovieView() {
     const isLoading = !movie || !images || !reviews || !ratingInfo;
     setLoading(isLoading); // 필요한 데이터가 모두 로드될 때까지 로딩
   }, [movie, images, reviews, ratingInfo]);
-
+  useEffect(()=>{
+    if(once==0){
+      once = 1;
+      console.log("한번만 실행!!!!!!!!!!!!!!!");
+      historySetting();
+    }
+  }, []);
 
   // 선호 정보 저장
   useEffect(() => {
@@ -124,6 +134,7 @@ function MovieView() {
       }
     };
     if (userid) saveUserPreference();
+
   }, [movieCode, userid]);
 
 
@@ -142,8 +153,37 @@ function MovieView() {
       fetchBookmarkStatus();
     }
   }, [userid, movieCode]);
+  function openReport(id, userid, content){{/* 신고 기능 */}
+        setReport({
+            report_tblname: 1,
+            report_tblno:  id,
+            reported_userid: userid,
+            report_content: content,// 피신고자의 채팅 내용
+});        
+      toggleReport();
+      resetReview();
+  }
 
+  function toggleReport(){{/* 신고 기능 */}
+  setReportShow(!reportShow);
+}
 
+  async function historySetting(){
+      try{
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
+        const editData = response.data.movieVO;
+        const {data} = await axios.post("http://localhost:9988/api/movies/hit", editData);
+        if(data==1){
+          console.log(data);
+        }
+        else{
+          throw new Error("조회수, 최근본 영화, 취향 업데이트중 오류");
+        }
+      }catch(e){
+        console.log(e);
+      }
+
+  }
   // 북마크 토글 함수
   const toggleFavorite = async () => {
     try {
@@ -236,6 +276,11 @@ function MovieView() {
       }
     }
   };
+  async function resetReview(){
+    const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
+        console.log("내가 쓴 리뷰 불러오기 성공"); // 리뷰 데이터 로그로 확인
+        setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
+  }
 
     // 리뷰 수정 요청 전송
     const handleUpdateReview = async (movie_review_no) => {
@@ -308,6 +353,7 @@ function MovieView() {
           <span className="nickname">{review.usernick}</span>
           </div>
           <div className="review-content">
+            
             {/* 항상 표시되는 별점*/}
             {editingReviewId !== review.movie_review_no && (
             <div className="star-rating">
@@ -320,6 +366,8 @@ function MovieView() {
               ))}
             </div>
             )}
+            {userid==review.userid?"":<AiOutlineAlert size="25px" onClick={()=>{openReport(review.movie_review_no, review.userid, review.movie_review_content)}} />}
+            
 
             {editingReviewId === review.movie_review_no ? (
             <div className="edit-review-section">
@@ -353,6 +401,7 @@ function MovieView() {
               <button onClick={() => handleUpdateReview(review.movie_review_no)} className="edit-btn">저장</button>
               <button onClick={() => setEditingReviewId(null)} className="delete-btn">취소</button>
             </div>
+            
           </div>
           ) : (
             <p className="review-text">{review.movie_review_content}</p>
@@ -373,6 +422,14 @@ function MovieView() {
     
     return (
         <div className="movie-view-container">
+           <ReportModal    
+                reportShow={reportShow}// 모달창 보이기 여부
+                toggleReport={toggleReport} // 모달창 열고닫기 함수
+                report={report}// 신고 데이터 변수
+                setReport={setReport} // 신고 데이터 변수 세팅
+                setDefaultList={resetReview}
+            />
+
           <div className="movie-content">
             <div className="contents-box">
               <div className="movie-image">
@@ -405,7 +462,7 @@ function MovieView() {
                       {movie?.movie_synops || '줄거리 정보 없음'}
                     </div>
                 </div>
-
+                
                 <div className="movie-actions">
                   {/* 찜하기 */}
                   <FaRegBookmark
