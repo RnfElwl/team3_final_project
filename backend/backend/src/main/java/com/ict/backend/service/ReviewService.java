@@ -27,7 +27,7 @@ public interface ReviewService {
     void updateReview(ReviewVO updatedReview);
 
     // 리뷰 삭제
-    void deleteReview(int movieReviewNo);
+    void deleteReview(int movieReviewNo, String loggedInUserId);
 
 
 

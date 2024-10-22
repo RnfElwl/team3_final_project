@@ -163,7 +163,7 @@ public class UserController {
                         communityService.deleteCommunity(no);
                     }
                 } else if (type.equals("review")) {
-                    reviewService.deleteReview(no);
+                    reviewService.deleteReview(no, userid);
                 }
                 else {
                     commentService.deleteComment(no);

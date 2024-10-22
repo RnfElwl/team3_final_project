@@ -2,7 +2,9 @@ import './../../css/admin/adminMovCon.css'
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { BsExclamationCircle } from "react-icons/bs";
 import axios from '../../component/api/axiosApi';
+import Modal from '../../component/api/Modal';
 
 
 function AdminMovieCon(){
@@ -12,6 +14,8 @@ function AdminMovieCon(){
     const [checkedMovie, setCheckedMovie] = useState(new Array(movie.length).fill(false));
     const [editActive_state, setEditActive_state]=useState('1');
     const [isAllMovieChecked, setAllMovieChecked] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [modalTitle, setModalTitle] = useState("");
     const handleAllMovieChecked = () => {
         const newCheckedState = !isAllMovieChecked;
         setAllMovieChecked(newCheckedState);
@@ -123,6 +127,19 @@ function AdminMovieCon(){
                 </form>
             </div>    
         </div>
+        {isModalOpen && (
+                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        {1===1?
+                        <>
+                        </>
+                        : (
+                            <div className="noslide no-hover" style = {{height : "300px", marginTop : '20px'}}>
+                                <BsExclamationCircle />
+                                <p>{modalTitle}이 없습니다.</p>
+                            </div>
+                        )}
+                    </Modal>
+                        )}
         <form className="adminQnaEdit" onSubmit={editActiveStateSubmit} >
             <div>              
                 <select

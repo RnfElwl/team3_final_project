@@ -62,8 +62,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
     // 리뷰 삭제
     @Override
-    public void deleteReview(int movieReviewNo) {
-        reviewDAO.deleteReview(movieReviewNo);
+    public void deleteReview(int movieReviewNo, String loggedInUserId) {
+        reviewDAO.deleteReview(movieReviewNo, loggedInUserId);
     }
 
 

@@ -25,7 +25,7 @@ public interface ReviewDAO {
     void updateReview(ReviewVO reviewVO);
 
     // 리뷰 삭제
-    void deleteReview(@Param("reviewId") int reviewId);
+    void deleteReview(@Param("reviewId") int reviewId, String loggedInUserId);
 
 
 

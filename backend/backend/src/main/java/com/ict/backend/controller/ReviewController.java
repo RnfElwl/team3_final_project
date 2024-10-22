@@ -72,7 +72,7 @@ public class ReviewController {
         System.out.println("있나?: " + movieReviewNo + loggedInUserId );
 
         try{
-            reviewService.deleteReview(movieReviewNo);
+            reviewService.deleteReview(movieReviewNo, loggedInUserId);
             return ResponseEntity.ok("Review deleted successfully");
         } catch(Exception e) {
             return ResponseEntity.status(401).body("You are not authorized to delete this review.");

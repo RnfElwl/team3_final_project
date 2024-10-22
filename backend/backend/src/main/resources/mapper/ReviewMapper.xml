@@ -23,7 +23,7 @@
         SELECT mrt.*, ut.usernick, it.image_url as userprofile FROM movie_review_tbl mrt
         join user_tbl ut on mrt.userid=ut.userid
         left join image_tbl it on ut.userprofile=it.image_no
-        WHERE movie_no = (SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode})
+        WHERE movie_no = (SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode}) and mrt.active_state=1
         ORDER BY movie_review_writedate DESC
     </select>
 
@@ -41,8 +41,8 @@
     </update>
 
     <!-- 리뷰 삭제 -->
-    <delete id="deleteReview">
-        DELETE FROM movie_review_tbl WHERE movie_review_no = #{param1}
-    </delete>
+    <update id="deleteReview">
+        update movie_review_tbl set edit_user=#{param2}, active_state=0 WHERE movie_review_no = #{param1}
+    </update>
 
 </mapper>
