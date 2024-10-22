@@ -116,6 +116,28 @@ function LoginPage() {
       }
     };
   }, [backimage]);
+  const openPopupId = (e) => {
+    e.preventDefault(); // 기본 동작을 막기 위해 사용
+    const width = 400;
+    const height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+
+    window.open(
+      "find/id", // 아이디 찾기 페이지 URL
+      "popupWindow",
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+  };
+
+  const openPopupPw = (e) => {
+    e.preventDefault(); // 기본 동작을 막기 위해 사용
+    window.open(
+      "find/password", // 비번 찾기 페이지 URL
+      "popupWindow",
+      "width=600,height=400,left=200,top=200"
+    );
+  };
 
   return (
     <div className="loginpage">
@@ -124,9 +146,9 @@ function LoginPage() {
           <div>
             <span>로그인</span>
             <div id = "find_idpw">
-              <a href = "#">아이디 찾기</a>
-              <a >/</a>
-              <a href= "#">비번 찾기</a>
+              <span onClick={openPopupId}>아이디 찾기</span>
+              <span >/</span>
+              <span onClick={openPopupPw}>비번 찾기</span>
             </div>
           </div>
           <form name="loginCheck" onSubmit={handleLogin}>

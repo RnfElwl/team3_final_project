@@ -69,9 +69,11 @@
     color : white;
 }
 .moiveimage .heart{
+    background-color: transparent;
+    border: none;
     width: 30px;
     height: 30px;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     position: absolute;
     left : 10px;
     bottom : 10px;

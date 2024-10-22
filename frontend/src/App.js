@@ -37,6 +37,7 @@ import EditInfo from './pages/mypage/EditInfo.js';
 import Signup from './pages/mypage/Signup.js'; 
 import User from './pages/mypage/User.js';
 import MyPost from './pages/mypage/MyPost.js';
+import Find from './pages/mypage/Find.js';
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
                 <Route path ="/user/info/:usernick" element={<User/>}/>
                 <Route path ="/user/info/" element={<User/>}/>
                 <Route path = "/mypage/mypost" element={<MyPost/>}/>
+                <Route path ="/find/:type" element={<Find/>}/>
             </Route>
         </Routes>
       </TokenValidator>

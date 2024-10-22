@@ -65,7 +65,7 @@ function More() {
                                             event.preventDefault(); // 페이지 이동 막기
                                             alert(`Heart 버튼이 클릭되었습니다! 영화: ${item.title}`);
                                         }}
-                                    ></button>
+                                    > <FaRegBookmark style ={{ fontSize: "28px"}}/></button>
                                         )}
                             </div>
                             <div className="moivetitle">
