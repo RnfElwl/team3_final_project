@@ -43,4 +43,7 @@ public interface UserService {
     public List<Map<String, String>> getCommentList(String userid, String order, int limit);
     public List<Map<String, String>> getQnAList( String userid, String order, int limit);
     public List<Map<String, String>> getLikeCommunityList(String userid, String order, int limit);
+
+    public String findidByNameAndEmail(String username, String useremail);
+    public boolean findpwdByNameAndEmailAndId(String userid, String username, String useremail);
 }

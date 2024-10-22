@@ -498,5 +498,44 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", "Need login"));
         }
     }
+    @PostMapping("/find")
+    public ResponseEntity<Map<String, String>> findUser(@RequestBody Map<String, String> request) {
+        String type = request.get("type");
+        String username = request.get("username");
+        String useremail = request.get("useremail");
+        String userid = request.get("userid");
+
+        Map<String, String> response = new HashMap<>();
+
+        // "id" 찾기 로직
+        if ("id".equals(type)) {
+            String foundUserid = userService.findidByNameAndEmail(username, useremail);
+            if (foundUserid != null) {
+                response.put("userid", foundUserid);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "아이디를 찾을 수 없습니다.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
+
+        // "password" 찾기 로직 (비밀번호 재설정 링크 전송 등)
+        if ("password".equals(type)) {
+            boolean result = userService.findpwdByNameAndEmailAndId(userid, username, useremail);
+            System.out.println(result);
+            if (result) {
+                response.put("message", "비밀번호 재설정 링크가 전송되었습니다.");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "비밀번호 재설정 요청이 실패했습니다.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        }
+
+        response.put("message", "유효하지 않은 요청입니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+
 
 }
