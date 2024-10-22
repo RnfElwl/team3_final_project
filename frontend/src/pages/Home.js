@@ -10,23 +10,17 @@ import image4 from '../img/banner4.png';
 import image5 from '../img/banner5.png';
 import image6 from '../img/banner6.png';
 import image7 from '../img/banner7.png';
-import image8 from '../img/banner8.png';
-import image9 from '../img/banner9.png';
-import image10 from '../img/banner10.png';
 import {HomeSliderSettings} from "../component/api/SliderSetting";
 import Slider from "react-slick";
 // banner
 const bannerData = [
   { movieCode: 20163137, image: image1, title: 'Movie 1' },
-  { movieCode: 20163137, image: image2, title: 'Movie 2' },
-  { movieCode: 20224667, image: image3, title: 'Movie 3' },
-  { movieCode: 20224667, image: image4, title: 'Movie 4' },
-  { movieCode: 20224667, image: image5, title: 'Movie 5' },
-  { movieCode: 20203702, image: image6, title: 'Movie 6' },
-  { movieCode: 20203702, image: image7, title: 'Movie 7' },
-  { movieCode: 20249434, image: image8, title: 'Movie 8' },
-  { movieCode: 20205144, image: image9, title: 'Movie 9' },
-  { movieCode: 20205144, image: image10, title: 'Movie 10' },
+  { movieCode: 20224667, image: image2, title: 'Movie 2' },
+  { movieCode: 20203702, image: image3, title: 'Movie 3' },
+  { movieCode: 20249434, image: image4, title: 'Movie 4' },
+  { movieCode: 20205144, image: image5, title: 'Movie 5' },
+  { movieCode: 20020168, image: image6, title: 'Movie 6' },
+  { movieCode: 20228313, image: image7, title: 'Movie 7' },
 ];
 
 function Home() {

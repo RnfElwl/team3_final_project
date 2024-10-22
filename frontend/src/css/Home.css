@@ -19,7 +19,7 @@
 
 .home .banner-images {
   display: flex;
-  width: 1000%; 
+  width: 700%; 
   transition: transform 1s ease-in-out; 
 }
 
