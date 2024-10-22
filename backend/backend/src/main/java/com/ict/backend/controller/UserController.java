@@ -1,8 +1,13 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.dto.CustomUserDetails;
+import com.ict.backend.jwt.JWTUtil;
 import com.ict.backend.service.*;
 import com.ict.backend.vo.MemberVO;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -50,6 +55,10 @@ public class UserController {
     QnAService qnAService;
     @Autowired
     ReviewService reviewService;
+    @Autowired
+    EmailService emailService;
+    @Autowired
+    JWTUtil jwtUtil;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -499,12 +508,11 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         }
     }
     @PostMapping("/find")
-    public ResponseEntity<Map<String, String>> findUser(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> findUser(@RequestBody Map<String, String> request, @RequestHeader(value = "Host", required = false) String Host) {
         String type = request.get("type");
         String username = request.get("username");
         String useremail = request.get("useremail");
         String userid = request.get("userid");
-
         Map<String, String> response = new HashMap<>();
 
         // "id" 찾기 로직
@@ -522,10 +530,21 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         // "password" 찾기 로직 (비밀번호 재설정 링크 전송 등)
         if ("password".equals(type)) {
             boolean result = userService.findpwdByNameAndEmailAndId(userid, username, useremail);
-            System.out.println(result);
             if (result) {
-                response.put("message", "비밀번호 재설정 링크가 전송되었습니다.");
-                return ResponseEntity.ok(response);
+                try {
+                    String resetToken = jwtUtil.createJwt(userid, "ROLE_USER", 30 * 60 * 1000L);  // 30분 유효
+                    //String resetToken = jwtUtil.createJwt(userid, "ROLE_USER", 30 * 1000L);
+                    String updatedHost = Host.replace(":9988", ":3000");
+                    String resetLink = "Http://" + updatedHost + "/reset-password?token="  + resetToken;
+                    System.out.println(resetLink);
+                    String testemail = "kimbj829@naver.com";
+                    emailService.sendPasswordResetEmail(testemail, resetLink);  // 이메일 전송
+                    response.put("message", "비밀번호 재설정 링크가 전송되었습니다.");
+                    return ResponseEntity.ok(response);
+                } catch (MessagingException e) {
+                    response.put("message", "이메일 전송 중 오류가 발생했습니다.");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                }
             } else {
                 response.put("message", "비밀번호 재설정 요청이 실패했습니다.");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -535,6 +554,46 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         response.put("message", "유효하지 않은 요청입니다.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> requestData) {
+        String token = requestData.get("token");
+        String newPassword = requestData.get("newPassword");
+        String encryptedNewPassword = "";
+        try {
+            // 1. 토큰 만료 여부 확인
+            boolean isExpired = jwtUtil.isExpired(token);
+            if (!isExpired) {
+                encryptedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+            }
+            System.out.println("암화화 비번 : "+ encryptedNewPassword);
+            // 2. 토큰에서 사용자 ID 추출
+            String userid = jwtUtil.getUserid(token);
+            System.out.println("userid: " + userid);
+
+            // 3. 비밀번호 재설정 로직 호출
+            int isReset = userService.changepassword(userid, encryptedNewPassword);  // userid를 사용하여 비밀번호 재설정
+
+            // 4. 결과 반환
+            if (isReset > 0) {
+                return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 재설정 실패");
+            }
+
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰 예외 처리
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JWT가 만료되었습니다.");
+        } catch (JwtException e) {
+            // 잘못된 토큰 예외 처리
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않은 토큰입니다.");
+        } catch (Exception e) {
+            // 기타 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 재설정 중 오류가 발생했습니다.");
+        }
+    }
+
+
 
 
 

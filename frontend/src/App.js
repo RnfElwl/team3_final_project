@@ -40,6 +40,7 @@ import User from './pages/mypage/User.js';
 import MyPost from './pages/mypage/MyPost.js';
 import Find from './pages/mypage/Find.js';
 import Success from './pages/mypage/Success.js';
+import ResetPassword from './pages/mypage/ResetPassword.js';
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
                 <Route path = "/mypage/mypost" element={<MyPost/>}/>
                 <Route path ="/find/:type" element={<Find/>}/>
                 <Route path ="/success" element={<Success/>}/>
+                <Route path ="/reset-password" element={<ResetPassword/>}/>
             </Route>
         </Routes>
       </TokenValidator>

@@ -109,7 +109,6 @@ function Find() {
                 <div className="findTitle">
                     <span>{type === "id" ? "아이디" : "비밀번호"} 찾기</span>
                 </div>
-                    // 폼이 제출되지 않았을 때는 폼을 보여줌
                     <form onSubmit={handleSubmit}>
                         <div className="findContent">
                             {type === "password" && (
