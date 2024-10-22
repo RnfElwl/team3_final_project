@@ -17,7 +17,9 @@
         join user_tbl ut on cct.userid=ut.userid
         left join image_tbl it on ut.userprofile=it.image_no
         left join reply_comment_tbl rct on cct.comment_no=rct.comment_no
+        AND rct.active_state = 1
         WHERE community_no = #{community_no}
+        AND cct.active_state = 1
         group by cct.comment_no
         ORDER BY comment_no DESC
     </select>
@@ -31,8 +33,8 @@
     </update>
 
     <!-- 댓글 삭제 -->
-    <delete id="deleteComment" parameterType="int">
-        DELETE FROM community_comment_tbl WHERE comment_no = #{comment_no}
-    </delete>
+    <update id="deleteComment" parameterType="int">
+        update community_comment_tbl set active_state=0 WHERE comment_no = #{comment_no}
+    </update>
 
 </mapper>

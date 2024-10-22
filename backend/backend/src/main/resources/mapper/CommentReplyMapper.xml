@@ -21,6 +21,7 @@
         join user_tbl ut on c.userid=ut.userid
         left join image_tbl it on ut.userprofile=it.image_no
         WHERE c.comment_no = ${param1}
+        AND c.active_state = 1
     </select>
 
     <!-- 대댓글 수정 -->
@@ -32,6 +33,6 @@
 
     <!-- 대댓글 삭제 -->
     <update id="deleteReply" parameterType="int">
-        DELETE FROM reply_comment_tbl WHERE reply_no = #{reply_no}
+        update reply_comment_tbl set active_state=0 WHERE reply_no = #{reply_no}
     </update>
 </mapper>
