@@ -20,6 +20,14 @@ public class MovieVO {
     private String movie_link;
     private String movie_synops;
     private String movie_casts;
+    private String searchKey;
+    private String word;
+    private int hit;
+    private String edit_date;
+    private String edit_state;
+    private String edit_user;
+    private String active_state;
+
 
 
 

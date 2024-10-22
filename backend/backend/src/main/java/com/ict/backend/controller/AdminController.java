@@ -208,4 +208,17 @@ public class AdminController {
 
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
+    @GetMapping("/movieList")
+    public ResponseEntity<List<MovieVO>> selectAdminMovieList(MovieVO movieVO){
+        System.out.println(movieVO.toString());
+        List<MovieVO> movieList = adminService.selectAdminMovieList(movieVO);
+        return new ResponseEntity<>(movieList, HttpStatus.OK);
+    }
+    @PostMapping("/movieActiveEdit")
+    public int memActiveEdit(@RequestParam int activeState, @RequestParam int movie_no) {
+        System.out.println("Active State: " + activeState);
+        System.out.println("Mem userid: " + movie_no);
+
+        return adminService.updateMovieActive(activeState, movie_no);
+    }
 }

@@ -417,6 +417,8 @@ function CommunityView(){
         }
         else{
             commentInput.current[i][j].style.display = 'block';
+            if(x!==-1&&y!==-1)
+            commentInput.current[x][y].style.display = 'none';
         }
         setX(i);
         setY(j);

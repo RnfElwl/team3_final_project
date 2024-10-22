@@ -128,5 +128,9 @@ public class AdminServiceImpl implements AdminService{
         return dao.getTotalComRecord(pagingVO);
     }
 
+    @Override
+    public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}
 
+    @Override
+    public int updateMovieActive(int active, int movie_no){return dao.updateMovieActive(active, movie_no);}
 }

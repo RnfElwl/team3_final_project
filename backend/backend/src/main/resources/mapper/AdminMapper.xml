@@ -211,5 +211,21 @@
             where ${searchKey} like '%${searchWord}%'
         </if>
     </select>
-
+    <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_data_tbl
+        <if test="searchKey=='movie_title'">
+            where movie_kor like '%${word}%' or movie_eng like '%${word}%';
+        </if>
+        <if test="searchKey!='movie_title'">
+            where ${searchKey} like '%${word}%';
+        </if>
+    </select>
+    <update id="updateMovieActive">
+        UPDATE movie_data_tbl
+        SET active_state = ${param1}
+        WHERE userid IN
+        <foreach item="no" collection="movie_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </update>
 </mapper>

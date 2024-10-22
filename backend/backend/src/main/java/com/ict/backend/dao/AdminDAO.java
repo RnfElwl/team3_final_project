@@ -28,4 +28,6 @@ public interface AdminDAO {
     int updateMemActive(Integer activeState, List<String> userids);
     List<CommunityVO> getComList(PagingVO pagingVO);
     int getTotalComRecord(PagingVO pagingVO);
+    List<MovieVO> selectAdminMovieList(MovieVO movieVO);
+    int updateMovieActive(int active, int movie_no);
 }
