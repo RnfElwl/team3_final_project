@@ -203,7 +203,7 @@ function MovieList() {
         ) : (
           category.map((category, index) => ( 
             <>
-            {movies[index].length==0? <></> :
+            {movies[index] && movies[index].length === 0 ? <></> :
               <div key={`category-${index}`} className='category_list'
                 onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시
                 onMouseLeave={handleMouseLeave} // 마우스 나가면
