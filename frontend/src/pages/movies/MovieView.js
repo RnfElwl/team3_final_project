@@ -27,7 +27,7 @@ function MovieView() {
   // Ref로 contentEditable 요소를 제어
   const reviewInputRef = useRef(null);
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true); // 상태 추가
-
+let once = 0;
   // 1. 영화 정보 가져오기
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -105,7 +105,13 @@ function MovieView() {
     const isLoading = !movie || !images || !reviews || !ratingInfo;
     setLoading(isLoading); // 필요한 데이터가 모두 로드될 때까지 로딩
   }, [movie, images, reviews, ratingInfo]);
-
+  useEffect(()=>{
+    if(once==0){
+      once = 1;
+      console.log("한번만 실행!!!!!!!!!!!!!!!");
+      historySetting();
+    }
+  }, []);
 
   // 선호 정보 저장
   useEffect(() => {
@@ -124,6 +130,7 @@ function MovieView() {
       }
     };
     if (userid) saveUserPreference();
+
   }, [movieCode, userid]);
 
 
@@ -143,7 +150,22 @@ function MovieView() {
     }
   }, [userid, movieCode]);
 
+  async function historySetting(){
+      try{
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
+        const editData = response.data.movieVO;
+        const {data} = await axios.post("http://localhost:9988/api/movies/hit", editData);
+        if(data==1){
+          console.log(data);
+        }
+        else{
+          throw new Error("조회수, 최근본 영화, 취향 업데이트중 오류");
+        }
+      }catch(e){
+        console.log(e);
+      }
 
+  }
   // 북마크 토글 함수
   const toggleFavorite = async () => {
     try {

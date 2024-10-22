@@ -60,6 +60,9 @@ public class MovieServiceImpl implements MovieService {
         return movieDAO.getRatingByMovieNo(movieNo);
     }
 
-
+    @Override
+    public int updateMovieHit(int movie_no){return movieDAO.updateMovieHit(movie_no);}
+    @Override
+    public int insertMovieHiStory(String userid, int movie_no){return movieDAO.insertMovieHiStory(userid, movie_no);}
 
 }
