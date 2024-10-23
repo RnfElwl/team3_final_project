@@ -115,35 +115,35 @@
 }
 
 /* 슬라이더 CSS */
-.slick-slide div div{
+.User .slick-slide div div{
     height: 100%;
     width: 90% !important;
     border-radius: 5px;
     overflow: hidden;
 }
-.slick-dots li.slick-active button:before{
+.User .slick-dots li.slick-active button:before{
     color : #f1f1f1;
 }
-.slick-dots li button:before{
+.User .slick-dots li button:before{
     color : gray;
 }
-.slidPoster{ 
+.User .slidPoster{ 
     height: 100%;
     width: 100%;
     /* min-width : 300px; */
     border-radius: 5px;
 }
-.slick-slide{
+.User .slick-slide{
     overflow: hidden;
     
 }
 /* .slick-slide slick-active slick-current{
     width: 95%;
 } */
-.slick-track{
+.User .slick-track{
     margin-left: 20px;
 }
-.slick-slide img:hover{
+.User .slick-slide img:hover{
     /* object-fit:cover; */
     transform:scale(1.1);
     transition: transform .5s;

@@ -140,35 +140,35 @@
 }
 
 /* 슬라이더 CSS */
-.slick-slide div div{
+.myPage .slick-slide div div{
     height: 100%;
     width: 90% !important;
     border-radius: 5px;
     overflow: hidden;
 }
-.slick-dots li.slick-active button:before{
+.myPage .slick-dots li.slick-active button:before{
     color : #f1f1f1;
 }
-.slick-dots li button:before{
+.myPage .slick-dots li button:before{
     color : gray;
 }
-.slidPoster{ 
+.myPage .slidPoster{ 
     height: 100%;
     width: 100%;
     /* min-width : 300px; */
     border-radius: 5px;
 }
-.slick-slide{
+.myPage .slick-slide{
     overflow: hidden;
     
 }
 /* .slick-slide slick-active slick-current{
     width: 95%;
 } */
-.slick-track{
+.myPage .slick-track{
     margin-left: 20px;
 }
-.slick-slide img:hover{
+.myPage .slick-slide img:hover{
     /* object-fit:cover; */
     transform:scale(1.1);
     transition: transform .5s;

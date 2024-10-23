@@ -54,7 +54,7 @@ function useBackgroundImage() {
 
         // 헤더 배경색 복구
         if (headerElement) {
-          headerElement.style.backgroundColor = 'black';  // 이미지가 없을 때 배경색 복구
+          headerElement.style.backgroundColor = '#1C1C20';  // 이미지가 없을 때 배경색 복구
         }
       };
     }

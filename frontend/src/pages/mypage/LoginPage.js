@@ -118,8 +118,8 @@ function LoginPage() {
       loginButton.style.backgroundColor = 'transparent';
     }
     return () => {
-      element[0].style.backgroundColor = 'black';
-      loginButton.style.backgroundColor = 'black';
+      element[0].style.backgroundColor = '#1C1C20';
+      //loginButton.style.backgroundColor = 'black';
       setBackimage("null");
     };
 }, []);
