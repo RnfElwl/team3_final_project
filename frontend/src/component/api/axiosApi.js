@@ -79,6 +79,14 @@ instance.interceptors.response.use(
             // 원래 요청을 다시 수행
             return instance(originalRequest);
         }
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 접속해주세요");
+            window.location.href = '/signin';
+        }
+        if (error.response && error.response.status === 403) {
+            alert("접근 권한이 없습니다. 로그인 후 접속해주세요.");
+            window.location.href = '/';
+        }
         return Promise.reject(error);
     }
 );

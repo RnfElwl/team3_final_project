@@ -592,6 +592,34 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 재설정 중 오류가 발생했습니다.");
         }
     }
+    @PostMapping("/checkban")
+    public Map<String, Object> checkban(@RequestParam("userid") String userid,
+                                        @RequestParam(value = "userpwd", required = false) String userpwd) {
+        Map<String, Object> resultMap = new HashMap<>();
+        int userstate = userService.checkuserstate(userid);
+        // 서비스나 DAO를 통해 banEndDate를 조회
+
+        if(userstate == 2){
+            String banEndDate = userService.getBanEndDate(userid);
+            if (banEndDate != null) {
+                // 정지된 경우
+                resultMap.put("banned", 1);
+                resultMap.put("banEndDate", banEndDate);
+            } else {
+                // 정지되지 않은 경우
+                resultMap.put("banned", 0);
+            }
+        }else if (userstate == 0){
+            resultMap.put("deleted", 0);
+        }
+
+        return resultMap;
+    }
+
+    @PostMapping("/updatevisite")
+    public int updatelastvisite(@RequestParam("userid") String userid){
+        return userService.updatelastvisite(userid);
+    }
 
 
 

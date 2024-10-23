@@ -46,4 +46,8 @@ public interface UserService {
 
     public String findidByNameAndEmail(String username, String useremail);
     public boolean findpwdByNameAndEmailAndId(String userid, String username, String useremail);
+
+    public String getBanEndDate(String userid);
+    public int checkuserstate(String userid);
+    public int updatelastvisite(String userid);
 }
