@@ -188,9 +188,9 @@ function MovieView() {
   // 조회수
   async function historySetting(){
       try{
-        const response = await axios.get(`http://localhost:9988/api/movies/${movieNo}`);
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
         const editData = response.data.movieVO;
-
+        console.log(editData.movie_no);
         const {data} = await axios.post("http://localhost:9988/api/movies/hit", editData);
         console.log("editData=" + editData);
         if(data===1){
