@@ -255,6 +255,9 @@ const Chatting = () => {
             const result = await axios.get('http://localhost:9988/user/userinfo');
             setMyid(result.data);
             const params = {userid : result.data};
+            if(result.data=='anonymousUser'){
+                throw new Error("로그인이 안됨");
+            }
             const result2 = await axios.get('http://localhost:9988/getUserData', {params});
             const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
             const offset = new Date().getTimezoneOffset() * 60000;
@@ -265,7 +268,7 @@ const Chatting = () => {
                 usernick : result2.data.usernick, 
                 chat_date: now,
                 chat_type: 2
-            } 
+            }
 
             if(data == 1){
                 console.log(data, typeof(data), data == 1)
@@ -513,9 +516,10 @@ const Chatting = () => {
                 <div className='vote_window_close'></div>
                 <div className='vote_user_box'>
                     <div>
+                        이전 채팅내용이 사라집니다.<br/>
                         정말 나가시겠습니까?
                     </div>
-                    <div>
+                    <div className='vote_user_btn'>
                         <div onClick={exitRoom}>나가기</div>
                         <div onClick={()=>setOpenExit(false)}>닫기</div>
                     </div>
