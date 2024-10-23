@@ -24,11 +24,18 @@
         WHERE userid = #{userid} AND movie_no = #{movie_no}
     </delete>
 
+    <!-- movieCode로 movieNo 조회 -->
+    <select id="findMovieNoByCode" resultType="int">
+        SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode}
+    </select>
+
     <!-- 북마크 여부 확인 -->
     <select id="isBookmarked" resultType="int">
         SELECT COUNT(*)
         FROM bookmark_tbl
         WHERE userid = #{userid} AND movie_no = #{movie_no}
     </select>
+
+
 
 </mapper>
