@@ -2,6 +2,7 @@ import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
 import { useState, useEffect, useRef  } from 'react';
 import { BsExclamationCircle } from "react-icons/bs";
+import { IoPerson } from "react-icons/io5";
 import { useNavigate  } from 'react-router-dom';
 //import axios from "axios";
 import axios from "../../component/api/axiosApi"
@@ -51,6 +52,7 @@ function ChantList(){
                 keyWord: search
             }
           });
+          console.log(result.data);
           setList(result.data);
         }catch(e){
             console.log(e)
@@ -108,7 +110,7 @@ function ChantList(){
     }
     function openWindow(url){
         const popupWindow = window.open(
-            'http://192.168.1.87:3000/chatting/'+url, // 열고자 하는 URL
+            '/chatting/'+url, // 열고자 하는 URL
             '_blank', // 새 창으로 열기
             'width=500,height=800' // 팝업 창의 크기
           );
@@ -223,10 +225,14 @@ function ChantList(){
                             <img src={val.movie_img_url}/>
                         </div>
                         <div className="chat_box_info">
-                                <div>
+                                <div className="movie_title">{val.movie_title}</div>
+                                <div className="room_info">
+                                <div className="room_title">
                                     {val.chat_title}
                                 </div>
-                                <div>{val.usernick}</div>
+                                <div className="room_headcount">
+                                    <IoPerson /> {val.chatlist_headcount}</div>
+                                </div>
                             </div>
 
                         </div>

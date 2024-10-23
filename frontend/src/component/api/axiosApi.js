@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 //const BASE_URL = 'http://192.168.1.88:9988';
+// const BASE_URL = 'http://192.168.1.87:9988';
 // Axios 인스턴스 생성
 const instance = axios.create({
     baseURL: "http://localhost:9988"
-    //baseURL: "http://192.168.1.88:9988"
+    // baseURL: "http://192.168.1.88:9988"
 });
 
 // 요청 인터셉터 추가

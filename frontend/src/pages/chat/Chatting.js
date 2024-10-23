@@ -62,6 +62,7 @@ const Chatting = () => {
         
     }, []);
     useEffect(()=>{
+        // const mqttClient = mqtt.connect('ws://192.168.1.88:8083');
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
 
         // 연결 성공 시
@@ -72,6 +73,11 @@ const Chatting = () => {
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
+                if(window.opener==null){
+                    navigate("/");
+                    window.close();
+                }
+
                 if(!mqttClient.connected){
                     return;
                 }
@@ -134,11 +140,9 @@ const Chatting = () => {
         // 메시지가 변경될 때마다 실행
         scrollBottom();
         dateMsgSend()
-        console.log(receivedMessages)
       }, [receivedMessages, client]);
       async function getRoomInfo(){
         try{
-
             const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
                 chatlist_url
             }});
@@ -147,8 +151,8 @@ const Chatting = () => {
                 const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
                     params: { movie_no: result.data.movie_no }
             });
-            console.log("---------------")
             console.log(data);
+            console.log("______________________________")
             if(data==null || data==""){
                 navigate("/");
                 window.close();
@@ -157,6 +161,8 @@ const Chatting = () => {
         setRoomInfo(result.data);
         }catch(e){
             console.log(e);
+            navigate("/");
+            window.close();
         }
       }
       
@@ -189,6 +195,8 @@ const Chatting = () => {
     async function soloChatCheck(){
         try{
         const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
+        console.log(data);
+        console.log("___________________")
         if(data==0){
             navigate("/");
             window.close();
