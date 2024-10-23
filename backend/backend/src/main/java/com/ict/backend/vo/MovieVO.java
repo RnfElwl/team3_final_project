@@ -26,7 +26,8 @@ public class MovieVO {
     private String edit_date;
     private String edit_state;
     private String edit_user;
-    private String active_state;
+    private int active_state;
+
 
 
 

@@ -31,7 +31,19 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public boolean isBookmarked(String userid, int movieNo) {
-        return bookmarkDAO.isBookmarked(userid, movieNo);
+    public int getMovieNoByCode(String movieCode) {
+        return bookmarkDAO.findMovieNoByCode(movieCode);
     }
+
+
+    @Override
+    public boolean isBookmarked(String userid, int movieNo) {
+        // 수정: int 결과를 boolean으로 변환
+        int result = bookmarkDAO.isBookmarked(userid, movieNo);
+        return result > 0;  // 1이면 true, 0이면 false 반환
+    }
+
+
+
+
 }

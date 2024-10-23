@@ -1,6 +1,6 @@
 .myPage {
     max-width: 1920px;
-    height: 91vh;
+    /* height: 91vh; */
     /* background-size: cover; */
     background-repeat: no-repeat;
     background-position: center;
@@ -176,8 +176,8 @@
 .slick-prev:before, .slick-next:before{
     font-size: 30px;
 }
-.slick-next{
-    right :1px;
+.myPage .slick-next{
+    right :-20px;
 }
 
 /* 사용자 프로필용 */

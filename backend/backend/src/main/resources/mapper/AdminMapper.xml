@@ -246,15 +246,17 @@
         FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
 
         <where>
-            -- 검색 조건 (searchKey, searchWord)
-            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
-                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
+                1=1
             </if>
 
-            -- 상태 필터 (active_state)
-            <if test="activeStateChk != null and activeStateChk != ''">
-                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
+
+<!--            <if test="activeStateChk != null and activeStateChk != ''">-->
+<!--                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')-->
+<!--            </if>-->
         </where>
 
         GROUP BY c.community_no, c.userid, c.community_title, c.community_content,
@@ -275,11 +277,9 @@
         COUNT(rc.userid) AS reply_cnt, c.edit_date, c.edit_user, c.active_state
         FROM community_comment_tbl c
         LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no  -- LEFT JOIN을 사용
-        <where>
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
-                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+                where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
-        </where>
         GROUP BY c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state
     </select>
@@ -293,6 +293,9 @@
         SELECT reply_no, userid, comment_no, reply_content,reply_writedate,
         edit_date,edit_user,active_state,tag_usernick FROM reply_comment_tbl
         <where>
+            <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
+                1=1
+            </if>
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
                 ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
@@ -304,6 +307,36 @@
             where ${searchKey} like '%${searchWord}%'
         </if>
     </select>
+    <update id="updateCommunityState">
+        UPDATE community_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE community_no IN
+        <foreach item="communityNo" collection="communityNos" open="(" separator="," close=")">
+            #{communityNo}
+        </foreach>
+    </update>
+    <update id="updateCommentState">
+        UPDATE community_comment_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE comment_no IN
+        <foreach item="commentNo" collection="commentNos" open="(" separator="," close=")">
+            #{commentNo}
+        </foreach>
+    </update>
+    <update id="updateReplyState">
+        UPDATE reply_comment_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE reply_no IN
+        <foreach item="replyNo" collection="replyNos" open="(" separator="," close=")">
+            #{replyNo}
+        </foreach>
+    </update>
     <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
         select * from movie_data_tbl
         <if test="searchKey=='movie_title'">

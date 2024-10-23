@@ -187,6 +187,21 @@ public class AdminServiceImpl implements AdminService{
         return dao.getTotalComRepRecord(pagingVO);
     }
 
+    @Override
+    public int updateCommunityState(String userid,List<Integer> communityNos, Integer activeState) {
+        return dao.updateCommunityState(userid,communityNos, activeState);
+    }
+
+    @Override
+    public int updateCommentState(String userid,List<Integer> commentNos, Integer activeState) {
+        return dao.updateCommentState(userid,commentNos,activeState);
+    }
+
+    @Override
+    public int updateReplyState(String userid,List<Integer> replyNos, Integer activeState) {
+        return dao.updateReplyState(userid,replyNos, activeState);
+    }
+
 
     @Override
     public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}

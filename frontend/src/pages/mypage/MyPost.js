@@ -332,7 +332,7 @@ function MyPost() {
                                                 : data.title || "N/A"}
                                             </td>
                                             <td className="col-md-3">
-                                                <div style={{ height: "20px", overflow: "hidden" }} dangerouslySetInnerHTML={{ __html: data.content || "N/A" }} />
+                                                <div style={{ height: "20px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} dangerouslySetInnerHTML={{ __html: data.content || "N/A" }} />
                                             </td>
                                             <td className="col-md-2">
                                                 {activeTab === "게시글" && (data.usernick || "N/A")}
