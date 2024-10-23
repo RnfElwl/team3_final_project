@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../css/Home.css';
 import axios from '../component/api/axiosApi';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -95,6 +95,7 @@ function MovieList() {
   const [hoveredListIndex, setHoveredListIndex] = useState(null); // 어떤 리스트에 마우스가 올라왔는지 저장
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate(); // Hook을 함수 컴포넌트 내부에서 호출
+  const categoryRefs = useRef([]);
 
   // 카테고리 목록
   const category = [
@@ -190,6 +191,29 @@ function MovieList() {
     navigate(`/movies/view/${movieCode}`); // movieCode만 사용
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+            observer.unobserve(entry.target)
+          } 
+        });
+      },
+      { threshold: 0.2 } // 20% 정도 뷰포트에 들어올 때 트리거
+    );
+
+    categoryRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+    return () => {
+      categoryRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, [categoryRefs, movies]);
+  
   return (
     <div className='movie-list'> 
         {loading ? ( // 로딩 상태에 따라 다른 UI 표시
@@ -197,64 +221,34 @@ function MovieList() {
         ) : (
           category.map((category, index) => ( 
             <>
-            {movies[index] && movies[index].length === 0 ? <></> :
-              <div key={`category-${index}`} className='category_list'
-                onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시
-                onMouseLeave={handleMouseLeave} // 마우스 나가면
-              > 
-              <h3>{category}</h3>
-              {movies.length > 0 ? (
-                <Slider {...HomeSliderSettings} >
-                {movies[index].map((slide, index) => (
-                  <div key={index}>
-                                      {console.log(slide)}
-                                        <Link to={`/movies/view/${slide.movie_code}`}>
-                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
-                                        </Link>
-                                    </div>
-                                ))}
-                                </Slider>
-                                
-                              ) 
-                              
-                              : 
-                              (
-                                // <div className="noslide">
-                                //     <BsExclamationCircle />
-                                //     <p>시청기록이 없습니다</p>
-                                // </div>
-                                <>
-                                </>
-                              )
-                              
-                            }
-                            
-                            
-                            {/* <div className="movie-grid"
-                              onMouseEnter={() => handleMouseEnter(index)}
-                              onMouseLeave={handleMouseLeave}> 
-                              <div className="movie-slider" style={{ transform: `translateX(-${(currentMovieIndexes[index] / moviesPerPage) * 100}%)` }}>
-                              {movies[index] && movies[index].slice(currentMovieIndexes[index], currentMovieIndexes[index] + moviesPerPage).map(movie => (
-                                <div key={movie.movie_code || movie.id} className="movie-item">
-                                <img src={movie.movie_link} alt={movie.title} onClick={() => handleCardClick(movie.movie_code)} />
-                                </div>
-                                ))}
-                                </div>
-                                <button 
-                                onClick={() => handlePrev(index)} 
-                                disabled={currentMovieIndexes[index] === 0} 
-                                className='buttonPrev' 
-                                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＜</button>
-                                <button 
-                                onClick={() => handleNext(index)}
-                                disabled={currentMovieIndexes[index] + moviesPerPage >= (movies[index]?.length || 0)} 
-                                className='buttonNext' 
-                                style={{ display: hoveredListIndex === index ? 'block' : 'none' }}>＞</button>
-                                </div> */}
-                                </div>
-                              }
-                              </>))
-                            )}
+              {movies[index] && movies[index].length === 0 ? <></> :
+                <div key={`category-${index}`} 
+                  className='category_list fade-out'
+                  ref={(el) => (categoryRefs.current[index] = el)}
+                  onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시
+                  onMouseLeave={handleMouseLeave} // 마우스 나가면
+                > 
+                <h3>{category}</h3>
+                {movies.length > 0 ? (
+                  <Slider {...HomeSliderSettings} >
+                    {movies[index].map((slide, index) => (
+                      <div key={`slide-${index}`}>
+                        <Link to={`/movies/view/${slide.movie_code}`}>
+                          <img className="slidPoster" 
+                          src={slide.movie_link} 
+                          alt={slide.movie_kor || "empty"} />
+                        </Link>
+                      </div>
+                    ))}
+                  </Slider>
+                                  
+                ) : (
+              <> </>
+            )}
+          </div>
+        }
+      </>))
+    )}
     </div>
   );
 }

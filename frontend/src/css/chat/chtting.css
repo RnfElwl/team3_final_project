@@ -453,12 +453,39 @@
     z-index: 2;
 }
 .chatting_room .vote_user_box{
+    width: 300px;
     border-radius: 10px;
     background-color: #f0f0f0;
-    padding: 50px;
+    padding-top: 50px;
     z-index: 3;
     color: #1C1C20;;
     
+}
+.chatting_room .vote_user_box>div:nth-child(1){
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #3132335d;
+}
+.chatting_room .vote_user_btn{
+    display: flex;
+    justify-content: space-around;
+}
+.chatting_room .vote_user_btn>div{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px 0px;
+}
+.chatting_room .vote_user_btn>div:nth-child(1){
+    border-right: 1px solid #3132335d;
+    color: tomato;
+    cursor: pointer;
+}
+.chatting_room .vote_user_btn>div:hover{
+    background-color: #a0a4a55d;
 }
 .chatting_room .vote_user_info img{
     border-radius: 13px;

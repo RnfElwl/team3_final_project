@@ -127,14 +127,14 @@ input:focus {
 .Header .search{
   display: flex;
   align-items: center;
-  background-color: #272731;
+  background-color: #343441;
   padding: 5px 20px;
   border-radius: 10px;
   height: 40px;
   width: 300px;
 }
 .Header .search input{
-  background-color: #272731;
+  background-color: #343441;
   color: #f1f1f1;
 }
 

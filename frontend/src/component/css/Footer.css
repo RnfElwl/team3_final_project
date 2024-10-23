@@ -1,7 +1,7 @@
 .footer{
     /* position: fixed; */
     /* bottom: 0px; */
-    background-color: #1C1C20;
+    background-color: #313133dc;
     /* width:100%; */
     display: flex;
     /* align-items: center; */
@@ -55,11 +55,13 @@ img.logo {
 }
 
 .footer-bottom {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
     border-top: 1px solid #918d8da2; /* 위에 구분선을 추가 */
     padding-top: 10px;
+}
+.footer-bottom p{
+    font-size: 13px;
     color: #c0bbbbb6;
-    font-size: 15px;
-    
+
 }
