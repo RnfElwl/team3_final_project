@@ -1,11 +1,11 @@
 .chatList{
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-color: #1C1C20;;
   margin:0;
   width: 100%;
+  min-height: 100vh;
 }
 .chatList .container{
   display: flex;
@@ -79,7 +79,12 @@
   background-color: #48d1cdea;
   color: #f1f1f1;
 }
-
+.chatList .room_window {
+  position: fixed;
+  display: flex;
+  align-items: normal;
+  justify-content: center;
+}
 .chatList .null_create{
   height: 40px;
   margin-top: 30px;
@@ -98,7 +103,7 @@
 }
 
 .chatList .room_cancle{
-  position: absolute;
+  position: fixed;
   background-color: rgba(0, 0, 0, 0.5);
   top: 0px;
   left: 0px;
@@ -210,10 +215,12 @@
   display: flex;
   align-items: center;
   position: relative;
-  height: 150px;
+  height: 190px;
   overflow-x: auto;
   overflow-y: hidden;
-  margin: 10px 0 20px 0;
+  margin: 10px 0 20px 0;  
+  background-color: rgb(21, 21, 27);
+  border-radius: 10px;
 }
 .chatList .movie_list::-webkit-scrollbar{
   height: 10px;
@@ -251,10 +258,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 .chatList .movie_box{
+  margin-top: 70px;
   transition: transform 0.3s;
 }
 .chatList .focus{
@@ -268,7 +275,7 @@
 }
 
 .chatList .movie_title{
-
+  margin-top: 5px;
 }
 
 .chatList .list_notice{
@@ -299,4 +306,14 @@
   justify-content: center;
   font-size: 1.5em;
   color: #4a4a52;
+}
+.chatList .room_info{
+  display: flex;
+  justify-content: space-between;
+}
+.chatList .movie_title{
+  font-size: 1.2em;
+}
+.chatList .room_title{
+  color: #c4c4c4;
 }

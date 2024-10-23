@@ -76,5 +76,9 @@ public interface UserDAO {
     public String findidByNameAndEmail(@Param("username") String username, @Param("useremail") String useremail);
     public int findpwdByNameAndEmailAndId(@Param("userid") String userid, @Param("username") String username, @Param("useremail") String useremail);
 
+    public String getBanEndDate(@Param("userid") String userid);
+    public int checkuserstate(@Param("userid") String userid);
+    public int updatelastvisite(@Param("userid") String userid);
+
 
 }

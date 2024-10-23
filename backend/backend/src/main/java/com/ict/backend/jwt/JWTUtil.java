@@ -36,7 +36,9 @@ public class JWTUtil {
 
 
     public String createJwt(String userid, String role, Long expiredMs) {
-
+        if (role == null || role.isEmpty()) {
+            role = "USER";
+        }
         return Jwts.builder()
                 .claim("userid", userid)
                 .claim("role", role)

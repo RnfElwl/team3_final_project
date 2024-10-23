@@ -81,10 +81,13 @@
             COUNT(rate) AS review_count
         FROM movie_review_tbl
         WHERE movie_no = #{movieNo}
+        AND active_state = 1  <!-- 활성화된 리뷰만 계산 -->
     </select>
+
     <update id="updateMovieHit">
         update movie_data_tbl set hit=hit+1 where movie_no=${param1}
     </update>
+
     <insert id="insertMovieHiStory">
         insert into history_sec_tbl(userid, movie_no) values(#{param1}, ${param2})
     </insert>

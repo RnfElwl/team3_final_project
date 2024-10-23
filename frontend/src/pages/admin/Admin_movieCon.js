@@ -15,7 +15,7 @@ function AdminMovieCon(){
     const [editActive_state, setEditActive_state]=useState('1');
     const [isAllMovieChecked, setAllMovieChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalTitle, setModalTitle] = useState("");
+    const [modalTitle, setModalTitle] = useState("영화 수정 폼");
     const [editForm, setEditForm] = useState({});
     const [clickNo, setClickNo] = useState();
     const handleAllMovieChecked = () => {
@@ -170,10 +170,9 @@ function AdminMovieCon(){
             </div>    
         </div>
         {isModalOpen && (
-                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle} className={"eidt_form"}>
                         {1===1?
-                        <form className='eidt_form' onSubmit={updateEditForm}>
-                            <h2>{modalTitle}</h2>
+                        <form onSubmit={updateEditForm}>
                             <div className='edit_input'>
                                 <div className='edit_column movie_title'>
                                     <span>한글제목</span> <input type='text'name='movie_kor' value={editForm.movie_kor} onChange={changeEditForm}/>    
@@ -271,7 +270,7 @@ function AdminMovieCon(){
                     </Modal>
                         )}
         <form className="adminQnaEdit" onSubmit={editActiveStateSubmit} >
-            <div>              
+            <div className='active_box'>
                 <select
                 value={editActive_state}
                 onChange={handleActive_StateChange}
@@ -281,7 +280,7 @@ function AdminMovieCon(){
                 </select>
                 <button type="submit">저장</button>
             </div>
-            <table className="table table-dark table-hover AdminMemTable">
+            <table className="table table-dark table-hover AdminMovieTable">
                 <thead>
                     <tr>
                         <th>

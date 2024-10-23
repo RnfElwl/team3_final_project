@@ -14,68 +14,91 @@ function LoginPage() {
 
   // login 함수 정의
   const login = async (loginData) => {
-    
     try {
       console.log(loginData);
-      const response = await axios.post("http://localhost:9988/login", loginData);  // 로컬로 할시 본인 컴퓨터로 인식
-      //const response = await axios.post("http://192.168.1.88:9988/login", loginData);
-      
-      // 성공적인 응답 처리
-      const authorizationHeader = response.headers['authorization'] || response.headers['Authorization'];
-      
-      if (authorizationHeader) {
-        const pureToken = authorizationHeader.split(' ')[1];
-
-        // localStorage에 토큰 저장
-        window.localStorage.setItem("token", pureToken);
-        //window.localStorage.setItem("isAdmin", response.data.isAdmin);
-        window.localStorage.setItem("refresh", response.data.refresh);
+      const result = await axios.post("http://localhost:9988/user/checkban", loginData);
+  
+      if (result.data.banned) {
+        // 정지된 경우
+        alert(`정지 기간입니다. 정지 해제 날짜: ${result.data.banEndDate}`);
+        return { status: 'banned' };
+      } else if (result.data.deleted === 0) {
+        // 탈퇴한 회원인 경우
+        alert('탈퇴한 회원입니다.');
+        return { status: 'deleted' };  // 이미 메시지를 출력했으므로 추가 메시지 처리 없음
+      } else {
+        // 정지되지 않았고, 탈퇴한 회원도 아닌 경우 로그인 처리
+        const response = await axios.post("http://localhost:9988/login", loginData);  // 로그인 요청
+  
+        // lastvisite 업데이트
+        const updateResponse = await axios.post("http://localhost:9988/user/updatevisite", loginData);
+        if (updateResponse.data !== 1) {
+          alert('마지막 방문 기록 업데이트 실패. 다시 시도해주세요.');
+          return { status: 'error', message: 'Failed to update last visit timestamp.' };
+        }
+  
+        // 토큰 저장
+        const authorizationHeader = response.headers['authorization'] || response.headers['Authorization'];
+        if (authorizationHeader) {
+          const pureToken = authorizationHeader.split(' ')[1];
+          window.localStorage.setItem("token", pureToken);
+          window.localStorage.setItem("refresh", response.data.refresh);
+        }
+  
+        return { status: 'success', data: response };
       }
-      return response;
     } catch (error) {
-      //console.error('Login failed:', error);
-      throw error; // 에러 상위로 전달
+      console.error('Login failed:', error);
+      throw error;  // 에러 상위로 전달
     }
   };
-
+  
   // 폼 제출 처리
   const handleLogin = (e) => {
-    e.preventDefault(); // 페이지 리프레시 방지
-    setErrorMessage(''); // 오류 메시지 초기화
-
+    e.preventDefault();
+    setErrorMessage('');
+  
     // 유효성 검사 호출
     const errors = validateLogin(userid, userpwd);
-    // 유효성 검사 통과시 만들 폼
     const loginData = new FormData();
-    
+  
     if (errors) {
-        setErrorMessage(errors);
-        return false;
+      setErrorMessage(errors);
+      return false;
     } else {
-        // loginData 생성
-        loginData.append("userid", userid);
-        loginData.append("userpwd", userpwd);
+      loginData.append("userid", userid);
+      loginData.append("userpwd", userpwd);
     }
-    
-    // login 함수 호출
+  
+    // 로그인 요청
     login(loginData)
       .then((response) => {
-        console.log('Login successful:', response.data);
-        alert("로그인 성공");
-        window.location = "/";
+        if (response.status === 'success') {
+          console.log('Login successful:', response.data);
+          alert("로그인 성공");
+          window.location = "/";
+        } else if (response.status === 'banned') {
+          // 정지된 경우 처리
+          return;
+        } else if (response.status === 'deleted') {
+          // 탈퇴한 회원 처리 (이미 처리되었으므로 추가 처리 없음)
+          return;
+        }
       })
       .catch((error) => {
         alert("로그인 실패");
         console.error('Login failed:', error);
       });
   };
+  
+
 
   const [backimage, setBackimage] = useState([]);
 
   async function fetchUsers() {
       try {
           const response = await axios.get('http://localhost:9988/user/imageworking', {
-              responseType: 'blob', // 이미지 데이터를 blob 형태로 받기
+              responseType: 'blob',
           });
           const imageObjectURL = window.URL.createObjectURL(response.data);
           console.log(imageObjectURL);

@@ -148,11 +148,11 @@
     transform:scale(1.1);
     transition: transform .5s;
 }
-.slick-prev:before, .slick-next:before{
+.User .slick-prev:before, .slick-next:before{
     font-size: 30px;
 }
-.slick-next{
-    right :1px;
+.User .slick-next{
+    right :-20px;
 }
 
 /* 사용자 프로필용 */

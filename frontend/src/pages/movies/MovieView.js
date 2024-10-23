@@ -12,6 +12,7 @@ function MovieView() {
   const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
   const [movie, setMovie] = useState(null); // 영화 데이터를 저장할 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
+  let once = 0;
   const [images, setImages] = useState([]);  // 이미지 목록 상태
   const [rating, setRating] = useState(0); // 별점 상태
   const [hoverRating, setHoverRating] = useState(0); // 마우스 호버 상태 추가
@@ -26,12 +27,40 @@ function MovieView() {
   const [ratingInfo, setRatingInfo] = useState({ avg_rating: 0, review_count: 0 }); // 평점 정보 상태
   const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
   const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
-
   
-  // Ref로 contentEditable 요소를 제어
-  const reviewInputRef = useRef(null);
-  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true); // 상태 추가
-let once = 0;
+  // Ref로 contentEditable 요소 제어
+  const reviewInputRef = useRef(null); // 첫 번째 입력 필드
+  const editReviewInputRef = useRef(null); // 수정 입력 필드
+  
+  // IME 입력 상태와 placeholder 관리
+  const [isComposing, setIsComposing] = useState(false);
+  const [inputText, setInputText] = useState(''); // 현재 입력된 텍스트
+  const [editText, setEditText] = useState(''); // 수정 입력 텍스트
+  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
+
+  // IME 시작/종료 이벤트 핸들러
+  const handleCompositionStart = () => setIsComposing(true);
+  const handleCompositionEnd = (e, isEdit = false) => {
+    setIsComposing(false);
+    const content = e.target.textContent;
+    isEdit ? setEditReviewText(content) : setInputText(content);
+  };
+
+  // 일반 입력 이벤트 핸들러
+  const handleInput = (e, isEdit = false) => {
+    if (!isComposing) {
+      const content = e.target.textContent;
+      isEdit ? setEditReviewText(content) : setInputText(content);
+      if (!isEdit) setIsPlaceholderVisible(content.trim() === '');
+    }
+  };
+
+  // 포커스가 떠날 때 placeholder 처리
+  const handleBlur = () => {
+    setIsPlaceholderVisible(reviewInputRef.current.textContent.trim() === '');
+  };
+  
+
   // 1. 영화 정보 가져오기
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -140,19 +169,27 @@ let once = 0;
 
   // userid가 설정된 후에 북마크 상태를 가져오도록 useEffect 분리
   useEffect(() => {
+    console.log("useEffect 실행됨 - userid와 movieCode 상태 확인:", { userid, movieCode });
     if (userid && movieCode) {
       const fetchBookmarkStatus = async () => {
         try {
-          const bookmarkResponse = await axios.get(`http://localhost:9988/api/bookmarks/add/${movieCode}`);
-          console.log("북마크 정보 가져오기 성공");
-          setIsFavorite(bookmarkResponse.data.isFavorite); // 북마크 여부 설정
+          console.log("북마크 상태 확인 API 호출 시작");
+
+    const response = await axios.post('http://localhost:9988/api/bookmarks/check', {
+      movieCode,
+      userid  // movieCode를 전송
+    });
+  
+    setIsFavorite(response.data); // 응답 상태 설정
+    console.log("북마크 불러오기 성공:", response.data);
         } catch (error) {
-          console.error("Error fetching bookmark status:", error);
+          console.error("북마크 정보 가져오기 실패:", error);
         }
       };
       fetchBookmarkStatus();
     }
   }, [userid, movieCode]);
+
   function openReport(id, userid, content){{/* 신고 기능 */}
         setReport({
             report_tblname: 1,
@@ -170,7 +207,7 @@ let once = 0;
 
   async function historySetting(){
       try{
-        const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
+        const response = await axios.get(`http://localhost:9988/api/movies/${movieNo}`);
         const editData = response.data.movieVO;
         const {data} = await axios.post("http://localhost:9988/api/movies/hit", editData);
         if(data==1){
@@ -278,14 +315,14 @@ let once = 0;
   };
   async function resetReview(){
     const reviewResponse = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
-        console.log("내가 쓴 리뷰 불러오기 성공"); // 리뷰 데이터 로그로 확인
-        setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
+         console.log("내가 쓴 리뷰 불러오기 성공"); // 리뷰 데이터 로그로 확인
+         setReviews(reviewResponse.data); // 서버에서 가져온 리뷰 저장
   }
 
     // 리뷰 수정 요청 전송
     const handleUpdateReview = async (movie_review_no) => {
       if (!movie_review_no) {
-        console.error('Error: movie_review_no is undefined or null');
+        console.error('Error: 수정할 movie_code 불러오지 못함');
         return;
       }
       try {
@@ -296,7 +333,7 @@ let once = 0;
         });
         console.log('리뷰 수정 성공', response.data);
 
-        // 리뷰 업데이트 후 다시 리스트를 새로고침
+         // 리뷰 업데이트 후 다시 리스트를 새로고침
         setReviews(reviews.map(review =>
           review.movie_review_no === movie_review_no 
           ? { ...review, movie_review_content: editReviewText, rate: rating}
@@ -312,14 +349,28 @@ let once = 0;
 
       // 수정 모드로 전환
       const handleEditReview = (review) => {
-        setEditingReviewId(review.movie_review_no); // 수정 중인 리뷰의 ID를 설정
-        setEditReviewText(review.movie_review_content); // 기존 리뷰 내용을 가져옴
-        setRating(review.rate); // 기존 별점 값을 초기화
-        // 리뷰의 영화 정보 설정
-        setMovieNo(review.movie_no);  // 영화 번호 설정
-        setMovieCode(review.movie_code);  // 영화 코드 설정
+      setEditingReviewId(review.movie_review_no); // 수정 중인 리뷰의 ID를 설정
+      setEditReviewText(review.movie_review_content); // 기존 리뷰 내용을 가져옴
+      setRating(review.rate); 
+      setTimeout(() => editReviewInputRef.current?.focus(), 0); // 입력 필드에 포커스 강제 부여
+      // 기존 별점 값을 초기화
+
+      // 리뷰의 영화 정보 설정
+      setMovieNo(review.movie_no);  // 영화 번호 설정
+      setMovieCode(review.movie_code);  // 영화 코드 설정
       };
-      
+
+      const handleEditInput = () => {
+        // contentEditable에서 입력한 내용을 ref로 직접 가져오기
+        const content = editReviewInputRef.current.textContent;
+        setEditReviewText(content); // 최신 텍스트를 상태에 저장
+      };
+
+
+
+
+
+
     
       // 리뷰 삭제 요청 전송
       const handleDeleteReview = async (movie_review_no) => {
@@ -332,17 +383,12 @@ let once = 0;
         }
       };
 
-      // div 글쓰기 오류 해결
-      const handleInput = () => {
-        setEditReviewText(reviewInputRef.current.textContent); // ref로 content 가져오기
-      };
-  
     // 리뷰 컴포넌트
     const renderReviews = () => {
       return reviews.map((review) => (
         <div key={review.movie_review_no} className="review">
           <div className="profile-section">
-            {review.userid==userid? 
+            {review.userid === userid? 
             <Link to={`/mypage`}>
               <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
             </Link>:
@@ -388,11 +434,12 @@ let once = 0;
             {/* 수정 입력 필드 */}
             <div
               contentEditable
+              ref={editReviewInputRef}
               className="review-edit-input"
-              ref={reviewInputRef}
-              onInput={handleInput}
-              style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}                 
-                        
+              onInput={handleEditInput}
+              onCompositionStart={handleCompositionStart}
+              onCompositionEnd={(e) => handleCompositionEnd(e, true)}
+              style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}          
             >
               {editReviewText}
             </div>
@@ -422,7 +469,7 @@ let once = 0;
     
     return (
         <div className="movie-view-container">
-           <ReportModal    
+          <ReportModal    
                 reportShow={reportShow}// 모달창 보이기 여부
                 toggleReport={toggleReport} // 모달창 열고닫기 함수
                 report={report}// 신고 데이터 변수
@@ -533,15 +580,19 @@ let once = 0;
               </div>
               <div
                 contentEditable
-                className="review-input"
                 ref={reviewInputRef}
+                className={`review-input ${isPlaceholderVisible ? 'placeholder' : ''}`}
+                onInput={(e) => handleInput(e)}
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={(e) => handleCompositionEnd(e)}
                 onFocus={() => setIsPlaceholderVisible(false)}
-                onBlur={() => {
-                  if (reviewInputRef.current.textContent.trim() === '') {
-                    setIsPlaceholderVisible(true);
-                  }
+                onBlur={handleBlur}
+                style={{
+                  minHeight: '100px',
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  padding: '10px',
                 }}
-                style={{ minHeight: '100px', width: '100%', border: '1px solid #ccc', padding: '10px' }}
               >
                 {isPlaceholderVisible ? '한줄평을 남겨보세요' : ''}
               </div>

@@ -188,6 +188,19 @@ public class UserServiceImpl  implements UserService {
         return count > 0;  // count가 1 이상이면 true, 0이면 false 반환
     }
 
+    @Override
+    public String getBanEndDate(String userid){
+        return dao.getBanEndDate(userid);
+    }
+    @Override
+    public int checkuserstate(String userid){
+        return dao.checkuserstate(userid);
+    }
+    @Override
+    public int updatelastvisite(String userid){
+        return dao.updatelastvisite(userid);
+    }
+
 
 
 }

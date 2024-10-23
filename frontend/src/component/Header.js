@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from './api/axiosApi';
+import CustomImage from './CustomImage';
 // import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {List, Search} from 'react-bootstrap-icons';
@@ -182,7 +183,7 @@ function Header() {
             // 토큰이 있는 경우: 로그아웃 버튼 표시
               <div className='profile' style = {{display:'flex'}}>
                 <Link to="/mypage">
-                  <img
+                  <CustomImage
                   onClick={()=>{tabClick(-1)}}
                     src={`http://localhost:9988/${userData.image_url}`}
                     alt="프로필 아이콘"
