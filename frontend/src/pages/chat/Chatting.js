@@ -62,6 +62,7 @@ const Chatting = () => {
         
     }, []);
     useEffect(()=>{
+        // const mqttClient = mqtt.connect('ws://192.168.1.88:8083');
         const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
 
         // 연결 성공 시

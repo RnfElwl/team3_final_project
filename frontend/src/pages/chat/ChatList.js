@@ -108,7 +108,7 @@ function ChantList(){
     }
     function openWindow(url){
         const popupWindow = window.open(
-            'http://192.168.1.87:3000/chatting/'+url, // 열고자 하는 URL
+            '/chatting/'+url, // 열고자 하는 URL
             '_blank', // 새 창으로 열기
             'width=500,height=800' // 팝업 창의 크기
           );
