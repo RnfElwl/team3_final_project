@@ -1,6 +1,7 @@
 import axios from "../../component/api/axiosApi";
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { format, addDays } from 'date-fns';
 import $ from "jquery";
 
 import './../../css/admin/adminRepCon.css'
@@ -11,6 +12,15 @@ function RepCon(){
     const [searchWord, setSearchWord]=useState('');
     const [checkedReps, setCheckedReps] = useState(new Array(report.length).fill(false));
     //신고리스트 불러오기
+
+    //리스트 리로드 함수
+    function reloadReportList() {
+        axios.get(`http://localhost:9988/admin/repList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
+            .then(response => {
+                console.log("결과:", response.data.repList);
+                setReport(response.data.repList);
+            });
+    }
     useEffect(()=>{
         axios.get(`http://localhost:9988/admin/repList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
         .then(response=>{
@@ -21,36 +31,17 @@ function RepCon(){
     },[searchKey, searchWord]);
 
        //신고처리 팝업 창 열기
-       const openAddReportAnsWindow = (report_no) => {
+    const openAddReportAnsWindow = (report_no) => {
         console.log("넘긴 번호"+report_no);
-        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=584');
+        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=300');
     };
+    useEffect(() => {
+        window.reloadReportList = reloadReportList;  // 전역 함수로 등록
+    }, []);
+
+
 
     //팝업 창으로 데이터 전송
-
-    //체크 전체 관리
-    const [isAllRepChecked, setAllRepChecked] = useState(false);
-    const handleAllRepChecked = () => {
-        const newCheckedState = !isAllRepChecked;
-        setAllRepChecked(newCheckedState);
-        setCheckedReps(new Array(report.length).fill(newCheckedState));  
-      };
-    // 모든 항목의 체크 상태를 동일하게 변경
-    const handleRepChecked = (index) => {
-        const newCheckedReps = [...checkedReps];
-        newCheckedReps[index] = !newCheckedReps[index]; // 해당 항목의 체크 상태 변경
-        setCheckedReps(newCheckedReps);
-
-        // 모든 항목이 체크되었는지 확인하여 전체 체크박스 상태 동기화
-        setAllRepChecked(newCheckedReps.every(item => item === true));
-    };
-
-    //useEffect를 사용하여 QnA 데이터가 변경될 때 체크 상태 초기화
-    useEffect(() => {
-        setCheckedReps(new Array(report.length).fill(false)); // QnA 데이터 변경 시 체크 상태 초기화
-        setAllRepChecked(false); // 전체 체크박스 상태 초기화
-    }, [report]);
-
 
     
     
@@ -62,12 +53,12 @@ function RepCon(){
             <table className="AdminRepTable">
                 <thead>
                     <tr>
-                        <th>
+                        {/* <th>
                             <input
                             type="checkbox"
                             checked={isAllRepChecked}
                             onChange={handleAllRepChecked}/>
-                        </th>
+                        </th> */}
                         <th>No.</th>
                         <th>신고자</th>
                         <th>피신고자</th>
@@ -87,13 +78,13 @@ function RepCon(){
                 {report && report.length > 0 ? (
                         report.map((item, index) => (
                     <tr key={index}>
-                        <td>
+                        {/* <td>
                         <input
                             type="checkbox"
                             checked={checkedReps[index]}
                             value={item.report_no || ''}
                             onChange={() => handleRepChecked(index)}/>
-                        </td>
+                        </td> */}
                         <td>{item.report_no}</td>
                         <td>{item.report_userid}</td>
                         <td>{item.reported_userid}</td>

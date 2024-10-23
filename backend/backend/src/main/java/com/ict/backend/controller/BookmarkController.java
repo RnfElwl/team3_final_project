@@ -47,15 +47,27 @@ public class BookmarkController {
         return ResponseEntity.ok("Bookmark removed successfully.");
     }
 
-    // 특정 영화의 북마크 여부 확인
-    @GetMapping("/{movieNo}")
-    public ResponseEntity<Boolean> isBookmarked(@PathVariable("movieNo") int movieNo) {
+
+    // 특정 영화의 북마크 여부 확인 (movieCode를 통해)
+    @PostMapping("/check")
+    public ResponseEntity<Boolean> isBookmarked(@RequestBody Map<String, String> requestBody) {
+        String movieCode = requestBody.get("movieCode");
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        System.out.println("[북마크 여부 확인] User: " + userid + ", MovieCode: " + movieCode);
+
         if (userid == null || userid.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
         }
-
-        boolean isFavorite = bookmarkService.isBookmarked(userid, movieNo);
-        return ResponseEntity.ok(isFavorite);
+        try {
+            int movieNo = bookmarkService.getMovieNoByCode(movieCode);
+            boolean isFavorite = bookmarkService.isBookmarked(userid, movieNo);
+            System.out.println("북마크 상태: " + isFavorite);
+            return ResponseEntity.ok(isFavorite);
+        } catch (Exception e) {
+            System.out.println("[예외 발생]: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
     }
 }

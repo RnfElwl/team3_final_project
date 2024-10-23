@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import axios from '../../component/api/axiosApi';
+import CustomImage from '../../component/CustomImage';
 import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FaHeart, FaRegHeart,  } from "react-icons/fa6";
 import { BsExclamationCircle } from "react-icons/bs";
@@ -304,7 +305,7 @@ function Mypage() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                     <div id = "profile">
-                        <img src = {profileImageSrc} alt = {profile} onError={handleProfileImageError}/>
+                        <CustomImage src = {profileImageSrc} alt = {profile} onError={handleProfileImageError}/>
                         <span>{userInfo.usernick}님</span>
                     </div>
                     <div id = "userinfo">
@@ -368,7 +369,7 @@ function Mypage() {
                                 {bookmarkSlidesData.map((slide, index) => (
                                     <div key={index}>
                                         <Link to={`/movies/view/${slide.movie_code}`}>
-                                            <img className="slidPoster" src={slide.movie_link} alt={slide.movie_kor || "empty"} />
+                                            <img src={slide.movie_link} alt={slide.movie_kor || "empty"} className="slidPoster" />
                                         </Link>
                                     </div>
                                 ))}

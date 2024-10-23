@@ -9,4 +9,10 @@ public class BanVO {
     private String stop_banDate;
     private String banContent;
     private String editBanDate;
+
+    private String username;
+    private String usernick;
+    private Integer active_state;
+    private String regiserdate;
+    private Integer reported_count;
 }

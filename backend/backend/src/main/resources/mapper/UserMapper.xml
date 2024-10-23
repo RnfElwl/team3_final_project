@@ -253,6 +253,16 @@
     <select id="findpwdByNameAndEmailAndId" resultType="int">
         select count(*) from user_tbl where userid = #{userid} and username = #{username} and useremail = #{useremail}
     </select>
+    <select id ="checkuserstate" resultType="int">
+        select active_state from user_tbl where userid = #{userid};
+    </select>
+    <select id="getBanEndDate">
+        select date_format(stop_banDate, '%Y.%m.%d') as banEndDate from ban_tbl where userid = #{userid}
+    </select>
+
+    <update id="updatelastvisite">
+        UPDATE user_tbl SET lastvisite = CURRENT_TIMESTAMP WHERE userid = #{userid}
+    </update>
 
 
 

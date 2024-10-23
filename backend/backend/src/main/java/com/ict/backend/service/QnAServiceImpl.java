@@ -94,8 +94,8 @@ public class QnAServiceImpl implements QnAService{
     }
 
     @Override
-    public void qnaDel(int qna_no, String userid) {
-        dao.qnaDel(qna_no, userid);
+    public int qnaDel(int qna_no, String userid) {
+        return dao.qnaDel(qna_no, userid);
     }
 
     @Override

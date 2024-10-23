@@ -18,11 +18,15 @@
 .AdminMovBody .eidt_form span{
     margin-right: 10px;
 }
-
+.AdminMovBody .modal-backdrop{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .AdminMovBody .eidt_form select {
     width: 150px;
     height: 35px;
-    background: transparent;
+    background: #1C1C20;
     border: 1px solid #48d1cdea;
     background-size: 20px;
     padding: 5px 30px 5px 10px;
@@ -85,3 +89,145 @@
     color: #f1f1f1;
     height: 200px;
   }
+  .AdminMovBody .eidt_form button{
+    border: 0;
+    width: 70px;
+    background-color:transparent;
+    color: #787c83;
+    font-weight: bold;
+    border: 1px solid #3bafa5ea;
+    border-radius: 20px;
+    width: 100%;
+    height: 50px;
+    transition: all 0.2s;
+  }
+
+  .AdminMovBody .eidt_form button:hover{
+    background-color: #3bafa5ea;
+    color: #f1f1f1;
+}
+
+.AdminMovBody .AdminMovieTable{
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+.AdminMovieTable th,
+.AdminMovieTable td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: 1px solid #444;
+}
+
+.AdminMovieTable th {
+    background-color: #343a40; /* Dark header background */
+    color: #f1f1f1; /* Text color */
+}
+
+.AdminMovieTable tr:nth-child(even) {
+    background-color: #2c2f33; /* Alternate row color */
+}
+
+.AdminMovieTable tr:nth-child(odd) {
+    background-color: #212529; /* Default row color */
+}
+
+.AdminMovieTable input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.AdminMovieTable tbody tr:hover {
+    background-color: #495057; /* Hover color */
+}
+
+.AdminMovieTable td {
+    color: #f8f9fa;
+    font-size: 14px;
+}
+
+.AdminMovieTable .no-results {
+  text-align: center;
+  font-size: 18px;
+  color: #f8d7da;
+  background-color: #343a40;
+}
+
+
+.AdminMovieTable button{
+  border: 0;
+    width: 70px;
+    background-color:transparent;
+    color: #787c83;
+    font-weight: bold;
+    border: 1px solid #3bafa5ea;
+    border-radius: 20px;
+    height: 40px;
+    transition: all 0.2s;
+}
+.AdminMovieTable button:hover{
+  background-color: #3bafa5ea;
+  color: #f1f1f1;
+}
+
+.AdminMovBody button{
+  background-color:transparent;
+    color: #787c83;
+    font-weight: bold;
+    border: 1px solid #3bafa5ea;
+    border-radius: 10px;
+    height: 40px;
+}
+
+.AdminMovBody .adminSearchForm select {
+  width: 100px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  padding: 0;
+  margin-right: 10px;
+}
+.AdminMovBody .adminSearchForm input{
+  border-radius: 4px;
+    width: 200px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+}
+.AdminMovBody .active_box select{
+  width: 60px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  padding: 0;
+  margin-right: 10px;
+}
+.AdminMovBody .active_box button{
+  width: 70px;
+  transition: all 0.2s;
+}
+.AdminMovBody .active_box button:hover{
+  background-color: #3bafa5ea;
+  color: #f1f1f1;
+}

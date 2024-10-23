@@ -153,6 +153,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public int updateMemActiveOne(Integer activeState, String userid) {
+        return dao.updateMemActiveOne(activeState, userid);
+    }
+
+    @Override
     public List<CommunityVO> getComList(PagingVO pagingVO) {
         return dao.getComList(pagingVO);
     }
@@ -160,6 +165,41 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public int getTotalComRecord(PagingVO pagingVO) {
         return dao.getTotalComRecord(pagingVO);
+    }
+
+    @Override
+    public List<CommentVO> getComMenList(PagingVO pagingVO) {
+        return dao.getComMenList(pagingVO);
+    }
+
+    @Override
+    public int getTotalComMenRecord(PagingVO pagingVO) {
+        return dao.getTotalComMenRecord(pagingVO);
+    }
+
+    @Override
+    public List<CommentReplyVO> getReplyList(PagingVO pagingVO) {
+        return dao.getReplyList(pagingVO);
+    }
+
+    @Override
+    public int getTotalComRepRecord(PagingVO pagingVO) {
+        return dao.getTotalComRepRecord(pagingVO);
+    }
+
+    @Override
+    public int updateCommunityState(String userid,List<Integer> communityNos, Integer activeState) {
+        return dao.updateCommunityState(userid,communityNos, activeState);
+    }
+
+    @Override
+    public int updateCommentState(String userid,List<Integer> commentNos, Integer activeState) {
+        return dao.updateCommentState(userid,commentNos,activeState);
+    }
+
+    @Override
+    public int updateReplyState(String userid,List<Integer> replyNos, Integer activeState) {
+        return dao.updateReplyState(userid,replyNos, activeState);
     }
 
 

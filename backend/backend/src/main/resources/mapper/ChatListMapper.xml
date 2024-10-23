@@ -12,10 +12,10 @@
     </insert>
 
     <select id="selectOpenChatList" resultType="com.ict.backend.vo.ChatListVO">
-        select chatlist_url, chat_title, chat_content, chatlist_type, chatlist_headcount, movie_img_url from chat_list_tbl clt
+        select chatlist_url, chat_title, chat_content, chatlist_type, chatlist_headcount, movie_img_url, movie_title from chat_list_tbl clt
         where clt.chatlist_type=1 and clt.movie_no in (select mrt.movie_no from movie_review_tbl mrt where mrt.userid=#{param2})
         <if test="param1!=''">
-            and chat_title like '%${param1}%'
+            and chat_title like '%${param1}%' or movie_title like '%${param1}%'
         </if>
     </select>
     <select id="selectSoloChatList" resultType="com.ict.backend.vo.ChatListVO">

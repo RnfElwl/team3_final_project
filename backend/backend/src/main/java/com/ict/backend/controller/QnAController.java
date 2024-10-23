@@ -226,12 +226,14 @@ public class QnAController {
         }
     }
     @GetMapping("/viewDel/{qna_no}")
-    public void qnaViewDel(@PathVariable int qna_no){
+    public int qnaViewDel(@PathVariable int qna_no){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("번호:"+qna_no+",유저아이디"+userid);
+
 
         //문의글 삭제
-        qnaService.qnaDel(qna_no,userid);
-        System.out.println("번호:"+qna_no+",유저아이디"+userid);
+        return qnaService.qnaDel(qna_no,userid);
+
     }
 
 

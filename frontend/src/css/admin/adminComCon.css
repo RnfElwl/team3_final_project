@@ -41,6 +41,12 @@
   text-overflow: ellipsis;  
   max-width: 200px;        
 }
+.AdminComMenTable td:nth-child(5){
+  white-space: nowrap;     
+  overflow: hidden;         
+  text-overflow: ellipsis;  
+  max-width: 200px;        
+}
 
 .AdminComTable th,
 .AdminComMenTable th {

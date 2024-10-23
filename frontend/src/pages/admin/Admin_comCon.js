@@ -6,178 +6,375 @@ import $ from "jquery";
 import './../../css/admin/adminComCon.css';
 
 function ComCon(){
-    const [CommunityActivity, setCommunityActivity]=useState(1);
-    const [community, setCommunity]=useState([]);
+    const [CommunityActivity, setCommunityActivity] = useState(1);
+    const [community, setCommunity] = useState([]);
+    const [com_com, setCom_com] = useState([]);
+    const [reply, setReply]=useState([])
     const [nowPage, setNowPage] = useState(1);
     const [totalRecord, setTotalRecord] = useState(0);
-    const [searchKey, setSearchKey]=useState('1');
-    const [searchWord, setSearchWord]=useState('1');
-    const [filter, setFilter]=useState('');
-    const [activeStateChk, setActiveStateChk]=useState('');
-    const [stateChk, setstateChk]=useState('');
+    const [totalComMenRecord, setTotalComMenRecord ] = useState(0);
+    const [totalComReplyRecord, setTotalReplyRecord]=useState(0);
+    const [searchKey, setSearchKey] = useState({
+        community: 'community_title',
+        comments: 'comment_content',
+        replies: 'reply_content',
+    });
+    const [searchWord, setSearchWord] = useState('');
+    const [filter, setFilter] = useState('');
+    const [activeStateChk, setActiveStateChk] = useState('');
+    const [stateChk, setstateChk] = useState('');
     const navigate = useNavigate();
-    //전체페이지
-    const totalPage = Math.ceil(totalRecord / 12);
+    const [editActive_state, setEditActive_state] = useState('1');
+
+
+    const [checkedCommunities, setCheckedCommunities] = useState([]);//커뮤니티 글 체크박스
+    const [checkedComments, setCheckedComments] = useState([]);//커뮤니티 댓글 체크박스
+    const [checkedReplies, setCheckedReplies]=useState([]);//커뮤니티 대댓글 체크박스
+    const [isAllComChecked, setAllComChecked] = useState(false);
+
     //페이지네이션
-    const handlePageChange = (newPage) => {
-        setNowPage(newPage);
+    const totalPage = Math.ceil(totalRecord / 12);
+    const totalComMenPage = Math.ceil(totalComMenRecord / 12);
+    const totalReplyPage=Math.ceil(totalComMenRecord / 12);
+
+    const handleActive_StateChange = (e) => {
+        setEditActive_state(e.target.value);
+    }
+    const handleSearchKeyChange = (e) => {
+
+        console.log(e.target.value); 
+        setSearchKey(e.target.value);
+    
+        };
+    const handlesearchWordChange = (e) => {
+        setSearchWord(e.target.value);
     };
 
-    const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}`+ 
-    `&searchKey=${searchKey||''}` + 
-    `&searchWord=${encodeURIComponent(searchWord) ||''}`+
-    `&activeStateChk=${activeStateChk ||''}`+
-    `&stateChk=${stateChk||''}`
-    // `&orderColumn=${orderColumn}` + 
-    // `&orderType=${orderType}`;
-
-
-    //커뮤니티 탭
-    const handleComTap=(e) => {
-        e.preventDefault();
-        setCommunityActivity(e.target.value);
-    };
-
+    //데이터 요청
     useEffect(() => {
-        // `http://localhost:9988/admin/comList?nowPage=${nowPage}&searchKey=${searchKey || ''}&searchWord=${encodeURIComponent(searchWord || '')}`
-        axios.get(comUrl)
+
+        const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}` + 
+        `&searchKey=${searchKey[CommunityActivity === 1 ? 'community' : CommunityActivity === 2 ? 'comments' : 'replies']}` + 
+        `&searchWord=${encodeURIComponent(searchWord) || ''}` + 
+        `&activeStateChk=${activeStateChk || ''}` + 
+        `&stateChk=${stateChk || ''}`;
+
+        const comunityData = async () => 
+            axios.get(comUrl)
             .then(response => {
                 console.log(response.data);
                 setCommunity(response.data.comList);
                 setTotalRecord(response.data.comTotalPages);
+                setCom_com(response.data.comMenList);
+                setTotalComMenRecord(response.data.comMenTotalPages);
+                setReply(response.data.replyList);
+                setTotalReplyRecord(response.data.comRepTotalPages);
             })
             .catch(error => {
                 console.error("데이터 로드 중 오류 발생:", error);
             });
-    }, [nowPage, searchKey, searchWord]);
+            comunityData()
+    }, [nowPage]);  
+    //서치폼 서브밋
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        console.log("검색키:" + searchKey + ",검색어:" + searchWord);
 
-    return(
+        setNowPage(1);
+
+        axios.get(`comurl`)
+            .then(response => {
+                console.log(response.data);
+                setCommunity(response.data.comList);
+                setTotalRecord(response.data.comTotalPages);
+                console.log("검색키:" + searchKey + ",검색어:" + searchWord);
+            })
+            .catch(error => {
+                console.error("검색 중 오류 발생:", error);
+            });
+    };
+
+    // 탭 스위칭 핸들
+    const handleComTap = (e) => {
+        e.preventDefault();
+        const selectedTab = Number(e.target.value);
+        setCommunityActivity(selectedTab);
+        setCheckedCommunities([]); //탭 바뀔때마다 체크값이 변경
+        setCheckedComments([]);
+        setCheckedReplies([]);
+    };
+
+    // 커뮤니티 탭별 체크박스 핸들
+    const handleAllComChecked = () => {
+        if (CommunityActivity === 1) {
+            const newCheckedState = !isAllComChecked;
+            setAllComChecked(newCheckedState);
+            setCheckedCommunities(new Array(community.length).fill(newCheckedState));
+        } else if (CommunityActivity === 2) {
+            const newCheckedState = !isAllComChecked;
+            setAllComChecked(newCheckedState);
+            setCheckedComments(new Array(com_com.length).fill(newCheckedState));
+        }
+        else if(CommunityActivity ===3){
+            const newCheckedState = !isAllComChecked;
+            setAllComChecked(newCheckedState);
+            setCheckedReplies(new Array(reply.length).fill(newCheckedState));
+        }
+    };
+
+    // 체크박스 핸들
+    const handleComChecked = (index) => {
+        if (CommunityActivity === 1) {
+            const newCheckedCommunities = [...checkedCommunities];
+            newCheckedCommunities[index] = !newCheckedCommunities[index];
+            setCheckedCommunities(newCheckedCommunities);
+            setAllComChecked(newCheckedCommunities.every(Boolean));
+        } else if (CommunityActivity === 2) {
+            const newCheckedComments = [...checkedComments];
+            newCheckedComments[index] = !newCheckedComments[index];
+            setCheckedComments(newCheckedComments);
+            setAllComChecked(newCheckedComments.every(Boolean));
+        }
+        else if(CommunityActivity === 3){
+            const newCheckedReplies = [...checkedReplies];
+            newCheckedReplies[index] = !newCheckedReplies[index];
+            setCheckedReplies(newCheckedReplies);
+            setAllComChecked(newCheckedReplies.every(Boolean));
+        }
+    };
+
+    //active폼 서브밋
+    const editActiveStateComSubmit = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        // 선택된 커뮤니티 글들
+        checkedCommunities.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append('community_no', community[index]?.community_no);
+            }
+        });
+
+        // 선택된 댓글들
+        checkedComments.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append('comment_no', com_com[index]?.comment_no);
+            }
+        });
+
+        // 선택된 대댓글들
+        checkedReplies.forEach((isChecked, index) => {
+            if (isChecked) {
+                formData.append('reply_no', reply[index]?.reply_no);
+            }
+        });
+
+        formData.append('active_state', editActive_state);
+
+        // 폼데이터 확인
+        formData.forEach((value, key) => {
+            console.log("Key:", key, "Value:", value);
+        });
+
+        axios.post('http://localhost:9988/admin/comActiveEdit',formData)
+        .then(response=>{
+            console.log('성공:',response.data);
+            handleSearchSubmit(e);
+        }).catch(error=>{
+            console.error('오류발생:',error);
+        })
+    };
+ 
+
+    return (
         <div className="AdminComBody">
             <h3>Community 관리</h3>
-            <hr/>
-            <div className="AdCom-tapMenu">
-                <button
-                    className="comListTap"
-                    onClick={handleComTap}
-                    value="1"
-                    disabled={CommunityActivity==1}>글</button>
-                <button
-                    className="comListTap"
-                    onClick={handleComTap}
-                    value="0"
-                    disabled={CommunityActivity==0}>댓글</button>
-            </div>
-            {CommunityActivity&&CommunityActivity==1 ?
-            ( <table className="AdminComTable">
-                <thead>
-                    <tr>
-                        <th>
+            <hr />
+            <form className="comSearchForm" onSubmit={handleSearchSubmit}>
+                <div>
+                    <div className="adminSearchForm">
+                        <div>
+                        {CommunityActivity === 1 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="community_title">제목</option>
+                                <option value="community_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="community_no">번호</option>
+                            </select>):
+                            CommunityActivity === 2 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="comment_content">글내용</option>
+                                <option value="qna_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="qna_no">번호</option>
+                            </select>):CommunityActivity === 3 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="qna_title">제목</option>
+                                <option value="qna_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="qna_no">번호</option>
+                            </select>):<></>}
                             <input
-                            type="checkbox"
-                            // checked={isAllComChecked}
-                            // onChange={handleAllComChecked}
-                            />
-                        </th>
-                        <th>No.</th>
-                        <th>작성자</th>
-                        <th>제목</th>
-                        <th>작성일</th>
-                        <th>조회수</th>
-                        <th>상태</th>
-                        <th>좋아요 수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {community && community.length > 0 ? (
-                    community.map((item, index) => (
-                        <tr key={index}>
-                            <td>
-                            <input
-                                type="checkbox"
-                                // checked={checkedComs[index]}
-                                // value={item.community_no || ''}
-                                // onChange={() => handleComChecked(index)}
-                                />
-                            </td>
-                            <td>{item.community_no}</td>
-                            <td>{item.userid}</td>
-                            <td>
-                                    {item.category==0?
-                                        <span className="adminCategory">[Movie]</span>:
-                                      item.category==1?
-                                        <span className="adminCategory">[Daily]</span>:
-                                      item.category==2?
-                                      <span className="adminCategory">[Free]</span>:
-                                      <span></span>}
-                            <span className="qna_tableTitle"  
-                                    onClick={(e)=>navigate(`/community/communityView/${item.community_no}`)}>
-                                        {item.community_title}
-                                    </span>  
-                            </td>
-                            <td>{item.community_writedate}</td>
-                            <td>{item.hit}</td>
-                            <td>{item.active_state==1? "활성":"비활성"}</td>
-                            <td>{item.community_like}</td>
-                        </tr>)))
-                        :(<tr colspan="8">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</tr>)}
-                    </tbody>
-    
-                </table>):
-                (<table className="AdminComMenTable">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input
-                                type="checkbox"
-                                // checked={isAllComChecked}
-                                // onChange={handleAllComChecked}
-                                />
-                            </th>
-                            <th>No.</th>
-                            <th>작성자</th>
-                            <th>내용</th>
-                            <th>작성일</th>
-                            <th>조회수</th>
-                            <th>상태</th>
-                            <th>좋아요 수</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {/* {community && community.length > 0 ? (
-                        community.map((item, index) => (
-                            <tr key={index}>
-                                <th>
-                                <input
-                                    type="checkbox"
-                                    // checked={checkedComs[index]}
-                                    // value={item.community_no || ''}
-                                    // onChange={() => handleComChecked(index)}
-                                    />
-                                </th>
-                                <th>{item.community_no}</th>
-                                <th>{item.userid}</th>
-                                <th>
-                                        {item.category==0?
-                                            <span className="adminCategory">[Movie]</span>:
-                                          item.category==1?
-                                            <span className="adminCategory">[Daily]</span>:
-                                          item.category==2?
-                                          <span className="adminCategory">[Free]</span>:
-                                          <span></span>}
-                                <span className="qna_tableTitle"  
-                                        onClick={(e)=>navigate(`/community/communityView/${item.community_no}`)}>
-                                            {item.community_title}
-                                        </span>  
-                                </th>
-                                <th>{item.community_writedate}</th>
-                                <th>{item.hit}</th>
-                                <th>{item.active_state==1? "활성":"비활성"}</th>
-                                <th>{item.community_like}</th>
-                            </tr>)))
-                            :(<tr>검색한 내용을 포함한 신고내역이 존재하지 않습니다.</tr>)} */}
+                                type="text"
+                                name="searchWord"
+                                className="qnaSearchWord"
+                                onChange={handlesearchWordChange}
+                                placeholder="Search..." />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form onSubmit={editActiveStateComSubmit}>
+                <div className="AdCom-tapMenu">
+                    <button
+                        className="comListTap"
+                        onClick={handleComTap}
+                        value="1"
+                        disabled={CommunityActivity === 1}>글</button>
+                    <button
+                        className="comListTap"
+                        onClick={handleComTap}
+                        value="2"
+                        disabled={CommunityActivity === 2}>댓글</button>
+                    <button
+                        className="comListTap"
+                        onClick={handleComTap}
+                        value="3"
+                        disabled={CommunityActivity === 3}>대댓글</button>
+                </div>
+                <select
+                        value={editActive_state}
+                        onChange={handleActive_StateChange}
+                        className="qna_active_editopt"
+                    >
+                        <option value={1}>활성</option>
+                        <option value={0}>비활성</option>
+                </select>
+
+                <button type="submit">전송</button>
+
+                {CommunityActivity === 1 ? (
+                    <table className="AdminComTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" checked={isAllComChecked}
+                                    onChange={handleAllComChecked} /></th>
+                                <th>No.</th>
+                                <th>작성자</th>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>조회수</th>
+                                <th>상태</th>
+                                <th>수정일</th>
+                                <th>수정인</th>
+                                <th>좋아요 수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {community && community.length > 0 ? community.map((item, index) => (
+                                <tr key={index}>
+                                    <td><input type="checkbox" checked={checkedCommunities[index]}
+                                        onChange={() => handleComChecked(index)} /></td>
+                                    <td>{item.community_no}</td>
+                                    <td>{item.userid}</td>
+                                    <td>{item.community_title}</td>
+                                    <td>{item.community_writedate}</td>
+                                    <td>{item.hit}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.edit_date}</td>
+                                    <td>{item.edit_user}</td>
+                                    <td>{item.community_like}</td>
+                                </tr>
+                            )) : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
                         </tbody>
-        
-                    </table>)}
+                    </table>
+                ) : CommunityActivity === 2 ? (
+                    <table className="AdminComMenTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" checked={isAllComChecked}
+                                    onChange={handleAllComChecked} /></th>
+                                <th>No.</th>
+                                <th>작성 위치</th>
+                                <th>작성자</th>
+                                <th>내용</th>
+                                <th>작성일</th>
+                                <th>상태</th>
+                                <th>수정일</th>
+                                <th>수정인</th>
+                                <th>답글 수</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {com_com && com_com.length > 0 ? com_com.map((item, index) => (
+                                <tr key={index}>
+                                    <td><input type="checkbox" checked={checkedComments[index]}
+                                        onChange={() => handleComChecked(index)} /></td>
+                                    <td>{item.comment_no}</td>
+                                    <td>{item.community_no}</td>
+                                    <td>{item.userid}</td>
+                                    <td>{item.comment_content}</td>
+                                    <td>{item.comment_writedate}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.edit_date}</td>
+                                    <td>{item.edit_user}</td>
+                                    <td>{item.reply_cnt}</td>
+                                </tr>
+                            )) : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
+                        </tbody>
+                    </table>
+                ):
+                 CommunityActivity === 3 ? (
+                    <table className="AdminComMenTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" checked={isAllComChecked}
+                                    onChange={handleAllComChecked} /></th>
+                                <th>No.</th>
+                                <th>작성 위치</th>
+                                <th>작성자</th>
+                                <th>내용</th>
+                                <th>작성일</th>
+                                <th>상태</th>
+                                <th>수정일</th>
+                                <th>수정인</th>
+                                <th>태그한 유저</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reply && reply.length > 0 ? reply.map((item, index) => (
+                                <tr key={index}>
+                                    <td><input type="checkbox" checked={checkedReplies[index]}
+                                        onChange={() => handleComChecked(index)} /></td>
+                                    <td>{item.reply_no}</td>
+                                    <td>{item.comment_no}</td>
+                                    <td>{item.userid}</td>
+                                    <td>{item.reply_content}</td>
+                                    <td>{item.reply_writedate}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.edit_date}</td>
+                                    <td>{item.edit_user}</td>
+                                    <td>{item.tag_usernick}</td>
+                                </tr>
+                            )) 
+                            : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
+                        </tbody>
+                    </table>
+                ):
+                (
+                    <></>
+                )}
+            </form>
         </div>
     );
 }

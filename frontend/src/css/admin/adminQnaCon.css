@@ -14,7 +14,7 @@
 .adminSearchForm input[type="radio"]{
   display: none;
 }
-.adminQnaEdit{
+.adminQnaEdit,.adminMemEdit{
   text-align: right;
 }
 /* qna상태 저장 css */
