@@ -1,7 +1,7 @@
 .footer{
     /* position: fixed; */
     /* bottom: 0px; */
-    background-color: #313133dc;
+    background-color: #1C1C20;
     /* width:100%; */
     display: flex;
     /* align-items: center; */
@@ -40,13 +40,13 @@
 .footer .detail{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 15px;
 }
 
 .footer .office, .footer .contact, .footer .ceo {
     display: flex;
     margin-left: 20px;
-    /*gap: 5px;  각 항목 간격 */
+    gap: 5px;  /* 각 항목 간격 */
 }
 
 img.logo {
@@ -58,10 +58,11 @@ img.logo {
     margin-top: 10px;
     text-align: center;
     border-top: 1px solid #918d8da2; /* 위에 구분선을 추가 */
-    padding-top: 10px;
+    padding-top: 30px;
+    padding-bottom: 40px;
 }
 .footer-bottom p{
-    font-size: 13px;
+    font-size: 15px;
     color: #c0bbbbb6;
 
 }
