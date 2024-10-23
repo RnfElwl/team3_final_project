@@ -188,8 +188,16 @@ function CommunityView(){
     
             try {
                 const response = await axios.post(`http://localhost:9988/community/comments`, commentData);
-                setComments([...comments, response.data]); // 댓글 상태 업데이트
-                setNewComment(""); // 입력 필드 초기화
+                if(response.data.comment_content!=""){
+                    axios.get(`http://localhost:9988/community/comments/${community_no}`)
+                    .then(response => {
+                        setComments(response.data); // 댓글 상태 업데이트
+                    })
+                    .catch(error => {
+                        console.error("Error fetching comments:", error);
+                    });    
+                    setNewComment(""); // 입력 필드 초기화
+                }
             } catch (error) {
                 console.error("Error submitting comment:", error);
             }
@@ -312,6 +320,7 @@ function CommunityView(){
             comment_no: comment_no,
             reply_content: replyText,
         };
+        console.log(replyData);
         axios.post(`http://localhost:9988/community/comments/reply`, replyData)
             .then(response => {
                 // setReplyComment((p)=>({ ...p,
@@ -351,6 +360,8 @@ function CommunityView(){
             reply_content: replyText,
             tag_usernick: reply.usernick
         };
+        console.log(replyData);
+
         const {data} = await axios.post(`http://localhost:9988/community/comments/reply`, replyData);
         setReplyComment((p)=>({ ...p,
             [reply.comment_no]: [...(p[reply.comment_no] || []), data]}));
