@@ -95,12 +95,7 @@ public class MovieController {
     public int insertMovieHit(@RequestBody MovieVO movieVO){
         int no = movieVO.getMovie_no();
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        String genre = movieVO.getMovie_genre();
         try{
-            System.out.println("Received movie_no: " + no);
-            System.out.println("Received genre: " + genre);
-            System.out.println("Received userid: " + userid);
-
             movieService.updateMovieHit(no);
             if ("anonymousUser".equals(userid)) {
                 return 1;
