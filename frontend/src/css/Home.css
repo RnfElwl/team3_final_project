@@ -54,13 +54,25 @@
   max-width: 1840px;
   min-width: 920px;
   margin: 0 auto;
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
 }
 
 .movie-list .category_list {
   margin-top: 60px;
   width: 100%;
+  opacity: 0;
+  transform: translateY(50px); /* 리스트가 처음에 약간 아래로 내려와 있는 효과 */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.movie-list .category_list.fade-in {
+  opacity: 1;
+  transform: translateY(0); /* 리스트가 스크롤될 때 원래 위치로 */
+}
+
+.category_list.fade-out {
+  opacity: 0; /* 보이지 않는 상태 */
 }
 
 .movie-list h3 {
@@ -103,7 +115,7 @@
 .movie-list .slick-slide {
   display: flex;
   justify-content: center; /* 슬라이드를 가운데 정렬 */
-
+  padding: 10px;
 }
 
 .movie-list .slidPoster {
@@ -135,5 +147,5 @@
 }
 
 .movie-list .slick-next {
-  right: 10px;
+  right: 40px;
 }

@@ -12,17 +12,16 @@ function Footer() {
                     <img src='../../logo3.png' className='logo' />
                 </div>
                 <div className='detail'>
-                    <div className='ceo'>
-                        <p>(주) SCENE NUMBER</p>
-                        <p>대표이사: 김성수</p>
+                    <div className='office'>
+                        <p>(주) 씬넘버</p>
+                        <p>주소 : 서울 성동구 아차산로 113 2층 203호 ICT 인재개발원</p>
                     </div>
                     <div className='contact'>
+                        <p>대표이사 : 차은우</p>
                         <p>tel : 010 - 2222 - 8888 </p>
                         <p>email : finalproject@scenen.com</p>
                     </div>
-                    <div className='office'>
-                        <p>서울 성동구 아차산로 113 2층 203호 ICT 인재개발원</p>
-                    </div>
+                    
                 </div>
             </div>
             <div className='footer-bottom'>
