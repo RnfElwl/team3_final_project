@@ -1,5 +1,6 @@
 .AdminMovBody{
     max-width: 1920px;
+    min-height: 100vh;
     padding-top: 10px;
     padding-left: 210px;
     padding-right: 10px;
