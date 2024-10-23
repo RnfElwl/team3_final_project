@@ -73,6 +73,11 @@ const Chatting = () => {
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
+                if(window.opener==null){
+                    navigate("/");
+                    window.close();
+                }
+
                 if(!mqttClient.connected){
                     return;
                 }
@@ -138,7 +143,6 @@ const Chatting = () => {
       }, [receivedMessages, client]);
       async function getRoomInfo(){
         try{
-
             const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
                 chatlist_url
             }});
@@ -147,7 +151,9 @@ const Chatting = () => {
                 const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
                     params: { movie_no: result.data.movie_no }
             });
-            if(data==null || data=="" || window.opener==null){
+            console.log(data);
+            console.log("______________________________")
+            if(data==null || data==""){
                 navigate("/");
                 window.close();
             }
@@ -155,6 +161,8 @@ const Chatting = () => {
         setRoomInfo(result.data);
         }catch(e){
             console.log(e);
+            navigate("/");
+            window.close();
         }
       }
       
@@ -187,6 +195,8 @@ const Chatting = () => {
     async function soloChatCheck(){
         try{
         const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
+        console.log(data);
+        console.log("___________________")
         if(data==0){
             navigate("/");
             window.close();
