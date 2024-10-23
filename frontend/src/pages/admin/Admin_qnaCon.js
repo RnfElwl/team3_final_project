@@ -121,7 +121,7 @@ function QnaCon() {
             .then(response => {
                 console.log('성공:', response.data);
                 if (response.data === selectedQnaNos.length) {
-                    window.location.reload();
+                    handleSearchSubmit(e)
                 }
             })
             .catch(error => {

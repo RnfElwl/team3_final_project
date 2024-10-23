@@ -10,6 +10,12 @@ function BanMem(){
     const [banMemList, setBanMemList]=useState([]);
     const [searchKey, setSearchKey]=useState('userid');
     const [searchWord, setSearchWord]=useState('');
+    const [checkedBanIds, setCheckedBanIds] = useState(new Array(banMemList.length).fill(false));
+    const [editActive_state, setEditActive_state] = useState('1');
+
+    const handleActive_StateChange = (e) => {
+        setEditActive_state(e.target.value);
+    }
     
     useEffect(()=>{
         axios.get(`http://localhost:9988/admin/banMemList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
@@ -23,6 +29,48 @@ function BanMem(){
         });
     },[searchKey,searchWord]);
 
+
+        //삭제 체크  전체 관리
+        const [isAllBanIdChecked, setAllBanIdChecked] = useState(false);
+        //전체 체크 박스 클릭 시
+        const handleAllBanIdChecked = () => {
+            const newCheckedState = !isAllBanIdChecked;
+            setAllBanIdChecked(newCheckedState);
+            setCheckedBanIds(new Array(banMemList.length).fill(newCheckedState)); // 모든 항목의 체크 상태를 동일하게 변경
+        };
+    
+        const handleBanIdChecked = (index) => {
+            const newCheckedBanIds = [...checkedBanIds];
+            newCheckedBanIds[index] = !newCheckedBanIds[index]; // 해당 항목의 체크 상태 변경
+            setCheckedBanIds(newCheckedBanIds);
+    
+            // 모든 항목이 체크되었는지 확인하여 전체 체크박스 상태 동기화
+            setAllBanIdChecked(newCheckedBanIds.every(item => item === true));
+        };
+    
+        //useEffect를 사용하여 QnA 데이터가 변경될 때 체크 상태 초기화
+        useEffect(() => {
+            setCheckedBanIds(new Array(banMemList.length).fill(false)); // QnA 데이터 변경 시 체크 상태 초기화
+            setAllBanIdChecked(false); // 전체 체크박스 상태 초기화
+        }, [banMemList]);
+
+        const editActiveStateSubmit=(e)=>{
+            e.preventDefault();
+
+            const formData=new FormData();
+
+            const selectedBanIds=[];
+
+            checkedBanIds.forEach((isChecked,index)=>{
+                if(isChecked){
+                    const userid=banMemList[index]?.userid;
+                    if(userid){
+                        FormData.append('userid',userid);
+                        selectedBanIds.push(userid);
+                    }
+                }
+            })
+        }
     return(
         <div className="bannedMemBody">
                 <h3>정지 멤버 관리</h3>
@@ -58,12 +106,12 @@ function BanMem(){
             </div>
             <form
                 className="adminMemEdit"
-                // onSubmit={editActiveStateSubmit}
+                onSubmit={editActiveStateSubmit}
                 >
                 <div>              
                     <select
-                        // value={editActive_state}
-                        // onChange={handleActive_StateChange}
+                        value={editActive_state}
+                        onChange={handleActive_StateChange}
                         >
                         <option disabled>선택하세요</option>
                         <option value="2">정지</option>
@@ -77,8 +125,8 @@ function BanMem(){
                         <tr>
                             <th>
                                 <input type="checkbox"
-                                    // checked={isAllMemChecked}
-                                    // onChange={handleAllMemChecked}
+                                    checked={isAllBanIdChecked}
+                                    onChange={handleAllBanIdChecked}
                                     />
                             </th>
                             <th>아이디</th>
@@ -98,9 +146,9 @@ function BanMem(){
                                 <tr key={index}>
                                     <td>
                                         <input type="checkbox"
-                                            // checked={checkedMems[index]}
-                                            // value={item?.userid || ''}
-                                            // onChange={() => handleMemChecked(index)}
+                                            checked={checkedBanIds[index]}
+                                            value={item?.userid || ''}
+                                            onChange={() => handleBanIdChecked(index)}
                                             />
                                     </td>
                                     <td>{item.userid}</td>

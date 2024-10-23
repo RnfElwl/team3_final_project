@@ -14,8 +14,12 @@ function ComCon(){
     const [totalRecord, setTotalRecord] = useState(0);
     const [totalComMenRecord, setTotalComMenRecord ] = useState(0);
     const [totalComReplyRecord, setTotalReplyRecord]=useState(0);
-    const [searchKey, setSearchKey] = useState('1');
-    const [searchWord, setSearchWord] = useState('1');
+    const [searchKey, setSearchKey] = useState({
+        community: 'community_title',
+        comments: 'comment_content',
+        replies: 'reply_content',
+    });
+    const [searchWord, setSearchWord] = useState('');
     const [filter, setFilter] = useState('');
     const [activeStateChk, setActiveStateChk] = useState('');
     const [stateChk, setstateChk] = useState('');
@@ -36,16 +40,27 @@ function ComCon(){
     const handleActive_StateChange = (e) => {
         setEditActive_state(e.target.value);
     }
+    const handleSearchKeyChange = (e) => {
+
+        console.log(e.target.value); 
+        setSearchKey(e.target.value);
+    
+        };
+    const handlesearchWordChange = (e) => {
+        setSearchWord(e.target.value);
+    };
 
     //데이터 요청
     useEffect(() => {
-        const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}` + 
-            `&searchKey=${searchKey || ''}` + 
-            `&searchWord=${encodeURIComponent(searchWord) || ''}` + 
-            `&activeStateChk=${activeStateChk || ''}` + 
-            `&stateChk=${stateChk || ''}`;
 
-        axios.get(comUrl)
+        const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}` + 
+        `&searchKey=${searchKey[CommunityActivity === 1 ? 'community' : CommunityActivity === 2 ? 'comments' : 'replies']}` + 
+        `&searchWord=${encodeURIComponent(searchWord) || ''}` + 
+        `&activeStateChk=${activeStateChk || ''}` + 
+        `&stateChk=${stateChk || ''}`;
+
+        const comunityData = async () => 
+            axios.get(comUrl)
             .then(response => {
                 console.log(response.data);
                 setCommunity(response.data.comList);
@@ -58,12 +73,32 @@ function ComCon(){
             .catch(error => {
                 console.error("데이터 로드 중 오류 발생:", error);
             });
-    }, [nowPage, searchKey, searchWord]);
+            comunityData()
+    }, [nowPage]);  
+    //서치폼 서브밋
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        console.log("검색키:" + searchKey + ",검색어:" + searchWord);
+
+        setNowPage(1);
+
+        axios.get(`comurl`)
+            .then(response => {
+                console.log(response.data);
+                setCommunity(response.data.comList);
+                setTotalRecord(response.data.comTotalPages);
+                console.log("검색키:" + searchKey + ",검색어:" + searchWord);
+            })
+            .catch(error => {
+                console.error("검색 중 오류 발생:", error);
+            });
+    };
 
     // 탭 스위칭 핸들
     const handleComTap = (e) => {
         e.preventDefault();
-        setCommunityActivity(Number(e.target.value));
+        const selectedTab = Number(e.target.value);
+        setCommunityActivity(selectedTab);
         setCheckedCommunities([]); //탭 바뀔때마다 체크값이 변경
         setCheckedComments([]);
         setCheckedReplies([]);
@@ -108,7 +143,7 @@ function ComCon(){
         }
     };
 
-    //폼 서브밋
+    //active폼 서브밋
     const editActiveStateComSubmit = (e) => {
         e.preventDefault();
 
@@ -141,12 +176,64 @@ function ComCon(){
         formData.forEach((value, key) => {
             console.log("Key:", key, "Value:", value);
         });
+
+        axios.post('http://localhost:9988/admin/comActiveEdit',formData)
+        .then(response=>{
+            console.log('성공:',response.data);
+            handleSearchSubmit(e);
+        }).catch(error=>{
+            console.error('오류발생:',error);
+        })
     };
+ 
 
     return (
         <div className="AdminComBody">
             <h3>Community 관리</h3>
             <hr />
+            <form className="comSearchForm" onSubmit={handleSearchSubmit}>
+                <div>
+                    <div className="adminSearchForm">
+                        <div>
+                        {CommunityActivity === 1 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="community_title">제목</option>
+                                <option value="community_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="community_no">번호</option>
+                            </select>):
+                            CommunityActivity === 2 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="comment_content">글내용</option>
+                                <option value="qna_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="qna_no">번호</option>
+                            </select>):CommunityActivity === 3 ?(<select
+                                className="qnaSearchSelect"
+                                name="searchKey"
+                                value={searchKey}
+                                onChange={handleSearchKeyChange}>
+                                <option value="qna_title">제목</option>
+                                <option value="qna_content">내용</option>
+                                <option value="userid">작성자</option>
+                                <option value="qna_no">번호</option>
+                            </select>):<></>}
+                            <input
+                                type="text"
+                                name="searchWord"
+                                className="qnaSearchWord"
+                                onChange={handlesearchWordChange}
+                                placeholder="Search..." />
+                        </div>
+                    </div>
+                </div>
+            </form>
             <form onSubmit={editActiveStateComSubmit}>
                 <div className="AdCom-tapMenu">
                     <button
@@ -170,8 +257,8 @@ function ComCon(){
                         onChange={handleActive_StateChange}
                         className="qna_active_editopt"
                     >
-                        <option value="1">활성</option>
-                        <option value="0">비활성</option>
+                        <option value={1}>활성</option>
+                        <option value={0}>비활성</option>
                 </select>
 
                 <button type="submit">전송</button>
@@ -188,6 +275,8 @@ function ComCon(){
                                 <th>작성일</th>
                                 <th>조회수</th>
                                 <th>상태</th>
+                                <th>수정일</th>
+                                <th>수정인</th>
                                 <th>좋아요 수</th>
                             </tr>
                         </thead>
@@ -201,10 +290,12 @@ function ComCon(){
                                     <td>{item.community_title}</td>
                                     <td>{item.community_writedate}</td>
                                     <td>{item.hit}</td>
-                                    <td>{item.active_state === 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.edit_date}</td>
+                                    <td>{item.edit_user}</td>
                                     <td>{item.community_like}</td>
                                 </tr>
-                            )) : (<tr><td colSpan="8">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
+                            )) : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
                         </tbody>
                     </table>
                 ) : CommunityActivity === 2 ? (
@@ -234,7 +325,7 @@ function ComCon(){
                                     <td>{item.userid}</td>
                                     <td>{item.comment_content}</td>
                                     <td>{item.comment_writedate}</td>
-                                    <td>{item.active_state === 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
                                     <td>{item.edit_date}</td>
                                     <td>{item.edit_user}</td>
                                     <td>{item.reply_cnt}</td>
@@ -270,7 +361,7 @@ function ComCon(){
                                     <td>{item.userid}</td>
                                     <td>{item.reply_content}</td>
                                     <td>{item.reply_writedate}</td>
-                                    <td>{item.active_state === 1 ? "활성" : "비활성"}</td>
+                                    <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
                                     <td>{item.edit_date}</td>
                                     <td>{item.edit_user}</td>
                                     <td>{item.tag_usernick}</td>

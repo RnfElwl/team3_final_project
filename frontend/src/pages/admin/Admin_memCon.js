@@ -160,6 +160,7 @@ function MemCon(){
         <form className="adminMemEdit" onSubmit={editActiveStateSubmit}>
             <div>              
                 <select
+                    className="qna_active_editopt"
                     value={editActive_state}
                     onChange={handleActive_StateChange}>
                     <option value="1">활성</option>
