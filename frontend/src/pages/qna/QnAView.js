@@ -111,6 +111,7 @@ function QnAView() {
     function checkid(){
         if(usersid==='' || usersid===null){
             alert("로그인 시 이용 가능한 기능입니다.");
+            return false;
         }
     }
     //뷰페이지 로딩
@@ -194,9 +195,9 @@ const toggleReport = () => {
             </tbody>
         </table>
         <div className="qnaItems">
-        {usersid !== itemQ.userid ?(
+        {(usersid !== itemQ.userid && usersid !== "") ?(
             <AiOutlineAlert size="35px"
-                onClick={()=>openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content)}
+                onClick={()=>{openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content);}}
                 className="qna_alert_icon"/>):null}
         {usersid === itemQ.userid || usersid==='admin1' ? (
                 <div><FontAwesomeIcon icon={faTrashCan} size ="2x"onClick={qnaDelete}/></div>
