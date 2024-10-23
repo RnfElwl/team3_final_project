@@ -185,7 +185,7 @@
     </select>
     <select id="selectUserReviewCheck">
         select movie_no from chat_list_tbl clt
-        where clt.chatlist_type=1 and clt.movie_no in (select mrt.movie_no from movie_review_tbl mrt where mrt.userid=#{param1} and mrt.movie_no=${param2});
+        where clt.chatlist_type=1 and clt.movie_no in (select mrt.movie_no from movie_review_tbl mrt where mrt.userid=#{param1} and mrt.movie_no=${param2}) limit 1;
     </select>
     <select id="selectSoloChatInfo">
         select ut.usernick, ut.usernick as chat_title, it.image_url as userprofile from chat_user_list cul
