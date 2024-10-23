@@ -183,16 +183,22 @@ function CommunityList() {
                 report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
                 reported_userid: userid, // 피신고자id
                 report_content: content,// 피신고자의 채팅 내용
-            })
+            });
             toggleReport();
         }else{
             alert("로그인 후 이용 가능합니다");
+            window.location.href = "/signin";
         }
     }
 
     // 모달창 열고 닫기 함수
     const toggleReport = () => {
-        setReportShow(!reportShow);
+        if (userid) {
+            setReportShow(!reportShow);
+        }else{
+            alert("로그인 후 이용 가능합니다");
+            window.location.href = "/signin";
+        }
     };
 
     useEffect(() => {
@@ -345,9 +351,12 @@ function CommunityList() {
                         <option value="hit">조회순</option>
                         <option value="like">인기순</option>
                     </select>
-                    <Link to="/community/CommunityWrite">
-                        <input className="write" type="button" value="New Post" />
-                    </Link>
+
+                    {userid && (
+                        <Link to="/community/CommunityWrite">
+                            <input className="write" type="button" value="New Post" />
+                        </Link>
+                    )}
                 </div>
 
 
@@ -381,6 +390,7 @@ function CommunityList() {
                                                 <input type="button" value={communityItem.follow==1?'following':'follow'} 
                                                 onClick={()=>{toggleFollow(communityItem)}}  
                                                 className="action_button" />
+                                                {/* {userid && ( */}
                                                 <button 
                                                     className="report_button" 
                                                     title="신고"
@@ -388,6 +398,7 @@ function CommunityList() {
                                                 >
                                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
                                                 </button>
+                                                {/* )} */}
                                             </>
                                         )}
                                     </div>

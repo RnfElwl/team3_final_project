@@ -274,34 +274,6 @@ function CommunityView(){
         }
     };
 
-    // // 댓글에 좋아요 처리
-    // const handleLikeComment = (comment_no) => {
-    //     axios.post(`http://localhost:9988/community/comments/like/${comment_no}`)
-    //         .then(() => {
-    //             setLikes({ ...likes, [comment_no]: likes[comment_no] + 1 });
-    //         })
-    //         .catch(error => {
-    //             console.error("Error liking comment:", error);
-    //         });
-    // };
-
-    // useEffect(() => {
-
-    //     // 댓글별 대댓글 가져오기
-    //     comments.forEach(comment => {
-    //         axios.get(`http://localhost:9988/community/comments/reply/${comment.comment_no}`)
-    //             .then(response => {
-    //                 setReplies(prevReplies => ({
-    //                     ...prevReplies,
-    //                     [comment.comment_no]: response.data
-    //                 }));
-    //             })
-    //             .catch(error => {
-    //                 console.error(`Error fetching replies for comment ${comment.comment_no}:`, error);    
-    //             });
-    //     });
-    // }, [comments]);
-
     const handleReplyChange = (e) => {
         setReplyText(e.target.value);
     };
@@ -651,13 +623,14 @@ function CommunityView(){
                                                 <div  className="reply_item">
                                                     <div className="comment_top">
                                                         <div className="comment_user">
+                                                        <span className="nieun">ㄴ </span>
                                                         {myid==reply.userid?
-                                             <Link to="/mypage">
-                                             <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
-                                             </Link>:
-                                            <Link to={`/user/info/${comment.usernick}`}>
-                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
-                                            </Link>
+                                                            <Link to="/mypage">
+                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            </Link>:
+                                                            <Link to={`/user/info/${comment.usernick}`}>
+                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            </Link>
                                         }
                                                             <p className="comment_writer_name">{reply.usernick}</p>
                                                         </div>
@@ -676,7 +649,7 @@ function CommunityView(){
                                                     <div className="comment_content"><span className="tag">{reply.tag_usernick!=null?`@${reply.tag_usernick}`:""}</span>{reply.reply_content}</div>
                                                         <div className="comment_info">
                                                         <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
-                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <form className="comment_input" onSubmit={(e) => {
                                                     e.preventDefault();

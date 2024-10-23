@@ -26,6 +26,7 @@ const bannerData = [
 function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate()
+  const bannerRef = useRef(null);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -44,9 +45,29 @@ function Home() {
     setCurrentIndex(index);
   };
   
+  useEffect(() => {
+    // 페이지 로드 후 약간 멈췄다가 스크롤
+    const timeoutId = setTimeout(() => {
+      if (bannerRef.current) {
+        const bannerHeight = bannerRef.current.offsetHeight;
+        
+        // 배너 높이 + 헤더 높이를 합산하여 스크롤 위치 계산
+        const scrollToPosition = bannerHeight;
+
+        window.scrollTo({
+          top: scrollToPosition, // 스크롤 위치
+          behavior: 'smooth', // 부드럽게 스크롤
+        });
+      }
+    }, 1000); // 500ms 정도 멈췄다가 스크롤 시작 (원하는 대로 조정 가능)
+
+    // 클린업
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <div className='home'>
-        <div className="banner">
+        <div className="banner" ref={bannerRef}>
           <div className="banner-images" style={{ display: 'flex', overflow: 'hidden' }}>
             {bannerData.map((movie, index) => (
               <img
@@ -192,27 +213,35 @@ function MovieList() {
   };
 
   useEffect(() => {
+    if (!categoryRefs.current) return;
+  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            // 요소가 뷰포트 안으로 들어오면 fade-in 클래스를 추가
             entry.target.classList.add('fade-in');
-            observer.unobserve(entry.target)
-          } 
+          } else {
+            // 요소가 뷰포트 밖으로 나가면 fade-in 클래스를 제거 (애니메이션 리셋)
+            entry.target.classList.remove('fade-in');
+          }
         });
       },
-      { threshold: 0.2 } // 20% 정도 뷰포트에 들어올 때 트리거
+      { threshold: 0.2 } // 20% 정도 뷰포트에 들어오면 트리거
     );
-
+  
     categoryRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
+      if (ref) observer.observe(ref); // 각 ref 요소를 옵저버로 관찰
     });
+  
     return () => {
       categoryRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
+        if (ref) observer.unobserve(ref); // 언마운트 시 옵저버 중지
       });
     };
   }, [categoryRefs, movies]);
+  
+  
   
   return (
     <div className='movie-list'> 
