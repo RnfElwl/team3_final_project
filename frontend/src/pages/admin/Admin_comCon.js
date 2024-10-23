@@ -33,6 +33,10 @@ function ComCon(){
     const totalComMenPage = Math.ceil(totalComMenRecord / 12);
     const totalReplyPage=Math.ceil(totalComMenRecord / 12);
 
+    const handleActive_StateChange = (e) => {
+        setEditActive_state(e.target.value);
+    }
+
     //데이터 요청
     useEffect(() => {
         const comUrl = `http://localhost:9988/admin/comList?nowPage=${nowPage}` + 
@@ -161,6 +165,14 @@ function ComCon(){
                         value="3"
                         disabled={CommunityActivity === 3}>대댓글</button>
                 </div>
+                <select
+                        value={editActive_state}
+                        onChange={handleActive_StateChange}
+                        className="qna_active_editopt"
+                    >
+                        <option value="1">활성</option>
+                        <option value="0">비활성</option>
+                </select>
 
                 <button type="submit">전송</button>
 
@@ -254,7 +266,7 @@ function ComCon(){
                                     <td><input type="checkbox" checked={checkedReplies[index]}
                                         onChange={() => handleComChecked(index)} /></td>
                                     <td>{item.reply_no}</td>
-                                    <td>{item.community_no}</td>
+                                    <td>{item.comment_no}</td>
                                     <td>{item.userid}</td>
                                     <td>{item.reply_content}</td>
                                     <td>{item.reply_writedate}</td>
