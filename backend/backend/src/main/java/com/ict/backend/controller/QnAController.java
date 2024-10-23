@@ -45,6 +45,7 @@ public class QnAController {
         System.out.println("Input: " + pagingVO);
         System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
         System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
 
         List<QnAVO> result = qnaService.getQnAList(pagingVO);
         int qnaTotalPages = qnaService.getTotalRecord(pagingVO);

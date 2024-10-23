@@ -177,12 +177,12 @@ function ComCon(){
             console.log("Key:", key, "Value:", value);
         });
 
-        axios.post('http://localhost:9988/admin/comActiveEdit',formData)
+        axios.post('http://localhost:9988/admin/comList?nowPage=${nowPage}',formData)
         .then(response=>{
             console.log('성공:',response.data);
-            handleSearchSubmit(e);
+            // handleSearchSubmit(e);
         }).catch(error=>{
-            console.error('오류발생:',error);
+            console.error('오류발생:',error)
         })
     };
  
@@ -191,11 +191,14 @@ function ComCon(){
         <div className="AdminComBody">
             <h3>Community 관리</h3>
             <hr />
-            <form className="comSearchForm" onSubmit={handleSearchSubmit}>
+            <form className="comSearchForm"
+            onSubmit={handleSearchSubmit}
+            >
                 <div>
                     <div className="adminSearchForm">
                         <div>
-                        {CommunityActivity === 1 ?(<select
+                        {CommunityActivity === 1 ?(
+                            <select
                                 className="qnaSearchSelect"
                                 name="searchKey"
                                 value={searchKey}

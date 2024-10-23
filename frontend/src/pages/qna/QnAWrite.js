@@ -140,18 +140,7 @@ function QnAWrite() {
                     <input type='hidden'
                         name='userid'
                         value={userid} />
-                    <div>
-                        <input
-                            type='text'
-                            className='qna_title'
-                            value={qna_title}
-                            onChange={(e) => {
-                                setQna_title(e.target.value)
-                                // setIsDirty(true);
-                            }}
-                            placeholder='제목을 입력해 주세요' />
-                    </div>
-                    <div>
+                                    <div>
                         <select
                             className='head_title'
                             name='head_title'
@@ -165,6 +154,17 @@ function QnAWrite() {
                                 </option>
                             })}
                         </select>
+                    </div>
+                    <div>
+                        <input
+                            type='text'
+                            className='qna_title'
+                            value={qna_title}
+                            onChange={(e) => {
+                                setQna_title(e.target.value)
+                                // setIsDirty(true);
+                            }}
+                            placeholder='제목을 입력해 주세요' />
                     </div>
                 </div>
                 <textarea
