@@ -2,6 +2,7 @@ import "../../css/chat/chatList.css";
 import { Search } from 'react-bootstrap-icons';
 import { useState, useEffect, useRef  } from 'react';
 import { BsExclamationCircle } from "react-icons/bs";
+import { IoPerson } from "react-icons/io5";
 import { useNavigate  } from 'react-router-dom';
 //import axios from "axios";
 import axios from "../../component/api/axiosApi"
@@ -51,6 +52,7 @@ function ChantList(){
                 keyWord: search
             }
           });
+          console.log(result.data);
           setList(result.data);
         }catch(e){
             console.log(e)
@@ -223,10 +225,14 @@ function ChantList(){
                             <img src={val.movie_img_url}/>
                         </div>
                         <div className="chat_box_info">
-                                <div>
+                                <div className="movie_title">{val.movie_title}</div>
+                                <div className="room_info">
+                                <div className="room_title">
                                     {val.chat_title}
                                 </div>
-                                <div>{val.usernick}</div>
+                                <div className="room_headcount">
+                                    <IoPerson /> {val.chatlist_headcount}</div>
+                                </div>
                             </div>
 
                         </div>

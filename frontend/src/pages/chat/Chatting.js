@@ -135,7 +135,6 @@ const Chatting = () => {
         // 메시지가 변경될 때마다 실행
         scrollBottom();
         dateMsgSend()
-        console.log(receivedMessages)
       }, [receivedMessages, client]);
       async function getRoomInfo(){
         try{
@@ -148,9 +147,7 @@ const Chatting = () => {
                 const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
                     params: { movie_no: result.data.movie_no }
             });
-            console.log("---------------")
-            console.log(data);
-            if(data==null || data==""){
+            if(data==null || data=="" || window.opener==null){
                 navigate("/");
                 window.close();
             }
