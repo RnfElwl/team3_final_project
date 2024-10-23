@@ -1,6 +1,6 @@
 .myPage {
     max-width: 1920px;
-    height: 91vh;
+    /* height: 91vh; */
     /* background-size: cover; */
     background-repeat: no-repeat;
     background-position: center;
@@ -12,17 +12,18 @@
     max-width: 1500px;
 }
 .info{
-    background-color: #232323;
-    opacity: 0.7;
+    background-color: #252525;
+    /* opacity: 0.7; */
     width: 100%;
     /* height: auto; */
     display: flex;
     padding : 10px 0;
     margin: 30px 0;
+    border-radius: 10px;
 }
 .otherinfo{
     width: 100%;
-    max-width: 1500px;
+    max-width: 1200px;
     margin : 0 auto;
 }
 .info #profile{
@@ -31,48 +32,95 @@
     flex-direction: column;
     align-items: center;
 }
-.info #userinfo{
+.myPage .info #userinfo{
     flex-grow: 7;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    font-weight: 700;
+}
+.usertop{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 7;
+    height: 70%;
+    align-items: center;
+}
+.usertop p{
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color : #a5a5a5;
+}
+.usertop span{
+    color : #fff;
+}
+.usertop p:nth-child(1){
+    flex: 1;
+}
+.usertop p:nth-child(3){
+    flex : 2;
+}
+.usertop p:nth-child(2), .usertop p:nth-child(4) {
+    flex: 3;
+}
+.userbottom{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex: 3;
+    height: 30%;
+    color: #a5a5a5;
+}
+.userbottom span{
+    color : #f1f1f1;
 }
 
-.info #profile>img {
+.myPage .info #profile>img {
     max-width: 150px;
     width: 100%;
     object-fit: cover;
     border-radius: 50%;
     margin-top: 10px;
 }
-.info #profile>span{
-    color : white;
+.myPage .info #profile>span{
+    color : #f1f1f1;
     font-weight: 800;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
-.info #userinfo{
+.myPage .info #userinfo{
     font-size: 1.1em;
     margin: 20px 0 10px 0;
 }
-.info #userinfo>p{
+.myPage .info #userinfo>p{
     color : gray;
     font-weight: 550;
 }
-.info #userinfo>p>span{
-    color : white;
+.myPage .info #userinfo>p>span{
+    color : #f1f1f1;
 }
 #info_change{
     margin : 10px 20px 0 0;
 }
-.content_title{
-    color : white;
+.myPage .content_title{
+    color : #f1f1f1;
     display: flex;
     justify-content: space-between;
     margin : 0 30px;
+    margin-bottom: 20px;
+}
+.myPage .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
 }
  /* 슬라이더 쓰는 content는 height 높게 */
-.recent_watch .content_info, .bookmark .content_info{
+.myPage .recent_watch .content_info, .bookmark .content_info{
     width: 90%;
-    height : 500px;
+    height : 350px;
     /* border : 1px gray solid; */
-    margin: 10px auto;
+    margin: 30px auto;
 }
 .follower .content_info{
     width: 90%;
@@ -85,42 +133,42 @@
     margin: 10px auto;
 }
 .content_info  h3{
-    color : white;
+    color : #f1f1f1;
 }
 .content_info div{
     height: 100%;
 }
 
 /* 슬라이더 CSS */
-.slick-slide div div{
+.myPage .slick-slide div div{
     height: 100%;
-    width: 85% !important;
-    border-radius: 20px;
+    width: 90% !important;
+    border-radius: 5px;
     overflow: hidden;
 }
-.slick-dots li.slick-active button:before{
-    color : white;
+.myPage .slick-dots li.slick-active button:before{
+    color : #f1f1f1;
 }
-.slick-dots li button:before{
+.myPage .slick-dots li button:before{
     color : gray;
 }
-.slidPoster{ 
+.myPage .slidPoster{ 
     height: 100%;
     width: 100%;
     /* min-width : 300px; */
-    border-radius: 20px;
+    border-radius: 5px;
 }
-.slick-slide{
+.myPage .slick-slide{
     overflow: hidden;
     
 }
-.slick-slide slick-active slick-current{
-    /* width: 95%; */
-}
-.slick-track{
+/* .slick-slide slick-active slick-current{
+    width: 95%;
+} */
+.myPage .slick-track{
     margin-left: 20px;
 }
-.slick-slide img:hover{
+.myPage .slick-slide img:hover{
     /* object-fit:cover; */
     transform:scale(1.1);
     transition: transform .5s;
@@ -128,8 +176,8 @@
 .slick-prev:before, .slick-next:before{
     font-size: 30px;
 }
-.slick-next{
-    right :1px;
+.myPage .slick-next{
+    right :-20px;
 }
 
 /* 사용자 프로필용 */
@@ -144,7 +192,7 @@
     object-fit: cover;
 }
 .follower .usernick{
-    color : white;
+    color : #f1f1f1;
     text-align: center;
     width: 115px;
 }
@@ -158,16 +206,151 @@
     display: flex !important;
     justify-content: flex-start !important;
   }
-.follower .userprofile[src="empty"] {
+.follower .userprofile[src="empty"], .slidPoster[alt = "empty"]{
     display: none;
   }
 
   th .fa-2x{
     font-size : 1.5em;
   }
-
+.noslide{
+    color : #a5a5a5;
+    font-size: 3.5em;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.noslide:hover{
+    border-top: 1px solid #a5a5a5;
+    border-bottom: 1px solid #a5a5a5;
+}
+.noslide>p{
+    margin-top: 12px;
+    line-height: 24px;
+    font-size: 0.3em;
+}
 
 .content_info .table-dark th, .content_info .table-dark td{
     text-align: center;
     background-color: transparent !important; /* 부모 요소의 배경색을 따름 */
   }
+/* 4분활 */
+.board{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    row-gap: 10px;
+    column-gap: 40px;
+}
+.board .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
+}
+
+.write_4, .comm_4, .comm_like_4, .qna_4 {
+    /* margin-bottom: 20px; */
+    padding: 20px 5px 40px 5px;
+    box-sizing: border-box;
+    /* border: 1px solid #4b4646; */
+}
+.write_4 {
+    grid-column: 1;
+    grid-row: 1;
+}
+.board .content_info{
+    height: auto !important;
+}
+
+.comm_4 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.comm_like_4 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.qna_4 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+
+.custom-list .list_title{
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+}
+.custom-list {
+    list-style-type: none; /* 점 없애기 */
+    padding: 0; /* 기본 패딩 제거 */
+    text-align: left;
+    margin: 0;
+}
+.list_title>div{
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.smaller-text {
+    font-size: 0.9em; /* 글씨 크기 작게 */
+    color: gray; /* 회색 */
+    padding-left: 10px;
+    display: block;
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.myPage .smaller-text>div{
+    height: 22px !important;
+}
+.smaller-text>div>p{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 30px;
+    margin: 0;
+}
+.text-content{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    max-width: 420px;
+}
+
+.right-align {
+    text-align: right;
+    font-size: 0.8em;
+    color : #f1f1f1;
+}
+
+.myPage .modal-backdrop{
+    display: flex;
+    align-items: center;
+}
+.myPage .modal-content{
+    border-radius: 15px;
+    background-color: #252525;
+    max-width: 400px;
+    max-height: 900px;
+    height: 400px;
+    width: 100% !important;
+    margin : 0 auto;
+    overflow-y: auto;
+    color : #f1f1f1;
+}
+.myPage .modal-content h2{
+    text-align: center;
+    margin-top: 30px;
+    font-weight: 800;
+    font-size: 20px;
+}
+.no-hover:hover{
+    border : none;
+}

@@ -1,0 +1,262 @@
+.User {
+    max-width: 1920px;
+    height: 91vh;
+    /* background-size: cover; */
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
+}
+.User>.container{
+    margin: 0 auto;
+    /* max-width: 1920px; */
+    max-width: 1500px;
+}
+.User .info{
+    background-color: #252525;
+    /* opacity: 0.7; */
+    width: 100%;
+    /* height: auto; */
+    display: flex;
+    padding : 10px 0;
+    margin: 30px 0;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.User #userinfo div{
+    color : #f1f1f1;
+}
+.followingBtn{
+    margin-top: 10px;
+    text-align: center;
+}
+.otherinfo{
+    width: 100%;
+    max-width: 1200px;
+    margin : 0 auto;
+}
+.info #profile{
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.User .info #userinfo{
+    display: flex;
+    justify-content: space-around;
+}
+.User .info div{
+    position: relative;
+}
+.User #info_change button{
+    position: absolute;
+    right : 1px;
+    top : 0px;
+}
+.info #profile>img {
+    max-width: 150px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: 10px;
+}
+.info #profile>span{
+    margin-top : 10px;
+    color : #f1f1f1;
+    font-weight: 800;
+    font-size: 1.2em;
+}
+.info #userinfo{
+    font-size: 1.1em;
+    margin: 20px 0 10px 0;
+}
+.info #userinfo>p{
+    color : gray;
+    font-weight: 550;
+}
+.info #userinfo>p>span{
+    color : #f1f1f1;
+}
+#info_change{
+    margin : 10px 20px 0 0;
+}
+.User .content_title{
+    color : #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    margin : 0 30px;
+    margin-bottom: 20px;
+}
+.User .content_title span{
+    font-weight: 800;
+    font-size: 1.4em;
+}
+ /* 슬라이더 쓰는 content는 height 높게 */
+.User .recent_watch .content_info, .bookmark .content_info{
+    width: 90%;
+    height : 350px;
+    /* border : 1px gray solid; */
+    margin: 30px auto;
+}
+.follower .content_info{
+    width: 90%;
+    height : 150px;
+    margin: 10px auto;
+}
+.User .content_info{
+    width: 90%;
+    height : 300px;
+    margin: 10px auto;
+}
+.content_info  h3{
+    color : #f1f1f1;
+}
+.content_info div{
+    height: 100%;
+}
+
+/* 슬라이더 CSS */
+.User .slick-slide div div{
+    height: 100%;
+    width: 90% !important;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.User .slick-dots li.slick-active button:before{
+    color : #f1f1f1;
+}
+.User .slick-dots li button:before{
+    color : gray;
+}
+.User .slidPoster{ 
+    height: 100%;
+    width: 100%;
+    /* min-width : 300px; */
+    border-radius: 5px;
+}
+.User .slick-slide{
+    overflow: hidden;
+    
+}
+/* .slick-slide slick-active slick-current{
+    width: 95%;
+} */
+.User .slick-track{
+    margin-left: 20px;
+}
+.User .slick-slide img:hover{
+    /* object-fit:cover; */
+    transform:scale(1.1);
+    transition: transform .5s;
+}
+.User .slick-prev:before, .slick-next:before{
+    font-size: 30px;
+}
+.User .slick-next{
+    right :-20px;
+}
+
+/* 사용자 프로필용 */
+.follower{
+    margin-bottom: 20px;
+}
+.follower .userprofile{
+    margin-top : 10px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.follower .usernick{
+    color : #f1f1f1;
+    text-align: center;
+    width: 115px;
+}
+.follower .slick-slide div div{
+    height: 100%;
+    width: 100% !important;
+    overflow: hidden;
+    margin-right:10px;
+}
+.follower .slick-track {
+    display: flex !important;
+    justify-content: flex-start !important;
+  }
+.follower .userprofile[src="empty"] {
+    display: none;
+  }
+
+  th .fa-2x{
+    font-size : 1.5em;
+  }
+
+
+.content_info .table-dark th, .content_info .table-dark td{
+    text-align: center;
+    background-color: transparent !important; /* 부모 요소의 배경색을 따름 */
+  }
+.User .modal-backdrop{
+    display: flex;
+    align-items: center;
+}
+.User .modal-content{
+    border-radius: 15px;
+    background-color: #252525;
+    max-width: 400px;
+    max-height: 900px;
+    height: 400px;
+    width: 100% !important;
+    margin : 0 auto;
+    overflow-y: auto;
+    color : #f1f1f1;
+}
+.User .modal-content h2{
+    text-align: center;
+    margin-top: 30px;
+    font-weight: 800;
+    font-size: 20px;
+}
+.user-list-ul{
+    margin-top: 20px;
+    padding : 0;
+}
+
+.user-list {
+    list-style-type: none; /* 리스트 점 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+    display: flex;
+    padding-bottom: 10px;
+    margin: 5px 20px;
+    border-bottom: 1px solid #998f8f;  /* 아래 경계선 추가 (선택 사항) */
+}
+
+.user-list a {
+    display: flex; /* Flexbox로 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit; /* 부모 요소의 글자 색상 상속 */
+    flex: 1; /* 버튼과 공간을 나누기 위해 flex 속성 추가 */
+}
+
+.user-list img {
+    width: 40px; /* 이미지 너비 설정 */
+    height: 40px; /* 이미지 높이 설정 */
+    border-radius: 50%; /* 둥글게 만들기 */
+    margin-right: 20px; /* 이미지와 텍스트 사이의 간격 */
+}
+
+.user-list span {
+    font-size: 1em;
+    font-weight: 800;
+    line-height: 40px;
+    display: inline-block; /* 텍스트가 버튼보다 더 많은 공간을 차지하도록 조정 */
+}
+
+.user-list button {
+    border: none; /* 기본 테두리 제거 */
+    padding: 4px 8px; /* 버튼 패딩 */
+    border-radius: 5px; /* 버튼 모서리 둥글게 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+    font-weight: 550;
+    margin-left: 40px; 
+}

@@ -35,6 +35,14 @@ public class JoinServiceImpl implements JoinService {
         memberVO.setUsername(joinDTO.getUsername());
         memberVO.setUsertel(joinDTO.getUsertel());
         memberVO.setUsernick(joinDTO.getUsernick());
+        memberVO.setUseremail(joinDTO.getUseremail());
+        memberVO.setUseraddr(joinDTO.getUseraddr());
+        memberVO.setZipcode(joinDTO.getZipcode());
+        memberVO.setAddrdetail(joinDTO.getAddrdetail());
+        memberVO.setUserbirth(joinDTO.getUserbirth());
+        memberVO.setUseremail(joinDTO.getUseremail());
+        memberVO.setGender(joinDTO.getGender());
+
         System.out.println(memberVO);
         // DAO를 통해 데이터베이스에 저장
         userDAO.saveUser(memberVO);
@@ -53,5 +61,13 @@ public class JoinServiceImpl implements JoinService {
     @Override
     public void saveUser(MemberVO user) {
         userDAO.saveUser(user);
+    }
+    @Override
+    public int usernickcheck(String usernick){
+        return userDAO.usernickcheck(usernick);
+    }
+    @Override
+    public int useridcheck(String userid){
+        return userDAO.useridcheck(userid);
     }
 }

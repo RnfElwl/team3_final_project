@@ -6,8 +6,17 @@
     <select id = "test" resultType="com.ict.backend.vo.MemberVO">
         select * from user_tbl limit 1
     </select>
+<!--    <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">-->
+<!--        SELECT * FROM user_tbl WHERE userid = #{userid}-->
+<!--    </select>-->
     <select id="findByUserid" parameterType="String" resultType="com.ict.backend.vo.MemberVO">
-        SELECT * FROM user_tbl WHERE userid = #{userid}
+        SELECT u.*, CASE a.authority
+        WHEN 1 THEN 'ADMIN' ELSE 'USER' END AS role,
+        it.image_url
+        FROM user_tbl u
+        left JOIN admin_grade_tbl a ON u.userid = a.userid
+        left join image_tbl it on u.userprofile=it.image_no
+        where u.userid = #{userid};
     </select>
 
     <select id="existsByUserid" parameterType="String" resultType="Boolean">
@@ -15,6 +24,246 @@
     </select>
 
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel})
+        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})
     </insert>
+
+    <select id="usernickcheck" resultType="int">
+        select count(*) from user_tbl where usernick = #{param1}
+    </select>
+    <select id="useridcheck" resultType="int">
+        select count(*) from user_tbl where userid = #{param1}
+    </select>
+    <select id ="getuserpwd">
+        select userpwd from user_tbl where userid = #{userid};
+    </select>
+    <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender
+        FROM user_tbl
+        WHERE userid = #{userid}
+    </select>
+    <select id = "getOtherUserInfo" resultType="com.ict.backend.vo.MemberVO">
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender, i.image_url as userprofile
+        FROM user_tbl u join image_tbl i on u.userprofile = i.image_no
+        WHERE usernick = #{usernick};
+    </select>
+<!--    <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">-->
+<!--        SELECT-->
+<!--        userid, usernick, username, userbirth, usertel, useremail, useraddr, zipcode, addrdetail, image_url AS userprofile-->
+<!--        FROM user_tbl u-->
+<!--        JOIN image_tbl i ON u.userprofile = i.image_no-->
+<!--        WHERE u.userid = #{userid};-->
+<!--    </select>-->
+    <update id = "updateUserInfo">
+        UPDATE user_tbl SET
+        usernick = #{usernick}, userbirth = #{userbirth}, usertel = #{usertel}, useremail = #{useremail}, useraddr = #{useraddr}, zipcode = #{zipcode}, addrdetail = #{addrdetail}
+        where userid = #{userid}
+    </update>
+    <update id="changepassword">
+        UPDATE user_tbl SET userpwd = #{userpwd} where userid = #{userid}
+    </update>
+
+    <select id="userprofile" resultType="String">
+        SELECT i.image_url
+        FROM user_tbl u
+        LEFT JOIN image_tbl i ON u.userprofile = i.image_no
+        WHERE u.userid = #{userid};
+    </select>
+
+
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO image_tbl (image_url) VALUES (#{image_url})
+    </insert>
+
+    <update id="updateprofile">
+        UPDATE user_tbl SET userprofile = #{param1} WHERE userid = #{param2}
+    </update>
+    <select id="userprofileno" resultType="int">
+        select userprofile from user_tbl  where userid = #{parma1}
+    </select>
+    <update id = "updateimageurl">
+        UPDATE image_tbl set image_url = #{param1} where image_no = #{param2}
+    </update>
+    <select id="getBookmarks" resultType="map">
+        SELECT m.movie_kor, m.movie_code, m.movie_link FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id="getCountBookmarks" resultType="int">
+        SELECT count(*) FROM bookmark_tbl WHERE userid = #{userid}
+    </select>
+    <select id="getHistory" resultType="map">
+        select m.movie_kor, m.movie_code, m.movie_link from history_sec_tbl h join movie_data_tbl m on h.movie_no = m.movie_no where h.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id="getCountHistory" resultType="int">
+        SELECT count(*) FROM history_sec_tbl where userid = #{userid}
+    </select>
+    <select id ="getfollower" resultType="map">
+        SELECT u.usernick, i.image_url FROM  follower_tbl f JOIN user_tbl u ON f.follower_userid = u.userid
+        JOIN  image_tbl i ON i.image_no = u.userprofile
+        WHERE  f.userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id ="getfollowing" resultType="map">
+        SELECT u.usernick, i.image_url FROM  follower_tbl f JOIN user_tbl u ON f.follower_userid = u.userid
+        JOIN  image_tbl i ON i.image_no = u.userprofile
+        WHERE  f.follower_userid = #{userid}
+        <if test="limit != null and limit > 0">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id ="getCountfollower" resultType="int">
+        SELECT count(*) FROM  follower_tbl where userid = #{userid}
+    </select>
+    <select id ="getCountfollowing" resultType="int">
+        SELECT count(*) FROM  follower_tbl where follower_userid = #{userid}
+    </select>
+    <select id="getCountCommunity" resultType = "int">
+        SELECT count(*) FROM community_tbl where userid = #{userid};
+    </select>
+    <select id="getCountComment" resultType = "int">
+        SELECT count(*) FROM community_comment_tbl where userid = #{userid};
+    </select>
+    <select id ="getCountReplyComment" resultType="int">
+        SELECT count(*) FROM reply_comment_tbl where userid = #{userid};
+    </select>
+
+    <select id="getFollowData" resultType = "map">
+        SELECT
+        <if test="endpoint == 'followers'">
+            f.userid AS follow_user,
+        </if>
+        <if test="endpoint == 'following'">
+            f.follower_userid AS follow_user,
+        </if>
+        u.usernick, CASE WHEN EXISTS (
+        <if test="endpoint == 'followers'">
+            SELECT 1 FROM follower_tbl f2 WHERE f2.userid = #{login_user} AND f2.follower_userid = f.userid
+        </if>
+        <if test="endpoint == 'following'">
+            SELECT 1 FROM follower_tbl f2 WHERE f2.userid = #{login_user} AND f2.follower_userid = f.follower_userid
+        </if>
+        ) THEN 1 ELSE 0 END AS is_follow, img.image_url FROM follower_tbl f JOIN user_tbl u
+        <if test="endpoint == 'followers'">
+            ON f.userid = u.userid
+        </if>
+        <if test="endpoint == 'following'">
+            ON f.follower_userid = u.userid
+        </if>
+        LEFT JOIN image_tbl img ON u.userprofile = img.image_no WHERE
+        <if test="endpoint == 'followers'">
+            f.follower_userid = #{userid}
+        </if>
+        <if test="endpoint == 'following'">
+            f.userid = #{userid}
+        </if>
+    </select>
+
+
+    <insert id="insertFollow">
+        INSERT INTO follower_tbl (userid, follower_userid)
+        VALUES (#{loginUser}, #{followerUserId})
+    </insert>
+
+    <!-- 팔로우 취소 -->
+    <delete id="deleteFollow">
+        DELETE FROM follower_tbl
+        WHERE userid = #{loginUser}
+        AND follower_userid = #{followerUserId}
+    </delete>
+
+    <!-- 현재 팔로우 여부 확인 -->
+    <select id="isFollowing" resultType="int">
+        SELECT COUNT(1)
+        FROM follower_tbl
+        WHERE userid = #{loginUser}
+        AND follower_userid = #{followerUserId}
+    </select>
+
+    <select id="getCommentList" resultType="map">
+        select ct.community_no, ct.community_title, ct.community_content, comment_no from community_comment_tbl cc
+        join community_tbl ct on cc.community_no = ct.community_no
+        where cc.userid = #{userid} and cc.active_state = 1
+        <choose>
+            <when test="order == 'asc'">
+                order by comment_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by comment_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getCommunityList" resultType="map">
+        select community_no, community_title, community_content from community_tbl
+        where userid = #{userid} and active_state = 1
+        <choose>
+            <when test="order == 'asc'">
+                order by community_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by community_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getQnAList" resultType="map">
+        select qna_no, head_title, qna_title, qna_content, qna_state from qna_tbl
+        where userid = #{userid} and active_state = 1
+        <choose>
+            <when test="order == 'asc'">
+                order by qna_writedate asc
+            </when>
+            <when test="order == 'desc'">
+                order by qna_writedate desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+        limit #{limit}
+        </if>
+    </select>
+    <select id="getLikeCommunityList" resultType="map">
+        select ct.community_no, ct.community_title, ct.community_content from community_like_tbl cl join community_tbl ct on cl.community_no = ct.community_no
+        where cl.userid = #{userid}
+        <choose>
+            <when test="order == 'asc'">
+                order by cl.like_date asc
+            </when>
+            <when test="order == 'desc'">
+                order by cl.like_date desc
+            </when>
+        </choose>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </select>
+
+    <select id="findidByNameAndEmail">
+        select userid from user_tbl where username = #{username} and useremail = #{useremail}
+    </select>
+    <select id="findpwdByNameAndEmailAndId" resultType="int">
+        select count(*) from user_tbl where userid = #{userid} and username = #{username} and useremail = #{useremail}
+    </select>
+    <select id ="checkuserstate" resultType="int">
+        select active_state from user_tbl where userid = #{userid};
+    </select>
+    <select id="getBanEndDate">
+        select date_format(stop_banDate, '%Y.%m.%d') as banEndDate from ban_tbl where userid = #{userid}
+    </select>
+
+    <update id="updatelastvisite">
+        UPDATE user_tbl SET lastvisite = CURRENT_TIMESTAMP WHERE userid = #{userid}
+    </update>
+
+
+
 </mapper>

@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-//const BASE_URL = 'http://192.168.1.88:9988';
+// const BASE_URL = 'http://192.168.1.88:9988';
+// const BASE_URL = 'http://192.168.1.87:9988';
 // Axios 인스턴스 생성
 const instance = axios.create({
     baseURL: "http://localhost:9988"
-    //baseURL: "http://192.168.1.88:9988"
+    // baseURL: "http://192.168.1.88:9988"
 });
 
 // 요청 인터셉터 추가
@@ -55,7 +56,7 @@ const logout = () => {
     // 로컬 스토리지의 모든 항목을 비웁니다.
     localStorage.clear();
     // 로그인 페이지로 리다이렉트
-    window.location.href = '/user/login';
+    window.location.href = '/signin';
 };
 
 
@@ -77,6 +78,14 @@ instance.interceptors.response.use(
 
             // 원래 요청을 다시 수행
             return instance(originalRequest);
+        }
+        if (error.response && error.response.status === 401) {
+            alert("로그인 후 접속해주세요");
+            window.location.href = '/signin';
+        }
+        if (error.response && error.response.status === 403) {
+            alert("접근 권한이 없습니다. 로그인 후 접속해주세요.");
+            window.location.href = '/';
         }
         return Promise.reject(error);
     }

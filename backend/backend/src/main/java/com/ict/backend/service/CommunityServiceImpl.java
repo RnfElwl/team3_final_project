@@ -3,7 +3,10 @@ package com.ict.backend.service;
 import com.ict.backend.dao.CommunityDAO;
 import com.ict.backend.vo.CommunityLikeVO;
 import com.ict.backend.vo.CommunityVO;
+import com.ict.backend.vo.ImageVO;
 import com.ict.backend.vo.PagingVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -14,10 +17,24 @@ public class CommunityServiceImpl implements CommunityService{
     @Inject
     CommunityDAO dao;
 
+//    @Override
+//    public Page<CommunityVO> getCommunityList(Pageable pageable) {
+//        return dao.getCommunityList(pageable);
+//    }
     @Override
-    public List<CommunityVO> getCommunityList() {
-        return dao.getCommunityList();
+    public List<CommunityVO> getCommunityList(String userid, String sortType) {
+        return dao.getCommunityList(userid, sortType);
     }
+
+//    @Override
+//    public List<CommunityVO> getCommunityList(int size, int offset) {
+//        return dao.getCommunityList(size,offset);
+//    }
+//
+//    @Override
+//    public int getTotalCount() {
+//        return dao.getTotalCount();
+//    }
 
     @Override
     public int createCommunity(CommunityVO vo) {
@@ -25,8 +42,8 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public CommunityVO getCommunityView(int community_no) {
-        return dao.getCommunityView(community_no);
+    public CommunityVO getCommunityView(int community_no, String userid) {
+        return dao.getCommunityView(community_no, userid);
     }
 
     @Override
@@ -72,6 +89,20 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     public int getLikesCount(int community_no) {
         return dao.getLikesCount(community_no);
+    }
+
+    @Override
+    public int uploadImage(String imageUrl) {
+        ImageVO imageVO = new ImageVO();
+        imageVO.setImage_url(imageUrl);
+        dao.uploadImage(imageVO);
+        return imageVO.getImage_no();  // image_no를 반환
+    }
+    public int updateimageurl(String imgurl, int profileno) {
+        return dao.updateimageurl(imgurl, profileno);
+    }
+    public int getimgno(int community_no){
+        return dao.getimgno(community_no);
     }
 
 }

@@ -25,8 +25,9 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final RefreshService refreshService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshService refreshService) {
-
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          JWTUtil jwtUtil,
+                          RefreshService refreshService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.refreshService = refreshService;
@@ -42,6 +43,10 @@ public class SecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
     }
 
     @Bean
@@ -59,12 +64,17 @@ public class SecurityConfig {
         //http basic 인증 방식 disable
         http
                 .httpBasic((auth) -> auth.disable());
-
-
+        // 토큰 소멸시 별도의 핸들러로 토큰 소멸이라 알림
+//        http
+//                .exceptionHandling((exceptions) -> exceptions
+//                    .authenticationEntryPoint(customAuthenticationEntryPoint()));
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin").permitAll()
+                        .requestMatchers("/user/mypageinfo").hasAuthority("USER")
+                        //.requestMatchers("/checkadmin").hasAuthority("ADMIN")
+                        //.requestMatchers("/signup").hasAuthority("ADMIN")
                         .anyRequest().permitAll());
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         //.anyRequest().authenticated());

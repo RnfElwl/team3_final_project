@@ -22,6 +22,8 @@ function MovieList() {
           url = `http://localhost:9988/api/movies/year/${id}`; // 연도별 영화 데이터
         } else if (type === 'nation') {
           url = `http://localhost:9988/api/movies/nation/${id}`; // 국가별 영화 데이터
+        }else if(type === 'search'){
+          url = `http://localhost:9988/api/movies/search/${id}`;
         }
 
         const response = await axios.get(url); // axios로 GET 요청
@@ -52,7 +54,7 @@ function MovieList() {
   return (
     <div className="movie-list-wrapper"> {/* 컨텐츠를 감싸는 중앙 배치용 div */}
       <div className="movie-list-container">
-        <h2> {id} 영화 목록</h2>
+        <h2> <b>'{id}'</b>{type=='search'?'에 관한 검색 결과':'을 선택한 당신의 영화'}</h2>
         <div className="row">
           {movies.map((movie) => (
             <div key={movie.movie_code} className="col-6 col-sm-4 col-md-2 mb-4">

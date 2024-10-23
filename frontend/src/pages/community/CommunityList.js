@@ -3,61 +3,79 @@ import React, { useState, useEffect } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
+import ReportModal from '../../component/api/ReportModal.js';
+import { AiOutlineAlert } from "react-icons/ai";
+
 
 function CommunityList() {
     const { community_no } = useParams(); // URL에서 community_no 가져오기
     const [community, setCommunity] = useState([]);
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
     const [filteredCommunity, setFilteredCommunity] = useState([]); // 필터링된 커뮤니티 상태
-    const categories = ["전체", "영화", "일상", "자유", "포스터"]; // 카테고리 목록에 "전체" 추가
+    const categories = ["All Posts", "Movies", "Daily", "Free"]; // 카테고리 목록에 "전체" 추가
     const [userid, setUserId] = useState('');
     //const userid = localStorage.getItem('userid');
     const userprofile = localStorage.getItem('userprofile');
     const [liked, setLiked] = useState(false); // 좋아요 상태
     const [likesCount, setLikesCount] = useState(0); // 좋아요 수
-    const [comments, setComments] = useState([]); // 댓글 상태 추가
-    const [hitCount, setHitCount] = useState(0);
 
-    // 상위 3개 게시물
-    const [topViewedPosts, setTopViewedPosts] = useState([]);
-    const [topLikedPosts, setTopLikedPosts] = useState([]);
+    const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
+
+    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState("All Posts");
+
+    const [communityList, setCommunityList] = useState([]);
+    const [sortType, setSortType] = useState("latest");
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
         switch (category) {
             case 0:
-                return "영화";
+                return "Movies";
             case 1:
-                return "일상";
+                return "Daily";
             case 2:
-                return "자유";
-            case 3:
-                return "포스터";
+                return "Free";
             default:
                 return "기타";
         }
     };
-
-    useEffect(() => {
-        // 커뮤니티 글 리스트 가져오기
-        axios.get('http://localhost:9988/community/list')
-            .then(response => {
+    function communityListSetting(sortType){
+        axios.get('http://localhost:9988/community/list', {
+            params: { sortType } // sortType을 params로 전달
+        })
+        .then(response => {
+                console.log(response.data);
+                console.log(response.data);
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
+                setCommunityList(response.data);
                 
-                // 상위 3개 게시물 설정
-                const sortedByLikes = [...response.data].sort((a, b) => b.likesCount - a.likesCount).slice(0, 3);
-               
-                setTopLikedPosts(sortedByLikes);
+                // 카테고리별 게시물 수 계산
+                const counts = response.data.reduce((acc, item) => {
+                    const category = getCategoryName(item.category);
+                    acc[category] = (acc[category] || 0) + 1;
+                    return acc;
+                }, {});
+
+                // 전체 카테고리 수 설정
+                counts["All Posts"] = response.data.length;
+
+                setCategoryCounts(counts);
 
             })
             .catch(error => {
                 console.error("Error fetching community list:", error);
             });
+    }
+    useEffect(() => {
+        // 커뮤니티 글 리스트 가져오기
+        communityListSetting();
 
         axios.get('http://localhost:9988/user/userinfo')
             .then(response => {
-                //console.log("hi",response.data);
                 setUserId(response.data);
             })
             .catch(error => {
@@ -69,28 +87,45 @@ function CommunityList() {
 
     useEffect(() => {
         // 게시글 데이터 가져오기
+        console.log(community_no)
         axios.get(`http://localhost:9988/community/view/${community_no}`)
             .then(response => {
                 console.log(response.data); // API 응답 로그
+                console.log(response);
                 setCommunity(response.data); // community 상태 업데이트
                 setLikesCount(response.data.likesCount); // 초기 좋아요 수 설정
                 setLiked(response.data.liked); // 초기 좋아요 상태 설정
             })
             .catch(error => {
                 console.error("Error fetching community view:", error);
-            });
-        // 댓글 데이터 가져오기
-        axios.get(`http://localhost:9988/community/comments/${community_no}`)
-            .then(response => {
-                setComments(response.data); // 댓글 상태 업데이트
-            })
-            .catch(error => {
-                console.error("Error fetching comments:", error);
-            });    
+            }); 
     }, [community_no]);
 
-    // 댓글 수 계산
-    const commentCount = comments.length;
+    useEffect(() => {
+        const fetchCommentsCount = async (community_no) => {
+            try {
+                const response = await axios.get(`http://localhost:9988/community/comments/${community_no}`);
+                return response.data.length; // 댓글 수 반환
+            } catch (error) {
+                console.error(`Error fetching comments count for post ${community_no}:`, error);
+                return 0;
+            }
+        };
+    
+        const fetchAllCommentsCounts = async () => {
+            const counts = await Promise.all(
+                community.map(async (communityItem) => {
+                    const count = await fetchCommentsCount(communityItem.community_no);
+                    return { ...communityItem, commentCount: count };
+                })
+            );
+            setFilteredCommunity(counts); // 댓글 수를 포함한 상태로 업데이트
+        };
+    
+        if (community.length > 0) {
+            fetchAllCommentsCounts();
+        }
+    }, [community]);
 
     // 검색창
     const handleSearchInputChange = (e) => {
@@ -110,65 +145,164 @@ function CommunityList() {
 
     // 카테고리 클릭 시 필터링
     const filterByCategory = (category) => {
-        if (category === "전체") {
-            setFilteredCommunity(community); // "전체" 선택 시 모든 커뮤니티 표시
+        setSelectedCategory(category);
+
+        if (category === "All Posts") {
+            setFilteredCommunity(community); // 카테고리를 선택할 때 상태 업데이트
         } else {
             setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
         }
     };  
 
     // 좋아요 처리
-    const handleLikeToggle = async () => {
-        // if (!userid) {
-        //     console.error('사용자가 로그인하지 않았습니다.');
-        //     return; // userid가 없으면 처리 중지
-        // }
+    const handleLikeToggle = async (no) => {
+        if (!userid) {
+            alert('로그인 후 이용가능한 서비스입니다.');
+            return; // userid가 없으면 처리 중지
+        }
 
         try {
-            const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
-                params: { community_no, userid }
-            });
-            console.log("좋아요 결과"+isLikedResponse.data);
-            setLiked(isLikedResponse.data);
-            // const isLiked = isLikedResponse.data > 0; // 이미 좋아요가 있다면 true
             
-            // if (isLiked) {
-            //     // 좋아요 삭제로
-            //     await axios.delete(`http://localhost:9988/community/unlike`, { params: { community_no, userid } });
-            // } else {
-            //     // 좋아요 추가
-            //     await axios.post(`http://localhost:9988/community/like`, { community_no, userid });
-            // }
-
-            // 좋아요 수 업데이트
-            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${community_no}`);
-            setLikesCount(likesCountResponse.data); // 업데이트된 좋아요 수
-            console.log("좋아요 수"+likesCountResponse);
-            //setLiked(!isLiked); // 좋아요 상태 업데이트
+            const isLikedResponse = await axios.get(`http://localhost:9988/community/like/status`, {
+                params: { community_no: no, userid }
+            });
+ 
+            communityListSetting();
+            const likesCountResponse = await axios.get(`http://localhost:9988/community/likes/count/${no}`);
         } catch (error) {
             console.error('좋아요 처리 실패:', error);
         }
+        
+    };
+
+    function openReport(id, userid, content){{/* 신고 기능 */}
+        if(userid){
+            console.log(id, userid, content);
+            setReport({
+                report_tblname: 2, // 본인 테이블에 따라 다름
+                report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+                reported_userid: userid, // 피신고자id
+                report_content: content,// 피신고자의 채팅 내용
+            })
+            toggleReport();
+        }else{
+            alert("로그인 후 이용 가능합니다");
+        }
+    }
+
+    // 모달창 열고 닫기 함수
+    const toggleReport = () => {
+        setReportShow(!reportShow);
     };
 
     useEffect(() => {
-        const fetchTopViewedPosts = async () => {
-            try {
-                const response = await axios.get(`http://localhost:9988/community/top-viewed-posts`); // API 호출
-                setTopViewedPosts(response.data); // 데이터 저장
-            } catch (error) {
-                console.error('Error fetching top viewed posts:', error);
-            }
-        };
-
-        fetchTopViewedPosts();
+        axios.get(`http://localhost:9988/user/userinfo`)
+            .then((response) => {
+                // API의 응답에서 데이터 추출
+                const userid = response.data; // userId 값을 변수에 저장
+                setLoggedInUserId(userid);
+            })
+            .catch((error) => {
+                console.error("Error fetching user info:", error);
+            });
     }, []);
+    
+    const formatDate = (dateString) => {
+        const months = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        
+        const date = new Date(dateString); // 날짜 문자열을 Date 객체로 변환
+        const day = date.getDate(); // 날짜
+        const month = months[date.getMonth()]; // 줄인 월 이름
+        const year = date.getFullYear(); // 연도
+    
+        return `${month} ${day}, ${year}`; // 원하는 형식으로 포맷팅
+    };
+    function toggleFollow(user){
+        axios.post('http://localhost:9988/user/info/toggleFollow', {
+            follow_user_nick: user.usernick,
+            newStatus: user.follow === 1 ? "0" : "1"
+        })
+        .then(response => {
+            console.log(response.data); // 성공 응답 처리
+            communityListSetting();
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data === "Need login") {
+                    // 로그인 필요 시 로그인 페이지로 리디렉션
+                    alert("팔로우 기능은 로그인이 필요합니다.");
+                    window.location.href = "/signin"; // 로그인 페이지 경로
+                } else {
+                    // 400 오류가 발생하면 상태 복구
+                    const restoredList = filteredCommunity.map((u) => {
+                        if (u.userick === user.usernick) {
+                            return {
+                                ...u,
+                                is_follower: u.follow === 1 ? "0" : "1", // 원래 상태로 복구
+                            };
+                        }
+                        return u;
+                    });
+                    setFilteredCommunity(restoredList);
+                    alert("팔로우 상태를 업데이트하는 데 실패했습니다."); // 실패 메시지
+                }
+            } else {
+                // 다른 에러 처리 (네트워크 오류 등)
+                console.error('Error toggling follow status:', error);
+                const restoredList = filteredCommunity.map((u) => {
+                    if (u.usernick === user.usernick) {
+                        return {
+                            ...u,
+                            is_follower: u.follow === 1 ? "0" : "1", // 원래 상태로 복구
+                        };
+                    }
+                    return u;
+                });
+                setFilteredCommunity(restoredList);
+                alert("팔로우 상태를 업데이트하는 중 에러가 발생했습니다."); // 에러 메시지
+            }
+        });
+
+    }useEffect(() => {
+        communityListSetting();
+    }, []);
+
+    useEffect(() => {
+        setFilteredCommunity(communityList); // communityList가 변경될 때마다 업데이트
+    }, [communityList]);
+
+    const sortCommunityList = (type) => {
+        let sortedList;
+
+        if (type === "latest") {
+            sortedList = [...communityList].sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
+        } else if (type === "hit") {
+            sortedList = [...communityList].sort((a, b) => b.hit - a.hit);
+        } else if (type === "like") {
+            sortedList = [...communityList].sort((a, b) => b.community_like - a.community_like);
+        }
+
+        setCommunityList(sortedList);
+        setSortType(type);
+    };
+    
 
     return (
         <div className="community_list">
             <div className="container">
                 <div className="list_header">
-                    <img className="user_image" src={userprofile || '/default_profile.png'} alt="User Profile"/>
-                    <p className="user_name">{userid}</p>
+                    <div className="category_box">
+                        <ul className="category_list">
+                            {categories.map(category => (
+                                <li key={category} onClick={() => filterByCategory(category)} className={`category_item ${selectedCategory === category ? 'active' : ''}`}>
+                                    {category}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     <div className="search" style={{ position: 'relative', width: '60%' }}>
                         <i className="fas fa-search" style={{
                             position: 'absolute',
@@ -185,99 +319,120 @@ function CommunityList() {
                             onChange={handleSearchInputChange}
                             style={{
                                 paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
-                                width: '100%'
+                                width: '100%',
+                                background: '#1C1C20',
+                                color: '#f0f0f0'
                             }}
                         />
                     </div>
+                </div>
+                <div className="post">
+                    <div className="category_counts">
+                        {/* 선택된 카테고리의 게시물 수만 표시 */}
+                        {selectedCategory ? (
+                            <div>
+                                {/* {selectedCategory}*/} {categoryCounts[selectedCategory] || 0} post
+                            </div>
+                         ) : (
+                            <div>
+                                {/* 선택된 카테고리가 없을 때 전체 게시물 수 */}
+                                {categoryCounts["All Posts"] || 0} post
+                            </div>   
+                        )}
+                    </div>
+                    <select onChange={(e) => sortCommunityList(e.target.value)} value={sortType}>
+                        <option value="latest">최신순</option>
+                        <option value="hit">조회순</option>
+                        <option value="like">인기순</option>
+                    </select>
                     <Link to="/community/CommunityWrite">
-                        <input className="write" type="button" value="글 작성하기" />
+                        <input className="write" type="button" value="New Post" />
                     </Link>
                 </div>
-                <hr />
+
 
                 {filteredCommunity.length > 0 ? (
                     filteredCommunity.map((communityItem) => (
                         <div className="list" key={communityItem.community_no}>
-                            <div className="list_top">
-                                <img className="writer_image" src={communityItem.userprofile} alt="Writer" />
-                                <div className="writer_info">
-                                    <div className="name_location">
-                                        <p className="writer_name">{communityItem.userid}</p>
-                                        <p className="location">{communityItem.loc}</p>
+                            <Link to={`/community/communityView/${communityItem.community_no}`}>
+                                <div className="image_box">
+                                    {communityItem.community_img && (
+                                        <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
+                                    )}
+                                </div> 
+                            </Link>  
+                            <div className="content"> 
+                                <div className="list_top">
+                                    {userid==communityItem.userid?<Link to="/mypage">
+                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                    </Link>:<Link to={`/user/info/${communityItem.usernick}`}>
+                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                    </Link>}
+                                    <div className="writer_info">
+                                        <p className="writer_name">{communityItem.usernick}</p>
+                                        <div className="list_info">
+                                            <p className="writedate">{formatDate(communityItem.community_writedate)}</p>
+                                            {/* <p className="location">{communityItem.loc}</p> */}
+                                        </div>
                                     </div>
-                                    <p className="writedate">{communityItem.community_writedate}</p>
+                                    <div className="action_button_container">
+                                        {userid !== communityItem.userid && (
+                                            <>
+                                                <input type="button" value={communityItem.follow==1?'following':'follow'} 
+                                                onClick={()=>{toggleFollow(communityItem)}}  
+                                                className="action_button" />
+                                                <button 
+                                                    className="report_button" 
+                                                    title="신고"
+                                                    onClick={() => openReport(communityItem.community_no, communityItem.userid, communityItem.community_title)} 
+                                                >
+                                                    <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    <ReportModal    
+                                        reportShow={reportShow}// 모달창 보이기 여부
+                                        toggleReport={toggleReport} // 모달창 열고닫기 함수
+                                        report={report}// 신고 데이터 변수
+                                        setReport={setReport} // 신고 데이터 변수 세팅
+                                    />
                                 </div>
-                                <input type="button" value="팔로우" className="action_button" />
-                                <input type="button" value="신고" className="action_button" />
-                            </div>
-                            <div className="list_nn">
+
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>
                                     <div className="list_middle">
-                                        <div className="middle_head">
-                                            <div className="category">{getCategoryName(communityItem.category)}</div>
-                                            <h3 className="community_title">{communityItem.community_title}</h3>
-                                        </div>
-                                        {communityItem.community_img && (
-                                            <img className="community_img" src={communityItem.community_img} alt="Uploaded" />
-                                        )}
+                                        <div className="category">{getCategoryName(communityItem.category)}</div>
+                                        <h3 className="community_title">{communityItem.community_title}</h3>
                                     </div>
                                 </Link>
                                 <div className="list_bottom">
-                                    <i 
-                                        className={`fa-heart ${liked ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
-                                        onClick={handleLikeToggle}
-                                        style={{ 
-                                            color: liked ? 'red' : 'black',  // 좋아요 상태에 따라 하트 색상 변경
-                                            cursor: 'pointer' 
-                                        }}
-                                    ></i>
-                                    <span className="likeCount">{likesCount}</span>
-                                    <i className="far fa-comment"></i>
-                                    <span className="commentCount">{commentCount}</span>
-                                    <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
-                                    <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
-                                </div>
-                            </div>    
+                                    <div className="left_info">
+                                        <i className="far fa-eye"></i>  {/* 조회수 아이콘 */}
+                                        <span className="hitCount">{communityItem.hit}</span>  {/* 조회수 출력 */}
+                                        <i className="far fa-comment"></i>
+                                        <span className="commentCount">{communityItem.commentCount}</span>
+                                    </div>
+                                    <div className="right_info">
+                                        <i 
+                                            className={`fa-heart ${communityItem.like_state==1 ? 'fas' : 'far'}`}  // fas는 채워진 하트, far는 빈 하트
+                                            onClick={()=>{handleLikeToggle(communityItem.community_no)}}
+                                            style={{ 
+                                                color: communityItem.like_state==1 ? 'red' : '#f0f0f0',  // 좋아요 상태에 따라 하트 색상 변경
+                                                cursor: 'pointer' 
+                                            }}
+                                        ></i>
+                                        <span className="likeCount">{communityItem.community_like}</span>
+                                    </div>
+                                </div> 
+                            </div>  
                         </div>
                     ))
                 ) : (
-                    <p style={{textAlign:"center", fontSize:"1.4em", paddingTop:"40px"}}>커뮤니티 글이 없습니다.</p> // 글이 없을 때 메시지
+                    <p style={{textAlign:"center", fontSize:"1.4em", paddingTop:"40px", marginLeft:"20px"}}>No posts have been posted.</p> // 글이 없을 때 메시지
                 )}
             </div>
 
-            <div className="categories_and_top_posts">
-                <div className="category_box">
-                    {categories.map(category => (
-                        <button key={category} onClick={() => filterByCategory(category)}>
-                            {category}
-                        </button>
-                    ))}
-                </div>
-                
-                {/* 조회수 많은 게시물 Top 3 */}
-                <div className="top_posts">
-                    <h3>조회수 Top 3</h3>
-                    {topViewedPosts.map((post, index) => (
-                        <div key={post.community_no} className="top_post_item">
-                            <Link to={`/community/communityView/${post.community_no}`}>
-                                <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-
-                {/* 좋아요 많은 게시물 Top 3 */}
-                <div className="top_posts">
-                    <h3>좋아요 Top 3</h3>
-                    {topLikedPosts.map((post, index) => (
-                        <div key={post.community_no} className="top_post_item">
-                            <Link to={`/community/communityView/${post.community_no}`}>
-                                <p>{index + 1}. {post.community_title}</p> {/* 인덱스 + 1을 사용하여 번호 매기기 */}
-                            </Link>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            
         </div>
     );
 }

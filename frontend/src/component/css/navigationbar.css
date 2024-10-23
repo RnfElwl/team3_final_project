@@ -1,6 +1,6 @@
 /* src/components/NavigationBar.css */
-a {color: #fff; text-decoration: none; outline: none}
- a:hover, a:active {text-decoration: none; color:#fff; }
+a {color: #f1f1f1; text-decoration: none; outline: none}
+ a:hover, a:active {text-decoration: none; color:#c2c2c2; }
 input{
   border-width: 0;
 }
@@ -11,12 +11,12 @@ input:focus {
   position:fixed;
   top: 0px;
   left: 0px;
-  background-color: #141517;
+  background-color: #111113;
   display: flex;
   flex-direction: column;
   width: 230px;
   height: 100vh;
-  z-index: 1;
+  z-index: 3;
   padding: 12px 40px;
 }
 .home_nav .logo{
@@ -38,12 +38,12 @@ input:focus {
 }
 .close_box{
   position: fixed;
-  z-index: -1;
+  z-index: 2;
   top: 0px;
   left: 230px; 
   width: 110vw;
   height: 110vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: #141517c7;
 }
 .nav_show{
   animation: slidenav 0.3s ease forwards;
@@ -57,62 +57,141 @@ input:focus {
   }
 }
 .Header{
-  background-color: black;
+  position: fixed;
+  top: 0px;
+  background-color: #1C1C20;
   width:100%;
   display: flex;
   align-items: center;
-  height: 56px;
-  padding: 12px 40px;
+  height: 60px;
+  padding: 0 20px;
   justify-content: space-between;
   box-sizing: border-box;
+  z-index: 100;
+  min-width: 1220px;
 }
 .Header .left-info{
   display: flex;
   align-items: center;
-  color: white;
+  color: #f1f1f1;
+  height: 100%;
+  width: 50%;
 }
+.Header .tab{
+  height: 100%;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 50%;
+  gap: 30px;
+}
+/*  */
+.Header .tab a:hover{
+  color: #48d1cdea;
+  font-weight: bold;
+}
+.Header .tab a:focus{
+  color: #f1f1f1;
+  font-weight: bolder;
+}
+/*  */
+.Header .tab >div:hover{
+  border-bottom: 2px solid #727272;
+}
+.Header .tab >.focus{
+  color: #48d1cdea;
+}
+.Header .tab >div{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+}
+.Header .under_line{
+  position: absolute;
+  bottom: 0px;
+  height: 2px;
+  background-color: #48d1cdea;
+  transition: left 0.3s, width 0.3s;
+}
+
 .Header .right-info{
   display: flex;
   align-items: center;
 
 }
 .Header .right-info>*{
-  margin-left: 30px;
+  margin-left: 20px;
 }
 .Header .search{
   display: flex;
   align-items: center;
-  background-color: rgb(34, 34, 34);
+  background-color: #343441;
   padding: 5px 20px;
   border-radius: 10px;
   height: 40px;
+  width: 300px;
 }
 .Header .search input{
-  background-color: rgb(34, 34, 34);
-  color: white;
+  background-color: #343441;
+  color: #f1f1f1;
 }
 
-.Header .login_btn{
+.Header .login_btn a{
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 100px;
+  width: 80px;
   height: 40px;
   padding: 5px 10px;
   border-radius: 5px;
-  background-color: black;
+  background:none;
+  border: 1px solid #f1f1f1;
+}
+.Header .login_btn a:hover{
+  color:#1C1C20;
+  font-weight: bold;
+  background-color: #f1f1f1;
+}
+.Header .join_btn a{
+  color: #48d1cdea;
+  font-weight: bold;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 80px;
+  height: 40px;
+  padding: 5px 10px;  
+  border-radius: 5px;
+  background:none;
 }
 .Header .join_btn{
+  color: #48d1cdea;
+  font-weight: bold;
+  border: 1px solid #48d1cdea;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 110px;
+  width: 80px;
   height: 40px;
-  padding: 5px 10px;
+  padding: 5px 10px;  
   border-radius: 5px;
-  background-color: #00ff88;
+  background:none;
+}
+
+.Header .join_btn a:hover{
+  color: #f1f1f1;
+  font-weight: bold;
+}
+.Header .join_btn:hover{
+  color: #f1f1f1;
+  font-weight: bold;
+  background-color: #48d1cdea; 
 }
 .nav-bar {
     position: absolute;
@@ -178,13 +257,13 @@ input:focus {
 
   .nav3 a{
     text-decoration: none;
-    color: white;
+    color: #f1f1f1;
     font-size: 1.3rem;
   }
 
   
  .search-icon{
-    color: white;
+    color: #f1f1f1;
     cursor: pointer;
     width: 35px;
     height: 35px;
@@ -201,7 +280,7 @@ input:focus {
   
   
   .nav-bar a {
-    color: rgb(255, 255, 255);
+    color: #f1f1f1;
     text-decoration: none;
     font-size: 1.4rem;
   }
@@ -211,7 +290,7 @@ input:focus {
   }
 
   .search-icon-button{
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(29, 29, 29, 0.11);
    width: 1px;
    height: 1px;
    text-align: center;

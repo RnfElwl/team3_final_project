@@ -12,8 +12,8 @@ public class CommentReplyServiceImpl implements CommentReplyService{
     CommentReplyDAO dao;
 
     @Override
-    public void saveReply(CommentReplyVO reply) {
-        dao.saveReply(reply);
+    public boolean saveReply(CommentReplyVO reply) {
+        return dao.saveReply(reply);
     }
 
     @Override

@@ -28,6 +28,7 @@
 }
 .chatting_room .chat_profile{
     margin: 10px;
+    cursor: pointer;
 }
 .chatting_room .chat_profile > img{
     width: 40px;
@@ -48,6 +49,7 @@
     width: 100%;
     height: calc(100vh - 110px);
     overflow-y: auto;
+    
 }
 .chatting_room .room_title{
     font-size: 19px;
@@ -82,19 +84,30 @@
     text-align: left;
 
 }
-
+.chatting_room .chat_usernick{
+    color: #c9fdfbea;
+}
+.chatting_room .chat_date{
+    color: #329491ea;
+}
+.chatting_room .myText .chat_text{
+    background-color: transparent;
+    border: 1px solid #48d1cdea;
+    color: #c9fdfbea;
+}
 .chatting_room .chat_text{
     padding: 5px 10px;
     min-height: 34px;
-    background-color: cadetblue;
     border-radius: 5px;
 }
 .chatting_room .chat_date{
     font-size: 0.95em;
 }
 
-.chatting_room .anotherText{
-
+.chatting_room .anotherText .chat_text{
+    background-color: transparent;
+    border: 1px solid #48d1cdea;
+    color: #c9fdfbea;
 }
 .chatting_room .anotherText .chat_info{
     display: flex;
@@ -135,12 +148,16 @@
     align-items: center;
     width: 100%;
     height: 70px;
-    background-color: aqua;
+    background-color: #3b9b93ea;
     padding: 15px 20px;
     z-index: 2;
 }
+.chatting_room .user_count{
+    width: 40px;
+    cursor: pointer;
+}
 .chatting_room .user_count:hover{
-    color: #555;
+    color: #556363ea;
 }
 .chatting_room header{
     height: 70px;
@@ -182,12 +199,22 @@
     top: 24px;
     background-color: #ffffff;
     color: gray;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 5px;
     max-height: 150px;
     overflow-y: auto;
 }
 
+.chatting_room .user_info{
+    display: flex;
+    margin: 8px 0;
+}
+.chatting_room .user_info img{
+    width: 40px;
+    height: 40px;
+    border-radius: 18px;
+    cursor: pointer;
+}
 
 .chatting_room .user_list::-webkit-scrollbar{
     width: 8px;
@@ -202,7 +229,7 @@
 }
 .chatting_room .schedule_box{
     position: absolute;
-    background-color: pink;
+    background-color: #1C1C20;
     top: 70px;
     width: 100%;
     height: calc(100vh - 70px);
@@ -215,7 +242,13 @@
     right: 50px;
     padding: 8px     20px;
     border-radius: 50px;
-    background-color: #555;
+    background-color: transparent;
+    color: #48d1cdea;
+    border: 1px solid #48d1cdea;
+}
+.chatting_room .schedule_btn:hover{
+    background-color: #48d1cdea;
+    color: #f1f1f1;
 }
 .chatting_room .schedule_show{
     display: flex;
@@ -224,7 +257,9 @@
     display: none;
 }
 .chatting_room .schedule_list{
-    margin-top: 50px;
+    
+    overflow: auto;
+    padding: 50px 0;
 }
 .chatting_room .schedule{
     display: flex;
@@ -234,27 +269,27 @@
     height: 100px;
 }
 .chatting_room .schedule:hover{
-    background-color: rgb(255, 146, 164);
+    background-color: #242429;
 }
 
-.chatting_room .schedule>div:nth-child(1){
+.chatting_room .schedule>*:nth-child(1){
     width: 10%; 
 }
-.chatting_room .schedule>div:nth-child(2){
+.chatting_room .schedule>*:nth-child(2){
     width: 60%; 
 }
-.chatting_room .schedule>div:nth-child(3){
+.chatting_room .schedule>*:nth-child(3){
     width: 30%; 
 }
 .chatting_room .schedule_icon{
     display: flex;
-    padding-top: 10px;
     justify-content: center;
     align-items: start;
     height: 70%;
 }
 .chatting_room .schedule_info{
     font-size: 0.9em;
+    
 }
 .chatting_room .schedule_voting{
     display: flex;
@@ -263,13 +298,67 @@
     align-items: center;
     height: 100%;
 }
-.chatting_room .schedule_voting>div{
+.chatting_room .show{
+    display: block;
+}
+.chatting_room .hide{
+
+}
+.chatting_room .schedule_voting .voting_box{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_user{
+    margin-right: 8px;
+    cursor: pointer;
+}
+.chatting_room .vote_user_info{
+    display: flex;
+}
+.chatting_room .vote_user_info img{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+.chatting_room .vote_yes_user{
+    color: #d0effd;
+}
+.chatting_room .vote_no_user{
+    color: #fde0d0;
+}
+.chatting_room .end_vote{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_btn{
     width: 100px;
     padding: 5px;
     background-color: #555;
     display: flex;
     justify-content: center;
     border-radius: 50px;
+}
+.chatting_room .yes_btn:hover {
+    background-color: rgb(126, 201, 255) !important;
+}
+.chatting_room .no_btn:hover {
+    background-color: rgb(255, 175, 129) !important;
+}
+.chatting_room .yes .yes_btn{
+    background-color: rgb(126, 201, 255) !important;
+}
+.chatting_room .no .no_btn{
+    background-color: rgb(255, 175, 129) !important;
+}
+.chatting_room .schedule_voting .voting_box>button{
+    width: 100px;
+    padding: 5px;
+    background-color: #666;
+    color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    border-radius: 50px;
+    border: 0;
 }
 .chatting_room .schedule_voting>div:nth-child(1){
 
@@ -296,12 +385,47 @@
     display: none;
 }
 .chatting_room .schedule_create_form{
-
     z-index: 3;
-    color: black;
-    background-color: aliceblue;
+    width: 90%;
+    color: #1C1C20;
+    background-color: #dfe4ee;
     padding: 50px;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.chatting_room .schedule_create_form>h2{
+    width: 100%;
+    text-align: left;
+}
+.chatting_room .schedule_create_form>button{
+    border: 0;
+    margin: 0 auto;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #cfcfda;
+}
+.chatting_room .schedule_create_form>button:hover{
+    background-color: #9fb3d1;
+    color: #f1f1f1;
+}
+.chatting_room .shcedule_inputs >div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    white-space : nowrap;
+    margin: 5px;
+}
+.chatting_room .shcedule_inputs >div>input{
+    position: relative;
+    background-color: #cfcfda;
+    padding: 10px;
+    border-radius: 10px;
+    color: #141414;
+    width: 100%;
 }
 
 .chatting_room .schedule_create_close{
@@ -312,16 +436,149 @@
     z-index: 2;
 }
 
-/* 신고기능 css */
-.chatting_room .report_window{
-    display: none;
+.chatting_room .voteWindow{
+    position: absolute;
+    display: flex;
     width: 100vw;
     height: 100vh;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+}
+.chatting_room .vote_window_close{
     position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #5555555b;
+    z-index: 2;
+}
+.chatting_room .vote_user_box{
+    width: 300px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    padding-top: 50px;
+    z-index: 3;
+    color: #1C1C20;;
+    
+}
+.chatting_room .vote_user_box>div:nth-child(1){
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #3132335d;
+}
+.chatting_room .vote_user_btn{
+    display: flex;
+    justify-content: space-around;
+}
+.chatting_room .vote_user_btn>div{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px 0px;
+}
+.chatting_room .vote_user_btn>div:nth-child(1){
+    border-right: 1px solid #3132335d;
+    color: tomato;
+    cursor: pointer;
+}
+.chatting_room .vote_user_btn>div:hover{
+    background-color: #a0a4a55d;
+}
+.chatting_room .vote_user_info img{
+    border-radius: 13px;
+}
+.chatting_room .vote_user_info{
+    margin: 5px;
+    display: flex;
+    align-items: center;
+}
+.chatting_room .vote_user_list{
+    margin-top: 20px;
+    overflow-y: auto;
+    max-height: 110px;
+}
+.chatting_room .room_box{
+    display: flex;
+    align-items: center;
+}
+.chatting_room .room_info{
+    margin-left: 10px;
+}
+.chatting_room .room_img{
+    width: 40px;
+    height: 40px;
+}
+.chatting_room .state_box{
+    margin-top: 30px;
+}
+
+.chatting_room .state_box>div:first-child{
+    margin-left: 10px;
+}
+.chatting_room .list_notice{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    color: #4a4a52;
+}
+.chatting_room .room_img img{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 13px;
+}
+.chatting_room .chatting_input button{
+    border: 0;
+    width: 70px;
+    background-color: #313233;
+    color: #62656b;
+    font-weight: bold;
+}
+
+.chatting_room .chatting_input .onText,
+.chatting_room .chatting_input button:hover{
+    background-color: #3bafa5ea;
+    color: #f1f1f1;
+}
+.chatting_room .exit_window{
+    position: absolute;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    z-index: 50;
+}
+.chatting_room .show{
+    display: flex;
+}
+.chatting_room .hide{
+    display: none;
+}
+
+
+/* 신고기능 css */
+.chatting_room .report_button {
+    background: none;
+    border: none;
+}
+
+.chatting_room .report_window{
+    display: none; /* 필요 시 JavaScript로 제어 */
+    width: 100vw;
+    height: 100vh;
+    position: fixed; /* 변경된 부분 */
     justify-content: center;
     align-items: center; 
     top: 0px;
     left: 0px;
+    z-index: 999; /* 다른 요소 위에 표시하도록 설정 */
 }
 .chatting_room .report_show{
     display: flex;
@@ -338,9 +595,44 @@
     z-index: 1;
 }
 .chatting_room .report_window .chatting_report{
-    color: black;
-    background-color: aliceblue;
+    color: #1C1C20;
+    background-color: #f0f0f0;
     padding: 50px;
     z-index: 2;
     border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    text-align: center;
+}
+.chatting_room .report_window .title h2{
+    font-size: 1.5em;
+    color: rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.chatting_room .report_window .report_radio{
+    gap: 10px;
+    display: flex;
+}
+.chatting_room .report_window .report_radio span{
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e1e20c2;
+}
+.chatting_room .report_window .sub_title textarea{
+    width: 100%;
+    height: 150px;
+    resize: none;
+    margin: 12px 0;
+}
+.chatting_room .report_window button{
+    border:1px solid rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    border-radius: 5px;
+    background: none;
+    color:rgba(235, 59, 59, 0.774);
+}
+.chatting_room .report_window button:hover{
+    background: rgba(235, 59, 59, 0.774);
+    color:#f0f0f0;
 }

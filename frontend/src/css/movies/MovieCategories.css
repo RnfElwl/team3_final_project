@@ -1,56 +1,114 @@
 /* 페이지 전체 배경과 중앙 정렬을 위한 스타일 */
 .page-container {
-    background-color: #000; /* 배경 검정색 */
+    background-color: #1C1C20; 
     min-height: 100vh;
     display: flex;
-    justify-content: flex-start; /* 위쪽에 배치 */
+    justify-content: center; /* 위쪽에 배치 */
     align-items: flex-start;
     padding-top: 40px; /* 위쪽 여백 조절 */
+    max-width: 1920px;
 }
-
-.content-container {
+.row{
+    border-top: none;
+}
+.page-container .content-container {
     max-width: 1200px; /* 중앙 1200px */
+    min-width: 760px;
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    color: #fff; /* 글씨 색상 흰색 */
+    color: #f0f0f0; /* 글씨 색상 흰색 */
 }
-
+.page-container .content-container h1{
+    padding-bottom: 20px;
+}
   /* 링크 관련 스타일 */
-a.card-link {
+.page-container .card-link {
     text-decoration: none; /* 링크 밑줄 제거 */
     color: inherit; /* 링크 색상 상속 */
 }
 
   /* 탭 스타일 */
-.nav-tabs .nav-link {
-color: #fff; /* 탭 기본 색상 */
-background-color: transparent;
-border: none;
-cursor: pointer;
-font-size: 18px;
+
+.page-container .nav-tabs {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    border-bottom: none; /* 아래쪽 border 제거 */
+    gap: 0; /* 탭 사이의 간격 제거 */
 }
 
-.nav-tabs .nav-link.active {
-color: #f1c40f; /* 활성화된 탭 색상 */
-border-bottom: 2px solid #f1c40f;
+/* 탭 아이템 간격 제거 */
+.page-container .nav-tabs .nav-item {
+    margin: 0; /* 탭 간격 제거 */
+    flex-grow: 1; /* 탭이 균일한 크기로 늘어나도록 설정 */
+}
+
+/* 탭 링크 스타일 */
+.page-container .nav-tabs .nav-link {
+    border-radius: 5px;
+    background-color: #333;
+    color: #f0f0f0;
+    padding: 12px 0; /* 탭의 높이와 길이 늘리기 */
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    font-size: 18px;
+    border: 1px solid #48d1cd5e;
+    text-align: center;
+    margin: 0; /* 탭 링크 간격 제거 */
+    width: 100%; /* 각 탭이 동일한 폭을 차지 */
+}
+
+/* Hover 효과 */
+.page-container .nav-tabs .nav-link:hover {
+    background-color: #48d1cd5e;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* 활성화된 탭 스타일 */
+.page-container .nav-tabs .nav-link.active {
+    background-color: #48d1cd;
+    color: white;
+    font-weight: bold;
 }
 
 /* 카드 스타일 */
-.card {
-background-color: #333; /* 카드 배경 */
-border: none;
-transition: transform 0.3s ease; /* hover 애니메이션 */
+.page-container .card {
+    height: 176px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #2c2c2e;
+    cursor: pointer;
+    border: 1px solid #353434;
 }
 
-.card:hover {
-transform: scale(1.05); /* hover 시 카드 크기 커짐 */
+.page-container .card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
 
 /* 카드 내부 텍스트 스타일 */
-.card-title {
-color: #fff; /* 카드 제목 색상 */
-font-size: 18px;
+.page-container .card-body {
+    display: flex;
+    justify-content: center;  /* 가로 중앙 정렬 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    height: 100%;  /* 카드의 전체 높이 차지 */
+    padding: 0;  /* 패딩 제거 */
+}
+
+.page-container .card-title {
+    color: white;
+    font-size: 22px;
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+    transition: font-size 0.2s, font-weight 0.2s;
+}
+
+.page-container .card-title:hover {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 /* 반응형 스타일 */

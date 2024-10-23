@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
 import { useNavigate, useParams } from 'react-router-dom';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 function CommunityEdit() {
     const navigate = useNavigate();
@@ -10,6 +13,7 @@ function CommunityEdit() {
     const [searchKeyword, setSearchKeyword] = useState(''); // 검색어 상태
     const [places, setPlaces] = useState([]); // 검색된 장소 리스트
     const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소 상태
+    const [com_img, setCom_Image] = useState(null);
     const [image, setImage] = useState(null); // 업로드된 이미지 상태
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -64,53 +68,12 @@ function CommunityEdit() {
 
     // 이미지 업로드 핸들러
     const handleImageUpload = (e) => {
-        const file = e.target.files[0]; // 선택한 파일 가져오기
-        const reader = new FileReader();
-
-        // 이미지 미리보기
-        reader.onloadend = () => {
-            setImage(reader.result); // 이미지 상태 업데이트
-        };
-
-        if (file) {
-            reader.readAsDataURL(file); // 파일을 데이터 URL로 읽기
-        }
-    };
-
-    // 수정된 게시글 저장
-    const handleSubmit = async () => {
-        try {
-            // 유효성 검사
-            if (!title.trim()) {
-                alert('제목을 입력해주세요.');
-                return;
-            }
-            if (!content.trim()) {
-                alert('내용을 작성해주세요.');
-                return;
-            }
-
-            const postData = {
-                userid: userid,  // 실제 로그인된 유저의 ID로 변경해야 함
-                community_title: title,
-                community_content: content,
-                community_img: image,
-                community_writedate: new Date().toISOString(),
-                loc: selectedPlace ? selectedPlace.place_name : null,
-                category: parseInt(category, 10), // 숫자형으로 변환
-                privacy: parseInt(privacy, 10) // 숫자형으로 변환
-            };
-
-            const result = await axios.put(`http://localhost:9988/community/edit/${community_no}`, postData);
-            console.log(result);
-            alert('게시글이 성공적으로 수정되었습니다.');
-
-            // 업로드 성공 후 게시글 페이지로 이동
-            navigate(`/community/communityView/${community_no}`);
-        } catch (error) {
-            console.error('게시글 수정 실패:', error);
-            alert('게시글 수정에 실패했습니다.');
-        }
+        // const file = e.target.files[0]; // 선택한 파일 가져오기
+        // const reader = new FileReader();
+        const file = Array.from(e.target.files); // FileList를 배열로 변환
+        setCom_Image(file);
+        const imagePreviews = file.map(file => URL.createObjectURL(file));
+        setImage(imagePreviews);
     };
 
     useEffect(() => {
@@ -126,13 +89,95 @@ function CommunityEdit() {
         fetchComments();
     }, [community_no]);
 
+    // 수정된 게시글 저장
+    const handleSubmit = async () => {
+        // 유효성 검사
+        if (!title.trim()) {
+            alert('제목을 입력해주세요.');
+            return;
+        }
+        if (!content.trim()) {
+            alert('내용을 작성해주세요.');
+            return;
+        }
+        if (category === null) {
+            alert('카테고리를 선택해주세요.');
+            return;
+        }
+        if (privacy === null) {
+            alert('공개 대상을 선택해주세요.');
+            return;
+        }
+        if (image === null) {
+            alert('사진을 첨부해주세요.');
+            return;
+        }
+        // if (!userid) {
+        //     alert('로그인이 필요합니다.');
+        //     navigate('/signin'); // 로그인이 필요한 페이지로 이동
+        //     return;
+        // }
+
+        try {
+            const postData = new FormData();
+
+            // 기존 이미지 데이터 가져오기
+        // const response = await axios.get(`http://localhost:9988/community/view/${community_no}`);
+        // const existingPost = response.data;
+
+            postData.append('userid', userid);
+            postData.append('community_title', title);
+            postData.append('community_content', content);
+            postData.append('community_writedate', new Date().toISOString());
+            postData.append('loc', selectedPlace ? selectedPlace.place_name : null);
+            postData.append('category', parseInt(category, 10));
+            postData.append('privacy', parseInt(privacy, 10));
+            postData.append('community_img', image);
+
+            // const existingImage = existingPost.community_img;
+
+            // if (com_img.length > 0) {
+            //     // 새로운 이미지가 선택된 경우
+            //     com_img.forEach((img, index) => {
+            //         postData.append(`community_img`, img);
+            //     });
+            // } else if (existingImage) {
+            //     postData.append('community_img', existingImage); // 기존 이미지 전송
+                
+            // }
+
+            console.log(postData);
+            
+            const result = await axios.put(`http://localhost:9988/community/edit/${community_no}`, postData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // multipart/form-data 헤더를 설정
+                },
+            });
+            console.log(result);
+            alert('게시글이 성공적으로 수정되었습니다.');
+
+            // 업로드 성공 후 게시글 페이지로 이동
+            navigate(`/community/communityView/${community_no}`);
+        } catch (error) {
+            console.error('게시글 수정 실패:', error);
+            alert('게시글 수정에 실패했습니다.');
+        }
+
+    //     let finalContent = content;
+    // if (finalContent.startsWith('<p>') && finalContent.endsWith('</p>')) {
+    //     finalContent = finalContent.slice(3, -4);
+    // }
+
+    // 최종 처리된 데이터를 사용해 제출
+    // console.log(finalContent);
+    };
+
     return (
         <div className="communityWrite-container">
             <div className="container">
                 <div className="communityWrite-header">
-                    <h2>게시글 수정</h2>
+                    <h3>Edit Post</h3>
                 </div>
-                <div className="communityWrite-form">
                     {/* 제목 입력 */}
                     <div className="communityWrite-title">
                         <input 
@@ -144,62 +189,59 @@ function CommunityEdit() {
                         />
                     </div>
 
-                    {/* 이미지 업로드 */}
-                    <div className="communityWrite-image">
-                        {image && <img src={image} alt="미리보기" className="image-preview" />} {/* 선택한 이미지 미리보기 */}
-                        <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageUpload} // 이미지 업로드 핸들러 추가
-                        className="image-upload"
+                    {/* 내용 입력 */}
+                    <div className="communityWrite-content">
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={content}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                setContent(data);
+                            }}
                         />
                     </div>
 
-                    {/* 내용 입력 */}
-                    <div className="communityWrite-content">
-                        <textarea 
-                        placeholder="내용을 작성하세요..." 
-                        className="content-input"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        ></textarea>
+                    {/* 이미지 업로드 */}
+                    <div className="communityWrite-image">
+                        {image && <img src={image} alt="미리보기" className="image-preview" />} 
+                        <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageUpload} 
+                        className="image-upload"
+                        />
                     </div>
-                </div>
-                <hr/>
                 
                 <div className="communityWrite-section">
                     {/* 카테고리 선택 */}
                     <div className="communityWrite-item">
-                        <h4>📂 카테고리</h4>
+                        <h4><i className="fas fa-folder-open"></i> Category</h4>
                         <label>
-                        <input type="radio" name="category" value={0} onChange={() => setCategory(0)} checked={category === 0} /> 영화
+                        <input type="radio" name="category" value={0} onChange={() => setCategory(0)} /> Movies
                         </label>
                         <label>
-                        <input type="radio" name="category" value={1} onChange={() => setCategory(1)} checked={category === 1} /> 일상
+                        <input type="radio" name="category" value={1} onChange={() => setCategory(1)} /> Daily
                         </label>
                         <label>
-                        <input type="radio" name="category" value={2} onChange={() => setCategory(2)} checked={category === 2} /> 자유
-                        </label>
-                        <label>
-                        <input type="radio" name="category" value={3} onChange={() => setCategory(3)} checked={category === 3} /> 포스터
+                        <input type="radio" name="category" value={2} onChange={() => setCategory(2)} /> Free
                         </label>
                     </div>
 
                     {/* 공개 대상 선택 */}
                     <div className="communityWrite-item">
-                        <h4>👥 공개 대상</h4>
+                        <h4><i className="fas fa-users"></i> Public</h4>
                         <label>
-                        <input type="radio" name="audience" value={0} onChange={() => setPrivacy(0)} checked={privacy === 0} /> 전체공개
+                        <input type="radio" name="audience" value={0} onChange={() => setPrivacy(0)} /> 전체 공개
                         </label>
                         <label>
-                        <input type="radio" name="audience" value={1} onChange={() => setPrivacy(1)} checked={privacy === 1} /> 팔로워공개
+                        <input type="radio" name="audience" value={1} onChange={() => setPrivacy(1)} /> 팔로워 공개
                         </label>
                     </div>
 
                     <div className="communityWrite-section">
                         {/* 위치 추가 */}
                         <div className="communityWrite-item">
-                            <h4>📍 위치 추가</h4>
+                            <h4><i className="fas fa-map-marked-alt"></i> Location</h4>
                             <input 
                                 type="text" 
                                 placeholder="장소를 검색하세요" 
@@ -222,12 +264,13 @@ function CommunityEdit() {
                             {/* 선택된 장소 표시 */}
                             {selectedPlace && (
                                 <div className="selected-place">
-                                    <p className="loca">장소: {selectedPlace.place_name}</p>
+                                    <p className="loca">장소: {selectedPlace.place_name} ({selectedPlace.address_name})</p>
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
+
 
                 <div className="communityWrite-footer">
                     <button onClick={handleSubmit} className="share-button">수정</button>

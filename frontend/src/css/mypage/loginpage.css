@@ -56,13 +56,18 @@
   font-size: 20px;
   font-weight: bold;
 }
-#find_idpw>a{
+#find_idpw>span{
   color : #fff !important;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -.4px;
   opacity: .5;
   padding: 4px 0 0;
+}
+#find_idpw>span:hover {
+  opacity: 1;
+  cursor: pointer;
+  color: #ddd;
 }
 .loginsession form{
   max-height: 250px;

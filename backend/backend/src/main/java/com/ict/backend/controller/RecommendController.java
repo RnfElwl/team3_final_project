@@ -1,12 +1,15 @@
 package com.ict.backend.controller;
 
 import com.ict.backend.service.RecommendService;
+import com.ict.backend.vo.BookmarkVO;
 import com.ict.backend.vo.MovieVO;
 import com.ict.backend.vo.RecommendVO;
+import com.ict.backend.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,4 +37,59 @@ public class RecommendController {
         return vo;
     }
 
+    @GetMapping("/bookmark")
+    public List<MovieVO> getMoviesByBookmarkCount(){
+        return service.getMoviesByBookmarkCount();
+    }
+    @GetMapping("/release")
+    public List<MovieVO> getMoviesByReleaseDate(){
+        return service.getMoviesByReleaseDate();
+    }
+    @GetMapping("/review")
+    public List<MovieVO> getMoviesByReviewCount(){
+        return service.getMoviesByReviewCount();
+    }
+    @GetMapping("/rating")
+    public List<MovieVO> getMoviesByRating(){
+        return service.getMoviesByRating();
+    }
+    @GetMapping("/hit")
+    public List<MovieVO> getMoviesByViewCount(){
+        return service.getMoviesByViewCount();
+    }
+    @GetMapping("/genre")
+    public List<MovieVO> getGenre(){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "id");
+    }
+    @GetMapping("/age")
+    public List<MovieVO> getAge(){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "age");
+    }
+    @GetMapping("/gender")
+    public List<MovieVO> getGender(){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return service.getRecommendedMovies(userid, "gender");
+    }
+//    @GetMapping("/homeList")
+//    public  List<MovieVO> getMovies(
+//            @RequestParam String category,
+//            @RequestParam String sortBy){
+//
+//        switch (sortBy) {
+//            case "bookmark":
+//                return service.getMoviesByBookmarkCount(category);
+//            case "release_date":
+//                return service.getMoviesByReleaseDate(category);
+//            case "review_count":
+//                return service.getMoviesByReviewCount(category);
+//            case "rating":
+//                return service.getMoviesByRating(category);
+//            case "view_count":
+//                return service.getMoviesByViewCount(category);
+//            default:
+//                return new ArrayList<>();
+//        }
+//    }
 }

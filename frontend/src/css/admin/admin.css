@@ -1,31 +1,59 @@
 /* .App {
   text-align: center;
 } */
-.footer{
+/* .footer{
   display: none;
-}
+} */
 /* 관리자페이지 헤더 부분 */
+.Header{
+  position: sticky;
+  top:0;
+}
 .admin_header{
   color:white;
 }
-.admin_nav a{
-  color:white;
-  
+.admin_navList a{
+  color:white; 
 }
-.admin_nav{
+.admin_navList{
   width: 200px;
   height: 100vh;
-  position: fixed;
-  background-color: black;
+  position:fixed;
+  background-color: rgba(34, 34, 34, 0.5);
   text-align: center;
+  z-index: 100;
 }
-.admin_nav div{
-  height: 50px;
-  line-height: 50px;
+.admin_nav{
+  line-height: 60px;
 }
+.admin_minNav {
+  padding-left: 75px;
+  display: flex;
+  line-height: 20px !important;
+  flex-direction: column;
+
+}
+.admin_minNav a {
+  font-size: 14px;
+  color: white;
+  text-decoration: none;
+  text-align: left !important;
+  margin: 5px 0;
+}
+.AdminGoHome{
+  position: fixed;
+  bottom: 0;
+  width: 200px;
+  height: 60px;
+}
+
+/* 관리자 body */
+
 .adminBody{
   max-width: 1920px;
+  padding-top: 10px;
   padding-left: 210px;
+  padding-right: 10px;
   margin: 0 auto;
   color:white;
   text-align: center;
@@ -37,6 +65,34 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 40px;
+}
+.minDatas{
+  max-width: 1730px;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+  min-height: 90px;
+}
+.minDataTitle{
+  background-color: gray;
+  margin: 0 10px;
+  padding:5px;
+  border-radius: 2px;
+  width: 300px;
+  min-width:160px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size: 1.2em;
+}
+.minDataBox{
+  margin-top: 5px;
+  min-height: 55px;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+  line-height: 55px;
 }
 
 /* 화면이 작은 경우 레이아웃 변경 */
@@ -45,9 +101,50 @@
     justify-content: center; /* 요소가 가운데로 정렬 */
   }
 }
-  .chartarea{
-    width: 100%;
-    text-align: center;
-    max-width: 450px;
-    min-width: 300px;
-  }
+
+canvas{
+  border-radius: 2px;
+  background-color: rgba(74, 74, 73, 0.11);
+}
+.chartTop{
+  margin-bottom: 10px;
+  text-align: left;
+}
+.chartarea{
+  width: 100%;
+  text-align: center;
+  max-width: 450px;
+  height: 350px;
+  min-width: 300px;
+  margin: 10px;
+}
+.chartBox{
+  width: 450px;
+  height: 300px;
+  text-align: center;
+}
+.simpBoardArea{
+  width: 100%;
+  text-align: center;
+  height: 350px;
+  max-width: 450px;
+  min-width: 450px;
+  margin: 10px;
+}
+.simpBoardL{
+  text-align: right;
+}
+.simpBoardT{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.memListTopBox{
+  margin:10px 0;
+}
+.memTable{
+  background-color: rgba(52, 58, 64, 0.7);
+  height: 300px;
+  width: 450px;
+}
+

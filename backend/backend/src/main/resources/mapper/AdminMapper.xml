@@ -7,33 +7,358 @@
         SELECT MONTH(qna_writedate) AS qna_date, COUNT(qna_title) AS qna_count
         FROM qna_tbl
         WHERE YEAR(qna_writedate) = YEAR(CURDATE())
-        GROUP BY MONTH(qna_writedate);
+        GROUP BY MONTH(qna_writedate)
     </select>
     <select id = "qnaDataSelectYear" resultType="com.ict.backend.vo.AdminVO">
         SELECT YEAR(qna_writedate) AS 'qna_date', COUNT(qna_title) AS 'qna_count'
         FROM qna_tbl
         WHERE YEAR(qna_writedate) BETWEEN YEAR(NOW()) - 7 AND YEAR(NOW())
-        GROUP BY YEAR(qna_writedate);
+        GROUP BY YEAR(qna_writedate)
     </select>
     <select id = "qnaDataSelectDay" resultType="com.ict.backend.vo.AdminVO">
-        SELECT
-        DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY), '%y.%m.%d') AS qna_date,
-        COUNT(q.qna_title) AS qna_count
-        FROM
-        (SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL
-        SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL
-        SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL
-        SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL
-        SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20 UNION ALL
-        SELECT 21 UNION ALL SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL
-        SELECT 25 UNION ALL SELECT 26 UNION ALL SELECT 27 UNION ALL SELECT 28 UNION ALL
-        SELECT 29 UNION ALL SELECT 30 UNION ALL SELECT 31) n
-        LEFT JOIN
-        qna_tbl q ON DATE(q.qna_writedate) = DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY)
-        WHERE
-        DATE_ADD(CURDATE(), INTERVAL -7 + n.n DAY)
-        BETWEEN DATE(NOW() - INTERVAL 7 DAY) AND CURDATE()
-        GROUP BY qna_date
-        ORDER BY qna_date
+        select
+        date_format(date_add(curdate(), interval -7 + n.n day), '%y.%m.%d') as qna_date,
+        count(q.qna_title) as qna_count
+        from
+        (select 1 as n union all select 2 union all select 3 union all select 4 union all
+        select 5 union all select 6 union all select 7 union all select 8 union all
+        select 9 union all select 10 union all select 11 union all select 12 union all
+        select 13 union all select 14 union all select 15 union all select 16 union all
+        select 17 union all select 18 union all select 19 union all select 20 union all
+        select 21 union all select 22 union all select 23 union all select 24 union all
+        select 25 union all select 26 union all select 27 union all select 28 union all
+        select 29 union all select 30 union all select 31) n
+        left join
+        qna_tbl q on date(q.qna_writedate) = date_add(curdate(), interval -7 + n.n day)
+        where
+        date_add(curdate(), interval -7 + n.n day)
+        between date(now() - interval 7 day) and curdate()
+        group by qna_date
+        order by qna_date;
     </select>
+    <select id = "communityDataSelectMonth" resultType="com.ict.backend.vo.AdminVO">
+        SELECT MONTH(community_writedate) AS community_date, COUNT(community_title) AS community_count
+        FROM community_tbl
+        WHERE YEAR(community_writedate) = YEAR(CURDATE())
+        GROUP BY MONTH(community_writedate)
+    </select>
+    <select id = "communityDataSelectYear" resultType="com.ict.backend.vo.AdminVO">
+        with years as (
+        select year(now()) as year union all
+        select year(now()) - 1 union all
+        select year(now()) - 2 union all
+        select year(now()) - 3
+        )
+        select y.year as 'community_date',
+        coalesce(count(c.community_title), 0) as 'community_count'
+        from years y
+        left join community_tbl c
+        on year(c.community_writedate) = y.year
+        group by y.year
+        order by y.year;
+    </select>
+    <select id = "communityDataSelectDay" resultType="com.ict.backend.vo.AdminVO">
+        select
+        date_format(date_add(curdate(), interval -7 + n.n day), '%y.%m.%d') as community_date,
+        count(c.community_title) as community_count
+        from
+        (select 1 as n union all select 2 union all select 3 union all select 4 union all
+        select 5 union all select 6 union all select 7 union all select 8 union all
+        select 9 union all select 10 union all select 11 union all select 12 union all
+        select 13 union all select 14 union all select 15 union all select 16 union all
+        select 17 union all select 18 union all select 19 union all select 20 union all
+        select 21 union all select 22 union all select 23 union all select 24 union all
+        select 25 union all select 26 union all select 27 union all select 28 union all
+        select 29 union all select 30 union all select 31) n
+        left join
+        community_tbl c on date(c.community_writedate) = date_add(curdate(), interval -7 + n.n day)
+        where
+        date_add(curdate(), interval -7 + n.n day)
+        between date(now() - interval 7 day) and curdate()
+        group by community_date
+        order by community_date;
+    </select>
+    <select id="qnaSearch" resultType="com.ict.backend.vo.AdminVO">
+        select date(qna_writedate) as 'qna_date', count(qna_title) as 'qna_count'
+        from qna_tbl
+        where date(qna_writedate) between STR_TO_DATE(#{start_qnaDate}, '%Y-%m-%d')
+        and STR_TO_DATE(#{end_qnaDate}, '%Y-%m-%d')
+        group by date(qna_writedate);
+    </select>
+    <select id="comSearch" resultType="com.ict.backend.vo.AdminVO">
+        select date(community_writedate) as 'community_date', count(community_title) as 'community_count'
+        from community_tbl
+        where date(community_writedate) between STR_TO_DATE(#{start_comDate}, '%Y-%m-%d')
+        and STR_TO_DATE(#{end_comDate}, '%Y-%m-%d')
+        group by date(community_writedate);
+    </select>
+    <select id="dailySubscriberSelect" resultType="int">
+        SELECT IFNULL(COUNT(userid), 0) as todayUCount
+        FROM user_tbl
+        WHERE DATE(regiserdate) = DATE(NOW())
+    </select>
+    <select id="dailyCommunitySelect" resultType="int">
+        select ifnull(count(community_title),0) as todayCCount
+        from community_tbl
+        where date(community_writedate)=date(now())
+    </select>
+    <select id="dailyQnaSelect" resultType="int">
+        select ifnull(count(qna_title),0) as todayQCount
+        from qna_tbl
+        where date(qna_writedate)=date(now())
+    </select>
+    <select id="dailyRepSelect" resultType="int">
+        select ifnull(count(report_userid),0) as todayRCount
+        from report_tbl
+        where date(report_date)=date(now())
+    </select>
+    <select id="selectMemberMin" resultType="com.ict.backend.vo.MemberVO">
+        select userid, username, DATE_FORMAT(regiserdate, '%y.%m.%d') AS regiserdate, active_state from user_tbl
+        order by regiserdate desc limit 5
+    </select>
+    <select id = "getQnAList" resultType="com.ict.backend.vo.QnAVO">
+        select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
+        privacyQ,qna_state,active_state,qna_pwd from qna_tbl
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+        order by qna_writedate desc
+        limit ${onePageRecord} offset ${offset}
+    </select>
+    <select id="getTotalQnARecord" resultType="int">
+        select count(qna_no) from qna_tbl
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <update id="insertQnaAnswer">
+        update qna_tbl set
+        answer_user=#{answer_user},
+        qna_answer=#{qna_answer},
+        qna_state=#{qna_state},
+        qna_answer_date=now()
+        where qna_no=#{qna_no}
+    </update>
+    <update id="updateQnaActive">
+        UPDATE qna_tbl
+        SET active_state = #{activeState}
+        WHERE qna_no IN
+        <foreach item="qnaNo" collection="qnaNos" open="(" separator="," close=")">
+            #{qnaNo}
+        </foreach>
+    </update>
+    <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
+        select userid, username, usernick, gender,usertel, u.active_state,
+        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate
+        from user_tbl u left join report_tbl r on u.userid=r.reported_userid
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+        GROUP BY
+        u.userid, u.username, u.usernick, u.gender, u.usertel, u.active_state, u.lastvisite, u.regiserdate
+    </select>
+    <select id="getBanMemList" resultType="com.ict.backend.vo.BanVO">
+        SELECT
+        b.userid,
+        u.username,
+        u.usernick,
+        DATE_FORMAT(b.start_banDate, '%Y-%m-%d') as start_banDate,
+        DATE_FORMAT(b.stop_banDate, '%Y-%m-%d') as stop_banDate,
+        u.active_state,
+        DATE_FORMAT(u.regiserdate, '%Y-%m-%d') as regiserdate,
+        COUNT(CASE WHEN r.active_state = 1 THEN r.reported_userid END) AS reported_count
+        FROM
+        ban_tbl b
+        JOIN
+        user_tbl u ON b.userid = u.userid
+        LEFT JOIN
+        report_tbl r ON u.userid = r.reported_userid
+        <if test="searchWord!=null and searchWord!=''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+        GROUP BY
+        b.userid,
+        u.username,
+        u.usernick,
+        b.start_banDate,
+        b.stop_banDate,
+        u.active_state;
+    </select>
+    <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
+        select report_no,report_userid, reported_userid, report_content, report_tblname,
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
+        <if test="searchWord!=null and searchWord!=''">
+            AND ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+        </if>
+    </select>
+    <select id="getRepView" resultType="com.ict.backend.vo.ReportVO">
+        select report_no,report_userid, reported_userid, report_content, report_tblname, report_date,
+        report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid
+        from report_tbl where report_no=${report_no}
+    </select>
+    <select id="getBanData" resultType="com.ict.backend.vo.BanVO">
+        select userid, start_banDate, stop_banDate, banContent, editBanDate
+        from ban_tbl where userid=#{reported_userid}
+    </select>
+
+    <update id="updateUserReport">
+        update report_tbl
+        set edit_user = #{edit_user},
+        active_state = #{active_state},
+        edit_state = #{edit_state},
+        edit_date = now()
+        where report_no = #{report_no}
+    </update>
+
+    <select id="banChk" resultType="int">
+        select COUNT(userid) FROM ban_tbl WHERE userid=#{reported_userid}
+    </select>
+    <insert id="insertUserBan">
+        insert ban_tbl values(#{userid},#{start_banDate},#{stop_banDate},#{banContent},now())
+    </insert>
+    <update id="updateUserBan">
+        update ban_tbl set
+        start_banDate=#{start_banDate},
+        stop_banDate=#{stop_banDate},
+        banContent=#{banContent},
+        editBanDate=now()
+        where userid=#{userid}
+    </update>
+
+    <update id="updateMemActive">
+        UPDATE user_tbl
+        SET active_state = #{activeState}
+        WHERE userid IN
+        <foreach item="useridd" collection="userids" open="(" separator="," close=")">
+            #{useridd}
+        </foreach>
+    </update>
+    <update id="updateMemActiveOne">
+        UPDATE user_tbl
+        SET active_state = ${activeState}
+        WHERE userid = #{userid}
+    </update>
+
+    <select id="getComList" parameterType="map" resultType="com.ict.backend.vo.CommunityVO">
+        SELECT c.community_no, c.userid, c.community_title, c.community_content,
+        COUNT(cl.community_no) AS community_like, c.community_writedate, c.hit,
+        c.edit_date, c.edit_state, c.edit_user, c.active_state, c.category, c.privacy
+        FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
+
+        <where>
+            <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
+                1=1
+            </if>
+
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+
+<!--            <if test="activeStateChk != null and activeStateChk != ''">-->
+<!--                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')-->
+<!--            </if>-->
+        </where>
+
+        GROUP BY c.community_no, c.userid, c.community_title, c.community_content,
+        c.community_writedate, c.hit, c.edit_date,
+        c.edit_state, c.edit_user, c.active_state,
+        c.category, c.privacy
+        LIMIT #{onePageRecord} OFFSET #{offset}
+    </select>
+
+    <select id="getTotalComRecord" resultType="int">
+        select count(*) from community_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <select id="getComMenList" resultType="com.ict.backend.vo.CommentVO">
+        SELECT c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
+        COUNT(rc.userid) AS reply_cnt, c.edit_date, c.edit_user, c.active_state
+        FROM community_comment_tbl c
+        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no  -- LEFT JOIN을 사용
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        GROUP BY c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
+        c.edit_date, c.edit_state, c.edit_user, c.active_state
+    </select>
+    <select id="getTotalComMenRecord" resultType="int">
+        select count(*) from community_comment_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <select id="getReplyList" resultType="com.ict.backend.vo.CommentReplyVO">
+        SELECT reply_no, userid, comment_no, reply_content,reply_writedate,
+        edit_date,edit_user,active_state,tag_usernick FROM reply_comment_tbl
+        <where>
+            <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
+                1=1
+            </if>
+            <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
+                ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getTotalComRepRecord" resultType="int">
+        select count(*) from reply_comment_tbl
+        <if test="searchWord != null and searchWord != ''">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <update id="updateCommunityState">
+        UPDATE community_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE community_no IN
+        <foreach item="communityNo" collection="communityNos" open="(" separator="," close=")">
+            #{communityNo}
+        </foreach>
+    </update>
+    <update id="updateCommentState">
+        UPDATE community_comment_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE comment_no IN
+        <foreach item="commentNo" collection="commentNos" open="(" separator="," close=")">
+            #{commentNo}
+        </foreach>
+    </update>
+    <update id="updateReplyState">
+        UPDATE reply_comment_tbl
+        SET active_state = #{activeState},
+        edit_user=#{userid},
+        edit_date=now()
+        WHERE reply_no IN
+        <foreach item="replyNo" collection="replyNos" open="(" separator="," close=")">
+            #{replyNo}
+        </foreach>
+    </update>
+    <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_data_tbl
+        <if test="searchKey=='movie_title'">
+            where movie_kor like '%${word}%' or movie_eng like '%${word}%';
+        </if>
+        <if test="searchKey!='movie_title'">
+            where ${searchKey} like '%${word}%';
+        </if>
+    </select>
+    <update id="updateMovieActive">
+        UPDATE movie_data_tbl
+        SET active_state = ${param1},
+        edit_user=#{param3}
+        WHERE movie_no IN
+        <foreach item="no" collection="movie_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </update>
+    <update id="updateMovieData">
+        update movie_data_tbl set movie_kor=#{movie_kor}, movie_eng=#{movie_eng}, movie_type=#{movie_type}, movie_genre=#{movie_genre}, movie_nation=#{movie_nation},
+        movie_showtime=${movie_showtime}, opened_year=${opened_year}, movie_directors=#{movie_directors}, movie_grade=#{movie_grade}, movie_synops=#{movie_synops},
+        movie_casts=#{movie_casts}, edit_user=#{edit_user}
+        where movie_no=${movie_no}
+    </update>
 </mapper>

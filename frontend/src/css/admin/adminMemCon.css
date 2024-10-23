@@ -1,0 +1,67 @@
+.AdminMemBody{
+    max-width: 1920px;
+    padding-top: 10px;
+    padding-left: 210px;
+    padding-right: 10px;
+    margin: 0 auto;
+    color:#f1f1f1;
+}
+.AdminMemTable {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.AdminMemTable th,
+.AdminMemTable td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    border: 1px solid #444;
+}
+
+.AdminMemTable th {
+    background-color: #343a40; /* Dark header background */
+    color: #f1f1f1; /* Text color */
+}
+
+.AdminMemTable tr:nth-child(even) {
+    background-color: #2c2f33; /* Alternate row color */
+}
+
+.AdminMemTable tr:nth-child(odd) {
+    background-color: #212529; /* Default row color */
+}
+
+.AdminMemTable input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.AdminMemTable tbody tr:hover {
+    background-color: #495057; /* Hover color */
+}
+
+.AdminMemTable td {
+    color: #f8f9fa;
+}
+
+.AdminMemTable .status-active {
+    color: green;
+    font-weight: bold;
+}
+
+.AdminMemTable .status-inactive {
+    color: red;
+    font-weight: bold;
+}
+
+.AdminMemTable .no-results {
+    text-align: center;
+    font-size: 18px;
+    color: #f8d7da;
+    background-color: #343a40;
+}

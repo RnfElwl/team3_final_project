@@ -13,6 +13,8 @@ public class PagingVO {
     private int startPageNum=1;
     private String searchKey;//검색키
     private String searchWord;//검색어
+    private String activeStateChk;
+    private Integer stateChk;
 
 
     public void setNowPage(int nowPage) {

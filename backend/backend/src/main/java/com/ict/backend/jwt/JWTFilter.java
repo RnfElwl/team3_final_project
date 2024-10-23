@@ -36,7 +36,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //Authorization 헤더 검증
         if (authorization == null || !authorization.startsWith("Bearer ")) {
 
-            System.out.println("12token null");
+            System.out.println("13token null");
             filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료 (필수)
@@ -53,6 +53,7 @@ public class JWTFilter extends OncePerRequestFilter {
             System.out.println("token expired");
             //response status code
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
 //        if (jwtUtil.isExpired(token)) {

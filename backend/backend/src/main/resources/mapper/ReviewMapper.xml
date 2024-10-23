@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ict.backend.dao.ReviewDAO">
+
+    <!-- 특정 유저의 리뷰 작성 여부 확인 -->
+    <select id="countUserReview" resultType="int">
+        SELECT COUNT(*)
+        FROM movie_review_tbl
+        WHERE movie_no = #{movie_no} AND userid = #{userid}
+    </select>
+
+    <!-- 리뷰 추가 -->
+    <insert id="insertReview">
+        INSERT INTO movie_review_tbl (userid, movie_no, movie_review_content, rate)
+        VALUES (#{userid}, #{movie_no}, #{movie_review_content}, #{rate})
+    </insert>
+
+    <!-- 영화에 대한 리뷰 조회 -->
+    <select id="selectReviewsByMovieCode" resultType="ReviewVO">
+        SELECT mrt.*, ut.usernick, it.image_url as userprofile FROM movie_review_tbl mrt
+        join user_tbl ut on mrt.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        WHERE movie_no = (SELECT movie_no FROM movie_data_tbl WHERE movie_code = #{movieCode}) and mrt.active_state=1
+        and mrt.movie_review_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=1)
+        ORDER BY movie_review_writedate DESC;
+    </select>
+
+    <!-- 특정 리뷰 조회 -->
+    <select id="selectReviewById" parameterType="int" resultType="com.ict.backend.vo.ReviewVO">
+        SELECT * FROM movie_review_tbl WHERE movie_review_no = #{movie_review_no}
+    </select>
+
+    <!-- 리뷰 수정 -->
+    <update id="updateReview" parameterType="com.ict.backend.vo.ReviewVO">
+        UPDATE movie_review_tbl
+        SET movie_review_content = #{movie_review_content},
+            rate = #{rate}
+        WHERE movie_review_no = #{movie_review_no}
+    </update>
+
+    <!-- 리뷰 삭제 -->
+    <update id="deleteReview">
+        update movie_review_tbl set edit_user=#{param2}, active_state=0 WHERE movie_review_no = #{param1}
+    </update>
+
+</mapper>

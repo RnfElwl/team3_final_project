@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.ict.backend.dao.MovieDAO">
 
     <!-- 장르별 영화 리스트 가져오기 -->
@@ -9,19 +10,33 @@
         SELECT * FROM movie_data_tbl WHERE movie_genre = #{genre}
     </select>
 
-    <!-- 연도별 영화 리스트 가져오기 -->
-    <select id="getMoviesByYear" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
-        SELECT * FROM movie_data_tbl WHERE opened_year = #{year}
+    <!-- 연도별 범위에 따른 영화 리스트 가져오기 -->
+    <select id="getMoviesByYearRange" parameterType="map" resultType="com.ict.backend.vo.MovieVO">
+        SELECT * FROM movie_data_tbl
+        WHERE
+        <if test="yearRange == '2024'">
+            opened_year = '2024'
+        </if>
+        <if test="yearRange == '2020'">
+            opened_year BETWEEN '2020' AND '2023'
+        </if>
+        <if test="yearRange == '2010'">
+            opened_year BETWEEN '2010' AND '2019'
+        </if>
+        <if test="yearRange == '1990'">
+            opened_year BETWEEN '1990' AND '1999'
+        </if>
     </select>
 
-    <!-- 국가별 영화 리스트 가져오기 -->
-    <select id="getMoviesByNation" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
+
+    <select id="getMoviesByNation" parameterType="map" resultType="com.ict.backend.vo.MovieVO">
         SELECT * FROM movie_data_tbl WHERE movie_nation = #{nation}
     </select>
 
-    <!-- 영화 코드를 기반으로 특정 영화의 상세 정보를 가져오는 쿼리 -->
+
     <select id="getMovieByCode" parameterType="String" resultType="com.ict.backend.vo.MovieVO">
         SELECT
+        movie_no,
         movie_code,
         movie_kor,
         movie_eng,
@@ -32,12 +47,48 @@
         opened_year,
         movie_grade,
         movie_directors,
-        movie_poster
+        movie_link,
+        movie_synops,
+        movie_casts
         FROM
         movie_data_tbl
         WHERE
         movie_code = #{movieCode}
     </select>
+    <select id="getMoviesBySearch" resultType="com.ict.backend.vo.MovieVO">
+        select * from movie_data_tbl where movie_kor like '%${param1}%' or movie_eng like '%${param1}%';
+    </select>
+    <select id="getMovieImagesByCode" parameterType="String" resultType="String">
+        SELECT
+        movie_img_url
+        FROM
+        movie_img_tbl
+        WHERE
+        movie_code = #{movieCode}
+    </select>
 
 
+    <select id="getMovieNoByCode" resultType="int">
+        SELECT movie_no
+        FROM movie_data_tbl
+        WHERE movie_code = #{movieCode}
+    </select>
+
+
+    <select id="getRatingByMovieNo" resultType="com.ict.backend.vo.RatingVO">
+        SELECT
+            AVG(rate) AS avg_rating,
+            COUNT(rate) AS review_count
+        FROM movie_review_tbl
+        WHERE movie_no = #{movieNo}
+        AND active_state = 1  <!-- 활성화된 리뷰만 계산 -->
+    </select>
+
+    <update id="updateMovieHit">
+        update movie_data_tbl set hit=hit+1 where movie_no=${param1}
+    </update>
+
+    <insert id="insertMovieHiStory">
+        insert into history_sec_tbl(userid, movie_no) values(#{param1}, ${param2})
+    </insert>
 </mapper>

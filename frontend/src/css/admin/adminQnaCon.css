@@ -1,0 +1,139 @@
+.AdminQnaBody{
+    max-width: 1920px;
+    padding-top: 10px;
+    padding-left: 210px;
+    padding-right: 10px;
+    margin: 0 auto;
+    color:#f1f1f1;
+  }
+/* 검색 css */
+.adminSearchForm{
+  display: flex;
+  justify-content: space-between;
+}
+.adminSearchForm input[type="radio"]{
+  display: none;
+}
+.adminQnaEdit,.adminMemEdit{
+  text-align: right;
+}
+/* qna상태 저장 css */
+.qna_active_edit_form{
+  display: flex;
+  align-items: center;
+}
+.qna_active_editopt{
+  appearance: none;
+  width: 100px;
+  height: 35px;
+  font-size: 1em;
+  padding: 5px;
+  margin-right: 10px;
+  white-space:nowrap;
+  border-radius: 5px;
+  text-align: center;
+}
+.qna_active_title{
+  font-size: 21px;
+  line-height: 24px;
+  margin-right: 10px;
+}
+/* qna 답변 등록 css */
+.qnaAnswerModify-btn{
+  background-color: rgb(182, 255, 161);
+  color: rgb(46, 91, 43);
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-weight: 900;
+}
+.qnaAnswerAdd-btn{
+  background-color: rgb(255, 144, 144);
+  color:rgb(91, 46, 43);
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-weight: 900;
+
+}
+.AdminQnaTable {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.AdminQnaTable th,
+.AdminQnaTable td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px;
+  border: 1px solid #444;
+  white-space: nowrap;
+
+}
+.AdminQnaTable td:nth-child(4) {
+  text-align: left;
+  max-width: 300px;
+  overflow: hidden;
+  word-wrap: normal;
+  text-overflow: ellipsis;
+  
+}
+
+.AdminQnaTable th {
+  background-color: #343a40; /* Dark header background */
+  color: #f1f1f1; /* Text color */
+}
+
+.AdminQnaTable tr:nth-child(even) {
+  background-color: #2c2f33; /* Alternate row color */
+}
+
+.AdminQnaTable tr:nth-child(odd) {
+  background-color: #212529; /* Default row color */
+}
+
+.AdminQnaTable input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.AdminQnaTable tbody tr:hover {
+  background-color: #495057; /* Hover color */
+}
+
+.AdminQnaTable td {
+  color: #f8f9fa;
+}
+
+.AdminQnaTable .status-active {
+  color: green;
+  font-weight: bold;
+}
+
+.AdminQnaTable .status-inactive {
+  color: red;
+  font-weight: bold;
+}
+
+.AdminQnaTable .no-results {
+  text-align: center;
+  font-size: 18px;
+  color: #f8d7da;
+  background-color: #343a40;
+}
+
+/* 타이틀 css */
+
+.qna_ht{
+  width: 20%;
+}
+.qna_tableTitle{
+  width: auto;
+  cursor: pointer;
+}

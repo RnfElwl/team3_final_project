@@ -21,14 +21,28 @@ public class JoinController {
 
     @PostMapping("/join")
     public String joinProcess(JoinDTO joinDTO) {
-        log.info(joinDTO.toString());
+        log.info("joindto = {}", joinDTO.toString());
         service.joinProcess(joinDTO);
 
         return "ok";
     }
+
     @GetMapping("/getUserData")
     public MemberVO getUserData(String userid){
         return service.findByUserid(userid);
     }
 
+    @GetMapping("/signup")
+    public String signup(){
+        System.out.println("hi");
+        return "hi";
+    }
+    @GetMapping("/nickcheck")
+    public int nickcheck(String usernick){
+        return service.usernickcheck(usernick);
+    }
+    @GetMapping("/idcheck")
+    public int idcheck(String userid){
+        return service.useridcheck(userid);
+    }
 }

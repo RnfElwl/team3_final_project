@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.ImageDAO">
+    <select id = "getPosterImages">
+        select movie_link from movie_data_tbl ORDER BY RAND() limit 8;
+    </select>
+    <select id = "getCutImages">
+        select movie_img_url from movie_img_tbl where movie_img_url != "" ORDER BY RAND() limit 10;
+    </select>
+
+</mapper>

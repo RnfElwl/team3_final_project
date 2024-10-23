@@ -11,14 +11,60 @@
             ${searchKey} like '%${searchWord}%' and
         </if>
         active_state IN (1, 2)
-        order by qna_writedate desc
+        order by qna_no desc
         limit ${onePageRecord} offset ${offset}
     </select>
     <select id="getQnAView" resultType="com.ict.backend.vo.QnAVO">
-        select qna_no, userid, head_title, qna_title,qna_content,
-        date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,qna_state,qna_answer,
-        answer_user, qna_answer_date, active_state,privacyQ,qna_pwd
-        from qna_tbl where qna_no=#{qna_no}
+        SELECT
+        q.qna_no,
+        q.userid,
+        u.usernick,
+        q.head_title,
+        q.qna_title,
+        q.qna_content,
+        DATE_FORMAT(q.qna_writedate, '%y-%m-%d %H:%i') AS qna_writedate,
+        q.qna_state,
+        q.qna_answer,
+        q.answer_user,
+        q.qna_answer_date,
+        q.active_state,
+        q.privacyQ,
+        q.qna_pwd,
+        i.image_url as qna_img
+        FROM
+        qna_tbl q
+        JOIN
+        user_tbl u
+        ON
+        q.userid = u.userid
+        LEFT JOIN
+        image_tbl i
+        ON
+        q.qna_img = i.image_no
+        WHERE
+        q.qna_no = #{qna_no}
+    </select>
+    <select id="getPrevQnaNo" resultType="int">
+        SELECT MAX(qna_no)
+        FROM qna_tbl
+        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0) and privacyQ not in (1)
+    </select>
+    <select id="getPrevTitle" resultType="String">
+        select qna_title from qna_tbl where qna_no=#{prevNo}
+    </select>
+    <select id="getPrevPrivacyQ" resultType="String">
+        select privacyQ from qna_tbl where qna_no=#{prevNo}
+    </select>
+    <select id="getNextQnaNo" resultType="int">
+        SELECT MIN(qna_no)
+        FROM qna_tbl
+        WHERE qna_no <![CDATA[>]]> #{qna_no} AND active_state not IN (0) and privacyQ not in (1);
+    </select>
+    <select id="getNextTitle" resultType="String">
+        select qna_title from qna_tbl where qna_no=#{nextNo}
+    </select>
+    <select id="getNextPrivacyQ" resultType="String">
+        select privacyQ from qna_tbl where qna_no=#{nextNo}
     </select>
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl
@@ -33,8 +79,8 @@
         values (#{userid}, #{head_title}, #{qna_title}, #{qna_content}, #{qna_state}, NOW(), #{privacyQ}, #{active_state}, #{qna_pwd}, #{qna_img})
     </insert>
     <select id="getQnAViewEdit" resultType="com.ict.backend.vo.QnAVO">
-        select qna_no, head_title, qna_title,qna_content,qna_state,privacyQ,qna_pwd
-        from qna_tbl where qna_no=#{qna_no}
+        select qna_no, head_title, qna_title,qna_content,qna_state,privacyQ,qna_pwd, i.image_url as qna_img
+        from qna_tbl q left join image_tbl i on q.qna_img=i.image_no where qna_no=#{qna_no}
     </select>
     <update id="qnaUpdate">
         update qna_tbl set
@@ -44,9 +90,42 @@
         privacyQ=#{privacyQ},
         active_state=#{active_state},
         qna_pwd=#{qna_pwd}
+        <if test="qna_state==0">
+            ,qna_answer_date=null
+        </if>
+        <if test="qna_img != null">
+            , qna_img=#{qna_img}
+        </if>
         where qna_no=#{qna_no} and userid=#{userid}
     </update>
     <update id="qnaDel">
-        update qna_tbl set active_state=0 where qna_no=#{qna_no} and userid=#{userid}
+        update qna_tbl set active_state=0 where qna_no=#{qna_no}
+        <if test="userid!='admin1'">
+            and userid=#{userid}
+        </if>
     </update>
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO image_tbl (image_url) VALUES (#{image_url})
+    </insert>
+    <select id="qnaImgNumGet" resultType="int">
+        select i.image_no from qna_tbl q left join image_tbl i on q.qna_img=i.image_no
+        where q.qna_no=#{qna_no}
+    </select>
+    <select id="getImgPath" resultType="String">
+        select i.image_url
+        from qna_tbl q
+        left join image_tbl i on q.qna_img=i.image_no
+        where q.qna_no=#{qna_no}
+    </select>
+    <update id="updateImgUrl">
+        update image_tbl set image_url=#{param1} where image_no=#{param2}
+    </update>
+    <insert id="insertImgUrl" useGeneratedKeys="true" keyProperty="image_no">
+        insert into image_tbl (image_url) values(#{image_url})
+    </insert>
+    <select id="passWriteChk" resultType="int">
+        SELECT COUNT(*) FROM qna_tbl
+        WHERE qna_no=#{qna_no} and qna_pwd = #{privacyCheckWord}
+    </select>
+
 </mapper>

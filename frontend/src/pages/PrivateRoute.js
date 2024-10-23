@@ -1,33 +1,33 @@
-import { Navigate, Outlet } from "react-router-dom";
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import jwt_decode from 'jwt-decode'; // JWT 해독 라이브러리 설치 필요: npm install jwt-decode
 
-// 로컬 스토리지에서 JWT 토큰 가져오기
-const token = window.localStorage.getItem("jwtToken");  // "jwtToken"은 저장된 토큰의 키
-
-// 토큰이 있는지 여부를 확인하는 함수 (간단한 유효성 확인 포함)
-const isTokenValid = (token) => {
-    if (!token) {
-        return false; // 토큰이 없으면 false
-    }
-    
-    try {
-        // base64로 인코딩된 JWT의 payload 부분을 디코딩 (단순 유효성 확인)
-        const payload = JSON.parse(atob(token.split('.')[1]));
-
-        // 현재 시간이 토큰의 만료 시간보다 작으면 유효함
-        const currentTime = Math.floor(Date.now() / 1000); // 현재 시간(초)
-        if (payload.exp && currentTime > payload.exp) {
-            return false; // 토큰이 만료됨
-        }
-        return true;
-    } catch (e) {
-        return false; // 토큰 파싱 오류 시 유효하지 않음
-    }
-};
-
-const isLogin = isTokenValid(token);  // 토큰 유효성 체크
-
+// PrivateRoute 컴포넌트 정의
 const PrivateRoute = () => {
-    return isLogin ? <Outlet /> : <Navigate to="/login" />; // 토큰이 있으면 접근 허용, 없으면 로그인 페이지로 이동
+  const token = localStorage.getItem('accessToken');
+  let isAuthenticated = false;
+
+  if (token) {
+    try {
+      const decodedToken = jwt_decode(token);
+      const currentTime = Date.now() / 1000; // 현재 시간 (초 단위)
+
+      // decodedToken 예시: { userid: 'someUserId', role: 'USER', iat: 1692304567, exp: 1692308167 }
+      if (decodedToken.exp > currentTime) {
+        // 토큰 만료 시간이 현재 시간보다 크다면 유효한 토큰
+        isAuthenticated = true;
+      } else {
+        // 토큰이 만료되었으므로 localStorage에서 제거
+        localStorage.removeItem('accessToken');
+      }
+    } catch (error) {
+      console.error('Invalid token:', error);
+      // 토큰이 유효하지 않은 경우 (예: 구조가 잘못된 경우)
+      localStorage.removeItem('accessToken');
+    }
+  }
+
+  return isAuthenticated ? <Outlet /> : <Navigate to="/signin" />;
 };
 
 export default PrivateRoute;

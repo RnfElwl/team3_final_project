@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.PreferDAO">
+
+
+    <!-- movie_code로 movie_genre 조회 -->
+    <select id="getGenreByMovieCode" resultType="string">
+        SELECT movie_genre
+        FROM movie_data_tbl
+        WHERE movie_code = #{movie_code}
+    </select>
+
+    <!-- 접속 정보 저장 -->
+    <insert id="saveUserPreference" parameterType="com.ict.backend.vo.PreferVO">
+        INSERT INTO prefer_tbl (userid, movie_genre)
+        VALUES (#{userid}, #{movie_genre})
+    </insert>
+
+</mapper>

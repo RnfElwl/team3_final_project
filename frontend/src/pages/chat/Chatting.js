@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import "../../css/chat/chtting.css";
 import axios from '../../component/api/axiosApi.js';
 import mqtt from 'mqtt';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { AiOutlineAlert } from "react-icons/ai";
 import { IoPerson, IoExitOutline, IoCloseSharp  } from "react-icons/io5";
 import { FaCalendarCheck } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import ReportModal from '../../component/api/ReportModal.js';
+import { BsExclamationCircle } from "react-icons/bs";
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -17,6 +18,7 @@ const Chatting = () => {
         day: 'numeric',
         weekday: 'long' // 요일
     };
+    const navigate = useNavigate()
     const {chatlist_url } = useParams();// 채팅방 id 
     const [roomInfo, setRoomInfo]= useState({}); // 채팅방 정보 
     const [client, setClient] = useState(null);
@@ -32,6 +34,16 @@ const Chatting = () => {
     const [memberList, setMemberList] = useState([]);// 채팅방 유저 정보 담는곳
     const [scheduleShow, setScheduleShow] = useState(false);
     const [scheduleCreate, setScheduleCreate] = useState(false);
+    const [today, setToday] = useState(new Date());
+    const [scheduleForm, setScheduleForm] = useState({chatlist_url});
+    const [scheduleList, setScheduleList] = useState([]);// 일정 리스트 
+    const [newTag, setNewTag] = useState([]);
+    const [oldTag, setOldTag] = useState([]);
+    const [voteForm, setVoteForm]= useState({});
+    const [voteList, setVoteList] = useState([]);
+    const [vote_state, setVoteState] = useState();
+    const [voteUserWindow, setVoteUserWindow] = useState(false);
+    const [openExit, setOpenExit] = useState(false);
     let once = 0;
     const chatting_box = useRef(null);
     const menu_box = useRef(null);
@@ -39,13 +51,19 @@ const Chatting = () => {
         document.body.style.overflow = 'hidden';
         if(once == 0){
             once = 1;
+            getUser()
+            getRoomInfo();
             setDefaultChat();
             setDefaultMember();
+            setDefaultSchdule();
+            
         }
-        const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
-        getUser()
-        getRoomInfo();
         // MQTT 브로커에 연결 (WebSocket 프로토콜 사용)
+        
+    }, []);
+    useEffect(()=>{
+        const mqttClient = mqtt.connect('ws://192.168.1.87:8083');
+        //const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
 
         // 연결 성공 시
         mqttClient.on('connect', () => {
@@ -55,10 +73,23 @@ const Chatting = () => {
                 if (!err) {
                     console.log('Subscribed to chat/topic');
                 }
+                if(window.opener==null){
+                    navigate("/");
+                    // window.close();
+                }
+
                 if(!mqttClient.connected){
                     return;
                 }
-                userListAdd(mqttClient);
+                if(roomInfo.chatlist_type==1){
+                    userListAdd(mqttClient);
+                }
+                else if(roomInfo.chatlist_type==2){
+                    //채팅방 유저인지 확인
+                    soloChatCheck();
+                    
+                    
+                }
             });
         });
         // 연결이 끊어졌을 때
@@ -69,8 +100,12 @@ const Chatting = () => {
         // 메시지 수신 시
         mqttClient.on('message', (topic, message) => {
             const decoding = new TextDecoder("utf-8").decode(message);
-            
-            setReceivedMessages(p=>[...p, JSON.parse(decoding)])
+            if(JSON.parse(decoding).chat_type==4){
+                console.log("투표된당!!!!!!")
+                setDefaultSchdule();
+            }else{
+                setReceivedMessages(p=>[...p, JSON.parse(decoding)])
+            }
             
         });
 
@@ -99,23 +134,38 @@ const Chatting = () => {
         return () => {
             mqttClient.end();
         };
-        
-    }, []);
-    
+    }, [roomInfo])
     useEffect(() => {
         
         // 메시지가 변경될 때마다 실행
         scrollBottom();
         dateMsgSend()
-        
       }, [receivedMessages, client]);
       async function getRoomInfo(){
-        const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
-            chatlist_url
-        }});
-        console.log(result);
+        try{
+            const result = await axios.get(`http://localhost:9988/chat/roominfo`, {params: {
+                chatlist_url
+            }});
+            console.log(result.data);
+            if(result.data.chatlist_type==1){
+                const {data} = await axios.get(`http://localhost:9988/chat/check/review`, {
+                    params: { movie_no: result.data.movie_no }
+            });
+            console.log(data);
+            console.log("______________________________")
+            if(data==null || data==""){
+                navigate("/");
+                window.close();
+            }
+        }
         setRoomInfo(result.data);
+        }catch(e){
+            console.log(e);
+            // window.close();
+            // navigate("/");
+        }
       }
+      
       async function dateMsgSend(){// 로컬 날짜 메시지 출력
         if(receivedMessages.length >= 1){
             const now = receivedMessages[receivedMessages.length -1].chat_date;
@@ -142,34 +192,72 @@ const Chatting = () => {
             }
         }
     }
-    
+    async function soloChatCheck(){
+        try{
+        const {data} = await axios.get(`http://localhost:9988/chat/check/solo`, {params:{chatlist_url}});
+        console.log(data);
+        console.log("___________________")
+        if(data==0){
+            navigate("/");
+            // window.close();
+        }
+        setDefaultChat();
+        
+        return data;
+    }catch(e){
+        console.log(e);
+    }
+    }
     async function setDefaultChat(){ // 채팅 기본 값 세팅
+        try{
         const {data} = await axios.get(`http://localhost:9988/chat/${chatlist_url}`);
         
         setReceivedMessages(data);
-        
+        }catch(e){
+            console.log(e);
+        }
+    }
+
+    async function setDefaultSchdule(){
+        try{
+        const {data} = await axios.get("http://localhost:9988/chat/schedule/list", {params:{chatlist_url}});
+        setScheduleList(data);
+    }catch(e){
+        console.log(e);
+    }
     }
     async function setDefaultMember(){
+        try{
         const {data} = await axios.get(`http://localhost:9988/chat/member-list`, {params:{
             chatlist_url
         }});
-        console.log(data);
         setMemberList(data);
+    }catch(e){
+        console.log(e);
+    }
     }
     
     async function getUser(){// 자기 정보 가져오기
+        try{
         const result = await axios.get('http://localhost:9988/user/userinfo');
         setMyid(result.data);
         const params = {userid : result.data};
         const result2 = await axios.get('http://localhost:9988/getUserData', {params});
         setUserData(result2)
+    }catch(e){
+        console.log(e);
+    }
     }
 
     async function userListAdd(mqttClient){
         if(mqttClient){
+            try{
             const result = await axios.get('http://localhost:9988/user/userinfo');
             setMyid(result.data);
             const params = {userid : result.data};
+            if(result.data=='anonymousUser'){
+                throw new Error("로그인이 안됨");
+            }
             const result2 = await axios.get('http://localhost:9988/getUserData', {params});
             const {data} = await axios.post(`http://localhost:9988/chat/userlistadd/${chatlist_url}`);
             const offset = new Date().getTimezoneOffset() * 60000;
@@ -180,19 +268,43 @@ const Chatting = () => {
                 usernick : result2.data.usernick, 
                 chat_date: now,
                 chat_type: 2
-            } 
-            
+            }
+
             if(data == 1){
+                console.log(data, typeof(data), data == 1)
+                const result3 = await axios.post("http://localhost:9988/chat/headcount", chatlist_url, {
+                    headers: {
+                      'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                    }
+                  });
+                if(result3.data == 1){
+                    getRoomInfo();
+                }
 
                 setReceivedMessages(receivedMessages)
                 
                 mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
             }
+            }catch(e){
+                console.log(e);
+            }
         }
     }
-
+    useEffect(() => {
+        // 매초마다 실행되는 함수
+        const interval = setInterval(() => {
+          setToday(new Date());
+          schedule_list_tag();
+        }, 1000); // 1000ms = 1초
     
-    const handleSendMessage = () => {
+        // 컴포넌트가 언마운트될 때 setInterval을 정리
+        return () => clearInterval(interval);
+      }, [today]); // `value`가 변경될 때마다 이 effect가 실행됨
+    useEffect(()=>{
+        schedule_list_tag();
+        setToday(new Date());
+    }, [scheduleList])
+    const handleSendMessage = async () => {
         if (client) {
             // 메시지 발행 (해당 토픽에 메시지를 보냄)
             const offset = new Date().getTimezoneOffset() * 60000;
@@ -207,17 +319,32 @@ const Chatting = () => {
                 chatlist_url,
                 usernick:userData.data.usernick, 
                 userprofile: userData.data.userprofile,
+                image_url: userData.data.image_url,
                 chat_date: now,
                 chat_type: 1
             } 
+            try{
 
+            
+            const result = await axios.post("http://localhost:9988/chat/add", data);
+            if(result.data==1){
+                console.log("성공");
+            }else{
+                console.log("실패");
+            }
             
             client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
+        }catch(e){
+            console.log(e);
+        }
             
         }
     };
     function pressKeyboard(e){
+        if(messageToSend==''){
+            return ;
+        }
         if(e.key==='Enter'){
             handleSendMessage();
         }
@@ -226,17 +353,15 @@ const Chatting = () => {
     function scrollBottom(){
         chatting_box.current.scrollTop = chatting_box.current.scrollHeight+10000;
     }
-    function openReport(e){{/* 신고 기능 */}
-        const id = e.target.dataset.id;
-        const userid = e.target.dataset.userid;
-        const content = e.target.dataset.content;
+    function openReport(id, userid, content){{/* 신고 기능 */}  
         setReport({
             report_tblname: 3,
             report_tbluuid:  id,
             reported_userid: userid,
             report_content: content,// 피신고자의 채팅 내용
-        })
+});
         toggleReport();
+        setDefaultChat();
     }
     function toggleReport(){{/* 신고 기능 */}
         setReportShow(!reportShow);
@@ -251,33 +376,185 @@ const Chatting = () => {
         setUserList(false)
     }
     function scheduleToggle(){
-        console.log("HIHIHIIHIHIHIH")
         setMenu(false);
         setScheduleShow(!scheduleShow);
     }
+    async function scheduleCreateSubmit(e){
+        e.preventDefault();
+        try{
+        const {data} = await axios.post("http://localhost:9988/chat/schedule/create", scheduleForm);
+        setScheduleCreate(false);
+        if(data>=1){
+            const info = {
+                chat_type: 4
+            } 
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+        }
+    }catch(e){
+        console.log(e);
+    }
+    }
+    function scheduleFormAdd(event){
+        let idField = event.target.name;
+        let idValue = event.target.value;
+        setScheduleForm(p=>{return {...p, [idField]:idValue}});
+    }
+    function schedule_list_tag(){
+        const newList = [];
+        const oldList = [];
+        scheduleList.map((data, index)=>{
+            if((new Date(data.schedule_date).getTime() -  today.getTime())>=0){
+                newList.push({
+                    schedule_id: data.schedule_id,
+                    schedule_title: data.schedule_title,
+                    schedule_date:data.schedule_date,
+                    schedule_addr: data.schedule_addr,
+                    yes:data.yes,
+                    no:data.no,
+                    user_vote: data.user_vote
+                });
+                
+            }
+            else{
+                oldList.push({
+                    schedule_id: data.schedule_id,
+                    schedule_title: data.schedule_title,
+                    schedule_date:data.schedule_date,
+                    schedule_addr: data.schedule_addr,
+                    yes:data.yes,
+                    no:data.no
+                });
+            }
+        })
+        setNewTag(newList);
+        setOldTag(oldList);
+        //set넣지 말고 배열에 담아서 한번에 set하기
+    }
+    async function setScheduleVote(e){
+        e.preventDefault();
+        try{
+        const {data} = await axios.post('http://localhost:9988/chat/schedule/voting', voteForm);
+        if(data>=1){
+            const info = {
+                chat_type: 4
+            } 
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+        }
+    }catch(e){
+        console.log(e);
+    }
+    } 
+    async function setDefaultVote(id, value){
+        console.log(id, value)
+        try{
+        const {data} = await axios.get("http://localhost:9988/chat/vote/list", {params:{
+            schedule_id: id,
+            vote_value: value
+        }});
 
+        if(data.length !=0){
+            setVoteUserWindow(true);
+            setVoteList(data);
+        }
+        }catch(e){
+            console.log(e);
+        }
+    }
+    function moveUserPage(usernick){
+        if (window.opener) {
+            window.opener.navigateToPage(`/user/info/${usernick}`);  // 부모 창 이동
+            // window.close();  // 팝업 닫기
+          }
+    }
+    function moveMyPage(){
+        if (window.opener) {
+            window.opener.navigateToPage(`/mypage`);  // 부모 창 이동
+            // window.close();  // 팝업 닫기
+          }
+    }
+    async function exitRoom(){
+        try{
+        if(roomInfo.chatlist_type==1){
+            const {data} = await axios.post("http://localhost:9988/chat/exit", chatlist_url, {
+                headers: {
+                    'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                }
+            });
+            
+            if(data>=1){
+                const result = await axios.get('http://localhost:9988/user/userinfo');
+                setMyid(result.data);
+                const params = {userid : result.data};
+                const result2 = await axios.get('http://localhost:9988/getUserData', {params});
+                const offset = new Date().getTimezoneOffset() * 60000;
+                let today = new Date(Date.now() - offset);
+                const now = today.toISOString().replace('T', ' ').substring(0, 19);
+                const info = {  
+                    chatlist_url,
+                    usernick : result2.data.usernick, 
+                    chat_date: now,
+                    chat_type: 3
+                }    
+                client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            }
+        }
+        if(roomInfo.chatlist_type==2){
+            const test = await axios.post("http://localhost:9988/chat/exit/solo", chatlist_url, {
+                headers: {
+                    'Content-Type': 'text/plain', // 전송할 데이터의 타입을 명시적으로 'text/plain'으로 설정
+                }
+            });
+        }
+    }catch(e){
+        console.log(e);
+    }
+        // window.close();
+    }
     return (
         <div className='chatting_room'>
+            <div className={`exit_window ${openExit?'show':'hide'}`}>
+                <div className='vote_window_close'></div>
+                <div className='vote_user_box'>
+                    <div>
+                        이전 채팅내용이 사라집니다.<br/>
+                        정말 나가시겠습니까?
+                    </div>
+                    <div className='vote_user_btn'>
+                        <div onClick={exitRoom}>나가기</div>
+                        <div onClick={()=>setOpenExit(false)}>닫기</div>
+                    </div>
+                </div>
+            </div>
             <header className='chat_header'> 
+                <div className='room_box'>
+                <div className='room_img'><img src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
                     <div className='user_count' title="유저 목록" onClick={userToggle}>
-                        <div>
+
                         <IoPerson size="15px" ></IoPerson >{roomInfo.chatlist_headcount}
-                        </div>
+               
                         <div className={`user_list ${userList?'user_show':'user_hide'}`}>
                             {
-                            memberList.map((data, index)=>(
+                                memberList.map((data, index)=>(
                                 <>
-                                    <div>
-                                        <div><img src={`${data.userprofile}`}/></div>
+                                {
+                                    myid==data.userid?
+                                    <div className='user_info'>
+                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                        <div>{data.usernick}</div>
+                                    </div>:
+                                    <div className='user_info'>
+                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
+                                    }
                                 </>
                             ))
-                            }
+                        }
                         </div>
                     </div>
+                </div>
                 </div>
                 <div className='schedule_icon'>
                     <div onClick={menuToggle} className={`${scheduleShow?'schedule_hide':'schedule_show'}`}>
@@ -290,7 +567,7 @@ const Chatting = () => {
                         <div onClick={scheduleToggle}>
                             <FaCalendarCheck />일정
                         </div>
-                        <div>
+                        <div onClick={()=>setOpenExit(true)}>
                             <IoExitOutline/> 방나가기
                         </div>
                     </div>
@@ -306,18 +583,30 @@ const Chatting = () => {
                 toggleReport={toggleReport} // 모달창 열고닫기 함수
                 report={report}// 신고 데이터 변수
                 setReport={setReport} // 신고 데이터 변수 세팅
+                setDefaultList={setDefaultChat}
             />
             <div className={`schedule_create ${scheduleCreate?'schedule_create_show':'schedule_create_hide'}`}>
-                    <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
-                    <form className='schedule_create_form'>
-                        <h2>일정 만들기</h2>
+                <div className='schedule_create_close' onClick={()=>setScheduleCreate(false)}></div>
+                <form className='schedule_create_form' onSubmit={scheduleCreateSubmit}>
+                    <h2>일정 만들기</h2>
+                    <div className='shcedule_inputs'>
                         <div>
-                            <input type='date'/>
-                            <input type="time"/>
+                        제목 <input type="text" name="schedule_title" onChange={scheduleFormAdd}/>
                         </div>
-                        <button type='submit'>일정 생성</button>
-                    </form>
-                </div>
+                        <div>
+
+                        날짜  <input type='date' name="day" onChange={scheduleFormAdd}/>
+
+                        시간  <input type="time" name="time" onChange={scheduleFormAdd}/>
+                        </div>
+                        <div>
+                        설명  <input tpye="text" name="schedule_addr" onChange={scheduleFormAdd}/>
+                        </div>
+                    </div>
+                    <button type='submit'>일정 생성</button>
+                </form>
+            </div>
+
             <div  className={`schedule_box ${scheduleShow?'schedule_show':'schedule_hide'}`}
                 onClick={()=>{ setMenu(false); setUserList(false)}} >
                 
@@ -325,22 +614,95 @@ const Chatting = () => {
                     일정 만들기
                 </div>
                 <div className='schedule_list'>
-                    <div>현재 일정</div>
-                    <div className='schedule'>
-                        <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
-                        <div className='schedule_info'>
-                            <div className='schedule_title'>베테랑 같이 볼사람</div>
-                            <div className='schedule_member'>참여인원, 본인 참여 여뷰</div>
-                            <div className='schedule_date'>일정 날짜</div>
-                        </div>
-                        <div className='schedule_voting'>
-                            <div>참여</div>
-                            <div>불참</div>
+                    <div className={`voteWindow ${voteUserWindow?'show':'hide'}`}>
+                        <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
+                        <div className='vote_user_box'>
+                            <h2>{vote_state==1?'참여 목록':'불참 목록'}</h2>
+                            <div className='vote_user_list'>
+                            {
+                                voteList.map((data, index)=>(
+                                    myid==data.userid?
+                                    <div className='vote_user_info'>
+                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                    <div>{data.usernick}</div>
+                                </div>:<div className='vote_user_info'>
+                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
+                                    <div>{data.usernick}</div>
+                                </div>
+                                ))
+                            }
+                            </div>
+                           
                         </div>
                     </div>
+                    <div className='state_box'>
+
+                    <div>진행중</div>
+                {
+                    newTag.length==0?<>
+                    <div className="list_notice">
+                                    <BsExclamationCircle/>
+                                    <div>현재 일정이 없습니다.</div>
+                                </div>
+                    </>:
+                    newTag.map((data, index)=>(
+                        <div className='schedule'>
+                        <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                        <div className='schedule_info'>
+                            <div className='schedule_title'>{data.schedule_title}</div>
+                            <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
+
+                            <div className='schedule_addr'>{data.schedule_addr}</div>
+                        </div>
+
+                        <form className={`schedule_voting ${data.user_vote}`} onSubmit={setScheduleVote}>
+                            <div className='voting_box'>
+                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id});setVoteState(1);}}>참여</button>
+                            </div>
+                            <div className='voting_box'>
+                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                <button className='no_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:0, schedule_id: data.schedule_id}); setVoteState(2);}}>불참</button>
+                            </div>
+                        </form>
+                    </div>
+                    ))
+                    
+                }
                 </div>
-                <div>
-                    <div>과거 일정</div>
+                <div className='state_box'>
+
+                    <div>이전 목록</div>
+                    {
+                        oldTag.length==0?<>
+                        <div className="list_notice">
+                                    <BsExclamationCircle/>
+                                    <div>이전 일정이 없습니다.</div>
+                                </div>
+                        </>:
+                        oldTag.map((data, index)=>(
+                            <div className='schedule'>
+                                <div className='schedule_icon'><FaCalendarCheck size="20px"/></div>
+                                <div className='schedule_info'>
+                                    <div className='schedule_title'>{data.schedule_title}</div>
+                                    <div className='schedule_member'>{data.user_vote==null?'[미투표]':'[투표완료]'} {(data.schedule_date).substring(0, 16)}</div>
+                                    <div className='schedule_addr'>{data.schedule_addr}</div>
+                                </div>
+                                    <div className='schedule_voting'>
+                                        <div className='end_vote'>
+                                            <div>
+                                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                            </div>
+                                            <div className='voting_box'>
+                                                <button>투표종료</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        ))
+                    }
+                    </div>
                 </div>
             </div>
             
@@ -366,11 +728,11 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                        <div className='chat_profile'><img  src={`${data.userprofile}`}/></div>
+                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><img  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >
@@ -381,19 +743,16 @@ const Chatting = () => {
                                                     <div className='chat_date'>
                                                     {(data.chat_date).substring(11, 16)}
                                                     </div>
-                                                    {/* <div className='chat_read'>
-                                                        1
-                                                    </div> */}
                                                     <div className='chat_report' >
-                                                        <AiOutlineAlert size="25px" data-id={data.content_id} data-userid={data.userid} data-content={data.chat_content} onClick={openReport} />
+                                                        <AiOutlineAlert size="25px" onClick={()=>openReport(data.content_id, data.userid, data.chat_content)} />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     ,
-                                2:  <div className='doorway'>{data.usernick} 님이 입장 하였습니다.</div>,
-                                3:  <div className='doorway'>{data.usernick} 님이 퇴장 하였습니다.</div>,
+                                2:  <>{roomInfo.chatlist_type==1 &&<div className='doorway'>{data.usernick} 님이 입장 하였습니다.</div>}</>,
+                                3:  <>{roomInfo.chatlist_type==1 &&<div className='doorway'>{data.usernick} 님이 퇴장 하였습니다.</div>}</>,
                             }[data.chat_type]
                         }
                         
@@ -403,12 +762,13 @@ const Chatting = () => {
                 <div className='chatting_input'>
                     <input
                         type="text"
+                        
                         value={messageToSend}
                         onKeyDown={pressKeyboard}
                         onChange={(e)=>setMessageToSend(e.target.value)}
-                        placeholder="Type your message"
+                        placeholder="메시지 입력"
                         />
-                    <button onClick={handleSendMessage}>Send</button>
+                    <button className={`${messageToSend==''?'':'onText'}`} onClick={handleSendMessage}>전송</button>
                 </div>
             </div>
                                 

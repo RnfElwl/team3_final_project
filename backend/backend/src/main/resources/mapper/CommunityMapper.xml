@@ -4,16 +4,50 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ict.backend.dao.CommunityDAO">
     <!-- 게시글 리스트 조회 쿼리 -->
+<!--    <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">-->
+<!--        SELECT * FROM community_tbl cct-->
+<!--        where cct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{userid} and rt.report_tblname=2)-->
+<!--        ORDER BY community_writedate DESC-->
+<!--    </select>-->
     <select id="getCommunityList" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl
-        ORDER BY community_writedate DESC
+        select ct.community_no, ct.userid, ut.usernick, it.image_url as userprofile, community_title, community_content, count(clt.like_date) community_like, community_writedate, i.image_url as community_img, hit, ct.edit_date, ct.edit_state, ct.edit_user, ct.active_state, loc, category, privacy,
+            exists(select * from community_like_tbl clt2 where clt2.userid=#{param1} and clt2.community_no=ct.community_no) like_state,
+            exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid) as follow
+        from community_tbl ct
+        left outer join community_like_tbl clt on ct.community_no=clt.community_no
+        left JOIN community_image_tbl i ON ct.community_img = i.image_no
+        join user_tbl ut on ct.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        where ct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{param1} and rt.report_tblname=2)
+        and (privacy=0 or exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid)=privacy or ct.userid=#{param1})
+        and ct.active_state=1
+        group by ct.community_no
+        ORDER BY
+            case
+                when #{sortType} = 'latest' THEN community_writedate
+                WHEN #{sortType} = 'hit' THEN hit
+                WHEN #{sortType} = 'like' THEN community_like
+                ELSE community_writedate
+            END DESC
     </select>
     <insert id = "createCommunity" parameterType="com.ict.backend.vo.CommunityVO">
         INSERT INTO community_tbl (userid, community_title, community_content, community_img, loc, category, privacy)
         VALUES (#{userid}, #{community_title}, #{community_content}, #{community_img}, #{loc}, #{category}, #{privacy})
     </insert>
+<!--    <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">-->
+<!--        SELECT * FROM community_tbl WHERE community_no = #{community_no}-->
+<!--    </select>-->
     <select id="getCommunityView" resultType="com.ict.backend.vo.CommunityVO">
-        SELECT * FROM community_tbl WHERE community_no = #{community_no}
+        SELECT c.community_no, c.userid, ut.usernick, it.image_url userprofile, c.community_title, c.community_content, i.image_url as community_img, c.hit, c.loc, c.category, c.privacy, count(clt.like_date) community_like,
+        exists(select * from community_like_tbl clt2 where clt2.userid=#{userid} and clt2.community_no=#{community_no}) like_state,
+        exists(select * from follower_tbl ft2 where ft2.userid=#{userid} and follower_userid=c.userid) as follow
+        from community_tbl c
+        join community_image_tbl i on c.community_img = i.image_no
+        left outer join community_like_tbl clt on c.community_no=clt.community_no
+        join user_tbl ut on c.userid=ut.userid
+        left join image_tbl it on ut.userprofile=it.image_no
+        WHERE c.community_no =#{community_no}
+        group by c.community_no
     </select>
     <update id="increaseHit" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl
@@ -27,21 +61,24 @@
     </select>
     <update id="editCommunity" parameterType="com.ict.backend.vo.CommunityVO">
         UPDATE community_tbl
-        SET community_content = #{community_content},
+        SET userid = #{userid},
+        community_content = #{community_content},
         community_title = #{community_title},
-        community_img = #{community_img},
+<!--        community_img = #{community_img},-->
         loc = #{loc},
         privacy = #{privacy},
+        category =#{category},
         edit_date = NOW(),
         edit_user = #{edit_user}
         WHERE community_no = #{community_no}
+
     </update>
-    <delete id="deleteCommentsByCommunityNo" parameterType="int">
-        DELETE FROM community_comment_tbl WHERE community_no = #{community_no}
-    </delete>
-    <delete id="deleteCommunity" parameterType="int">
-        delete from community_tbl where community_no = #{community_no}
-    </delete>
+    <update id="deleteCommentsByCommunityNo" parameterType="int">
+        update community_comment_tbl set active_state=0 WHERE community_no = #{community_no}
+    </update>
+    <update id="deleteCommunity" parameterType="int">
+        update community_tbl set active_state=0 where community_no = #{community_no}
+    </update>
     <!-- 좋아요 있는지 확인 -->
     <select id="isLiked" parameterType="com.ict.backend.vo.CommunityLikeVO" resultType="int">
         SELECT COUNT(*)
@@ -58,9 +95,19 @@
         DELETE FROM community_like_tbl
         WHERE community_no = #{community_no} AND userid = #{userid}
     </delete>
-    <!-- 좋아요 수 조회 -->
+<!--     좋아요 수 조회 -->
     <select id="getLikesCount" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM community_like_tbl
         WHERE community_no = #{community_no}
     </select>
+    <insert id="uploadImage" useGeneratedKeys="true" keyProperty="image_no">
+        INSERT INTO community_image_tbl (image_url) VALUES (#{image_url})
+    </insert>
+    <update id = "updateimageurl">
+        UPDATE community_image_tbl set image_url = #{param1} where image_no = #{param2}
+    </update>
+    <select id = "getimgno" resultType="int">
+        select community_img from community_tbl where community_no = #{community_no};
+    </select>
+
 </mapper>

@@ -1,58 +1,67 @@
-/* src/components/Footer.css */
-.footer {
-    background: rgb(0, 0, 0);
-    padding: 5px;
-    text-align: left;   
-}
-
-.footer-nav {
+.footer{
+    /* position: fixed; */
+    /* bottom: 0px; */
+    background-color: #313133dc;
+    /* width:100%; */
     display: flex;
+    /* align-items: center; */
     justify-content: center;
-    margin-top: 2px;
-    margin-bottom: 10px;
-    margin-right: 100px;
+    /* height: 100px; */
+    /* justify-content: space-between; */
+    /* z-index: 100; */
+    /* min-width: 1220px; */
+    margin-top: 50px;
+    color: #e0e0e0;
+    padding: 20px 0;
+    flex-direction: column;
 }
 
-.footer-nav ul {
-    list-style: none;
+.footer p{
+    margin-bottom: 5px;
+    margin-right: 30px;
+    font-size: 15px;
+}
+
+.footer-info{
     display: flex;
-    gap: 5rem;
-    font-family: 'Material Symbols Outlined';
-    font-weight: 400;
-   
+    max-width: 1920px;
+    align-items: center;
+    margin: 0 auto;
+    justify-content: space-between;
 }
 
-.footer-nav a {
-    /* 밑에 메뉴바*/
-    color:white;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 400;
-    font-family: 'Material Symbols Outlined';
-    margin-left: 60px;
-    font-size:1.2rem;
-    
+.footer .logo-container {
+    margin-right: 20px;
+    align-items: center;
+    display: flex;
+    justify-content: center; /* 로고도 가운데 정렬 */
 }
 
-.footer-nav a:hover {
-    text-decoration: underline;
-   
-    
+.footer .detail{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
+.footer .office, .footer .contact, .footer .ceo {
+    display: flex;
+    margin-left: 20px;
+    /*gap: 5px;  각 항목 간격 */
+}
 
-.footer-info p{
-    /* 밑에 주소영역*/
-    color:white;
-    font-size: 0.9rem;
-    line-height: 0.9rem;
-    font-weight: 300;
-   font-family: 'Material Symbols Outlined';
-   margin-left: 50px;
+img.logo {
+    width: 200px;
+    height: auto; /* 이미지 비율 유지 */
+}
 
+.footer-bottom {
+    margin-top: 10px;
+    text-align: center;
+    border-top: 1px solid #918d8da2; /* 위에 구분선을 추가 */
+    padding-top: 10px;
+}
+.footer-bottom p{
+    font-size: 13px;
+    color: #c0bbbbb6;
 
 }
-.footer-info p:last-child{
-    text-decoration: overline;
-}
- 

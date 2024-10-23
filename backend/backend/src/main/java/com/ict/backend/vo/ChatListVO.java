@@ -14,5 +14,12 @@ public class ChatListVO {
     private String usernick;
     private String image_url;
     private String userprofile;
+    private String user2;
+    private int movie_no;
+    private String movie_code;
+    private String movie_title;
+    private String movie_img_url;
+
+    private int flag;
 
 }

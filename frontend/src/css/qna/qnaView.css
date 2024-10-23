@@ -1,7 +1,166 @@
 .QnAViewBody{
-    color:white;
+    padding-top: 10px;
+    color:#f1f1f1;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
 }
-td:nth-child(1){
-    min-width: 100px;
-    height: 20px;
+.QnaTbl{
+    margin: 30px auto 0;
+    max-width: 800px;
+    width: 100%;
+}
+.QnaTbl td{
+    padding: 10px;
+    border-bottom: 1px solid rgb(214, 214, 221);
+    border-top: 1px solid rgb(214, 214, 221);
+}
+.QnaTbl td:nth-child(1){
+    width: 90px;
+}
+.QnaTbl td:nth-child(3){
+    text-align: right;
+}
+.qnaType{
+    background-color: rgb(182, 172, 172);
+    
+}
+.qnaItems{
+    display: flex;
+    justify-content: right;
+}
+.qnaItems div{
+    margin: 10px 5px 0 5px;
+}
+.qna-imgArea img{
+    width: 300px;
+    height: 200px;
+}
+
+.QnAViewBody .report_button {
+    background: none;
+    border: none;
+}
+
+.QnAViewBody .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.QnAViewBody .report_show{
+    display: flex;
+}
+.QnAViewBody .report_hide{
+    display: none;
+}
+.QnAViewBody .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.QnAViewBody .report_window .chatting_report{
+    color: #1C1C20;
+    background-color: #f0f0f0;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    text-align: center;
+}
+.QnAViewBody .report_window .title h2{
+    font-size: 1.5em;
+    color: rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.QnAViewBody .report_window .report_radio{
+    gap: 10px;
+    display: flex;
+}
+.QnAViewBody .report_window .report_radio span{
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e1e20c2;
+}
+.QnAViewBody .report_window .sub_title textarea{
+    width: 100%;
+    height: 150px;
+    margin: 12px 0;
+}
+.QnAViewBody .report_window button{
+    border:1px solid rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    border-radius: 5px;
+    background: none;
+    color:rgba(235, 59, 59, 0.774);
+}
+.QnAViewBody .report_window button:hover{
+    background: rgba(235, 59, 59, 0.774);
+    color:#f0f0f0;
+}
+.qna_alert_icon{
+    margin-top: 6px;
+}
+.qna-list-btn{
+    text-align: right;
+}
+.qna-list-btn button{
+    background-color: #555353; /* 버튼 배경색 */
+    border: none;
+    border-radius: 5px;
+    color: #7d807d; /* 글자색 */
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.qna-list-btn button:hover{
+    background-color: #51e4dfea; /* 호버 시 색상 */
+    color:#194644ea;
+    transform: scale(1.05); /* 호버 시 크기 증가 */
+}
+
+.next-qna{
+    display: flex;
+    margin-bottom: 10px;
+    color:#51e4dfea;
+    font-size:1.2em;
+}
+.prev-qna{
+    display: flex;
+    margin-bottom: 40px;
+    color:#51e4dfea;
+    font-size:1.2em;
+}
+.next-qna div{
+    cursor:pointer;
+    color: #f1f1f1;
+}
+.prev-qna div{
+    cursor:pointer;
+    color: #f1f1f1;
+
+}
+.next-qna div:hover{
+    color: #51e4dfea;
+    cursor:pointer;
+    text-decoration-line: underline;
+}
+.prev-qna div:hover{
+    color: #51e4dfea;
+    cursor:pointer;
+    text-decoration-line: underline;
 }

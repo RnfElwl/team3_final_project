@@ -1,80 +1,161 @@
 .community_view {
-    background-color: black; /* 배경색 */
-    max-width: 1920px;
+    background-color: #1C1C20; /* 배경색 */
+    min-width: 700px; /* 최소 너비 설정 */
+    max-width: 1200px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     justify-content: center; /* 가로 중앙 정렬 */
-    color: #fff; /* 글자 색상 */
+    color: #f0f0f0; /* 글자 색상 */
+    display: flex; 
 }
 
 .community_view .container{
-    max-width: 1200px;
-    margin: 0 auto; /* 중앙 정렬 */
+    width: 100%; /* 컨테이너 너비를 100%로 설정 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    border-radius: 10px;
+    flex-wrap: wrap; /* 항목이 한 줄에 가득 차면 다음 줄로 이동 */
+    padding: 20px;
 }
+
+/* 맨위에 */
 
 .community_view .view_top {
     display: flex; /* 플렉스 레이아웃 */
     align-items: center; /* 세로 정렬 */
-    justify-content: space-between;
-    
+    /* justify-content: space-between; */
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .community_view .writer_image {
     width: 70px; /* 작성자 이미지 크기 */
     height: 70px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
-    margin-right: 10px; /* 여백 */
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
+    border: 1px solid #ddd;
 }
 
 .community_view .writer_info {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start; 
-    width: 100%;
+    flex-direction: column; /* 세로 방향 정렬 */
+    gap: 10px;
+    margin-left: 30px;
+}
+
+.community_view .list_info {
+    display: flex; 
+    justify-content: flex-start;
+    gap: 20px;
+    
 }
 
 .community_view .writer_name {
     font-weight: bold; /* 글씨 두껍게 */
-    color: #fff; /* 색상 */
     font-size: 1.2em;
+    margin: 0;
+
 }
 
-.community_view .writedate {
+.community_view .writedate, .community_view .location {
     color: #999; /* 색상 */
     font-size: 0.9em; /* 글자 크기 */
-    padding-right: 30px;
-    padding-top: 25px;
-    margin-left: auto; /* 날짜를 오른쪽에 배치 */
     white-space: nowrap; /* 날짜가 줄바꿈되지 않도록 함 */
-}
-
-.community_view .name_location {
-    display: flex;
-    flex-direction: column; /* 이름과 위치를 수직 정렬 */
-    align-items: flex-start;     /* 왼쪽 정렬 */
-}
-
-.community_view .writer_name, .community_view .location {
     margin: 0;
-    margin-left: 10px;
 }
 
-.community_view .location{
-    font-size: 0.9em;
+.community_view .action_button_container {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽으로 정렬 */
+    align-items: center;
+    margin-left: auto; /* 자동 여백 추가로 오른쪽으로 이동 */
+    /* margin-top: 10px; */
 }
 
 .community_view .action_button {
-    background-color: #f1f3f5;
-    border: none;
+    background: none;
+    color: #f0f0f0;
     padding: 5px 10px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.community_view .action_button:hover {
+    color: #48d1cdea;
+}
+
+/* 신고 */
+.community_view .report_button {
+    background: none;
+    border: none;
+}
+
+.community_view .report_window{
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    justify-content: center;
+    align-items: center; 
+    top: 0px;
+    left: 0px;
+}
+.community_view .report_show{
+    display: flex;
+}
+.community_view .report_hide{
+    display: none;
+}
+.community_view .report_window .report_close{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background-color: #5555555b;
+    z-index: 1;
+}
+.community_view .report_window .chatting_report{
+    color: #1C1C20;
+    background-color: #f0f0f0;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
+    width: 450px;
+    height: 400px;
+    text-align: center;
+}
+.community_view .report_window .title h2{
+    font-size: 1.5em;
+    color: rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.community_view .report_window .report_radio{
+    gap: 10px;
+    display: flex;
+}
+.community_view .report_window .report_radio span{
+    font-size: 16px;
+    font-weight: bold;
+    color: #1e1e20c2;
+}
+.community_view .report_window .sub_title textarea{
+    width: 100%;
+    height: 150px;
+    margin: 12px 0;
+}
+.community_view .report_window button{
+    border:1px solid rgba(235, 59, 59, 0.774);
+    font-weight: bold;
+    border-radius: 5px;
+    background: none;
+    color:rgba(235, 59, 59, 0.774);
+}
+.community_view .report_window button:hover{
+    background: rgba(235, 59, 59, 0.774);
+    color:#f0f0f0;
 }
 
 .community_view .view_middle {
@@ -85,53 +166,64 @@
     width: 1000px;
     margin-left: auto; /* 자동 여백으로 좌우 중앙 정렬 */
     margin-right: auto; /* 자동 여백으로 좌우 중앙 정렬 */
+    display: flex; /* Flexbox 사용 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
 }
 
 .community_view .category {
-    font-size: 12px;
-    border: 1px solid #fff;
-    width: 50px;
-    height: 25px;
-    font-size: 0.9em;
-    border-radius: 50px;
-    padding: 0; /* 여백 제거 */
+    font-size: 20px;
     font-weight: bold;
-    color: #fff;
-    text-align: center;
-    margin-top: 5px;
+    color: #ebe2e279; /* 글자 색상 */
+    margin: 15px 0;
 }
 
 .community_view .community_title {
-    font-size: 2em; /* 제목 크기 */
-    margin-left: 20px;
+    font-size: 1.5em; /* 제목 크기 */
+    line-height: 1.5; /* 줄 간격 설정 */
+    max-height: 3em; /* 2줄 높이 설정 (line-height 1.5 * 2줄 = 3em) */
+    overflow: hidden;
+    margin: 15px 10px;
+    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+    font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
+    -webkit-box-orient: vertical;
+    white-space: normal; /* 텍스트 줄바꿈 허용 */
 }
 
 .community_view .category_title{
+    margin-top: 10px; /* 여백 */
+    gap: 5px; /* 내부 요소 간격 */
     display: flex;
+    text-align: left; /* 왼쪽 정렬 추가 */
+    width: 100%;
 }
 
 .community_view .community_img {
-    width:1000px;
+    width:70%;
     /* height: 200px; */
     height: auto; /* 자동 높이 */
     border-radius: 4px; /* 모서리 둥글게 */
     margin-top: 10px; /* 여백 */
-    margin-left: auto;
     align-items: center;
+    justify-content: center;
 }
 
 .community_view .community_content{
-    font-size:  1.5em;
-    margin-top: 20px;
+    margin: 20 0px;
+    line-height: 1.6; /* 줄 간격 */
+    padding: 10px 15px; /* 안쪽 여백 (상하 10px, 좌우 15px) */
+    word-break: break-word; /* 긴 단어가 있을 때 줄바꿈 */
+    font-size: 18px; /* 글자 크기 조절 */
 }
 
 .community_view .view_bottom {
     display: flex; /* 플렉스 레이아웃 */
-    align-items: center; /* 세로 정렬 */
-    margin-top: 20px; /* 여백 */
-    width: 1000px;
-    margin-left: auto; /* 자동 여백으로 좌우 중앙 정렬 */
-    margin-right: auto; /* 자동 여백으로 좌우 중앙 정렬 */
+    justify-content: space-between;
+    margin-top: 10px;
+    /*margin-top: auto;  위쪽 여백이 없을 경우, 자동으로 아래쪽으로 정렬 */
+    border-top: 1px solid #ebe7e7a6; /* 위에 얇은 선 추가 */
+    padding: 10px 0; /* 위아래 패딩 추가 */
 }
 
 .community_view .fa-heart,
@@ -146,14 +238,39 @@
 .community_view .commentCount,
 .community_view .hitCount {
     margin-right: 15px;
-    font-size: 14px;
+    font-size: 15px;
+    padding-top: 8px;
 }
+
+.community_view .edit_button, .community_view  .delete_button{
+    border: #48d1cdea 1px solid;
+    background: none;
+    color: #48d1cdea;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.community_view .edit_button:hover, .community_view  .delete_button:hover{
+    background-color: #48d1cdea;
+    color: #f0f0f0;
+}
+
+.community_view .edit_delete{
+    margin-left: auto;
+}
+
 /* 댓글 */
 
 .community_view .comments_section {
     display: flex;
     flex-direction: column;
     align-items: center; /* 수직 가운데 정렬 */
+    width: 100%; /* 전체 너비 */
+    max-width: 1200px; /* 최대 너비 설정 */
 }
 
 .community_view .comment_form {
@@ -161,30 +278,33 @@
     align-items: center;
     width: 100%; /* 전체 너비 */
     max-width: 1200px; /* 최대 너비 설정 */
-    margin-bottom: 20px; /* 댓글 목록과의 간격 조정 */
+    margin: 30px 0; /* 댓글 목록과의 간격 조정 */
 }
 
 .community_view .inputform {
     flex-grow: 1; /* 입력 필드가 가능한 공간을 차지하도록 설정 */
     margin-right: 10px; /* 버튼과의 간격 조정 */
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #f0f0f0;
     border-radius: 4px;
-    width: 875px;
-    /* height: 100px; */
+    background: none;
+    color: #f0f0f0;
+    width: 80%;
 }
 
 .community_view .submit_button {
-    padding: 10px 15px;
-    background-color: #54575a;
-    color: white;
-    border: none;
+    padding: 10px;
+    border: #48d1cdea solid 1px;
+    color: #48d1cdea;
+    background: none;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .community_view .submit_button:hover {
-    background-color: #0056b3; /* 버튼 호버 효과 */
+    background-color: #48d1cdea; /* 버튼 호버 효과 */
+    color: #f0f0f0;
 }
 
 .community_view .comments_list {
@@ -192,7 +312,14 @@
     flex-direction: column; /* 댓글 목록을 세로로 정렬 */
     align-items: center; /* 댓글 목록을 가운데 정렬 */
     width: 100%; /* 전체 너비 */
-    max-width: 1000px; /* 최대 너비 설정 */
+    max-width: 1200px; /* 최대 너비 설정 */
+}
+
+.community_view .comment_container {
+    display: flex; /* Flexbox 사용 */
+    align-items: center;
+    gap: 20px;
+    width: 100%;
 }
 
 .community_view .comment_item {
@@ -200,30 +327,41 @@
     /*align-items: center;  댓글 작성자 이미지와 텍스트 수직 정렬 */
     margin: 10px 0; /* 각 댓글 간의 간격 */
     width: 100%; /* 전체 너비 */
-    max-width: 1000px; /* 최대 너비 설정 */
     background: #f9f9f9; /* 댓글 배경색 */
     color: #030303;
     padding: 10px; /* 댓글 패딩 */
     border-radius: 5px; /* 댓글 테두리 둥글게 */
-}
-
-.community_view .comment_writer_image {
-    width: 50px; /* 댓글 작성자 이미지 너비 */
-    height: 50px; /* 댓글 작성자 이미지 높이 */
-    border-radius: 50%; /* 둥근 이미지 */
-    margin-right: 10px; /* 이미지와 텍스트 간격 */
-    border: #54575a 1px solid;
-    margin-bottom: 10px;
-}
-
-.community_view .comment_user{
-    display: flex;
-    align-items: center;
+    flex: 1;
 }
 
 .community_view .comment_top{
     display: flex;
     justify-content: space-between;
+}
+
+.community_view .comment_user{
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    gap: 10px;
+}
+
+.community_view .comment_writer_image {
+    width: 40px; /* 댓글 작성자 이미지 너비 */
+    height: 40px; /* 댓글 작성자 이미지 높이 */
+    border-radius: 50%; /* 둥근 이미지 */
+    border: #54575a 1px solid;
+}
+
+.community_view .comment_writer_name{
+    margin: 0;
+    font-size: 17px;
+}
+
+.community_view .comment_writedate{
+    margin: 10px;
+    font-size: 15px;
+    color: #999;
 }
 
 .community_view .comment_actions{
@@ -238,19 +376,67 @@
     border: none; /* 기본 테두리 제거 */
     border-radius: 5px; /* 둥근 모서리 */
     cursor: pointer; /* 마우스 커서 스타일 */
-    height: 40px;
+    height: 35px;
 }
 
-.community_view .edit_button, .community_view  .delete_button{
-    border: none;
-    padding: 5px 10px;
+.community_view .comment_content{
+    width: 100%;
+    max-width: 1000px;
+    white-space: normal; /* 기본 설정: 텍스트 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어가 넘어갈 때 줄바꿈 */
+    word-wrap: break-word; /* 긴 단어가 넘어갈 때 줄바꿈 (구형 브라우저 호환) */
+    margin: 10px;
+}
+
+.community_view .comment_info{
+    width: 100%;
+    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+}
+.community_view .comment_input{
+    width: 100%;
+    height: 100%;
+}
+.community_view .comment_input input{
+    height: 35px;
+    width: 300px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-left: 5px;
+}
+.community_view .comment_input button{
+    border: none;
+    height: 35px;
+    margin-left: 20px;
+    border-radius: 5px;
+}
+.community_view .comment_info button{
+    padding: 5px 10px; /* 버튼 안쪽 여백 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 5px; /* 둥근 모서리 */
+    cursor: pointer; /* 마우스 커서 스타일 */
+    height: 35px;
+}
+.community_view .recomment{
+    padding: 5px 10px; /* 버튼 안쪽 여백 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 5px; /* 둥근 모서리 */
+    cursor: pointer; /* 마우스 커서 스타일 */
+    height: 35px;
 }
 
-.community_view .edit_delete{
-    margin-left: auto;
+.community_view .reply_open{
+    padding: 5px 10px; /* 버튼 안쪽 여백 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 5px; /* 둥근 모서리 */
+    cursor: pointer; /* 마우스 커서 스타일 */
+    height: 35px;
+    margin-left: 10px;
+}
+.community_view .reply_item{
+    margin-left: 30px;
+}
+
+.community_view .comment_input{
+    display: none;
 }
