@@ -53,12 +53,6 @@ function RepCon(){
             <table className="AdminRepTable">
                 <thead>
                     <tr>
-                        {/* <th>
-                            <input
-                            type="checkbox"
-                            checked={isAllRepChecked}
-                            onChange={handleAllRepChecked}/>
-                        </th> */}
                         <th>No.</th>
                         <th>신고자</th>
                         <th>피신고자</th>
@@ -78,13 +72,6 @@ function RepCon(){
                 {report && report.length > 0 ? (
                         report.map((item, index) => (
                     <tr key={index}>
-                        {/* <td>
-                        <input
-                            type="checkbox"
-                            checked={checkedReps[index]}
-                            value={item.report_no || ''}
-                            onChange={() => handleRepChecked(index)}/>
-                        </td> */}
                         <td>{item.report_no}</td>
                         <td>{item.report_userid}</td>
                         <td>{item.reported_userid}</td>

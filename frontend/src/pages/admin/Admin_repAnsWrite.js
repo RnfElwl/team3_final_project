@@ -83,9 +83,11 @@ function RepAnsWrite() {
         console.log("Selected value:", e.target.value);
         setActive_state(parseInt(e.target.value, 10)); //active_state가 문자로 넘어와 정수로 변환
     };
+
     useEffect(() => {
         console.log("active_state값:", active_state);
     }, [active_state]);
+
     useEffect(() => {
         console.log("stop_banDate값:", stop_banDate);
     }, [stop_banDate]);
@@ -124,12 +126,16 @@ function RepAnsWrite() {
             const end = new Date(stop_banDate);
 
             console.log('form데이터 확인:', formData);
-            // if(start>end){
-            //     window.alert("시작 날짜가 종료 날짜보다 이후입니다.");
-            //     return false;
-            // }
+            if(start>end&&start==null){
+                window.alert("시작 날짜가 종료 날짜보다 이후입니다.");
+                return false;
+            }
             if(active_state===''){
                 window.alert("신고 유효성을 체크하여주십시오.");
+                return false;
+            }
+            if(edit_user!=='admin1'){
+                window.alert("관리자 로그인 후 진행해주십시오.");
                 return false;
             }
 

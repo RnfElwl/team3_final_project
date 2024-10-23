@@ -111,6 +111,7 @@ function QnAView() {
     function checkid(){
         if(usersid==='' || usersid===null){
             alert("로그인 시 이용 가능한 기능입니다.");
+            return false;
         }
     }
     //뷰페이지 로딩
@@ -173,29 +174,30 @@ const toggleReport = () => {
         <table className="QnaTbl">
             <tbody>
             <tr>
-                <td className="qnaType">제목</td>
+                <th className="qnaType">제목</th>
                 <td >{itemQ.qna_title}</td>
                 <td>{itemQ.qna_writedate}</td>
             </tr>
             <tr>
-                <td className="qnaType">작성자</td>
+                <th className="qnaType">작성자</th>
                 <td colSpan="2">{itemQ.usernick}</td>          
             </tr>
             <tr>
+                <th className="qnaType">내용</th>
                 <td colSpan="3"> {itemQ.qna_content}</td>
             </tr>
             <tr>
-                <td className="qnaType">첨부파일</td>
+                <th className="qnaType">첨부파일</th>
                 <td colSpan="2" className="qna-imgArea">
-                    {itemQ.qna_img&&qnaImgSrc ? (<img src={`http://localhost:9988/qna/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
+                    {itemQ.qna_img&&qnaImgSrc ? (<img src={itemQ.qna_img}/>):<div>첨부된 파일이 없습니다.</div>}
                 </td>
             </tr>
             </tbody>
         </table>
         <div className="qnaItems">
-        {usersid !== itemQ.userid ?(
+        {(usersid !== itemQ.userid && usersid !== "") ?(
             <AiOutlineAlert size="35px"
-                onClick={()=>openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content)}
+                onClick={()=>{openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content);}}
                 className="qna_alert_icon"/>):null}
         {usersid === itemQ.userid || usersid==='admin1' ? (
                 <div><FontAwesomeIcon icon={faTrashCan} size ="2x"onClick={qnaDelete}/></div>
@@ -216,7 +218,7 @@ const toggleReport = () => {
                     />
         </div>
         <h4>문의 답변</h4>
-        <hr/>
+        <hr className="qna_header"/>
         <div className="ansArea">
             
                 {itemQ.qna_state==0 ? <div></div>:
@@ -226,7 +228,7 @@ const toggleReport = () => {
                     </div>
                     }
                 {itemQ.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{itemQ.qna_answer}</div> }
-        </div><hr/>
+        </div><hr className="qna_header"/>
         <div className="PagingArea">
             <div className="qna-list-btn"><button onClick={(e)=>navigate('/qna')}>목록으로</button></div>
             {itemQ.next_qna_no ?

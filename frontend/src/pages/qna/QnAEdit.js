@@ -187,15 +187,6 @@ function QnAEdit() {
                     <h1>질의응답(QnA) 수정</h1>
                     <hr />
                     <div className="qna_titleArea">
-                        {/* 제목 */}
-                        <div>
-                            <input type="text" className="qna_title"
-                                id="qna_title"
-                                placeholder="제목을 입력하세요"
-                                value={qna_title}
-                                onChange={(e) => setQna_title(e.target.value)}
-                                name="email" />
-                        </div>
                         {/* 카테고리 */}
                         <div>
                             <select
@@ -210,6 +201,15 @@ function QnAEdit() {
                                     </option>
                                 })}
                             </select>
+                        </div>
+                        {/* 제목 */}
+                        <div>
+                            <input type="text" className="qna_title"
+                                id="qna_title"
+                                placeholder="제목을 입력하세요"
+                                value={qna_title}
+                                onChange={(e) => setQna_title(e.target.value)}
+                                name="email" />
                         </div>
                     </div>
                     {/* 글내용 */}

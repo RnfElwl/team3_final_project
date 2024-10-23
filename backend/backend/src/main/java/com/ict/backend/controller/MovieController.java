@@ -95,23 +95,21 @@ public class MovieController {
     public int insertMovieHit(@RequestBody MovieVO movieVO){
         int no = movieVO.getMovie_no();
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        String genre = movieVO.getMovie_genre();
         try{
-        movieService.updateMovieHit(no);
-        if(userid == "anonymousUser"){
-            return 1;
-        }
-        movieService.insertMovieHiStory(userid, no);
+            movieService.updateMovieHit(no);
+            if ("anonymousUser".equals(userid)) {
+                return 1;
+            }
+//            if(userid == "anonymousUser"){
+//                return 1;
+//            }
+            movieService.insertMovieHiStory(userid, no);
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return 0;
         }
 
         return 1;
     }
-
-
-
-
 
 }

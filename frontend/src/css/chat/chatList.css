@@ -35,6 +35,7 @@
   
 }
 .chatList .chat-tab>div{
+  cursor: pointer;
   color: #f1f1f1;
   padding: 10px 20px;
   border-bottom: 0px;
@@ -59,6 +60,7 @@
   color: #1d1d20;
 }
 .chatList .chat_create{
+  cursor: pointer;
   margin-top: 30px;
   margin-left: auto;
   margin-right: 100px;
@@ -80,8 +82,9 @@
   color: #f1f1f1;
 }
 .chatList .room_window {
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -115,9 +118,7 @@
 }
 .chatList .room{
   color: #f1f1f1;;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   border-radius: 30px;
   padding: 30px 40px;
   width: 600px;
@@ -163,7 +164,7 @@
 .chatList .chat_box{
   width: 100%;
   height: 250px;
-  
+  cursor: pointer;
 }
 .chatList .solo .solochat{
   width: 300px;

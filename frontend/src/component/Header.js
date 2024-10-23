@@ -85,7 +85,7 @@ function Header() {
   }
   useEffect(() => {
     if(index == -1 || location.pathname.startsWith("/admin")){
-      // underLine.current.style.display = `none`; // 밑줄 너비 설정
+      underLine.current.style.display = `none`; // 밑줄 너비 설정
       
     }
     else{
@@ -169,7 +169,9 @@ function Header() {
             }
             <div className={`${index==3?'focus':''}`}><Link to={'/qna'} onClick={()=>{tabClick(3)}} ref={(el) => (tabList.current[3] = el)}>QnA</Link></div>
             <div className={`${index==4?'focus':''}`}><Link to={'/community'} onClick={()=>{tabClick(4)}} ref={(el) => (tabList.current[4] = el)}>Community</Link></div>
-            <div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>
+            {
+              myid!==''&&(<div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>)
+            }
           </div>
           <div className='under_line' ref={underLine}></div>
           </div>
@@ -195,8 +197,8 @@ function Header() {
               ) : (
               // 토큰이 없는 경우: 로그인 및 회원가입 버튼 표시
               <>
-                <div className='login_btn'><Link to={'/signin'}>Login</Link></div>
-                <div className='join_btn'><Link to={'/signup'}>Join</Link></div>
+                <div className='login_btn' ><Link onClick={()=>{tabClick(-1)}} to={'/signin'}>Login</Link></div>
+                <div className='join_btn'><Link onClick={()=>{tabClick(-1)}} to={'/signup'}>Join</Link></div>
               </>
               )}
             {/* <div className='login_btn'><Link to={'/signin'}>로그인</Link></div>
