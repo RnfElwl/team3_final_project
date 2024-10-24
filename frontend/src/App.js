@@ -26,8 +26,7 @@ import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
 import QNA from './pages/qna/QnA'
-import QNAView from './pages/qna/QnAView.js'
-import MvShopping from './pages/shopping/MvShopping.js'    
+import QNAView from './pages/qna/QnAView.js'   
 import MyPage from './pages/mypage/MyPage';
 import More from './pages/mypage/More.js' 
 import LoginPage from './pages/mypage/LoginPage.js';
@@ -74,7 +73,6 @@ function App() {
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
-                <Route path='/shop/' element={<MvShopping/>}/>
                 <Route path='/mypage' element={<MyPage/>}/>
                 <Route path='/signin' element={<LoginPage/>}/>
                 <Route path = '/signup' element = {<Signup/>}/>
