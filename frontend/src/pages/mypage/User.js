@@ -206,10 +206,10 @@ function User() {
                         <button className="btn btn-secondary" onClick={createSoloRoom} style ={{marginLeft : "10px"}}>채팅하기</button>
                     </div>
                     <div id = "userinfo">
-                        <div onClick={() => handleOpenModal('following')}>
+                        <div className = "fol" onClick={() => handleOpenModal('following')}>
                             팔로잉 : <span>{userInfo.follower}</span>
                         </div>
-                        <div onClick={() => handleOpenModal('followers')}>
+                        <div className = "fol" onClick={() => handleOpenModal('followers')}>
                             팔로워 : <span>{userInfo.following}</span>
                         </div>
                         <div>게시글 : <span>{userInfo.community}</span></div>

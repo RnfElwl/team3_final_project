@@ -31,7 +31,7 @@ function MyPost() {
     const [nowPage, setNowPage] = useState(1);
     const [totalRecord, setTotalRecord] = useState(0);
         //전체페이지 계산
-        const totalPage = Math.ceil(totalRecord / 10);
+        const totalPage = Math.ceil(totalRecord / 5);
 
     const tabData = {
         게시글: { display: ["전체", "게시글", "댓글", "좋아요"], send: ["all", "community", "comment", "like"] },
@@ -76,6 +76,7 @@ function MyPost() {
         setActiveTab(tab);
         setActiveSubButton("전체");
         setSortOrder(1);
+        setSearchKeyword("");
     };
     
     const handleSubButtonClick = (button) => {
@@ -109,7 +110,7 @@ function MyPost() {
             const params = {
                 column: column,
                 order: order,
-                offset: nowPage * 10 - 10
+                offset: nowPage * 5 - 5
             };
     
             if (searchKeyword) {
@@ -162,7 +163,7 @@ function MyPost() {
         navigate(path);
     };
 
-    const [likeStatus, setLikeStatus] = useState(Array(10).fill(true));
+    const [likeStatus, setLikeStatus] = useState(Array(5).fill(true));
 
     const toggleLike = async (index, community) => {
         console.log(index, community);
@@ -218,7 +219,10 @@ function MyPost() {
     
             if (response.status === 200) {
                 console.log('삭제 성공:', response.data);
-                // 필요 시 전체 데이터를 다시 가져오는 로직
+                const englishTab = tabNames[activeTab];
+                const sortColumn = tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)];
+                const engorder = sortOrder === 1 ? "desc" : "asc";
+                fetchData(englishTab, sortColumn, engorder, searchType, searchKeyword);
             } else {
                 alert("삭제 실패");
                 console.log('삭제 실패:', response.data);
@@ -301,11 +305,11 @@ function MyPost() {
                             {/* 제목 선택 및 검색 */}
                             <div className="search-bar">
                                 <select className="dropdown" value={searchType} onChange={handleSearchTypeChange}>
-                                    <option value="title">제목</option>
+                                    <option value="title">{activeTab === "리뷰" ? "영화" : activeTab === "QnA" ? "질문" : "제목"}</option>
                                     {activeTab === "게시글" && <option value="usernick">작성자</option>}
                                     <option value="content">내용</option>
                                 </select>
-                                <input type="text" placeholder="검색어 입력" className="search-input" value={searchKeyword} onChange={handleSearchKeywordChange} />
+                                <input type="text" placeholder="검색어 입력" className="search-input" value={searchKeyword} onChange={handleSearchKeywordChange} onKeyDown={(e) => { if (e.key === "Enter") { handleSearchClick();} }}/>
                                 <button className="search-button" onClick={handleSearchClick}>검색</button>
                             </div>
                         </div>

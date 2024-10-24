@@ -117,10 +117,11 @@ function EditInfo() {
             .then(response => {
                 if (response.data > 0) {
                     console.log('User info updated successfully:', response.data);
-                    // 여기에서 성공 메시지 표시할 수 있음
+                    alert("정보 변경 성공");
+                    fetchProfile();
                 } else {
                     console.error('Failed to update user info or unauthorized:', response.data);
-                    // 실패 메시지 표시할 수 있음
+                    alert("정보 변경 실패");
                 }
             })
             .catch(error => {
@@ -222,7 +223,7 @@ function EditInfo() {
                                     type="text" 
                                     name="usertel" 
                                     value={formData.usertel} 
-                                    onChange={(e) => setFormData({ ...formData, usetel: e.target.value })} />
+                                    onChange={(e) => setFormData({ ...formData, usertel: e.target.value })} />
                             </div>
                             <div> 
                                 <span>이메일</span>  

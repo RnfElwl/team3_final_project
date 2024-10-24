@@ -316,8 +316,8 @@ function Mypage() {
                             <p>이메일 : <span>{userInfo.useremail}</span></p>
                         </div>
                         <div className = "userbottom">
-                            <p onClick={() => handleOpenModal('followers')}>팔로워 : <span>{userInfo.follower}</span></p>
-                            <p onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
+                            <p className = "fol" onClick={() => handleOpenModal('followers')}>팔로워 : <span>{userInfo.follower}</span></p>
+                            <p className = "fol" onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
                             <p>게시글 : <span>{userInfo.community}</span></p>
                             <p>댓글 : <span>{userInfo.comment}</span></p>
                         </div>
