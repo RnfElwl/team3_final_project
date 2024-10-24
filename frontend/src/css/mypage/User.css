@@ -90,6 +90,9 @@
     font-weight: 800;
     font-size: 1.4em;
 }
+.User .fol:hover{
+    cursor: pointer;
+}
  /* 슬라이더 쓰는 content는 height 높게 */
 .User .recent_watch .content_info, .bookmark .content_info{
     width: 90%;

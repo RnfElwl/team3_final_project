@@ -72,7 +72,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin").permitAll()
-                        .requestMatchers("/user/mypageinfo").hasAuthority("USER")
+                        .requestMatchers("/user/mypageinfo").authenticated()
+                        //.requestMatchers("/user/mypageinfo").hasAuthority("USER")
                         //.requestMatchers("/checkadmin").hasAuthority("ADMIN")
                         //.requestMatchers("/signup").hasAuthority("ADMIN")
                         .anyRequest().permitAll());

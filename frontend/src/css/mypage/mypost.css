@@ -20,6 +20,8 @@
     flex-wrap: wrap;
     justify-content: center;
     background: linear-gradient(#252525 40%, #1C1C20);
+    height: 400px;
+    align-content: flex-start;
     /* border: 1px solid white; */
 }
 /* 필터 영역 */
