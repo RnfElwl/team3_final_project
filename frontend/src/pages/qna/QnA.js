@@ -139,8 +139,9 @@ function QnA() {
             });
         } else {
             const result = 0;
+            alert("비밀번호가 틀렸습니다! 목록으로 되돌아갑니다.");
             navigate(`/qna/view/${privatePost.qna_no}`, { state: {result} });
-            // alert("비밀번호가 틀렸습니다!");
+            
             // setIsPasswordCheck(false);
         }
     };
@@ -304,7 +305,7 @@ function QnA() {
                             <h3>비밀글 알림</h3>
                             <p>이 게시글은 비밀글입니다. 비밀번호를 입력해주세요.</p>
                             <form className="qna_pwdCheckForm" onSubmit={handlePasswordSubmit}>
-                                <input id="qna_password" type="password" name="userpwd" maxLength='4' value={password}
+                                <input id="qna_password" type="password" name="userpwd" minLength='4' maxLength='20' value={password}
                                     onChange={handlePasswordChange} />
                                 <button value="submit">입력</button>
                             </form>

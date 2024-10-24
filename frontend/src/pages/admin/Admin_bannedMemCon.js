@@ -3,6 +3,7 @@ import './../../css/admin/adminBanMemCon.css'
 import axios from "../../component/api/axiosApi";
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {openAddReportAnsWindow} from './Admin_repCon';
 import $ from "jquery";
 
 
@@ -162,7 +163,7 @@ function BanMem(){
                                     </td>
                                     <td>{item.regiserdate}</td>
                                     <td>{item.reported_count}</td>
-                                    <td></td>
+                                    <td> </td>
                                 </tr>
                             ))
                         ) : (

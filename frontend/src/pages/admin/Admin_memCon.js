@@ -34,10 +34,10 @@ function MemCon(){
         };
       };
 
-    const genderChk=(e)=>{
+    const activeChk=(e)=>{
         e.preventDefault();
         const searchValue=e.target.value;
-        setSearchKey('gender');
+        setSearchKey('u.active_state');
         setSearchWord(searchValue);   
     }
     const handlesearchKeyChange = (e) => { //검색키 처리
@@ -133,8 +133,9 @@ function MemCon(){
     <div>
         멤버 필터 폼
         <div className="member-filterArea">
-            <button value='1' onClick={genderChk}>남</button>
-            <button value='2' onClick={genderChk}>여</button>
+            <button value={0} onClick={activeChk}>비활성</button>
+            <button value={1} onClick={activeChk}>활성</button>
+            <button value={2} onClick={activeChk}>정지</button>
 
             <div className="adminSearchForm">
                 <form onSubmit={handleSearchSubmit}>

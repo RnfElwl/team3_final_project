@@ -1,52 +1,97 @@
-.QnAViewBody{
+.QnAViewBody {
     padding-top: 10px;
-    color:#f1f1f1;
+    color: #f1f1f1;
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
 }
-.QnaTbl{
-    margin: 30px auto 0;
-    max-width: 800px;
-    width: 100%;
-}
-.QnaTbl th{
-    text-align: center;
-    border-bottom: 1px solid #48d1cdea; 
-    border-top: 1px solid #48d1cdea;
-}
-.QnaTbl th, .QnaTbl td{
-    padding: 10px;   
 
+.QnaTbl {
+    margin: 30px auto;
+    max-width: 800px;
+    width: 80%;
+    border-collapse: collapse; /* Ensures borders don't have gaps */
 }
-.QnaTbl th:nth-child(1){
-    width: 90px;
-    border-left: 1px solid #48d1cdea;
-    border-right: 1px solid #48d1cdea;
+
+.QnaTbl th, .QnaTbl td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Softens table borders */
 }
-.QnaTbl td:nth-child(3){
-    text-align: right;
+
+.QnaTbl th {
+    background-color: rgba(160, 156, 156, 0.8);
+    text-align: center;
 }
-.qnaType{
-    background-color: rgb(46, 44, 44);
-    
+
+.qnaType {
+    background-color: rgb(160, 156, 156);
 }
-.qnaItems{
+
+.qnaItems {
     display: flex;
-    justify-content: right;
+    justify-content: flex-end; /* Align items to the right */
 }
-.qnaItems div{
+
+.qnaItems div {
     margin: 10px 5px 0 5px;
 }
-.qna-imgArea img{
+
+.qna-imgArea img {
     width: 300px;
     height: 200px;
+    border-radius: 8px; /* Rounds image corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
 }
 
-.QnAViewBody .report_button {
-    background: none;
-    border: none;
+.qna-list-btn {
+    text-align: right;
 }
+
+.qna-list-btn button {
+    background-color: #555353;
+    border: none;
+    border-radius: 5px;
+    color: #7d807d;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.qna-list-btn button:hover {
+    background-color: #51e4dfea;
+    color: #194644ea;
+    transform: scale(1.05);
+}
+
+.next-qna, .prev-qna {
+    display: flex;
+    margin-bottom: 10px;
+    color: #51e4dfea;
+    font-size: 1.2em;
+}
+
+.next-qna div, .prev-qna div {
+    cursor: pointer;
+    color: #f1f1f1;
+}
+
+.next-qna div:hover, .prev-qna div:hover {
+    color: #51e4dfea;
+    text-decoration: underline; /* Keeps it consistent */
+}
+
+.qna_header {
+    width: 100%;
+    margin: 20px auto;
+    border-top: 2px solid rgba(255, 255, 255, 0.3); /* Adds a nice header line */
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 
 .QnAViewBody .report_window{
     display: none;

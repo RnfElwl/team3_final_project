@@ -1,5 +1,5 @@
 import react, { useEffect,useState } from 'react';
-// import '../App.css';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend,Filler } from 'chart.js';
 
@@ -29,6 +29,7 @@ function AdminTest() {
   const [start_comDate, setStart_comDate]=useState('');
   const [end_comDate, setEnd_comDate]=useState('');
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
   
   //QnA필터 옵션
   const handleQnaFilterChange = (e) => {
@@ -503,7 +504,7 @@ if(qna_filter ==="년"){
         <div className='simpBoardArea'>
           <div className="simpBoardT">
               멤버 목록
-              <div className="simpBoardL">더보기▷</div>
+              <div className="simpBoardL" onClick={(e)=>navigate('/admin/memCon')}>더보기▷</div>
           </div>
           <table className="memTable">
             <thead>
@@ -589,7 +590,7 @@ if(qna_filter ==="년"){
         <div className="simpBoardArea">
         <div className="simpBoardT">
             커뮤니티 게시글
-            <div className="simpBoardL">더보기▷</div>
+            <div className="simpBoardL" onClick={(e)=>navigate('/admin/comCon')}>더보기▷</div>
             </div>
               <div className="container">
                 <div className="row">

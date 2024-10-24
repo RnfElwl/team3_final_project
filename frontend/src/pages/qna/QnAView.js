@@ -46,9 +46,10 @@ function QnAView() {
                     setResult(1);
                 }            
             });
-        }else{
+        }else  if (result !== 1) {
             navigate(`/qna`)
             setResult(0);
+            
         }
     }, [params, result, privacyQ]);
 
@@ -175,21 +176,30 @@ const toggleReport = () => {
             <tbody>
             <tr>
                 <th className="qnaType">제목</th>
-                <td >{itemQ.qna_title}</td>
-                <td>{itemQ.qna_writedate}</td>
+                <td colSpan="3">{itemQ.qna_title}</td>
+ 
             </tr>
             <tr>
                 <th className="qnaType">작성자</th>
-                <td colSpan="2">{itemQ.usernick}</td>          
+                <td>{itemQ.usernick}</td> 
+                <th className="qnaType">작성일</th>
+                <td>{itemQ.qna_writedate}</td>        
             </tr>
             <tr>
                 <th className="qnaType">내용</th>
-                <td colSpan="3"> {itemQ.qna_content}</td>
+                <td colSpan="4">
+                    {itemQ.qna_content && itemQ.qna_content.split('\n').map((line, index) => (
+                        <React.Fragment key={index}>
+                            {line}
+                            <br />
+                        </React.Fragment>
+                    ))}
+                </td>
             </tr>
             <tr>
                 <th className="qnaType">첨부파일</th>
-                <td colSpan="2" className="qna-imgArea">
-                    {itemQ.qna_img&&qnaImgSrc ? (<img src={itemQ.qna_img}/>):<div>첨부된 파일이 없습니다.</div>}
+                <td colSpan="4" className="qna-imgArea">
+                    {itemQ.qna_img&&qnaImgSrc ? (<img src={`http://localhost:9988/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
                 </td>
             </tr>
             </tbody>

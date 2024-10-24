@@ -133,6 +133,7 @@ canvas{
 }
 .simpBoardL{
   text-align: right;
+  cursor: pointer;
 }
 .simpBoardT{
   display: flex;
