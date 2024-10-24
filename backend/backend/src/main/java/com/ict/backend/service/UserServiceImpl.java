@@ -70,11 +70,11 @@ public class UserServiceImpl  implements UserService {
     }
 
     @Override
-    public List<Map<String, String>> getBookmarks(String userid, int limit){
+    public List<Map<String, Object>> getBookmarks(String userid, int limit){
         return dao.getBookmarks(userid, limit);
     }
     @Override
-    public List<Map<String, String>> getHistory(String userid, int limit){
+    public List<Map<String, Object>> getHistory(String userid, int limit){
         return dao.getHistory(userid, limit);
     }
     @Override
@@ -135,6 +135,10 @@ public class UserServiceImpl  implements UserService {
             // 팔로우 중이 아니면 팔로우 추가 (INSERT)
             return dao.insertFollow(loginUser, followerUserId) > 0;
         }
+    }
+    @Override
+    public int isFollowing(String followerUserId, String loginUser){
+        return dao.isFollowing(loginUser, followerUserId);
     }
     @Override
     public List<Map<String, String>> getCommunityList(String userid, String order, int limit){
@@ -199,6 +203,15 @@ public class UserServiceImpl  implements UserService {
     @Override
     public int updatelastvisite(String userid){
         return dao.updatelastvisite(userid);
+    }
+    @Override
+    public int userunban(@Param("userid") String userid){
+        return dao.userunban(userid);
+    }
+
+    @Override
+    public int deletebantbl(@Param("userid") String userid){
+        return dao.deletebantbl(userid);
     }
 
 

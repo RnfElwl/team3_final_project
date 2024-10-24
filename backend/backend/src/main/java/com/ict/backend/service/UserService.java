@@ -20,8 +20,8 @@ public interface UserService {
     public String getuserpwd(String userid);
 
     // 사용자 정보 필요용
-    public List<Map<String, String>> getBookmarks(String userid, int limit);
-    public List<Map<String, String>> getHistory(String userid, int limit);
+    public List<Map<String, Object>> getBookmarks(String userid, int limit);
+    public List<Map<String, Object>> getHistory(String userid, int limit);
     public List<Map<String, String>> getfollower(String userid, int limit);
 
     public MemberVO getOtherUserInfo(String usernick);
@@ -36,6 +36,7 @@ public interface UserService {
 
     //public List<Map<String, Object>> getFollowData(String userid);
     public List<Map<String, Object>> getFollowData(String login_user, String userid, String endpoint);
+    int isFollowing(String followerUserId, String loginUser);
 
     boolean toggleFollow(String followerUserId, String loginUser);
 
@@ -50,4 +51,7 @@ public interface UserService {
     public String getBanEndDate(String userid);
     public int checkuserstate(String userid);
     public int updatelastvisite(String userid);
+
+    public int userunban(String userid);
+    public int deletebantbl(String userid);
 }
