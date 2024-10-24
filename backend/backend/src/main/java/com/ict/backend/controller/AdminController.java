@@ -209,26 +209,49 @@ public class AdminController {
     //Community Management Part
     @GetMapping("/comList")
     public ResponseEntity<Map<String, Object>> ComList(@ModelAttribute PagingVO pagingVO){
-        List<CommunityVO> result=adminService.getComList(pagingVO);
-        List<CommentVO> resultCo=adminService.getComMenList(pagingVO);
-        List<CommentReplyVO> resultre=adminService.getReplyList(pagingVO);
-        int comTotalPages = adminService.getTotalComRecord(pagingVO);
-        int comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
-        int comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
-        System.out.println("Input: " + pagingVO);
-        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
-        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
-
-
-
+        System.out.println(pagingVO.toString());
         Map<String, Object> resultMap = new HashMap<>();
+        int comTotalPages =0;
+        int comMenTotalPages =0;
+        int comReplyTotalPages =0;
+        if(pagingVO.getTabActive()==1){
+        List<CommunityVO> result=adminService.getComList(pagingVO);
         resultMap.put("comList", result);
+            comTotalPages = adminService.getTotalComRecord(pagingVO);
+        }
+        else if(pagingVO.getTabActive()==2) {
+            List<CommentVO> resultCo = adminService.getComMenList(pagingVO);
+            resultMap.put("comMenList", resultCo);
+            comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
+        }
+        else if(pagingVO.getTabActive()==3) {
+            List<CommentReplyVO> resultre = adminService.getReplyList(pagingVO);
+            resultMap.put("replyList", resultre);
+            comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
+        }
+        else{
+            List<CommunityVO> result=adminService.getComList(pagingVO);
+            resultMap.put("comList", result);
+            List<CommentVO> resultCo = adminService.getComMenList(pagingVO);
+            resultMap.put("comMenList", resultCo);
+            List<CommentReplyVO> resultre = adminService.getReplyList(pagingVO);
+            resultMap.put("replyList", resultre);
+            comTotalPages = adminService.getTotalComRecord(pagingVO);
+            comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
+            comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
+        }
+
+//        System.out.println("Input: " + pagingVO);
+//        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
+//        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+
+
+
+
         resultMap.put("comTotalPages", comTotalPages);
-        resultMap.put("comMenList",resultCo);
         resultMap.put("comMenTotalPages",comMenTotalPages);
-        resultMap.put("replyList",resultre);
         resultMap.put("comRepTotalPages",comReplyTotalPages);
-        System.out.println("Result: " + resultMap);
+//        System.out.println("Result: " + resultMap);
 
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
