@@ -5,9 +5,10 @@ import com.ict.backend.dao.EventDAO;
 import com.ict.backend.vo.EventNoticeVO;
 import com.ict.backend.vo.EventVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class EventServiceImpl implements EventService{
     private EventDAO eventDAO;
     @Autowired

@@ -7,7 +7,7 @@
     <select id="selectEventList">
         select * from event_tbl;
     </select>
-    <select id="selectEventList">
+    <select id="selectNoticeList">
         select * from event_notice_tbl;
     </select>
     <select id="selectEventPage">
