@@ -179,7 +179,6 @@
     height: 40px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
     margin-right: 5px; /* 여백 */
-    border: #555 1px solid;
 }
 
 .community_list .writer_info {

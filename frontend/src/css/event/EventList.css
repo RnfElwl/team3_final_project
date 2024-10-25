@@ -1,0 +1,36 @@
+.event_list{
+    max-width: 1200px;
+    min-width: 700px; /* 최소 너비 설정 */
+    margin: 0 auto;
+    background-color: #1C1C20; /* 배경색 */
+    color: #f0f0f0;
+}
+
+.event_list .notice{
+    display: flex;
+    border: 1px solid #999;
+}
+
+.event_list .eventItem{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.event_list .event{
+    display: flex;
+    width: calc(33.3% - 20px);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.event_list .event{
+    transform: scale(1.05);
+} 
+
+.event_list .eventImg{
+    width: 100%;
+    height: auto;
+    display: block;
+}

@@ -85,6 +85,8 @@ function App() {
                 <Route path ="/find/:type" element={<Find/>}/>
                 <Route path ="/success" element={<Success/>}/>
                 <Route path ="/reset-password" element={<ResetPassword/>}/>
+                <Route path ="/event/EventList" element={<EventList/>}/>
+                <Route path ="/event/EventView" element={<EventView/>}/>
             </Route>
         </Routes>
       </TokenValidator>
