@@ -28,5 +28,11 @@ public class EventServiceImpl implements EventService{
     public EventNoticeVO selectNoticePage(int notice_no){
         return eventDAO.selectNoticePage(notice_no);
     }
+    public int updatePointMinus(String userid, int point){
+        return eventDAO.updatePointMinus(userid, point);
+    }
+    public int updatePointAdd(String userid, int point){
+        return eventDAO.updatePointAdd(userid, point);
+    }
 
 }

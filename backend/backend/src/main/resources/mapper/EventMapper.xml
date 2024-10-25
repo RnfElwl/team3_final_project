@@ -13,7 +13,13 @@
     <select id="selectEventPage">
         select * from event_tbl where event_no=${param1};
     </select>
-    <select id="selectEventPage">
+    <select id="selectNoticePage">
         select * from event_notice_tbl where notice_no=${param1};
     </select>
+    <update id="updatePointMinus">
+        update user_tbl set user_point=user_point-${param2} where userid=#{param1}
+    </update>
+    <update id="updatePointAdd">
+        update user_tbl set user_point=user_point+${param2} where userid=#{param1}
+    </update>
 </mapper>

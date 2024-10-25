@@ -10,4 +10,6 @@ public interface EventDAO {
     public List<EventNoticeVO> selectNoticeList();
     public EventVO selectEventPage(int event_no);
     public EventNoticeVO selectNoticePage(int notice_no);
+    public int updatePointMinus(String userid, int point);
+    public int updatePointAdd(String userid, int point);
 }
