@@ -40,6 +40,8 @@ import MyPost from './pages/mypage/MyPost.js';
 import Find from './pages/mypage/Find.js';
 import Success from './pages/mypage/Success.js';
 import ResetPassword from './pages/mypage/ResetPassword.js';
+import EventList from './pages/event/EventList.js';
+import EventView from './pages/event/EventView.js';
 
 function App() {
   return (
@@ -85,8 +87,8 @@ function App() {
                 <Route path ="/find/:type" element={<Find/>}/>
                 <Route path ="/success" element={<Success/>}/>
                 <Route path ="/reset-password" element={<ResetPassword/>}/>
-                {/* <Route path ="/event/EventList" element={<EventList/>}/>
-                <Route path ="/event/EventView" element={<EventView/>}/> */}
+                <Route path ="/event" element={<EventList/>}/>
+                <Route path ="/event/EventView" element={<EventView/>}/>
             </Route>
         </Routes>
       </TokenValidator>
