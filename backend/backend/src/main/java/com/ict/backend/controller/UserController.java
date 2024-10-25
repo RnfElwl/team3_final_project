@@ -30,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -133,8 +135,8 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getUserData(@RequestHeader(value = "Host", required = false) String Host) {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         // 각 서비스에서 데이터 가져오기
-        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
-        List<Map<String, String>> history = userService.getHistory(userid, 10);
+        List<Map<String, Object>> bookmarks = userService.getBookmarks(userid, 10);
+        List<Map<String, Object>> history = userService.getHistory(userid, 10);
 
         // 결과를 하나의 맵에 담기
         Map<String, Object> responseData = new HashMap<>();
@@ -188,17 +190,18 @@ public class UserController {
 
     // 북마크한 정보 가져오기
     @GetMapping("/bookmarks")
-    public ResponseEntity<List<Map<String, String>>> getBookmarks() {
+    public ResponseEntity<List<Map<String, Object>>> getBookmarks() {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 0);
+        System.out.println("bookmarks" + userid);
+        List<Map<String, Object>> bookmarks = userService.getBookmarks(userid, 0);
         System.out.println(bookmarks);
         return ResponseEntity.ok(bookmarks);
     }
     // 최근 본 list 가져오기
     @GetMapping("/history")
-    public ResponseEntity<List<Map<String, String>>> getHistory() {
+    public ResponseEntity<List<Map<String, Object>>> getHistory() {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Map<String, String>> history = userService.getHistory(userid, 0);
+        List<Map<String, Object>> history = userService.getHistory(userid, 0);
         System.out.println(history);
         return ResponseEntity.ok(history);
     }
@@ -366,15 +369,22 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "User not found"));
         }
-
+        String login_user = SecurityContextHolder.getContext().getAuthentication().getName();
+        int followcheck = 0;
         String userid = vo.getUserid();
-        List<Map<String, String>> bookmarks = userService.getBookmarks(userid, 10);
+
+        if(!login_user.equals("anonymousUser")){
+            followcheck = userService.isFollowing(userid, login_user);
+        }
+
+        List<Map<String, Object>> bookmarks = userService.getBookmarks(userid, 10);
 //        List<Map<String, String>> followers = userService.getfollower(userid, 14);
 
         String userprofile = "http://" + Host +"/" + vo.getUserprofile();
 
         Map<String, Object> userdata = new HashMap<>();
         userdata.put("userid", userid);
+        userdata.put("followercheck", followcheck);
         userdata.put("usernick", vo.getUsernick());
         userdata.put("userprofile", userprofile);
         userdata.put("bookmarks", userService.getCountBookmarks(userid));
@@ -443,6 +453,9 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
         String follower_user_id = vo.getUserid();
         if (!login_user.equals("anonymousUser")) {
             try {
+                if (login_user.equals(follower_user_id)) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You cannot follow yourself.");
+                }
                 boolean isUpdated = userService.toggleFollow(follower_user_id, login_user);
                 if (isUpdated) {
                     return ResponseEntity.ok("Follow status updated successfully");
@@ -597,22 +610,34 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
                                         @RequestParam(value = "userpwd", required = false) String userpwd) {
         Map<String, Object> resultMap = new HashMap<>();
         int userstate = userService.checkuserstate(userid);
-        // 서비스나 DAO를 통해 banEndDate를 조회
 
-        if(userstate == 2){
+        if (userstate == 2) {
             String banEndDate = userService.getBanEndDate(userid);
+
             if (banEndDate != null) {
-                // 정지된 경우
-                resultMap.put("banned", 1);
-                resultMap.put("banEndDate", banEndDate);
+                LocalDate banEndDateParsed = LocalDate.parse(banEndDate, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+                LocalDate today = LocalDate.now();
+
+                // banEndDate 확인
+                if (banEndDateParsed.isAfter(today) || banEndDateParsed.isEqual(today)) {
+                    // 정지된 경우
+                    resultMap.put("banned", 1);
+                    resultMap.put("banEndDate", banEndDate);
+                } else {
+                    // 정지 기간이 끝났을 경우
+                    userService.deletebantbl(userid);
+                    userService.userunban(userid);
+                    resultMap.put("banned", 0);
+                }
             } else {
-                // 정지되지 않은 경우
+                // banEndDate가 null인 경우 (정지되지 않은 경우)
+                userService.userunban(userid);
                 resultMap.put("banned", 0);
             }
-        }else if (userstate == 0){
-            resultMap.put("deleted", 0);
+        } else if (userstate == 0) {
+            // 사용자 상태가 삭제된 경우
+            resultMap.put("deleted", 1);
         }
-
         return resultMap;
     }
 

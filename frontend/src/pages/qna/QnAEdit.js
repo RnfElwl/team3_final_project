@@ -38,7 +38,7 @@ function QnAEdit() {
             .then(response => {
                 setQnAEdit(response.data);
                 console.log(response.data);
-                setPreQpwd(qna_pwd);
+                setPreQpwd(response.data[0].qna_pwd);
                 setImages(`http://localhost:9988/qna/`+response.data[0].qna_img);
             });
     }, [params]);
@@ -48,20 +48,19 @@ function QnAEdit() {
         console.log(head_title);
         setHead_title(e.target.value);
     };
-    //비밀번호 변경
     const handleqnapwdChange = (e) => {
-        setQna_pwd(e.target.value);
-    }
+        const value = e.target.value;
+        setQna_pwd(value);
+    };
     //비밀글 설정 변경
     const handleprivacyQChange = (e) => {
-        setprivacyQ(e.target.value);
+        setprivacyQ(Number(e.target.value));
     };
     //비밀글 설정에 따라 비밀번호 저장 및 초기화
     useEffect(() => {
-        if (privacyQ === '0') {
-            setPreQpwd(qna_pwd);
+        if (privacyQ === 0) {
             setQna_pwd('');
-        } else if (privacyQ === '1') {
+        } else if (privacyQ === 1) {
             setQna_pwd(preQpwd);
         }
     }, [privacyQ]);
@@ -103,9 +102,9 @@ function QnAEdit() {
         if (item?.head_title) {
             setHead_title(item.head_title);
         }
-        if (item?.privacyQ) {
-            setprivacyQ(item.privacyQ);
-        }
+        // if (item?.privacyQ) {
+        //     setprivacyQ(item.privacyQ);
+        // }
         if (item?.privacyQ != 1) {
             setQna_pwd('');
         } else {
@@ -129,7 +128,7 @@ function QnAEdit() {
             qna_content: qna_content,
             head_title: head_title,
             privacyQ: privacyQ,
-            qna_pwd: privacyQ === '1' ? qna_pwd : null,
+            qna_pwd: privacyQ === 1 ? qna_pwd : null,
             qna_state: qna_state,
             active_state: active_state,
         };
@@ -155,9 +154,9 @@ function QnAEdit() {
             alert("카테고리를 선택해주세요.");
             return;
         }
-        if (privacyQ === '1' && (qna_pwd.trim().length < 4)) {
-            alert('비밀번호를 반드시 4자리로 입력하세요.');
-            return;
+        if (privacyQ === 1 && (qna_pwd.trim().length < 4||qna_pwd.trim().length > 20)) {
+            alert('비밀번호를 반드시 4자리 이상 20자리 이하로 입력하세요.');
+            return false;
         }
     
         console.log("hihi");
@@ -227,8 +226,8 @@ function QnAEdit() {
                             <input
                                 type='radio'
                                 name='privacy'
-                                value='0'
-                                checked={privacyQ === '0'}
+                                value="0"
+                                checked={privacyQ === 0}
                                 onChange={handleprivacyQChange}
                             /> <span className="qna-custom-radio">공개글</span>
                         </label>
@@ -236,24 +235,26 @@ function QnAEdit() {
                             <input
                                 type='radio'
                                 name='privacy'
-                                value='1'
-                                checked={privacyQ === '1'}
+                                value="1"
+                                checked={privacyQ === 1}
                                 onChange={handleprivacyQChange}
                             /> <span className="qna-custom-radio">비밀글</span>
                         </label>
-                        {privacyQ === '1' && (
+                    </div>
+                        {privacyQ == 1 && (
                             <div className="qna_pwd_box">
                                 <input
-                                    type='text'
+                                    type='password'
                                     placeholder='비밀번호를 설정하세요(숫자 4자리)'
-                                    maxLength='4'
+                                    minLength='4'
+                                    maxLength='20'
                                     value={qna_pwd}
                                     onChange={(e) => setQna_pwd(e.target.value)}
                                 />
                             </div>
                         )}
                         {/* 이미지 목록 */}
-                        <div className="imgUploader-box">
+                <div className="imgUploader-box">
                     <input
                         type='file'
                         accept='image/*'
@@ -273,7 +274,6 @@ function QnAEdit() {
                             className="film-strip" />)}
                     </div>
                 </div>
-                    </div>
                     <div className='right-buttons'>
                         <button type='submit'>문의 저장</button>
                     </div>

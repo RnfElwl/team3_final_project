@@ -7,8 +7,12 @@
         select qna_no, userid, head_title, qna_title,date_format(qna_writedate, '%y-%m-%d %H:%i') qna_writedate,
         privacyQ,qna_state,active_state,qna_pwd from qna_tbl
         where
-        <if test="searchWord!=null and searchWord!=''">
+        <if test="searchWord!=null or searchWord!=''">
             ${searchKey} like '%${searchWord}%' and
+        </if>
+        <if test="logId!=null or logId!=''">
+            qna_no not in (select rt.report_tblno
+            from report_tbl rt where rt.report_userid=#{logId} and rt.report_tblname=4) and
         </if>
         active_state IN (1, 2)
         order by qna_no desc
@@ -47,7 +51,9 @@
     <select id="getPrevQnaNo" resultType="int">
         SELECT MAX(qna_no)
         FROM qna_tbl
-        WHERE qna_no <![CDATA[<]]> #{qna_no} AND active_state not IN (0) and privacyQ not in (1)
+        WHERE qna_no <![CDATA[<]]> #{qna_no}
+        AND active_state not IN (0)
+        AND privacyQ not in (1)
     </select>
     <select id="getPrevTitle" resultType="String">
         select qna_title from qna_tbl where qna_no=#{prevNo}
@@ -69,7 +75,7 @@
     <select id="getTotalRecord" resultType="int">
         select count(qna_no) from qna_tbl
         where
-        <if test="searchWord!=null and searchWord!=''">
+        <if test="searchWord!=null or searchWord!=''">
             ${searchKey} like '%${searchWord}%' and
         </if>
         active_state IN (1, 2)

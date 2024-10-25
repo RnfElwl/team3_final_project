@@ -150,6 +150,16 @@ function Mypage() {
         fetchUserList(type);
         setIsModalOpen(true);
     };
+    const handleCloseModal = async () => {
+        try {
+            // 모달을 닫기 전에 사용자 정보를 먼저 업데이트
+            await fetchtotaldata();
+        } catch (error) {
+            console.error("Error fetching user info during modal close:", error);
+        }
+        // 사용자 정보 업데이트가 완료된 후 모달을 닫음
+        setIsModalOpen(false);
+    };
     const fetchUserList = async (type) => {
         console.log(userInfo.usernick);
         console.log(type);
@@ -305,7 +315,7 @@ function Mypage() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                     <div id = "profile">
-                        <CustomImage src = {profileImageSrc} alt = {profile} onError={handleProfileImageError}/>
+                        <CustomImage src = {profileImageSrc} alt = {profile} onError={handleProfileImageError} style={{ cursor: 'default' }}/>
                         <span>{userInfo.usernick}님</span>
                     </div>
                     <div id = "userinfo">
@@ -384,7 +394,7 @@ function Mypage() {
                     </div>
                     {/* 즐찾 회원 */}
                     {isModalOpen && (
-                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        <Modal onClose={handleCloseModal} title={modalTitle}>
                         {currentList.length > 0 ? (
                         <ul className="user-list-ul">
                             {currentList.map((user, index) => {
@@ -444,7 +454,7 @@ function Mypage() {
                                                 <li className="list_title"
                                                     onClick={() => navigate(`/community/communityView/${communitylist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{communitylist.community_title}</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete"); toggledelete(index, communitylist, "community");}}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); toggledelete(index, communitylist, "community");}}/>
                                                 </li>
                                                 <li className="smaller-text">
                                                 <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(communitylist.community_content) }} />
@@ -582,7 +592,7 @@ function Mypage() {
                                                             <span>[{qna.head_title == 1 ? "영화" : (qna.head_title == 2 ? "사이트" : "기타")}] </span>
                                                             {qna.qna_title}
                                                         </div>
-                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("working"); toggledelete(index, qna, "qna");}} />
+                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); toggledelete(index, qna, "qna");}} />
                                                     </li>
                                                     <li className="smaller-text" style ={{display:'flex', justifyContent: 'space-between'}}>
                                                         <div className = "text-content">{qna.qna_content}</div>

@@ -66,6 +66,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: default;
 }
 #userinfo>.information input{
     font-size: 13px;

@@ -92,11 +92,17 @@ input[type="radio"]:checked + .qna-custom-radio {
     background-color: #48d1cdea;
     color:#f1f1f1;
   }
+.qna_pwd_box{
+       width: 1000px; 
+       text-align: left;
+       margin: 0 auto;
+  }
 .qna_pwd_box input{
+
     padding: 10px;
     border-radius: 5px;
     background-color: rgb(245, 245, 247);
-    width: 280px;
+    width: 40%;
 }
 
 /* 이미지 업로더 css */
@@ -105,11 +111,6 @@ input[type="radio"]:checked + .qna-custom-radio {
     margin: 0 auto;
     margin-bottom: 40px;
     
-}
-/* 이미지 미리보기 css */
-.image-preview{
-    max-width: 860px;
-    margin: 0 auto;
 }
 /* HTML: <img class="film-strip" src="" alt=""> */
 .film-strip {
@@ -124,6 +125,7 @@ input[type="radio"]:checked + .qna-custom-radio {
     border: var(--s) solid var(--c);
     padding: calc(var(--s)*2) calc(var(--s)*1.5);
     box-sizing: content-box;
+    margin: 0 auto;
     
   }
 /* 저장 버튼 css */

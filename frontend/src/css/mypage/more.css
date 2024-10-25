@@ -13,7 +13,7 @@
 }
 
 .More .otherinfo{
-    height: 70vh;
+    /* height: 70vh; */
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;

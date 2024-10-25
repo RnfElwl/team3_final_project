@@ -84,7 +84,8 @@
         UPDATE image_tbl set image_url = #{param1} where image_no = #{param2}
     </update>
     <select id="getBookmarks" resultType="map">
-        SELECT m.movie_kor, m.movie_code, m.movie_link FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        SELECT m.movie_kor, m.movie_code, m.movie_link, bookmartk_date FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        order by bookmartk_date desc
         <if test="limit != null and limit > 0">
             LIMIT #{limit}
         </if>
@@ -93,7 +94,11 @@
         SELECT count(*) FROM bookmark_tbl WHERE userid = #{userid}
     </select>
     <select id="getHistory" resultType="map">
-        select m.movie_kor, m.movie_code, m.movie_link from history_sec_tbl h join movie_data_tbl m on h.movie_no = m.movie_no where h.userid = #{userid}
+        SELECT m.movie_kor, m.movie_code, m.movie_link, MAX(h.history_sec_date) AS history_sec_date
+        FROM history_sec_tbl h JOIN movie_data_tbl m ON h.movie_no = m.movie_no
+        WHERE h.userid = #{userid}
+        GROUP BY m.movie_kor, m.movie_code, m.movie_link
+        ORDER BY MAX(h.history_sec_date) DESC
         <if test="limit != null and limit > 0">
             LIMIT #{limit}
         </if>
@@ -127,10 +132,10 @@
         SELECT count(*) FROM community_tbl where userid = #{userid};
     </select>
     <select id="getCountComment" resultType = "int">
-        SELECT count(*) FROM community_comment_tbl where userid = #{userid};
+        SELECT count(*) FROM community_comment_tbl where userid = #{userid} and active_state = 1;
     </select>
     <select id ="getCountReplyComment" resultType="int">
-        SELECT count(*) FROM reply_comment_tbl where userid = #{userid};
+        SELECT count(*) FROM reply_comment_tbl where userid = #{userid} and active_state = 1;
     </select>
 
     <select id="getFollowData" resultType = "map">
@@ -167,7 +172,8 @@
 
     <insert id="insertFollow">
         INSERT INTO follower_tbl (userid, follower_userid)
-        VALUES (#{loginUser}, #{followerUserId})
+        SELECT #{loginUser}, #{followerUserId}
+        WHERE #{loginUser} != #{followerUserId};
     </insert>
 
     <!-- 팔로우 취소 -->
@@ -263,6 +269,12 @@
     <update id="updatelastvisite">
         UPDATE user_tbl SET lastvisite = CURRENT_TIMESTAMP WHERE userid = #{userid}
     </update>
+    <update id="userunban">
+        UPDATE user_tbl SET active_state = 1 WHERE userid = #{userid}
+    </update>
+    <delete id ="deletebantbl">
+        DELETE FROM ban_tbl WHERE userid = #{userid}
+    </delete>
 
 
 

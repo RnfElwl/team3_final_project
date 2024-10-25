@@ -244,7 +244,6 @@
         COUNT(cl.community_no) AS community_like, c.community_writedate, c.hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state, c.category, c.privacy
         FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
-
         <where>
             <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
                 1=1
@@ -253,17 +252,18 @@
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
                 c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
+        </where>
 
 <!--            <if test="activeStateChk != null and activeStateChk != ''">-->
 <!--                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')-->
 <!--            </if>-->
-        </where>
+
 
         GROUP BY c.community_no, c.userid, c.community_title, c.community_content,
         c.community_writedate, c.hit, c.edit_date,
         c.edit_state, c.edit_user, c.active_state,
         c.category, c.privacy
-        LIMIT #{onePageRecord} OFFSET #{offset}
+        LIMIT ${onePageRecord} OFFSET ${offset}
     </select>
 
     <select id="getTotalComRecord" resultType="int">
@@ -276,9 +276,9 @@
         SELECT c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
         COUNT(rc.userid) AS reply_cnt, c.edit_date, c.edit_user, c.active_state
         FROM community_comment_tbl c
-        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no  -- LEFT JOIN을 사용
+        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
-                where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+                where c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
         GROUP BY c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state
