@@ -113,6 +113,10 @@
     overflow: hidden;
 }
 
+.community_list .list:hover{
+    transform: scale(1.05); 
+}
+
 @media (max-width: 1200px) {
     .community_list {
         justify-content: center; /* 게시물들이 중앙에 배치되도록 */

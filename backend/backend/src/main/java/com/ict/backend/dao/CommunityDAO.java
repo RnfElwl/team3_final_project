@@ -15,7 +15,7 @@ public interface CommunityDAO {
 
     // 게시글 리스트 조회 메서드
 //    Page<CommunityVO> getCommunityList(Pageable pageable);
-    List<CommunityVO> getCommunityList(String userid, String sortType);
+    List<CommunityVO> getCommunityList(String userid, String sortType, String categoryType);
 //    List<CommunityVO> getCommunityList(@Param("size") int size, @Param("offset") int offset);
 //    int getTotalCount(); // 총 게시물 수를 가져오는 메서드
 
