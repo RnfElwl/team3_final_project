@@ -22,4 +22,7 @@
     <update id="updatePointAdd">
         update user_tbl set user_point=user_point+${param2} where userid=#{param1}
     </update>
+    <insert id="insertFirstCome">
+        insert into event_first_come(userid, event_no) values(#{param1}, ${param2})
+    </insert>
 </mapper>

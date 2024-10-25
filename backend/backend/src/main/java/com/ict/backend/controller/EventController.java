@@ -43,21 +43,21 @@ public class EventController {
         return eventService.selectNoticePage(notice_no);
     }
     @PostMapping("/point/minus")
-    public int updatePointMinus(int point){
+    public int updatePointMinus(@RequestBody int event_no, @RequestBody int event_point){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         MemberVO memberVO =  joinService.findByUserid(userid);
         int user_point = memberVO.getUser_point();
-        if(user_point < point){
+        if(user_point < event_point){
             return 0;
         }
-        return eventService.updatePointMinus(userid, point);
+
+        eventService.insertFirstCome(userid, event_no);
+        return eventService.updatePointMinus(userid, event_point);
     }
     @PostMapping("/point/add")
     public int updatePointAdd(int point){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         return eventService.updatePointAdd(userid, point);
     }
-
-
 
 }

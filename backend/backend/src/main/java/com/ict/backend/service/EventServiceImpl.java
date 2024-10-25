@@ -34,5 +34,8 @@ public class EventServiceImpl implements EventService{
     public int updatePointAdd(String userid, int point){
         return eventDAO.updatePointAdd(userid, point);
     }
+    public int insertFirstCome(String userid, int no){
+        return eventDAO.insertFirstCome(userid, no);
+    }
 
 }
