@@ -28,6 +28,7 @@ function CommunityList() {
 
     const [communityList, setCommunityList] = useState([]);
     const [sortType, setSortType] = useState("latest");
+    const [categoryType, setCategoryType] = useState('All Posts');  // 선택된 카테고리 상태
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -42,16 +43,21 @@ function CommunityList() {
                 return "기타";
         }
     };
-    function communityListSetting(sortType){
+    
+    useEffect(() => {
+        communityListSetting(sortType, categoryType);
+    }, []);
+
+    function communityListSetting(sortType, categoryType){
         axios.get('http://localhost:9988/community/list', {
-            params: { sortType } // sortType을 params로 전달
+            params: { sortType, categoryType } // sortType을 params로 전달
         })
         .then(response => {
                 console.log(response.data);
-                console.log(response.data);
+                setCommunityList(response.data);
+                
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
-                setCommunityList(response.data);
                 
                 // 카테고리별 게시물 수 계산
                 const counts = response.data.reduce((acc, item) => {
@@ -148,9 +154,9 @@ function CommunityList() {
         setSelectedCategory(category);
 
         if (category === "All Posts") {
-            setFilteredCommunity(community); // 카테고리를 선택할 때 상태 업데이트
+            setFilteredCommunity(communityList); // 카테고리를 선택할 때 상태 업데이트
         } else {
-            setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
+            setFilteredCommunity(communityList.filter(item => getCategoryName(item.category) === category));
         }
     };  
 
@@ -280,22 +286,39 @@ function CommunityList() {
         setFilteredCommunity(communityList); // communityList가 변경될 때마다 업데이트
     }, [communityList]);
 
-    const sortCommunityList = (type) => {
-        let sortedList;
+    const sortCommunityList = (type, category) => {
+        let filteredList = communityList;
+
+        // 카테고리에 따른 필터링
+        if (category && category !== "All Posts") {
+            filteredList = communityList.filter(item => getCategoryName(item.category) === category);
+        }
+        let sortedList = [...filteredList];
 
         if (type === "latest") {
-            sortedList = [...communityList].sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
+            sortedList.sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
         } else if (type === "hit") {
-            sortedList = [...communityList].sort((a, b) => b.hit - a.hit);
+            sortedList.sort((a, b) => b.hit - a.hit);
         } else if (type === "like") {
-            sortedList = [...communityList].sort((a, b) => b.community_like - a.community_like);
+            sortedList.sort((a, b) => b.community_like - a.community_like);
         }
 
-        setCommunityList(sortedList);
+        setFilteredCommunity(sortedList);
         setSortType(type);
     };
-    
 
+    // 카테고리 선택 시 호출되는 함수
+    const handleCategoryChange = (category) => {
+        setCategoryType(category);
+        sortCommunityList(sortType, category); // 선택된 정렬 상태를 유지한 채로 카테고리 변경
+    };
+
+    // 정렬 선택 시 호출되는 함수
+    const handleSortChange = (sort) => {
+        setSortType(sort);
+        sortCommunityList(sort, categoryType); // 선택된 카테고리 상태를 유지한 채로 정렬 변경
+    };
+        
     return (
         <div className="community_list">
             <div className="container">
@@ -303,7 +326,7 @@ function CommunityList() {
                     <div className="category_box">
                         <ul className="category_list">
                             {categories.map(category => (
-                                <li key={category} onClick={() => filterByCategory(category)} className={`category_item ${selectedCategory === category ? 'active' : ''}`}>
+                                <li key={category} onClick={() => handleCategoryChange(category)} className={`category_item ${categoryType  === category ? 'active' : ''}`}>
                                     {category}
                                 </li>
                             ))}
@@ -334,19 +357,19 @@ function CommunityList() {
                 </div>
                 <div className="post">
                     <div className="category_counts">
-                        {/* 선택된 카테고리의 게시물 수만 표시 */}
-                        {selectedCategory ? (
+                        {categoryType === "All Posts" ?(
                             <div>
-                                {/* {selectedCategory}*/} {categoryCounts[selectedCategory] || 0} post
-                            </div>
-                         ) : (
-                            <div>
-                                {/* 선택된 카테고리가 없을 때 전체 게시물 수 */}
+                                {/* 전체 카테고리 수만 표시 */}
                                 {categoryCounts["All Posts"] || 0} post
-                            </div>   
+                            </div>
+                        ) : (
+                            <div>
+                                {/* 선택된 카테고리의 게시물 수 */}
+                                {categoryCounts[categoryType] || 0} post
+                            </div>
                         )}
                     </div>
-                    <select onChange={(e) => sortCommunityList(e.target.value)} value={sortType}>
+                    <select onChange={(e) => handleSortChange(e.target.value)} value={sortType}>
                         <option value="latest">최신순</option>
                         <option value="hit">조회순</option>
                         <option value="like">인기순</option>

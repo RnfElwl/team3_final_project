@@ -2,10 +2,14 @@
 import React from 'react';
 import './css/Footer.css';
 import {Link} from 'react-router-dom';
-
+import { CiGift } from "react-icons/ci";
 
 function Footer() {
     return (
+        <>
+        <div className='event_move'>
+            <Link to={"/event"}><CiGift/></Link>
+        </div>
         <footer className='footer'>
             <div className='footer-info'>
                 <div className='logo-container'>
@@ -29,6 +33,7 @@ function Footer() {
                 <p> Privacy Policy | Terms of Service </p>
             </div>
         </footer>
+        </>
         );
     }
     

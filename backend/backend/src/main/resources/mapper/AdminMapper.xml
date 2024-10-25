@@ -184,6 +184,7 @@
         b.stop_banDate,
         u.active_state;
     </select>
+<!--    <update id=""-->
     <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
         select report_no,report_userid, reported_userid, report_content, report_tblname,
         report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
@@ -200,7 +201,13 @@
         select userid, start_banDate, stop_banDate, banContent, editBanDate
         from ban_tbl where userid=#{reported_userid}
     </select>
-
+    <update id="deleteBanHistory">
+        delete from ban_tbl
+        WHERE userid IN
+        <foreach item="useridd" collection="userids" open="(" separator="," close=")">
+            #{useridd}
+        </foreach>
+    </update>
     <update id="updateUserReport">
         update report_tbl
         set edit_user = #{edit_user},
@@ -224,7 +231,6 @@
         editBanDate=now()
         where userid=#{userid}
     </update>
-
     <update id="updateMemActive">
         UPDATE user_tbl
         SET active_state = #{activeState}

@@ -31,7 +31,6 @@
     width: 70px; /* 작성자 이미지 크기 */
     height: 70px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
-    border: 1px solid #ddd;
 }
 
 .community_view .writer_info {
@@ -350,7 +349,6 @@
     width: 40px; /* 댓글 작성자 이미지 너비 */
     height: 40px; /* 댓글 작성자 이미지 높이 */
     border-radius: 50%; /* 둥근 이미지 */
-    border: #54575a 1px solid;
 }
 
 .community_view .comment_writer_name{

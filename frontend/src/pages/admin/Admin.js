@@ -587,19 +587,37 @@ if(qna_filter ==="년"){
             <Line data={sComData} options={s_Coptions} width="300px" height="300px" />
           </div>
         </div>
-        <div className="simpBoardArea">
-        <div className="simpBoardT">
-            커뮤니티 게시글
-            <div className="simpBoardL" onClick={(e)=>navigate('/admin/comCon')}>더보기▷</div>
-            </div>
-              <div className="container">
-                <div className="row">
-                <div className="col-sm-1">No</div>
-                <div className="col-sm-6">제목</div>
-                <div className="col-sm-2">등록일</div>
-                <div className="col-sm-3">조회수</div>
-              </div>
-            </div>
+        <div className='simpBoardArea'>
+          <div className="simpBoardAnotherT">
+              멤버 목록
+              <div className="simpBoardL" onClick={(e)=>navigate('/admin/memCon')}>더보기▷</div>
+          </div>
+            <table className="memTable">
+            <thead>
+              <tr>
+                <th>피신고인 ID</th>
+                <th>신고유형</th>
+                <th>신고시간</th>
+                <th>신고 수리 여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* {inputMemData.length > 0 ? (
+                inputMemData.map((item, index) => (
+                  <tr key={item.userid || index}>
+                    <td>{item.userid}</td>
+                    <td>{item.username}</td>
+                    <td>{item.regiserdate}</td>
+                    <td>{item.active_state === 1 ? "활성화" : "비활성화"}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">Loading...</td>
+                </tr>
+              )} */}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>    

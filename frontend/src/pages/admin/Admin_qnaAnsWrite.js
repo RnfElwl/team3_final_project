@@ -15,6 +15,8 @@ function QnaAnsWrite(){
     const[answer_user, setAnswer_user] =useState([]);//답변하는 운영자 아이디
     const [qna_state]=useState(1); //문의 상태
 
+    
+
 
     //관리자 아이디 체크
     useEffect(() => checkId(), [])

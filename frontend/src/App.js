@@ -22,6 +22,7 @@ import AdminQAns from './pages/admin/Admin_qnaAnsWrite.js'
 import AdminComCon from './pages/admin/Admin_comCon.js'
 import AdminMemCon from './pages/admin/Admin_memCon.js'
 import AdminBanMemCon from './pages/admin/Admin_bannedMemCon.js';
+import AdminBanEdit from './pages/admin/Admin_banEditWrite.js';
 import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
@@ -40,6 +41,9 @@ import MyPost from './pages/mypage/MyPost.js';
 import Find from './pages/mypage/Find.js';
 import Success from './pages/mypage/Success.js';
 import ResetPassword from './pages/mypage/ResetPassword.js';
+import EventList from './pages/event/EventList.js';
+import EventView from './pages/event/EventView.js';
+import EventNoticeView from './pages/event/EventNoticeView.js';
 
 function App() {
   return (
@@ -66,6 +70,7 @@ function App() {
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
                 <Route path='/admin/memCon' element={<AdminMemCon/>}/>
                 <Route path='/admin/banMemCon' element={<AdminBanMemCon/>}/>
+                <Route path='/admin/banEdit/:userid' element={<AdminBanEdit/>}/>
                 <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
@@ -85,6 +90,9 @@ function App() {
                 <Route path ="/find/:type" element={<Find/>}/>
                 <Route path ="/success" element={<Success/>}/>
                 <Route path ="/reset-password" element={<ResetPassword/>}/>
+                <Route path ="/event" element={<EventList/>}/>
+                <Route path ="/event/:event_no" element={<EventView/>}/>
+                <Route path ="/event/notice/:notice_no" element={<EventNoticeView/>}/>
             </Route>
         </Routes>
       </TokenValidator>

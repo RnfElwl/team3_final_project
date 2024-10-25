@@ -261,6 +261,7 @@ function ComCon(){
                 </div>
             </form>
             <form onSubmit={editActiveStateComSubmit}>
+            <div className="adminSearchForm">
                 <div className="AdCom-tapMenu">
                     <button
                         className="comListTap"
@@ -278,17 +279,18 @@ function ComCon(){
                         value="3"
                         disabled={CommunityActivity === 3}>대댓글</button>
                 </div>
-                <select
-                        value={editActive_state}
-                        onChange={handleActive_StateChange}
-                        className="qna_active_editopt"
-                    >
-                        <option value={1}>활성</option>
-                        <option value={0}>비활성</option>
-                </select>
+                <div>
+                    <select
+                            value={editActive_state}
+                            onChange={handleActive_StateChange}
+                            className="qna_active_editopt">
+                            <option value={1}>활성</option>
+                            <option value={0}>비활성</option>
+                    </select>
 
-                <button type="submit">전송</button>
-
+                    <button type="submit">전송</button>
+                </div>
+            </div>
                 {CommunityActivity === 1 ? (
                     <table className="AdminComTable">
                         <thead>

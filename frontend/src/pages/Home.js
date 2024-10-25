@@ -46,22 +46,19 @@ function Home() {
   };
   
   useEffect(() => {
-    // 페이지 로드 후 약간 멈췄다가 스크롤
     const timeoutId = setTimeout(() => {
       if (bannerRef.current) {
         const bannerHeight = bannerRef.current.offsetHeight;
         
-        // 배너 높이 + 헤더 높이를 합산하여 스크롤 위치 계산
         const scrollToPosition = bannerHeight;
 
         window.scrollTo({
-          top: scrollToPosition, // 스크롤 위치
-          behavior: 'smooth', // 부드럽게 스크롤
+          top: scrollToPosition, 
+          behavior: 'smooth', 
         });
       }
-    }, 1000); // 500ms 정도 멈췄다가 스크롤 시작 (원하는 대로 조정 가능)
+    }, 1000); 
 
-    // 클린업
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -219,15 +216,14 @@ function MovieList() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // 요소가 뷰포트 안으로 들어오면 fade-in 클래스를 추가
             entry.target.classList.add('fade-in');
-          } else {
-            // 요소가 뷰포트 밖으로 나가면 fade-in 클래스를 제거 (애니메이션 리셋)
-            entry.target.classList.remove('fade-in');
+          }else {
+              // 요소가 뷰포트 밖으로 나가면 fade-in 클래스를 제거 (애니메이션 리셋)
+              entry.target.classList.remove('fade-in');
           }
         });
       },
-      { threshold: 0.2 } // 20% 정도 뷰포트에 들어오면 트리거
+      { threshold: 0.2 }
     );
   
     categoryRefs.current.forEach((ref) => {

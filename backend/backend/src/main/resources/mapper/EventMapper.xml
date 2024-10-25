@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.EventDAO">
+
+    <select id="selectEventList">
+        select * from event_tbl;
+    </select>
+    <select id="selectNoticeList">
+        select * from event_notice_tbl;
+    </select>
+    <select id="selectEventPage">
+        select * from event_tbl where event_no=${param1};
+    </select>
+    <select id="selectNoticePage">
+        select * from event_notice_tbl where notice_no=${param1};
+    </select>
+    <update id="updatePointMinus">
+        update user_tbl set user_point=user_point-${param2} where userid=#{param1}
+    </update>
+    <update id="updatePointAdd">
+        update user_tbl set user_point=user_point+${param2} where userid=#{param1}
+    </update>
+    <insert id="insertFirstCome">
+        insert into event_first_come(userid, event_no) values(#{param1}, ${param2})
+    </insert>
+</mapper>

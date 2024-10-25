@@ -24,6 +24,7 @@ public interface AdminService {
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
     List<BanVO> getBanMemList(PagingVO pagingVO);
+    int deleteBanHistory(List<String> userids);
     List<ReportVO> getRepList(PagingVO pagingVO);
     List<ReportVO> getRepView(int report_no);
     List<BanVO> getBanData(String reported_userid);

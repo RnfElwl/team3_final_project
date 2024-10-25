@@ -113,6 +113,10 @@
     overflow: hidden;
 }
 
+.community_list .list:hover{
+    transform: scale(1.05); 
+}
+
 @media (max-width: 1200px) {
     .community_list {
         justify-content: center; /* 게시물들이 중앙에 배치되도록 */
@@ -175,7 +179,6 @@
     height: 40px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
     margin-right: 5px; /* 여백 */
-    border: #555 1px solid;
 }
 
 .community_list .writer_info {

@@ -21,6 +21,7 @@
         where ct.community_no not in (select rt.report_tblno from report_tbl rt where rt.report_userid=#{param1} and rt.report_tblname=2)
         and (privacy=0 or exists(select * from follower_tbl ft2 where ft2.userid=#{param1} and follower_userid=ct.userid)=privacy or ct.userid=#{param1})
         and ct.active_state=1
+        and (#{categoryType} IS NULL OR ct.category = #{categoryType})
         group by ct.community_no
         ORDER BY
             case
