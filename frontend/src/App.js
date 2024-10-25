@@ -42,6 +42,7 @@ import Success from './pages/mypage/Success.js';
 import ResetPassword from './pages/mypage/ResetPassword.js';
 import EventList from './pages/event/EventList.js';
 import EventView from './pages/event/EventView.js';
+import EventNoticeView from './pages/event/EventNoticeView.js';
 
 function App() {
   return (
@@ -88,7 +89,8 @@ function App() {
                 <Route path ="/success" element={<Success/>}/>
                 <Route path ="/reset-password" element={<ResetPassword/>}/>
                 <Route path ="/event" element={<EventList/>}/>
-                <Route path ="/event/EventView" element={<EventView/>}/>
+                <Route path ="/event/:event_no" element={<EventView/>}/>
+                <Route path ="/event/notice/:notice_no" element={<EventNoticeView/>}/>
             </Route>
         </Routes>
       </TokenValidator>
