@@ -8,6 +8,7 @@
   }
 /* 검색 css */
 .adminSearchForm{
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -16,6 +17,30 @@
 }
 .adminQnaEdit,.adminMemEdit{
   text-align: right;
+}
+
+.AdminQnaBody .adminSearchForm select{
+  width: 120px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  appearance: none;
+}
+.AdminQnaBody .adminSearchForm input{
+  border-radius: 4px;
+  width: 200px;
+  height: 35px;
+  background: transparent;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  padding: 5px 30px 5px 10px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
 }
 /* qna상태 저장 css */
 .qna_active_edit_form{

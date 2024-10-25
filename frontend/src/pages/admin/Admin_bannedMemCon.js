@@ -1,15 +1,15 @@
 import './../../css/admin/adminBanMemCon.css'
+import { openAddReportAnsWindow, anotherFunction } from './Admin_repCon.js';
 
 import axios from "../../component/api/axiosApi";
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {openAddReportAnsWindow} from './Admin_repCon';
 import $ from "jquery";
 
 
 function BanMem(){
     const [banMemList, setBanMemList]=useState([]);
-    const [searchKey, setSearchKey]=useState('userid');
+    const [searchKey, setSearchKey]=useState('b.userid');
     const [searchWord, setSearchWord]=useState('');
     const [checkedBanIds, setCheckedBanIds] = useState(new Array(banMemList.length).fill(false));
     const [editActive_state, setEditActive_state] = useState('1');
@@ -17,18 +17,34 @@ function BanMem(){
     const handleActive_StateChange = (e) => {
         setEditActive_state(e.target.value);
     }
-    
-    useEffect(()=>{
-        axios.get(`http://localhost:9988/admin/banMemList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
-        .then(response => {
-            console.log(response.data);
-            setBanMemList(response.data.banMemList);
 
-        })
-        .catch(error => {
-            console.error("데이터 로드 중 오류 발생:", error);
-        });
-    },[searchKey,searchWord]);
+    const handlesearchKeyChange = (e) => { //검색키 처리
+        setSearchKey(e.target.value);
+    };
+    const handlesearchWordChange = (e) => { //검색 처리
+        setSearchWord(e.target.value);
+    };
+    
+    const fetchBanMemList = () => {
+        axios.get(`http://localhost:9988/admin/banMemList?searchKey=${searchKey}&searchWord=${decodeURIComponent(searchWord)}`)
+            .then(response => {
+                console.log(response.data);
+                setBanMemList(response.data.banMemList); // 새로운 데이터를 받아와서 상태 업데이트
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
+            });
+    };
+    
+    // useEffect에서 처음 데이터 로드 시 호출
+    useEffect(() => {
+        fetchBanMemList();
+    }, []);
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        fetchBanMemList(); // 검색 후 리스트 재호출
+    };
 
 
         //삭제 체크  전체 관리
@@ -66,12 +82,37 @@ function BanMem(){
                 if(isChecked){
                     const userid=banMemList[index]?.userid;
                     if(userid){
-                        FormData.append('userid',userid);
+                        formData.append('userid',userid);
                         selectedBanIds.push(userid);
                     }
                 }
+            });
+
+            formData.append('active_state',editActive_state);
+
+            formData.forEach((value, key) => {
+                console.log("키:",key,"값:",value);
+            });
+
+            console.log(formData);
+
+            axios.post('http://localhost:9988/admin/banMemActiveEdit', formData)
+            .then(response => {
+                console.log('성공:', response.data);
+                if (response.data === selectedBanIds.length) {
+                    fetchBanMemList();
+                }
             })
+            .catch(error => {
+                console.error('오류 발생:', error);
+            });
+
         }
+        const openEditBanDateWindow = (userid) => {
+            console.log("넘긴 아이디"+userid);
+            window.open(`http://localhost:3000/admin/banEdit/${userid}`, '_blank', 'width=600,height=300');
+        };
+        
     return(
         <div className="bannedMemBody">
                 <h3>정지 멤버 관리</h3>
@@ -84,24 +125,25 @@ function BanMem(){
 
                 <div className="adminSearchForm">
                     <form
-                        // onSubmit={handleSearchSubmit}
+                        onSubmit={handleSearchSubmit}
                     >
-                        {/* <select
+                        <select
                             className="MemSearchSelect"
                             name="searchKey"
                             value={searchKey}
                             onChange={handlesearchKeyChange}>
-                            <option value="userid">유저아이디</option>
-                            <option value="username">유저이름</option>
-                            <option value="usernick">유저 닉네임</option>
-                            <option value="usertel">연락처</option>
-                        </select> */}
+                            <option value="b.userid">유저아이디</option>
+                            <option value="u.username">유저이름</option>
+                            <option value="u.usernick">유저 닉네임</option>
+                            <option value="u.usertel">연락처</option>
+                        </select>
                         <input
                             type="text"
                             name="searchWord"
                             className="qnaSearchWord"
-                            // onChange={handlesearchWordChange}
+                            onChange={handlesearchWordChange}
                             placeholder="Search..." />
+                            <button type="submit">검색</button>
                     </form>
                 </div>    
             </div>
@@ -163,7 +205,7 @@ function BanMem(){
                                     </td>
                                     <td>{item.regiserdate}</td>
                                     <td>{item.reported_count}</td>
-                                    <td> </td>
+                                    <td><button onClick={(e)=>{e.preventDefault(); openEditBanDateWindow(item.userid);}}>정지 기간 수정</button></td>
                                 </tr>
                             ))
                         ) : (

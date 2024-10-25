@@ -9,7 +9,7 @@
 .QnaTbl {
     margin: 30px auto;
     max-width: 800px;
-    width: 80%;
+    width: 100%;
     border-collapse: collapse; /* Ensures borders don't have gaps */
 }
 

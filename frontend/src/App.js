@@ -22,6 +22,7 @@ import AdminQAns from './pages/admin/Admin_qnaAnsWrite.js'
 import AdminComCon from './pages/admin/Admin_comCon.js'
 import AdminMemCon from './pages/admin/Admin_memCon.js'
 import AdminBanMemCon from './pages/admin/Admin_bannedMemCon.js';
+import AdminBanEdit from './pages/admin/Admin_banEditWrite.js';
 import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
@@ -69,6 +70,7 @@ function App() {
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
                 <Route path='/admin/memCon' element={<AdminMemCon/>}/>
                 <Route path='/admin/banMemCon' element={<AdminBanMemCon/>}/>
+                <Route path='/admin/banEdit/:userid' element={<AdminBanEdit/>}/>
                 <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>

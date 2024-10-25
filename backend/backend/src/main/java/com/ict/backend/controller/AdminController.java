@@ -107,7 +107,6 @@ public class AdminController {
         return adminService.comSearch(dateList);
     }
 
-    //멤버목록 확인
     @GetMapping("/mem_dashboard")
     public List<MemberVO> getMemberList() {
         List<MemberVO> result = adminService.selectMemberMin();
@@ -182,6 +181,20 @@ public class AdminController {
         resultMap.put("banMemList", result);
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+    @PostMapping("/banMemActiveEdit")
+    public int banMemActiveEdit(
+            @RequestParam("active_state") Integer activeState,
+            @RequestParam("userid") List<String> userids) {
+        System.out.println("Active State: " + activeState);
+        System.out.println("UserIds: " + userids);
+
+        int updatedCount =  adminService.updateMemActive(activeState, userids);
+
+        if(activeState==1){
+            adminService.deleteBanHistory(userids);
+        }
+        return updatedCount;
     }
 
     //Report Management Part

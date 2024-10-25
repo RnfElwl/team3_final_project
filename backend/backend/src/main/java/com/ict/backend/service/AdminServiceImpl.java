@@ -111,6 +111,11 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public int deleteBanHistory(List<String> userids) {
+        return dao.deleteBanHistory(userids);
+    }
+
+    @Override
     public List<ReportVO> getRepList(PagingVO pagingVO) {
         return dao.getRepList(pagingVO);
     }

@@ -140,6 +140,11 @@ canvas{
   justify-content: space-between;
   margin-bottom: 10px;
 }
+.simpBoardAnotherT{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
 .memListTopBox{
   margin:10px 0;
 }
