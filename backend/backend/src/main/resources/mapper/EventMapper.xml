@@ -5,16 +5,16 @@
 <mapper namespace="com.ict.backend.dao.EventDAO">
 
     <select id="selectEventList">
-        select * from event_tbl;
+        select * from event_tbl
     </select>
     <select id="selectNoticeList">
-        select * from event_notice_tbl;
+        select * from event_notice_tbl
     </select>
     <select id="selectEventPage">
-        select * from event_tbl where event_no=${param1};
+        select * from event_tbl where event_no=${param1}
     </select>
     <select id="selectNoticePage">
-        select * from event_notice_tbl where notice_no=${param1};
+        select * from event_notice_tbl where notice_no=${param1}
     </select>
     <update id="updatePointMinus">
         update user_tbl set user_point=user_point-${param2} where userid=#{param1}

@@ -1,5 +1,8 @@
 package com.ict.backend.vo;
 
+import lombok.Data;
+
+@Data
 public class EventNoticeVO {
     private int notice_no;
     private String notice_title;
