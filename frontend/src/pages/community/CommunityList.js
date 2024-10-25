@@ -28,7 +28,7 @@ function CommunityList() {
 
     const [communityList, setCommunityList] = useState([]);
     const [sortType, setSortType] = useState("latest");
-    const [categoryType, setCategoryType] = useState('all');  // 선택된 카테고리 상태
+    const [categoryType, setCategoryType] = useState('All Posts');  // 선택된 카테고리 상태
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -356,19 +356,19 @@ function CommunityList() {
                     </div>
                 </div>
                 <div className="post">
-                <div className="category_counts">
-    {categoryType === "All Posts" ? (
-        <div>
-            {/* 전체 카테고리 수만 표시 */}
-            {categoryCounts["All Posts"] || 0} post
-        </div>
-    ) : (
-        <div>
-            {/* 선택된 카테고리의 게시물 수 */}
-            {categoryCounts[categoryType] || 0} post
-        </div>
-    )}
-</div>
+                    <div className="category_counts">
+                        {categoryType === "All Posts" ?(
+                            <div>
+                                {/* 전체 카테고리 수만 표시 */}
+                                {categoryCounts["All Posts"] || 0} post
+                            </div>
+                        ) : (
+                            <div>
+                                {/* 선택된 카테고리의 게시물 수 */}
+                                {categoryCounts[categoryType] || 0} post
+                            </div>
+                        )}
+                    </div>
                     <select onChange={(e) => handleSortChange(e.target.value)} value={sortType}>
                         <option value="latest">최신순</option>
                         <option value="hit">조회순</option>
