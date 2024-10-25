@@ -25,6 +25,7 @@ public interface AdminDAO {
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
     List<BanVO> getBanMemList(PagingVO pagingVO);
+    int updateBanDateWrite(BanVO banData);
     int deleteBanHistory(List<String> userids);
     List<ReportVO> getRepList(PagingVO pagingVO);
     List<ReportVO> getRepView(int report_no);
