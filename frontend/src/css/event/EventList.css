@@ -53,7 +53,6 @@
     flex-direction: column;
     box-sizing: border-box;
     padding: 10px; 
-    position: relative;
 }
 
 .event_list .event:hover{
@@ -112,17 +111,6 @@
 .status.closed {
     border: 2px solid gray; /* 마감일 때 회색 */
     color: gray; /* 텍스트 색상 흰색 */
-}
-
-.event.closed:after {
-    content: ''; /* 내용 없음 */
-    position: absolute; /* 절대 위치 */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; /* 전체 영역을 덮도록 설정 */
-    background-color: rgba(128, 128, 128, 0.5); /* 투명한 회색 */
-    z-index: 1; /* 다른 요소 위에 위치하도록 설정 */
 }
 
 .event_list .status_date {
