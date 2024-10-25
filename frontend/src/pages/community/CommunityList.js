@@ -5,6 +5,7 @@ import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
 import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
+import CustomImage from "../../component/CustomImage.js";
 
 
 function CommunityList() {
@@ -396,9 +397,9 @@ function CommunityList() {
                             <div className="content"> 
                                 <div className="list_top">
                                     {userid==communityItem.userid?<Link to="/mypage">
-                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                        <CustomImage className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     </Link>:<Link to={`/user/info/${communityItem.usernick}`}>
-                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                        <CustomImage className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     </Link>}
                                     <div className="writer_info">
                                         <p className="writer_name">{communityItem.usernick}</p>

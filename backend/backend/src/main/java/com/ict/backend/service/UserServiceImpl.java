@@ -213,6 +213,19 @@ public class UserServiceImpl  implements UserService {
     public int deletebantbl(@Param("userid") String userid){
         return dao.deletebantbl(userid);
     }
+    @Override
+    public String checkwithdraw(String userid){
+        return dao.checkwithdraw(userid);
+    }
+    @Override
+    public boolean restoreUser(String userid){
+        return dao.restoreUser(userid) > 0;
+    }
+
+    @Override
+    public int withdraw(@Param("userid") String userid){
+        return dao.withdraw(userid);
+    }
 
 
 

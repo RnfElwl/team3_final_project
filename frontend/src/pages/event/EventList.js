@@ -1,6 +1,6 @@
 import "../../css/event/EventList.css";
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../component/api/axiosApi';
 import { Link, useParams } from 'react-router-dom';
 
 function EventList() {

@@ -81,6 +81,9 @@ public interface UserDAO {
     public int updatelastvisite(@Param("userid") String userid);
     public int userunban(@Param("userid") String userid);
     public int deletebantbl(@Param("userid") String userid);
+    public String checkwithdraw(@Param("userid") String userid);
+    public int restoreUser(@Param("userid") String userid);
+    public int withdraw(@Param("userid") String userid);
 
 
 }
