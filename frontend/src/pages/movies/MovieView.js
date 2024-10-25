@@ -40,7 +40,7 @@ function MovieView() {
     const fetchMovieData = async () => {
       try {
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}`);
-        console.log("1. 영화정보 가져오기 성공"); // API 응답 확인
+        console.log("영화정보 가져오기 성공"); // API 응답 확인
         setMovie(response.data.movieVO); // 영화 데이터 상태에 저장
         setUserId(response.data.userid); // 유저 ID 상태에 저장
       } catch (error) {
@@ -55,7 +55,7 @@ function MovieView() {
     const fetchUserData = async () => {
       try {
         const result = await axios.get('http://localhost:9988/getUserData', { params: { userid } });
-        console.log("2. 유저데이터 가져오기 성공")
+        console.log("유저데이터 가져오기 성공")
         setUserData(result.data); // 유저 데이터 상태에 저장
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -70,7 +70,7 @@ function MovieView() {
     const fetchImages = async () => {
       try {
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}/images`);
-        console.log("3. 이미지 가져오기 성공")
+        console.log("이미지 가져오기 성공")
         setImages(response.data); // 이미지 데이터 상태에 저장
       } catch (error) {
         console.error("이미지 가져오기 실패: ", error);
@@ -84,7 +84,7 @@ function MovieView() {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(`http://localhost:9988/api/reviews/${movieCode}`);
-        console.log("4. 리뷰 정보 가져오기 성공"); // 리뷰 데이터 확인
+        console.log("리뷰 정보 가져오기 성공"); // 리뷰 데이터 확인
         setReviews(response.data); // 리뷰 상태에 저장
       } catch (error) {
         console.error("Error fetching reviews:", error);
@@ -98,7 +98,7 @@ function MovieView() {
     const fetchRatingInfo = async () => {
       try {
         const response = await axios.get(`http://localhost:9988/api/movies/${movieCode}/rating`);
-        console.log("5. 평점정보 가져오기 성공"); // 평점 정보 확인
+        console.log("평점정보 가져오기 성공"); // 평점 정보 확인
         setRatingInfo(response.data); // 평점 상태에 저장
       } catch (error) {
         console.error("Error fetching rating info:", error);
@@ -131,7 +131,7 @@ function MovieView() {
           userid,
           movie_genre: movieGenre          
         });
-        console.log("6. 선호장르 저장하기 성공");
+        console.log("선호장르 저장하기 성공");
 
       } catch (error) {
         console.error('Error saving user preference:', error);
@@ -158,7 +158,7 @@ function MovieView() {
     });
   
     setIsFavorite(response.data); // 응답 상태 설정
-    console.log("7. 북마크 불러오기 성공:", response.data);
+    console.log("북마크 불러오기 성공:", response.data);
         } catch (error) {
           console.error("북마크 정보 가져오기 실패:", error);
         }
@@ -206,6 +206,11 @@ function MovieView() {
   }
   // 북마크 토글 함수
   const toggleFavorite = async () => {
+
+    if (!userid) {
+      alert('북마크를 추가하려면 로그인하세요.');
+      return; // 로그인되지 않은 경우 함수 종료
+    }
     try {
       if (isFavorite) {
         // 북마크 해제 API 호출
@@ -243,13 +248,22 @@ function MovieView() {
         url: shareUrl,
       })
       .then(() => console.log('Successfully shared'))
-      .catch((error) => console.error('Error sharing', error));
-    } else {
-      // Web Share API를 지원하지 않는 브라우저에서는 링크를 클립보드에 복사
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        alert('링크가 클립보드에 복사되었습니다!');
+      .catch((error) => {
+        console.error('Error sharing', error);
+        alert('공유하기를 지원하지 않는 환경입니다.');
       });
-    }
+    } else {
+      // Web Share API를 지원하지 않는 경우: 클립보드에 링크 복사
+    navigator.clipboard
+    .writeText(shareUrl)
+    .then(() => {
+      alert('링크가 클립보드에 복사되었습니다!');
+    })
+    .catch((error) => {
+      console.error('클립보드 복사 실패:', error);
+      alert('클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
+    });
+}
   };
 
   //////////////////// 리뷰 관련 //////////////////////////
@@ -264,9 +278,8 @@ function MovieView() {
           userid: userid
         },
     });
-
-    const reviewExists = existResponse.data;
-
+    console.log('리뷰 존재 여부:', existResponse.data);
+    const reviewExists = existResponse.data === true;
 
     if (reviewExists) {
       alert('하나의 영화에 대한 리뷰 작성은 한 번만 가능합니다');
@@ -299,6 +312,7 @@ function MovieView() {
 
     // 리뷰 입력 초기화
     setInputText(''); // 입력 텍스트 초기화
+    setRating(0);
   } catch (error) {
     console.error('Error submitting review:', error);
   }
@@ -353,7 +367,7 @@ function MovieView() {
       setMovieCode(review.movie_code);  // 영화 코드 설정
       };
 
-    
+  
     
       // 리뷰 삭제 요청 전송
       const handleDeleteReview = async (movie_review_no) => {
@@ -368,10 +382,12 @@ function MovieView() {
         }
       };
 
-    ///////////////////////////////////////////////////////////////////// 리뷰 컴포넌트
+    // 리뷰 리스트 컴포넌트 ////////////////////////////////////////////////////////////////// 
     const renderReviews = () => {
       return reviews.map((review) => (
         <div key={review.movie_review_no} className="review">
+
+          {/* 프로필 부분 */}
           <div className="profile-section">
             {review.userid === userid? 
             <Link to={`/mypage`}>
@@ -380,55 +396,36 @@ function MovieView() {
             <Link to={`/user/info/${review.usernick}`}>
               <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
             </Link>}
-          
           <span className="nickname">{review.usernick}</span>
           </div>
 
+          {/* 리뷰컨텐츠 부분 */}
           <div className="review-content">
             {editingReviewId !== review.movie_review_no && (
             <div className="star-rating">
               {[...Array(5)].map((star, index) => (
                 <FaStar
                   key={index}
-                  className={`star ${
-                    index <
-                  ((editingReviewId === review.movie_review_no || inputText) 
-                    ? (hoverRating || rating) 
-                    : review.rate)
-                    ? 'active' 
-                    : ''
-                }`}
-                onMouseEnter={() => {
-                  if (editingReviewId === review.movie_review_no || inputText) {
-                    setHoverRating(index + 1); // 작성 또는 수정 중일 때만 hover 허용
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (editingReviewId === review.movie_review_no || inputText) {
-                    setHoverRating(0); // 작성 또는 수정 중일 때만 초기화
-                  }
-                }}
-                onClick={() => {
-                  if (editingReviewId === review.movie_review_no || inputText) {
-                    setRating(index + 1); // 작성 또는 수정 중일 때만 별점 선택 가능
-                  }
-                }}
-                style={{
-                  cursor:
-                    editingReviewId === review.movie_review_no || inputText
-                      ? 'pointer'
-                      : 'default',
-                }}
+                  className={`star ${index < review.rate ? 'active' : ''}`}
                 />
               ))}
             </div>
             )}
-            {userid==review.userid?"":<AiOutlineAlert size="25px" onClick={()=>{openReport(review.movie_review_no, review.userid, review.movie_review_content)}} />}
             
+            {/* 신고 버튼 */}
+            {userid && userid !== review.userid && (
+              <button 
+                className="report-button" 
+                onClick={() => openReport(review.movie_review_no, review.userid, review.movie_review_content)}
+              >
+                <AiOutlineAlert size="35px" />
+              </button>
+            )}
+          
 
+            {/* 수정 입력 필드 */}
             {editingReviewId === review.movie_review_no ? (
             <div className="edit-review-section">
-              {/* 수정 가능한 별점 필드 - 수정 모드일때만 표시*/}
               <div className="star-rating">
                 {[...Array(5)].map((star, index) => (
                   <FaStar
@@ -441,8 +438,6 @@ function MovieView() {
                   />
                 ))}
               </div>
-
-              {/* 수정 입력 필드 */}
               <textarea
                 value={editReviewText}
                 onChange={(e) => setEditReviewText(e.target.value)} // 상태 업데이트
@@ -453,11 +448,8 @@ function MovieView() {
                 <button onClick={() => handleUpdateReview(review.movie_review_no)} className="edit-btn">저장</button>
                 <button onClick={() => setEditingReviewId(null)} className="delete-btn">취소</button>
               </div>
-            
-          </div>
-          ) : (
-            <p className="review-text">{review.movie_review_content}</p>
-          )}
+            </div>) : (<p className="review-text">{review.movie_review_content}</p>)}
+
             {review.userid === userid && editingReviewId !== review.movie_review_no && (
             <div className="review-actions">
               <button onClick={() => handleEditReview(review)} className="edit-btn">수정</button>
@@ -468,6 +460,10 @@ function MovieView() {
         </div>
       ));
     };
+
+
+
+
     // 배우를 /가 아닌 , 로 구분
     const formattedCasts = movie?.movie_casts ? movie.movie_casts.replace(/\//g, ', ') : '출연진 정보 없음';
     
@@ -480,8 +476,8 @@ function MovieView() {
                 setReport={setReport} // 신고 데이터 변수 세팅
                 setDefaultList={resetReview}
             />
-
           <div className="movie-content">
+
             <div className="contents-box">
               <div className="movie-image">
               {movie?.movie_link ? (
@@ -528,12 +524,18 @@ function MovieView() {
                   title="공유하기"
                 />
                 </div>
+                <div className="watch-button-container">
+                <button className="watch-btn">OTT로 보러가기</button>
               </div>
-            </div>
-        <hr/>
+              </div>
+              
+
+              </div>
+            
+        
         
         <div className="tab-content">
-          <div className="movie-details-info">
+          <div className="">
               {/* 출연진 */}
               <div className="info-section">
                 <h3>출연진</h3>
@@ -559,12 +561,19 @@ function MovieView() {
           </div>
         )}
 
-        {/* 사용자 평 섹션 */}
+
+
+
+
+
+        {/* 리뷰 섹션 */}
         <div className="review-section">
           <div className="review-header">
             <h2><b>'{movie?.movie_kor || '영화 제목 없음'}'</b>의 사용자 평</h2>
           </div>
-           {/* 리뷰 입력 필드 */}
+
+          {/* 리뷰 입력 필드 */}
+          {userid ? (
           <div className="review-input-section">
             <div className="profile-section">
               <img src={`http://localhost:9988/${userData.image_url}`} alt="Profile" className="profile-img" />
@@ -589,14 +598,16 @@ function MovieView() {
                 placeholder="한줄평을 남겨보세요"
                 className="review-input"
               />
-              
               </div>
               <button className="submit-btn" onClick={handleReviewSubmit}>
               리뷰 등록
             </button>
             </div>
-            
+            ) : (
+              <p className="login-prompt">리뷰를 작성하려면 로그인하세요.</p>
+            )}
           </div>
+
           {/* 리뷰 리스트 */}
           <div className="review-section">
             {renderReviews()}

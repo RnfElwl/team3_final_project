@@ -19,6 +19,9 @@
     max-width: 1200px;
     margin: 0 auto; /* 가운데 정렬 */
     color: white;
+    border-bottom: 1px solid #48d1cd94;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
 
   }
 
@@ -29,7 +32,7 @@
     border-radius: 8px;
     margin: 20px;
   }
-  
+
   .movie-details {
     display: flex;
     flex-direction: column;
@@ -42,8 +45,15 @@
     font-weight: bold;
     margin: 0; padding: 0;
   }
-  .movie-info{
-    padding: 0; margin: 0;
+  .movie-info {
+    margin-top: 10px; /* 제목과 영화 정보 사이의 여백 */
+    }
+  
+  .rating-info {
+    font-size: 28px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
   }
 
   .star-icon {
@@ -57,6 +67,8 @@
     gap: 10px;
     flex-wrap: wrap;
     padding-bottom: 20px;
+    padding-top: 20px;
+
   }
   
   .info-details span {
@@ -71,6 +83,7 @@
     text-align: justify;
   }
 
+  /* 북마크, 공유하기 버튼 */
 
   .movie-actions {
     margin-top: 20px; /* movie-info와 버튼들 사이에 여백 추가 */
@@ -92,40 +105,6 @@
     background-color: #0056b3;
   }
   
-
-  /* 보러가기 버튼 */
-  .watch-button-container {
-    text-align: right;
-    margin-top: 10px;
-  }
-  
-  .watch-btn {
-    padding: 12px 24px;
-    font-size: 18px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .watch-btn:hover {
-    background-color: #218838;
-  }
-  
-  .movie-info {
-    margin-top: 10px; /* 제목과 영화 정보 사이의 여백 */
-    }
-  
-  .rating-info {
-    font-size: 28px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-  }
-  
-  
-
   .favorite-icon {
     font-size: 40px;
     cursor: pointer;
@@ -152,8 +131,31 @@
   .share-icon:hover {
     color: #007bff; /* 공유 아이콘 hover 시 색상 변경 */
   }
-  
 
+  .movie-details-info{
+    padding-top: 30px;
+  }
+
+   /* 보러가기 버튼 */
+  .watch-button-container {
+    text-align: left;
+    padding-top: 40px;
+  }
+  
+  .watch-btn {
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    border-color: #48d1cdea;
+    background-color: #4eb8b6ea;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .watch-btn:hover {
+    opacity: 0.8;
+  }
+  
 
 /* 관련 이미지 부분 */
 
@@ -177,14 +179,71 @@
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* 리뷰관련 */
-
+.login-prompt {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #ddd;
+  font-weight: bold;
+}
 
 .review-header{
   padding-bottom: 20px;
 }
+
 .review-input-section {
   display: flex;
   align-items: center;
@@ -221,18 +280,15 @@
 }
 
 .star {
-  font-size: 38px; /* 별 크기 증가 */
+  font-size: 35px; /* 별 크기 증가 */
   cursor: pointer;
   transition: color 0.2s ease-in-out; /* 부드러운 색 전환 */
 }
 
-.star.active {
+.star.active, .star:hover {
   color: gold;
 }
 
-.star:hover {
-  color: gold;
-}
 
 .review-input {
   border: 1px solid #48d1cdea;
@@ -277,12 +333,36 @@
   margin-bottom: 20px;
 }
 
-
 .review-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: flex-start; /* 신고 버튼을 상단에 고정 */
   width: 100%;
+  position: relative;
+}
+
+/* 신고 버튼 스타일 */
+.report-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4757; /* 기본 색상 */
+  transition: color 0.3s;
+  align-self: flex-start; /* 상단 정렬 */
+  margin-left: auto; /* 오른쪽 끝으로 정렬 */
+}
+
+.report-button:hover {
+  color: #ff6b81; /* 호버 시 더 밝은 색상 */
+}
+
+/* 리뷰 본문과 별점 영역 */
+.review-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
 }
 
 /* .review-header {
@@ -306,7 +386,7 @@
 .review-text {
   font-size: 20px;
   color: white;
-  line-height: 1.5;
+  /* line-height: 1.5; */
 }
 
 .review-input{
@@ -319,13 +399,9 @@
   width: 100%;
 }
 
-.star-rating {
-  margin-bottom: 10px; /* 별점과 입력 필드 사이에 여백 추가 */
-}
-
 .review-edit-input {
-  width: 100%;
-  min-height: 100px;
+  width: 90%;
+  min-height: 80px;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid #ccc;
@@ -334,15 +410,12 @@
   resize: none;
   outline: none;
 }
-.review-input:focus,
-.review-edit-input:focus {
-  border-color: #007bff;
-}
 
 .review-actions {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  /* align-items: flex-start; */
 } 
 
 .edit-btn, .delete-btn {
@@ -435,3 +508,8 @@
   background: rgba(235, 59, 59, 0.774);
   color:#f0f0f0;
 }
+
+
+
+
+
