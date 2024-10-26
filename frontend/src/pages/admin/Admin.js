@@ -28,6 +28,7 @@ function AdminTest() {
   const [end_qnaDate, setEnd_qnaDate]=useState('');
   const [start_comDate, setStart_comDate]=useState('');
   const [end_comDate, setEnd_comDate]=useState('');
+  const [reportData, setReportData]=useState('');
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   
@@ -119,6 +120,7 @@ function AdminTest() {
 
   useEffect(()=>{
     if(error) return;
+
     axios.get(`http://localhost:9988/admin/mem_dashboard`)
     .then(response => {
       console.log(response.data);
@@ -129,6 +131,16 @@ function AdminTest() {
       console.error("검색 중 오류 발생:", err);
       setError(true); // 오류가 발생하면 상태 변경
     });
+
+    axios.get(`http://localhost:9988/admin/repList`)
+            .then(response => {
+                console.log("결과:", response.data.repList);
+                setReportData(response.data.repList);
+            })
+            .catch(error=>{
+              console.error("리스트 생성 중 오류!");
+              setError(true);
+            })
 }, [error]);
 
 
@@ -602,20 +614,20 @@ if(qna_filter ==="년"){
               </tr>
             </thead>
             <tbody>
-              {/* {inputMemData.length > 0 ? (
-                inputMemData.map((item, index) => (
-                  <tr key={item.userid || index}>
-                    <td>{item.userid}</td>
-                    <td>{item.username}</td>
-                    <td>{item.regiserdate}</td>
-                    <td>{item.active_state === 1 ? "활성화" : "비활성화"}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center">Loading...</td>
+            {reportData.length > 0 ? (
+              reportData.slice(0, 5).map((item, index) => (
+                <tr key={item.userid || index}>
+                  <td>{item.reported_userid}</td>
+                  <td>{item.report_type}</td>
+                  <td>{item.report_date}</td>
+                  <td>{item.active_state === 1 ? "활성화" : "비활성화"}</td>
                 </tr>
-              )} */}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center">Loading...</td>
+              </tr>
+            )}
             </tbody>
           </table>
         </div>

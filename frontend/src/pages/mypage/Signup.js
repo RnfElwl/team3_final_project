@@ -4,6 +4,7 @@ import '../../css/mypage/signup.css';
 import Modal from '../../component/api/Modal';
 import DaumPostcode from "react-daum-postcode";
 import Masonry from "react-masonry-css";
+import HideEventMove from '../../component/HideEventMove';
 
 function Signup() {
     const [step, setStep] = useState(1);
@@ -453,6 +454,7 @@ function Signup() {
                     </div>
                     </>
                 )}
+                <HideEventMove />
             </div>
             
             {isAddressModalOpen && (

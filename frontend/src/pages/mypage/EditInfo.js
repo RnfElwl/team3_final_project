@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
 import '../../css/mypage/editinfo.css';
 import ImageUploader from '../../component/api/ImageUploader';
 import profile from '../../img/profile.png';
 import Modal from '../../component/api/Modal';
 import DaumPostcode from "react-daum-postcode";
-
+import HideEventMove from '../../component/HideEventMove';
 
 function EditInfo() {
+    const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [iswithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [images, setImages] = useState(profile);
     const [formData, setFormData] = useState({
         userid: '',
@@ -92,7 +95,9 @@ function EditInfo() {
         // Axios를 사용한 POST 요청
         axios.post('http://localhost:9988/user/uploadProfile', formData)
             .then(response => {
-                console.log('Success:', response.data);  
+                console.log('Success:', response.data);
+                window.location.reload();
+                fetchProfile();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -160,8 +165,9 @@ function EditInfo() {
                     alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해 주세요.");
                 });
         } else {
-            alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            setErrorMessage("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
         }
+        
     };
     const handleAddressSelect = (data) => {
         // 선택된 주소를 상태에 저장
@@ -172,12 +178,47 @@ function EditInfo() {
         });
         setIsAddressModalOpen(false); // 모달 닫기
     };
+    const handleWithdrawSubmit = (e) => {
+        e.preventDefault();
+        const currentPassword = e.target.currentPassword.value;
+    
+        if (currentPassword !== "") {
+            console.log("working");
+            axios.post('http://localhost:9988/user/withdraw', { 
+                    userid: formData.userid,
+                    currentPassword,
+                })
+                .then(response => {
+                    const message = response.data;
+                    if (message === "withdraw success") {
+                        console.log('회원 탈퇴 되었습니다.');
+                        alert('회원 탈퇴가 완료되었습니다.\n계정 복구는 7일 이내에만 가능하며, 이후에는 해당 아이디로 재가입이 불가능합니다.');
+                        setIsWithdrawModalOpen(false);
+                        localStorage.clear();
+                        navigate('/');
+                    } else if (message === "password dismatched") {
+                        alert("비밀번호가 틀렸습니다.");
+                    } else if (message === "login Account dismatched") {
+                        alert("사용자 ID가 일치하지 않습니다.");
+                    } else {
+                        alert("알 수 없는 오류가 발생했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error('비밀번호 변경 중 오류 발생:', error);
+                    alert("회원 탈퇴 중 오류가 발생했습니다. 다시 시도해 주세요.");
+                });
+        } else {
+            setErrorMessage("비밀번호를 입력해주세요.");
+        }
+    };
 
     useEffect(() => {
         console.log(formData);
     }, [formData]);
     return (
         <div className="editInfo">
+            <HideEventMove/>
             <div className="container">
                 <div className = "editprofile">
                     <div id = "profile">
@@ -194,7 +235,7 @@ function EditInfo() {
                             </div>
                             <div> 
                                 <span style={{ width: "141.8px" }}>비밀번호</span> 
-                                <span style = {{color : "white"}} onClick={() => setIsPasswordModalOpen(true)}>비밀번호 변경하기{'>'}</span> 
+                                <span style = {{color : "white"}} onClick={() => {setErrorMessage(''); setIsPasswordModalOpen(true)}}>비밀번호 변경하기{'>'}</span> 
                             </div>
                                
                             <div> 
@@ -297,8 +338,18 @@ function EditInfo() {
                         </div>
                     </div>
                     <div className = "leave-button">
-                    <button className = "btn btn-link">회원탈퇴</button>
-                </div>
+                    <button className = "btn btn-link" onClick={() => {setErrorMessage(''); setIsWithdrawModalOpen(true)}}>회원탈퇴</button>
+                    {iswithdrawModalOpen && (
+                            <Modal onClose={() => setIsWithdrawModalOpen(false)} title="회원 탈퇴">
+                                <form onSubmit={handleWithdrawSubmit} className = "withdrawuser">
+                                    <input type="text" value={formData.userid} placeholder="userid" disabled />
+                                    <input type = "password" id ="currentPassword" placeholder ="기존 비밀번호"/>
+                                    {errorMessage && <p style={{ color: 'tomato' }}>{errorMessage}</p>}
+                                    <div id = "modal_submit" style ={{padding : '5px 0 0 0', justifyContent:'center'}}><button type="submit" className="btn btn-secondary">탈퇴하기</button></div>
+                                </form>
+                            </Modal>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

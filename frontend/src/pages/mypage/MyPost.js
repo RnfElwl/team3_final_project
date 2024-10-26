@@ -126,7 +126,7 @@ function MyPost() {
             if (error.response && error.response.status === 400) {
                 if (error.response.data.error === "Need login") {
                     alert("로그인이 필요합니다.");
-                    window.location.href = "/signin";
+                    navigate('/signin');
                 }
             } else {
                 console.error("데이터 로드 중 오류 발생:", error);

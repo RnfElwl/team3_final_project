@@ -329,7 +329,7 @@ function AdminMovieCon(){
                             <td>{item.edit_date}</td>
                             {/* <td>{item.edit_state}</td> */}
                             <td>{item.edit_user}</td>
-                            <td>{item.active_state}</td>
+                            <td>{item.active_state==1 ? "활성":"비활성"}</td>
                             <td><button type="button" onClick={()=>editBtnClick(item.movie_code)}>수정하기</button></td>
                         </tr>
                        ))

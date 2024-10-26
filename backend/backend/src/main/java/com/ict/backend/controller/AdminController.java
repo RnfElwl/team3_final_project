@@ -209,7 +209,6 @@ public class AdminController {
     }
     @GetMapping("/getReport/{report_no}")
     public ResponseEntity<List<ReportVO>> getRep(@PathVariable int report_no){
-
         List<ReportVO> reportList=adminService.getRepView(report_no);
         return new ResponseEntity<>(reportList, HttpStatus.OK);
     }
@@ -217,6 +216,13 @@ public class AdminController {
     public ResponseEntity<List<BanVO>> getBanData(@PathVariable String reported_userid){
         List<BanVO> BanList=adminService.getBanData(reported_userid);
         return new ResponseEntity<>(BanList, HttpStatus.OK);
+    }
+//    정지 기간 수정
+    @PostMapping("/editBanDate")
+    public int editBanDates(@RequestBody BanVO banData){
+        int updateBanCnt= adminService.updateBanDateWrite(banData);
+
+        return updateBanCnt;
     }
 
     //Community Management Part

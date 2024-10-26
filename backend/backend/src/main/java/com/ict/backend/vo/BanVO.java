@@ -15,4 +15,5 @@ public class BanVO {
     private Integer active_state;
     private String regiserdate;
     private Integer reported_count;
+    private String report_types;
 }

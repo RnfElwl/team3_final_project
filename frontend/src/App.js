@@ -26,6 +26,7 @@ import AdminBanEdit from './pages/admin/Admin_banEditWrite.js';
 import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
+import AdminNociceCon from './pages/admin/Admin_noticeCon.js'
 import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'   
 import MyPage from './pages/mypage/MyPage';
@@ -74,6 +75,7 @@ function App() {
                 <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
+                <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 

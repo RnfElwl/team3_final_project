@@ -1,0 +1,116 @@
+.event_view{
+    max-width: 1200px;
+    min-width: 700px; /* 최소 너비 설정 */
+    margin: 0 auto;
+    background-color: #1C1C20; /* 배경색 */
+    color: #f0f0f0;
+}
+
+.event_view .event_top{
+    /* margin-top: 100px; */
+    justify-content: space-between;
+    display: flex;
+    /* border-bottom: 1px solid #ccc; */
+    margin: 100px 10px 0 10px;
+    align-items: center; /* 수직 정렬 */
+}
+
+.event_view .prev{
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.event_view .prev:hover{
+    transform: scale(1.05);
+    color: #48d1cdea;
+}
+
+.event_view .status{
+    border-radius: 15px;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.status.preparing {
+    border: 2px solid tomato; /* 준비중일 때 토마토색 */
+    color: tomato; /* 텍스트 색상 흰색 */
+}
+
+.status.ongoing {
+    border: 2px solid #48d1cdea;
+    color: #48d1cdea; /* 진행중일 때 텍스트 색상 */
+}
+
+.status.closed {
+    border: 2px solid gray; /* 마감일 때 회색 */
+    color: gray; /* 텍스트 색상 흰색 */
+}
+
+.event_view .status p{
+    margin: 0; /* 여백 제거 */
+    padding: 5px;
+}
+
+.event_view .title {
+    flex-grow: 1; /* title이 가능한 공간을 차지하게 함 */
+    margin: 0 10px; /* 좌우 간격 추가 (필요시) */
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block; 
+    max-width: 100%; 
+}
+
+.event_view .title p{
+    margin: 0; /* 여백 제거 */
+    padding: 5px;
+    font-size: 20px;
+}
+
+.event_view .status_date p{
+    margin: 0;
+    padding-top: 10px;
+    color: #ccc;
+}
+
+.event_view .event_img{
+    max-width: 1200px;
+    min-width: 700px;
+    height: auto;
+    margin: 20px auto;
+}
+.event_view .eventImg{
+    max-width: 1200px; /* 최대 폭을 제한 */
+    min-width: 700px; /* 최소 폭을 제한 */
+    width: 100%;
+    height: auto;
+}
+
+.event_view .enter button{
+    border: 1px solid #48d1cdea;
+    margin: 40px auto;
+    width: 200px;
+    border-radius: 20px;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #48d1cdea;
+    font-size: 1.8em;
+    /* font-weight: bold; */
+}
+.event_view .enter button:hover{
+    color: #f0f0f0;
+    background-color: #48d1cdea;
+}
+
+.event_view .event_info p{
+    color: #ccc;
+    margin: 5px;
+    font-size: 0.9em;
+}

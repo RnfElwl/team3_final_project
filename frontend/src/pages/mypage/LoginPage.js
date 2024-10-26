@@ -1,5 +1,6 @@
 import axios from '../../component/api/axiosApi';
 //import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../../css/mypage/loginpage.css';
 import { useState, useEffect } from 'react';
 import kakaoIcon from '../../img/kakao_social.png';
@@ -8,6 +9,7 @@ import { validateLogin } from '../../component/Validation';
 import { downloadExcelFile } from '../../component/api/fileDownload';
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [userid, setUserid] = useState('');
   const [userpwd, setUserpwd] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -22,10 +24,29 @@ function LoginPage() {
         // 정지된 경우
         alert(`정지 기간입니다. 정지 해제 날짜: ${result.data.banEndDate}`);
         return { status: 'banned' };
-      } else if (result.data.deleted === 0) {
+      } else if (result.data.deleted === 1) {
         // 탈퇴한 회원인 경우
         alert('탈퇴한 회원입니다.');
         return { status: 'deleted' };  // 이미 메시지를 출력했으므로 추가 메시지 처리 없음
+      } else if (result.data.deleted === 0) {
+        // 탈퇴 후 7일 이내 - 계정 복구 여부를 확인
+        const restoreConfirmation = window.confirm(
+          '탈퇴한지 7일 이내입니다. 계정을 복구하시겠습니까?'
+        );
+        
+        if (restoreConfirmation) {
+          // 예를 선택한 경우 계정 복구 요청을 보냅니다.
+          const restoreResponse = await axios.post("http://localhost:9988/user/restore", loginData);
+          if (restoreResponse.data === 'restore success') {
+            alert('계정이 성공적으로 복구되었습니다.');
+            return { status: 'restored' };
+          } else {
+            alert('계정 복구에 실패했습니다. 다시 시도해 주세요.');
+            return { status: 'restore failed' };
+          }
+        } else {
+          return { status: 'restore canceled' };
+        }
       } else {
         // 정지되지 않았고, 탈퇴한 회원도 아닌 경우 로그인 처리
         const response = await axios.post("http://localhost:9988/login", loginData);  // 로그인 요청
@@ -126,10 +147,14 @@ function LoginPage() {
   useEffect(() => {
     const root = document.getElementById('root');
     const img = document.createElement('img');
+    const event = document.querySelector('.event_move');
     img.src = `${backimage}`; // 이미지 경로 설정
     console.log(img, backimage);
     img.className = 'login-background';
     root.appendChild(img);
+    if (event) {
+      event.style.display = 'none';  // display none 적용
+    }
     //console.log(img);
     return () => {
       // root에서 img 요소 제거
@@ -137,6 +162,10 @@ function LoginPage() {
       if (imgToRemove) {
         root.removeChild(imgToRemove);
       }
+      if (event) {
+        event.style.display = 'flex';  // 원래대로 복구
+      }
+      
     };
   }, [backimage]);
   const openPopupId = (e) => {

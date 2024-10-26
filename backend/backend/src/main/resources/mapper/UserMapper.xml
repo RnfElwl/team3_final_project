@@ -275,7 +275,15 @@
     <delete id ="deletebantbl">
         DELETE FROM ban_tbl WHERE userid = #{userid}
     </delete>
-
+    <update id = "withdraw">
+        UPDATE user_tbl SET active_state = 0, withdrawdate = NOW()  WHERE userid = #{userid}
+    </update>
+    <select id = "checkwithdraw">
+        select date_format(withdrawdate, '%Y.%m.%d') as withdrawdate from user_tbl where userid = #{userid}
+    </select>
+    <update id="restoreUser">
+        UPDATE user_tbl SET active_state = 1, withdrawdate = null  WHERE userid = #{userid}
+    </update>
 
 
 </mapper>

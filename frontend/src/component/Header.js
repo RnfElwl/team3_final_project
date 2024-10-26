@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './css/navigationbar.css';
 import { useAuth } from './TokenValidator';
+import { CiGift } from "react-icons/ci";
 
 function Header() {
   const [nav, setNav] = useState(false);
@@ -65,6 +66,7 @@ function Header() {
     (location.pathname).substring(0, 9) === "/chatting"
     ? setIsChatting(true)
     : setIsChatting(false);
+
   }, [location.pathname]);
   
   // 로그인 여부 판단용
@@ -101,6 +103,7 @@ function Header() {
     //관리자 헤더
     return (
       <>
+      
       <header className="Header">
           <div className='admin_header'>
              <div><Link to={'/'}><img src="../../logo3.png" width={"200px"} /></Link><Link to={'/admin'}>관리자페이지</Link></div>
@@ -157,6 +160,9 @@ function Header() {
         </div>
         <div className='close_box' onClick={closeNav}></div>
       </nav> */}
+      <div className='event_move' onClick={()=>{tabClick(6)}}>
+            <Link to={"/event"}><CiGift className='event_icon'/> </Link>
+      </div>
       <header className="Header">
           <div className='left-info'>
             {/* <List color={"#c2c2c2"} size={40} onClick={showNav}/> */}
@@ -172,6 +178,7 @@ function Header() {
             {
               myid!==''&&(<div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>)
             }
+            <div className={`${index==6?'focus':''}`}><Link to={'/event'} onClick={()=>{tabClick(6)}} ref={(el) => (tabList.current[6] = el)}>event</Link></div>
           </div>
           <div className='under_line' ref={underLine}></div>
           </div>

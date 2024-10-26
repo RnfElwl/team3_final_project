@@ -285,6 +285,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
             return 0;
         }
     }
+    @PostMapping("/change-password")
     public String changePassword(@RequestBody Map<String, String> requestBody) {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         String currentPassword = requestBody.get("currentPassword");
@@ -610,7 +611,6 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
                                         @RequestParam(value = "userpwd", required = false) String userpwd) {
         Map<String, Object> resultMap = new HashMap<>();
         int userstate = userService.checkuserstate(userid);
-
         if (userstate == 2) {
             String banEndDate = userService.getBanEndDate(userid);
 
@@ -635,8 +635,19 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
                 resultMap.put("banned", 0);
             }
         } else if (userstate == 0) {
-            // 사용자 상태가 삭제된 경우
-            resultMap.put("deleted", 1);
+            String withdrawDate = userService.checkwithdraw(userid);
+            if (withdrawDate != null) {
+                LocalDate withdrawDateParsed = LocalDate.parse(withdrawDate, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+                LocalDate today = LocalDate.now();
+
+                if (withdrawDateParsed.plusDays(7).isAfter(today) || withdrawDateParsed.plusDays(7).isEqual(today)) {
+                    resultMap.put("deleted", 0); // 탈퇴 후 7일 이내
+                } else {
+                    resultMap.put("deleted", 1); // 7일 이후
+                }
+            } else {
+                resultMap.put("deleted", 1); // 탈퇴 날짜가 null인 경우(7일 초과)
+            }
         }
         return resultMap;
     }
@@ -644,6 +655,46 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
     @PostMapping("/updatevisite")
     public int updatelastvisite(@RequestParam("userid") String userid){
         return userService.updatelastvisite(userid);
+    }
+
+    @PostMapping("/withdraw")
+    public String withdraw(@RequestBody Map<String, String> requestBody){
+        String userid = requestBody.get("userid");
+        String currentPassword = requestBody.get("currentPassword");
+        String loginUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userid +", " + currentPassword+", " + loginUser);
+        if(userid.equals(loginUser)){
+            String userpwd = userService.getuserpwd(userid);
+            if (bCryptPasswordEncoder.matches(currentPassword, userpwd)) {
+                int result = userService.withdraw(userid);
+                if(result > 0){
+                    return "withdraw success";
+                }
+                    return "withdraw fail";
+            } else {
+                return "password dismatched";
+            }
+        }else{
+            return "login Account dismatched";
+        }
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<String> restoreUser(@RequestParam("userid") String userid,
+                                              @RequestParam(value = "userpwd", required = false) String userpwd) {
+        try {
+            boolean restoreSuccess = userService.restoreUser(userid);
+            System.out.println("hi" + restoreSuccess);
+
+            if (restoreSuccess) {
+                return ResponseEntity.ok("restore success");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("restore failed");
+            }
+        } catch (Exception e) {
+            // 예외 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("restore failed");
+        }
     }
 
 

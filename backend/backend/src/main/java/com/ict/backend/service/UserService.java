@@ -54,4 +54,7 @@ public interface UserService {
 
     public int userunban(String userid);
     public int deletebantbl(String userid);
+    public String checkwithdraw(String userid);
+    public boolean restoreUser(String userid);
+    public int withdraw(String userid);
 }
