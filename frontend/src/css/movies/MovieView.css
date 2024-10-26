@@ -155,6 +155,82 @@
   .watch-btn:hover {
     opacity: 0.8;
   }
+
+  /* OTT */
+
+
+  .movie-view-container{
+    padding-top: 30px;
+  }
+/* OTT 보기 버튼과 슬라이드를 감싸는 래퍼 */
+.watch-button-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative; /* 슬라이드를 버튼 옆에 배치하기 위해 사용 */
+  width: 200px;
+  
+}
+
+/* 가로 슬라이드되는 Collapse */
+.horizontal-collapse {
+  display: flex;
+  flex-direction: row; /* 로고를 가로 정렬 */
+  gap: 10px;
+  align-items: center;
+  position: absolute; /* 버튼 옆에 배치 */
+  left: 100%; /* 버튼 오른쪽에 위치 */
+  top: 0;
+  height: 100%; /* 버튼 높이와 동일하게 맞춤 */
+  overflow: hidden;
+  width: 0; /* 초기에는 닫혀 있음 */
+  visibility: hidden; /* 처음에 보이지 않도록 설정 */
+  padding: 0; /* 패딩 제거 */
+  transition: width 0.2s ease, visibility 0s 0.2s; /* 애니메이션과 보이기 조절 */
+  background-color: #1C1C20;
+  padding: 10px;
+  border-radius: 5px;
+  
+  
+}
+
+/* Collapse가 열렸을 때 */
+.horizontal-collapse.open {
+  width: 300px; /* 열릴 때의 가로 길이 */
+  background-color: #1C1C20;
+  visibility: visible; /* 보이도록 설정 */
+  transition: width 0.2s ease; /* 부드러운 애니메이션 */
+}
+
+/* OTT 로고 스타일 */
+.ott-logo {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.3s ease;
+  
+}
+
+.ott-logo:hover {
+  transform: scale(1.1);
+}
+
+/* 버튼 컨테이너 */
+.watch-btn {
+  margin-right: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #48d1cdea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.watch-btn:hover {
+  opacity: 0.8;
+}
+
+
+
   
 
 /* 관련 이미지 부분 */

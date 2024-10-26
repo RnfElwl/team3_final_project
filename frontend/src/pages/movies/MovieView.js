@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {useParams, useLocation, Link } from 'react-router-dom';
-import { FaStar, FaRegBookmark, FaShareAlt } from 'react-icons/fa'; 
+import { FaStar, FaRegBookmark, FaShareAlt, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
 import './../../css/movies/MovieView.css';
 import axios from '../../component/api/axiosApi';
 import ReportModal from '../../component/api/ReportModal';
 import { AiOutlineAlert } from "react-icons/ai";
+import { Collapse } from 'react-collapse';
 
 function MovieView() {
   const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
@@ -24,7 +25,9 @@ function MovieView() {
   const [ratingInfo, setRatingInfo] = useState({ avg_rating: 0, review_count: 0 });
   const [inputText, setInputText] = useState(''); // 입력 필드
   const reviewInputRef = useRef(null); // 리뷰 입력 참조
-
+  // Collapse 상태 관리
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+  const [ottList, setOttList] = useState([]);
 
 
   const [loading, setLoading] = useState(true); // 로딩 상태
@@ -33,6 +36,18 @@ function MovieView() {
   const [movieCodeState, setMovieCode] = useState(null); // 영화 코드 상태
   const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
   const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+
+  
+
+  
+
+
+
+
+
+
+
+
 
   
   // 1. 영화 정보 가져오기
@@ -107,6 +122,22 @@ function MovieView() {
     fetchRatingInfo();
   }, [movieCode]);
 
+  // 6. OTT 데이터 가져오기
+  useEffect(() => {
+    
+    const fetchOttData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9988/api/ott/${movieCode}`);
+        setOttList(response.data);
+        console.log('OTT 데이터 가져오기 성공:');
+      } catch (error) {
+        console.error('OTT 데이터 가져오기 실패:', error);
+      }
+    };
+
+    fetchOttData();
+  }, [movieCode]);
+
   // 로딩 상태 관리
   useEffect(() => {
     const isLoading = !movie || !images || !reviews || !ratingInfo;
@@ -115,7 +146,7 @@ function MovieView() {
   useEffect(()=>{
     if(once==0){
       once = 1;
-      console.log("한번만 실행!!!!!!!!!!!!!!!");
+      console.log("한번만 실행!");
       historySetting();
     }
   }, []);
@@ -264,6 +295,11 @@ function MovieView() {
       alert('클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
     });
 }
+  };
+
+  // Collapse 열기/닫기 핸들러
+  const toggleCollapse = () => {
+    setIsCollapseOpen(!isCollapseOpen);
   };
 
   //////////////////// 리뷰 관련 //////////////////////////
@@ -524,13 +560,40 @@ function MovieView() {
                   title="공유하기"
                 />
                 </div>
-                <div className="watch-button-container">
-                <button className="watch-btn">OTT로 보러가기</button>
-              </div>
-              </div>
-              
 
+                {/* OTT 보기 버튼과 슬라이드 */}
+                <div className="movie-view-container">
+              <div className="watch-button-wrapper">
+                <button className="watch-btn" onClick={toggleCollapse}>
+                  {isCollapseOpen ? (
+                    <>
+                      OTT 목록 닫기 <FaChevronLeft />
+                    </>
+                  ) : (
+                    <>
+                      OTT로 보러가기 <FaChevronRight />
+                    </>
+                  )}
+                </button>
+
+                {/* 오른쪽에 슬라이드되는 Collapse */}
+                <div className={`horizontal-collapse ${isCollapseOpen ? 'open' : ''}`}>
+                  {ottList.map((ott) => (
+                    <a
+                      key={ott.ott_code}
+                      href={ott.ott_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ott-link"
+                    >
+                      <img src={ott.ott_logo_url} alt={`${ott.ott_name} 로고`} className="ott-logo" />
+                    </a>
+                  ))}
+                </div>
               </div>
+            </div>
+        </div>
+        </div>
             
         
         

@@ -27,8 +27,6 @@ public class ReviewController {
 
 
 
-
-
     // 리뷰 추가
     @PostMapping("/add")
     public ResponseEntity<ReviewVO> addReview(@RequestBody ReviewVO reviewVO) {
