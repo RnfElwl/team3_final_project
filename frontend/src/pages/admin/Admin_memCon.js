@@ -131,8 +131,8 @@ function MemCon(){
     <h3>멤버 관리</h3>
     <hr />
     <div>
-        멤버 필터 폼
         <div className="member-filterArea">
+            <button value={''} onClick={activeChk}>전체</button>
             <button value={0} onClick={activeChk}>비활성</button>
             <button value={1} onClick={activeChk}>활성</button>
             <button value={2} onClick={activeChk}>정지</button>

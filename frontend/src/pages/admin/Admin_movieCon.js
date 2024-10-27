@@ -143,7 +143,6 @@ function AdminMovieCon(){
             <h3>영화 관리</h3>
     <hr />
     <div>
-        영화 필터 폼
         <div className="member-filterArea">
             <div className="adminSearchForm">
                 <form onSubmit={submitData}>

@@ -351,9 +351,26 @@ public class AdminController {
 
         return updateCnt;
     }
+    //Notice Management Part
+    @PostMapping("/qNotice/write")
+    public int qnoticeWrite(@RequestBody NoticeVO qnoVO){
+        System.out.println(qnoVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        qnoVO.setUserid(userid);
+        qnoVO.setActive_state(1);
+
+        return adminService.insertQnaNotice(qnoVO);
+    }
+    @GetMapping("/qNoticeList")
+    public ResponseEntity<List<NoticeVO>> selectAdminNoticeList(NoticeVO qnoVO){
+        System.out.println(qnoVO.toString());
+        List<NoticeVO> qNoticeList=adminService.selectAdminQNoticeList(qnoVO);
+        return new ResponseEntity<>(qNoticeList, HttpStatus.OK);
+    }
 
     @GetMapping("/movieList")
     public ResponseEntity<List<MovieVO>> selectAdminMovieList(MovieVO movieVO){
+        System.out.println("데이터");
         System.out.println(movieVO.toString());
         List<MovieVO> movieList = adminService.selectAdminMovieList(movieVO);
         return new ResponseEntity<>(movieList, HttpStatus.OK);

@@ -1,4 +1,6 @@
 import "../../css/qna/qnaView.css";
+import LineBreakText from './../../component/LineBreakText';
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from "../../component/api/axiosApi";
@@ -188,12 +190,7 @@ const toggleReport = () => {
             <tr>
                 <th className="qnaType">내용</th>
                 <td colSpan="4">
-                    {itemQ.qna_content && itemQ.qna_content.split('\n').map((line, index) => (
-                        <React.Fragment key={index}>
-                            {line}
-                            <br />
-                        </React.Fragment>
-                    ))}
+                    {itemQ.qna_content && <LineBreakText text={itemQ.qna_content}/>}
                 </td>
             </tr>
             <tr>
@@ -250,15 +247,6 @@ const toggleReport = () => {
             {itemQ.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글 {itemQ.next_Title}</div>:<div></div>}
         </div>
     </div>
-    {/* ):(
-        <div>
-            <form onSubmit={(e)=>handlePassSubmit(e)}>
-                <h3>문의글입니다.</h3>
-                <div>들어가려면 비밀번호를 입력하여주십시오.</div>
-                <input type="password" value={passwordQ} onChange={(e)=>handlePassCheck(e)}/>
-                <button type="submit">확인</button>
-            </form>
-        </div>)} */}
 </div>
     
 

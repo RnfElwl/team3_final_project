@@ -26,6 +26,19 @@
     outline: 0 none;
     color: #f1f1f1;
 }
+.noticeBody .insert_form textarea{
+    border-radius: 4px;
+    width: 100%;
+    min-height: 300px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    resize: none;
+    color: #f1f1f1;
+}
 
 .noticeBody .insert_form .formbtns{
     text-align: center;
@@ -41,4 +54,19 @@
     border-radius: 4px;
     outline: 0 none;
     color: #f1f1f1;
+}
+
+.adminBody select, .adminBody input{
+  width: 120px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
 }

@@ -212,6 +212,16 @@ public class AdminServiceImpl implements AdminService{
         return dao.updateReplyState(userid,replyNos, activeState);
     }
 
+    @Override
+    public int insertQnaNotice(NoticeVO qnoVO) {
+        return dao.insertQnaNotice(qnoVO);
+    }
+
+    @Override
+    public List<NoticeVO> selectAdminQNoticeList(NoticeVO qnoVO) {
+        return dao.selectAdminQNoticeList(qnoVO);
+    }
+
 
     @Override
     public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}

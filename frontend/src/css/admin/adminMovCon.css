@@ -192,12 +192,12 @@
   background: #1C1C20;
   border: 1px solid #48d1cdea;
   background-size: 20px;
-  padding: 5px 30px 5px 10px;
   border-radius: 4px;
   outline: 0 none;
   color: #f1f1f1;
-  padding: 0;
   margin-right: 10px;
+  appearance: none;
+  text-align: center;
 }
 .AdminMovBody .adminSearchForm input{
   border-radius: 4px;
@@ -217,12 +217,12 @@
   background: #1C1C20;
   border: 1px solid #48d1cdea;
   background-size: 20px;
-  padding: 5px 30px 5px 10px;
   border-radius: 4px;
   outline: 0 none;
   color: #f1f1f1;
-  padding: 0;
   margin-right: 10px;
+  appearance: none;
+  text-align: center;
 }
 .AdminMovBody .active_box button{
   width: 70px;

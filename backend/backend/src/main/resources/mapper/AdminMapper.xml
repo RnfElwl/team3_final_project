@@ -194,10 +194,12 @@
     </update>
     <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
         select report_no,report_userid, reported_userid, report_content, report_tblname,
-        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid
+        from report_tbl
         <if test="searchWord!=null and searchWord!=''">
-            AND ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
         </if>
+        ORDER BY report_no desc
     </select>
     <select id="getRepView" resultType="com.ict.backend.vo.ReportVO">
         select report_no,report_userid, reported_userid, report_content, report_tblname, report_date,
@@ -363,6 +365,15 @@
             #{replyNo}
         </foreach>
     </update>
+    <insert id="insertQnaNotice">
+        insert qna_notice_tbl values(#{qnotice_no},#{qnotice_title},#{qnotice_content},#{userid},now(),#{active_state})
+    </insert>
+    <select id="selectAdminQNoticeList" resultType="com.ict.backend.vo.NoticeVO">
+        select * from qna_notice_tbl
+        <if test="searchKey=='qnotice_title'">
+            where qnotice_title like '%${searchWord}%'
+        </if>
+    </select>
     <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
         select * from movie_data_tbl
         <if test="searchKey=='movie_title'">

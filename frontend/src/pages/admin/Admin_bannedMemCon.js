@@ -118,7 +118,6 @@ function BanMem(){
                 <h3>정지 멤버 관리</h3>
         <hr />
         <div>
-            정지 멤버 필터 폼
             <div className="member-filterArea">
                 {/* <button value='1' onClick={genderChk}>남</button>
                 <button value='2' onClick={genderChk}>여</button> */}

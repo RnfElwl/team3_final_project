@@ -33,7 +33,7 @@ function RepCon(){
        //신고처리 팝업 창 열기
     const openAddReportAnsWindow = (report_no) => {
         console.log("넘긴 번호"+report_no);
-        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=300');
+        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=400,top=200,left=200');
     };
     useEffect(() => {
         window.reloadReportList = reloadReportList;  // 전역 함수로 등록
@@ -97,7 +97,7 @@ function RepCon(){
                         <td>{item.edit_state==0?(<button className="repAnswerModify-btn"
                                         onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리</button>)
                                     :(<button className="repAnswerAdd-btn"
-                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리 수정</button>)}</td>
+                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 수정</button>)}</td>
                     </tr>)))
                     :(<tr>검색한 내용을 포함한 신고내역이 존재하지 않습니다.</tr>)}
                 </tbody>

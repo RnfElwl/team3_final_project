@@ -48,6 +48,8 @@ public interface AdminDAO {
     int updateCommunityState(String userid,List<Integer> communityNos, Integer activeState);
     int updateCommentState(String userid,List<Integer> commentNos, Integer activeState);
     int updateReplyState(String userid,List<Integer> replyNos, Integer activeState);
+    int insertQnaNotice(NoticeVO qnoVO);
+    List <NoticeVO> selectAdminQNoticeList(NoticeVO qnoVO);
     List<MovieVO> selectAdminMovieList(MovieVO movieVO);
     int updateMovieActive(Integer active, List<Integer> movie_no, String userid);
     int updateMovieData(MovieVO movieVO);

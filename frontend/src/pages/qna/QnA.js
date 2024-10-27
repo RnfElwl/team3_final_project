@@ -30,9 +30,13 @@ function QnA() {
     //게시글 정렬
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
+    const [selectedCategory, setSelectedCategory] = useState('all');
+
     //말머리 필터
     const handleSearchClick = (e) => {
         e.preventDefault();
+        const category = e.target.value;
+        setSelectedCategory(category);
         setNowPage(1);
         const searchValue = e.target.value;
         setSearchKey('head_title');
@@ -41,9 +45,10 @@ function QnA() {
     //전체 전환
     const handleSearchClickAll=(e)=>{
         e.preventDefault();
+        setSelectedCategory('all');
         setNowPage(1);
         const searchValue=e.target.value;
-        setSearchKey('');
+        setSearchKey('head_title');
         setSearchWord('');
     }
 
@@ -237,18 +242,22 @@ function QnA() {
                     </div>
                 </div>
                 <div className="qna-category-filter">
-                    <button value='1'
-                        onClick={handleSearchClick}
-                        disabled={searchKey=='head_title'&&searchWord=='1'}>영화</button>
-                    <button value='2'
-                        onClick={handleSearchClick}
-                        disabled={searchKey=='head_title'&&searchWord=='2'}> 사이트</button>
-                    <button value='3'
-                        onClick={handleSearchClick}
-                        disabled={searchKey=='head_title'&&searchWord=='3'}> 기타</button>
-                    <button value='1'
+                    <button value='all'
+                        className={`qna-category-allSel ${selectedCategory === 'all' ? 'active' : ''}`}
                         onClick={handleSearchClickAll}
-                        disabled={searchKey==''&&searchWord==''}> 전체</button>
+                        disabled={selectedCategory === 'all'}> 전체</button>
+                    <button value='1'
+                        className={selectedCategory === '1' ? 'active' : ''}
+                        onClick={handleSearchClick}
+                        disabled={selectedCategory === '1'}>영화</button>
+                    <button value='2'
+                        className={selectedCategory === '2' ? 'active' : ''}
+                        onClick={handleSearchClick}
+                        disabled={selectedCategory === '2'}> 사이트</button>
+                    <button value='3'
+                        className={selectedCategory === '3' ? 'active' : ''}
+                        onClick={handleSearchClick}
+                        disabled={selectedCategory === '3'}> 기타</button>
                 </div>
                 <table className="table table-dark table-hover QnaTable">
                     <thead>
