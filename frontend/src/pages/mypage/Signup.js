@@ -289,6 +289,7 @@ function Signup() {
 
     return (
         <>
+        <HideEventMove />
             {/* 로딩 중일 때 보여줄 로딩바 */}
             {loading && (
                 <div className="loading-overlay" style={{
@@ -454,7 +455,7 @@ function Signup() {
                     </div>
                     </>
                 )}
-                <HideEventMove />
+                
             </div>
             
             {isAddressModalOpen && (

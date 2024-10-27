@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TokenValidator from './component/TokenValidator.js';
 import ScrollToTop from './component/ScrollToTop.js';
+import PrivateRoute from './pages/PrivateRoute.js';
 
 import Home from './pages/Home';
 import Layout from './pages/Layout';
@@ -65,7 +66,7 @@ function App() {
                 <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
-                <Route path='/admin' element={<Admin/>}/>
+                {/* <Route path='/admin' element={<Admin/>}/> */}
                 <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/>
                 <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
                 <Route path='/admin/comCon' element={<AdminComCon/>}/>
@@ -80,11 +81,11 @@ function App() {
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
-                <Route path='/mypage' element={<MyPage/>}/>
+                {/* <Route path='/mypage' element={<MyPage/>}/> */}
                 <Route path='/signin' element={<LoginPage/>}/>
                 <Route path = '/signup' element = {<Signup/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
-                <Route path = '/mypage/edit' element={<EditInfo/>}/>
+                {/* <Route path = '/mypage/edit' element={<EditInfo/>}/> */}
                 <Route path = "/mypage/:more" element={<More/>}/>
                 <Route path ="/user/info/:usernick" element={<User/>}/>
                 <Route path ="/user/info/" element={<User/>}/>
@@ -95,10 +96,26 @@ function App() {
                 <Route path ="/event" element={<EventList/>}/>
                 <Route path ="/event/:event_no" element={<EventView/>}/>
                 <Route path ="/event/notice/:notice_no" element={<EventNoticeView/>}/>
+
+            
+              {/* USER 1차 체크 */}
+              
+              <Route element={<PrivateRoute requiredRole="USER" />}>
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path = '/mypage/edit' element={<EditInfo/>}/>
+              </Route>
+
+              {/* Admin 1차 체크 */}
+              <Route element={<PrivateRoute requiredRole="ADMIN" />}>
+                <Route path="/admin" element={<Admin />} />
+                
+              </Route>
+
             </Route>
         </Routes>
       </TokenValidator>
     </BrowserRouter>
+
   );
 }
 

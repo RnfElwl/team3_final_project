@@ -1,33 +1,47 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import jwt_decode from 'jwt-decode'; // JWT 해독 라이브러리 설치 필요: npm install jwt-decode
+import { jwtDecode } from 'jwt-decode';
 
-// PrivateRoute 컴포넌트 정의
-const PrivateRoute = () => {
-  const token = localStorage.getItem('accessToken');
+const PrivateRoute = ({ requiredRole }) => {
+  const token = localStorage.getItem('token');
   let isAuthenticated = false;
+  let hasRequiredRole = false;
 
   if (token) {
     try {
-      const decodedToken = jwt_decode(token);
-      const currentTime = Date.now() / 1000; // 현재 시간 (초 단위)
+      const decodedToken = jwtDecode(token);
+      console.log("12", decodedToken);
+      const currentTime = Date.now() / 1000;
 
-      // decodedToken 예시: { userid: 'someUserId', role: 'USER', iat: 1692304567, exp: 1692308167 }
       if (decodedToken.exp > currentTime) {
-        // 토큰 만료 시간이 현재 시간보다 크다면 유효한 토큰
         isAuthenticated = true;
+
+        hasRequiredRole =
+          decodedToken.role === 'ADMIN' ||
+          (decodedToken.role === 'USER' && requiredRole === 'USER');
       } else {
-        // 토큰이 만료되었으므로 localStorage에서 제거
-        localStorage.removeItem('accessToken');
+        localStorage.clear();
+        // localStorage.removeItem('token');
       }
     } catch (error) {
-      console.error('Invalid token:', error);
-      // 토큰이 유효하지 않은 경우 (예: 구조가 잘못된 경우)
-      localStorage.removeItem('accessToken');
+      console.error('잘못된 토큰:', error);
+      localStorage.clear();
+      // localStorage.removeItem('token');
     }
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/signin" />;
+  if (!isAuthenticated) {
+    alert('로그인 후 사용 가능합니다.');
+    return <Navigate to="/signin" replace />;
+  }
+
+
+  if (!hasRequiredRole) {
+    alert('이용 권한이 없습니다.');
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;

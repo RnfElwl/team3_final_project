@@ -20,7 +20,7 @@ const TokenValidator = ({ children }) => {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
-
+        console.log("to" , decodedToken);
         if (decodedToken.exp > currentTime) {
           // 유효한 토큰인 경우 로그인 상태로 설정
           setIsAuthenticated(true);

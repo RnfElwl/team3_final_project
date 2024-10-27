@@ -97,7 +97,7 @@ function LoginPage() {
         if (response.status === 'success') {
           console.log('Login successful:', response.data);
           alert("로그인 성공");
-          window.location = "/";
+          navigate("/");
         } else if (response.status === 'banned') {
           // 정지된 경우 처리
           return;
@@ -132,16 +132,31 @@ function LoginPage() {
   useEffect(() => {
     fetchUsers();
     // 컴포넌트가 처음 렌더링된 후 실행되는 코드
-    const element = document.getElementsByClassName('Header');
-    const loginButton = element[0].querySelector('.login_btn');
-    if (element.length > 0) {
-      element[0].style.backgroundColor = 'transparent'; // 첫 번째 요소의 배경색을 투명하게 설정
-      loginButton.style.backgroundColor = 'transparent';
-    }
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length > 0) {
+          const headerElement = document.querySelector('.Header');
+          if (headerElement) {
+            const loginButton = headerElement.querySelector('.login_btn');
+            headerElement.style.backgroundColor = 'transparent';
+            if (loginButton) {
+              loginButton.style.backgroundColor = 'transparent';
+            }
+          }
+        }
+      });
+    });
+
+    // `body`에 MutationObserver 적용
+    observer.observe(document.body, { childList: true, subtree: true });
+
     return () => {
-      element[0].style.backgroundColor = '#1C1C20';
-      //loginButton.style.backgroundColor = 'black';
-      setBackimage("null");
+      observer.disconnect();
+      const headerElement = document.querySelector('.Header');
+      if (headerElement) {
+        headerElement.style.backgroundColor = '#1C1C20';
+      }
+      setBackimage(null);
     };
 }, []);
   useEffect(() => {
