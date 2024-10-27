@@ -108,7 +108,12 @@
     color: #f0f0f0;
     background-color: #48d1cdea;
 }
-
+.event_view .enter button:disabled {
+    background-color: #7c7b7b; /* 반투명 회색 */
+    color: #a9a9a9; /* 회색 텍스트 */
+    cursor: not-allowed; /* 비활성화 상태일 때 커서 변경 */
+    border: none;
+}
 .event_view .event_info p{
     color: #ccc;
     margin: 5px;

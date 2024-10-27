@@ -6,6 +6,7 @@ import axios from '../../component/api/axiosApi';
 function EventView() {
     const [eventView, setEventView] = useState([]);
     const { event_no } = useParams();
+    // const [userid, setUserid] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,7 +14,7 @@ function EventView() {
             try {
                 const response = await axios.get(`http://localhost:9988/event/${event_no}`);
                 console.log("이벤트 데이터:", response.data);
-                setEventView(response.data);
+                setEventView(response.data); 
             } catch (error) {
                 console.error("Error fetching event view:", error);
             }
@@ -22,6 +23,17 @@ function EventView() {
     
         fetchEventView(); // 이벤트 데이터를 가져오는 함수 호출
     }, [event_no]);
+
+    // useEffect(() => {
+    //     axios.get('http://localhost:9988/user/userinfo')
+    //         .then(response => {
+    //             setUserid(response.data.userid);
+    //         })
+    //         .catch(error => {
+    //             console.error("데이터 로드 중 오류 발생:", error);
+    //         });
+            
+    // }, []);
 
     const getEventStatus = (start_date, last_date) => {
         const now = new Date();
@@ -51,6 +63,9 @@ function EventView() {
         }
     };
 
+    const status = getEventStatus(eventView.event_startdate, eventView.event_lastdate);
+    const isOngoing = status === "진행중";
+
     if (!eventView) {
         return <div>로딩 중...</div>;
     }
@@ -79,7 +94,7 @@ function EventView() {
                 <p>- 본 이벤트는 선착순으로, 상황에 따라 조기 종료될 수 있습니다.</p>
             </div>
             <div className="enter">
-                <button>응모하기</button>
+                <button disabled={!isOngoing}>응모하기</button>
             </div>
         </div>
 
