@@ -97,7 +97,8 @@ function LoginPage() {
         if (response.status === 'success') {
           console.log('Login successful:', response.data);
           alert("로그인 성공");
-          navigate("/");
+          window.location.href = '/';
+          // navigate("/");
         } else if (response.status === 'banned') {
           // 정지된 경우 처리
           return;
