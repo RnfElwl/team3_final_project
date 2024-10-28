@@ -47,7 +47,7 @@
 }
 
 .event_list .sort{
-    margin-right: 40px;
+    margin-right: 10px;
 }
 
 .event_list .sort label {
@@ -73,7 +73,7 @@
 }
 
 .event_list .event{
-    width: calc(33.33% - 20px); /* 전체 너비의 3분의 1에서 여백을 빼기 */
+    width: calc(33.33% - 10px); /* 전체 너비의 3분의 1에서 여백을 빼기 */
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
