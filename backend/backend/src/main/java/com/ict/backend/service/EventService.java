@@ -13,4 +13,6 @@ public interface EventService {
     public int updatePointMinus(String userid, int point);
     public int updatePointAdd(String userid, int point);
     public int insertFirstCome(String userid, int no);
+    public int selectEventTenCheck(int event_no);
+    public int selectEventUserCheck(int event_no, String userid);
 }

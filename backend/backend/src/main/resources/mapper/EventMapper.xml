@@ -25,4 +25,10 @@
     <insert id="insertFirstCome">
         insert into event_first_come(userid, event_no) values(#{param1}, ${param2})
     </insert>
+    <select id="selectEventTenCheck">
+        select exists (select 1 from event_first_come where event_no=${parma1} group by event_no having count(event_no)&gt;=10)
+    </select>
+    <select id="selectEventUserCheck">
+        select exists(select 1 from event_first_come where userid=#{param2} and event_no=${param1});
+    </select>
 </mapper>

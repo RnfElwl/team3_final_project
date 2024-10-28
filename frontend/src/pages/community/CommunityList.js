@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
-import ReportModal from '../../component/api/ReportModal.js';
+// import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
 import CustomImage from "../../component/CustomImage.js";
 
@@ -22,8 +22,8 @@ function CommunityList() {
 
     const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
 
-    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
-    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    //const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    //const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All Posts");
 
@@ -182,31 +182,31 @@ function CommunityList() {
         
     };
 
-    function openReport(id, userid, content){{/* 신고 기능 */}
-        if(userid){
-            console.log(id, userid, content);
-            setReport({
-                report_tblname: 2, // 본인 테이블에 따라 다름
-                report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
-                reported_userid: userid, // 피신고자id
-                report_content: content,// 피신고자의 채팅 내용
-            });
-            toggleReport();
-        }else{
-            alert("로그인 후 이용 가능합니다");
-            window.location.href = "/signin";
-        }
-    }
+    // function openReport(id, userid, content){{/* 신고 기능 */}
+    //     if(userid){
+    //         console.log(id, userid, content);
+    //         setReport({
+    //             report_tblname: 2, // 본인 테이블에 따라 다름
+    //             report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+    //             reported_userid: userid, // 피신고자id
+    //             report_content: content,// 피신고자의 채팅 내용
+    //         });
+    //         toggleReport();
+    //     }else{
+    //         alert("로그인 후 이용 가능합니다");
+    //         window.location.href = "/signin";
+    //     }
+    // }
 
     // 모달창 열고 닫기 함수
-    const toggleReport = () => {
-        if (userid) {
-            setReportShow(!reportShow);
-        }else{
-            alert("로그인 후 이용 가능합니다");
-            window.location.href = "/signin";
-        }
-    };
+    // const toggleReport = () => {
+    //     if (userid) {
+    //         setReportShow(!reportShow);
+    //     }else{
+    //         alert("로그인 후 이용 가능합니다");
+    //         window.location.href = "/signin";
+    //     }
+    // };
 
     useEffect(() => {
         axios.get(`http://localhost:9988/user/userinfo`)
@@ -415,23 +415,24 @@ function CommunityList() {
                                                 onClick={()=>{toggleFollow(communityItem)}}  
                                                 className="action_button" />
                                                 {/* {userid && ( */}
-                                                <button 
+                                                {/* <button 
                                                     className="report_button" 
                                                     title="신고"
                                                     onClick={() => openReport(communityItem.community_no, communityItem.userid, communityItem.community_title)} 
                                                 >
                                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
-                                                </button>
+                                                </button> */}
                                                 {/* )} */}
                                             </>
                                         )}
                                     </div>
-                                    <ReportModal    
+                                    {/* <ReportModal    
                                         reportShow={reportShow}// 모달창 보이기 여부
                                         toggleReport={toggleReport} // 모달창 열고닫기 함수
                                         report={report}// 신고 데이터 변수
                                         setReport={setReport} // 신고 데이터 변수 세팅
-                                    />
+                                        setDefaultList={()=>{}}
+                                    /> */}
                                 </div>
 
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>

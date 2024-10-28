@@ -106,7 +106,9 @@ function CommunityView(){
     const handleEdit = () => {
         navigate(`/community/CommunityEdit/${community_no}`); // 수정 페이지로 이동
     };
-
+    function defaultCommunity(){
+        navigate("/community");
+    }
     useEffect(() => {
         // 페이지가 처음 로드될 때만 실행되도록 조건 설정
         if (isInitialRender.current) {
@@ -341,13 +343,11 @@ function CommunityView(){
         commentInput.current[x][y].style.display = 'none';
     }
 
-    function openReport(e){{/* 신고 기능 */}
-        const id = e.target.dataset.id;
-        const userid = e.target.dataset.userid;
-        const content = e.target.dataset.content;
+    function openReport(id, userid, content){{/* 신고 기능 */}
+        console.log(id, userid, content);
         setReport({
             report_tblname: 2, // 본인 테이블에 따라 다름
-            report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+            report_tblno: id, // 이건 uuid값이 아니라 id로 수정해야함
             reported_userid: userid, // 피신고자id
             report_content: content,// 피신고자의 채팅 내용
         })
@@ -483,10 +483,7 @@ function CommunityView(){
                                 <button 
                                     className="report_button" 
                                     title="신고"
-                                    onClick={(e) => openReport(e)} 
-                                    data-id={community.community_no}
-                                    data-userid={community.userid}
-                                    data-content={community.community_title}
+                                    onClick={() => openReport(community.community_no, community.userid, community.community_title)} 
                                 >
                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
                                 </button>
@@ -499,6 +496,7 @@ function CommunityView(){
                         toggleReport={toggleReport} // 모달창 열고닫기 함수
                         report={report}// 신고 데이터 변수
                         setReport={setReport} // 신고 데이터 변수 세팅
+                        setDefaultList={defaultCommunity}
                     />
                 </div> 
                 <hr/>

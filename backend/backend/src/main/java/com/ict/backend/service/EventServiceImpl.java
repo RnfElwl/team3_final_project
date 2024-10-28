@@ -39,4 +39,11 @@ public class EventServiceImpl implements EventService{
         return eventDAO.insertFirstCome(userid, no);
     }
 
+    public int selectEventTenCheck(int event_no){
+        return eventDAO.selectEventTenCheck(event_no);
+    }
+    public int selectEventUserCheck(int event_no, String userid){
+        return eventDAO.selectEventUserCheck(event_no, userid);
+    }
+
 }

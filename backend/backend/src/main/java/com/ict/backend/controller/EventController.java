@@ -43,21 +43,31 @@ public class EventController {
         return eventService.selectNoticePage(notice_no);
     }
     @PostMapping("/point/minus")
-    public int updatePointMinus(@RequestBody int event_no, @RequestBody int event_point){
+    public int updatePointMinus(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         MemberVO memberVO =  joinService.findByUserid(userid);
         int user_point = memberVO.getUser_point();
-        if(user_point < event_point){
+        if(user_point < eventVO.getEvent_point()){
             return 0;
         }
-
-        eventService.insertFirstCome(userid, event_no);
-        return eventService.updatePointMinus(userid, event_point);
+        eventService.insertFirstCome(userid, eventVO.getEvent_no());
+        return eventService.updatePointMinus(userid, eventVO.getEvent_point());
     }
     @PostMapping("/point/add")
     public int updatePointAdd(int point){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         return eventService.updatePointAdd(userid, point);
+    }
+    @GetMapping("/user/check")
+    public int selectDupCheck(@RequestParam int event_no){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return eventService.selectEventUserCheck(event_no, userid);
+    }
+    @GetMapping("/ten/check")
+    public int selectTenCheck(@RequestParam int event_no){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return eventService.selectEventTenCheck(event_no);
     }
 
 }

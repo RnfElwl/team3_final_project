@@ -6,11 +6,20 @@ import axios from '../../component/api/axiosApi';
 function EventView() {
     const [eventView, setEventView] = useState([]);
     const { event_no } = useParams();
-    // const [userid, setUserid] = useState(null);
+    const [userid, setUserid] = useState();
+    const [status, setStatus] = useState();
     const navigate = useNavigate();
 
+
     useEffect(() => {
-        const fetchEventView = async () => {
+        axios.get('http://localhost:9988/user/userinfo')
+            .then(response => {
+                setUserid(response.data);
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
+            });
+            const fetchEventView = async () => {
             try {
                 const response = await axios.get(`http://localhost:9988/event/${event_no}`);
                 console.log("이벤트 데이터:", response.data);
@@ -23,6 +32,38 @@ function EventView() {
     
         fetchEventView(); // 이벤트 데이터를 가져오는 함수 호출
     }, [event_no]);
+    async function clickSubmitEvent(){
+        if(!userid){
+            alert("로그인후 이용 가능합니다");
+            return 0;
+        }
+        try{
+
+            const result = await axios.get("http://localhost:9988/event/ten/check", {params:{event_no}})
+            if(result.data===1){
+                setStatus("마감")
+                alert("마감되었습니다.");
+                return;
+            }
+            const result2 = await axios.get("http://localhost:9988/event/user/check", {params:{event_no}})
+            if(result2.data===1){
+                alert("이미 응모한 이벤트 입니다.");
+                return;
+            }
+            const event_point = eventView.event_point;
+            
+            const {data} = await axios.post("http://localhost:9988/event/point/minus", {event_no:Number(event_no), event_point});
+            if(data===1){
+                alert("성공적으로 응모 되었습니다.")
+            }
+            else{
+                alert("포인트가 부족합니다.")
+            }
+            console.log(data);
+        }catch(e){
+            console.log(e);
+        }
+    }
 
     // useEffect(() => {
     //     axios.get('http://localhost:9988/user/userinfo')
@@ -35,17 +76,29 @@ function EventView() {
             
     // }, []);
 
-    const getEventStatus = (start_date, last_date) => {
+    const getEventStatus = async (start_date, last_date) => {
         const now = new Date();
 
         const startDate = new Date(start_date);
         const lastDate = new Date(last_date);
+        try{
 
+            const result = await axios.get("http://localhost:9988/event/ten/check", {params:{event_no}})
+            if(result.data===1){
+                setStatus("마감")
+                return;
+            }
+        }catch(e){
+            console.log(e);
+        }
         if (now < startDate) {
+            setStatus("준비중")
             return "준비중"; // 현재 날짜가 시작 날짜보다 이전
         } else if (now >= startDate && now <= lastDate) {
+            setStatus("진행중");
             return "진행중"; // 현재 날짜가 시작 날짜와 종료 날짜 사이
         } else {
+            setStatus("마감");
             return "마감"; // 현재 날짜가 종료 날짜보다 이후
         }
     };
@@ -62,8 +115,12 @@ function EventView() {
                 return "status"; // 기본 클래스
         }
     };
-
-    const status = getEventStatus(eventView.event_startdate, eventView.event_lastdate);
+    useEffect(()=>{
+        getEventStatus(eventView.event_startdate, eventView.event_lastdate)
+    }, [eventView])
+    useEffect(()=>{
+        getStatusClass(status)
+    }, [status])
     const isOngoing = status === "진행중";
 
     if (!eventView) {
@@ -76,8 +133,8 @@ function EventView() {
                 <span onClick={() => navigate("/event")} className="prev">
                 ⨞
                 </span>
-                <div className={getStatusClass(getEventStatus(eventView.event_startdate, eventView.event_lastdate))}>
-                    <p>{getEventStatus(eventView.event_startdate, eventView.event_lastdate)}</p>
+                <div className={getStatusClass(status)}>
+                    <p>{status}</p>
                 </div>
                 <div className="title"> 
                     <p>{eventView.event_title}</p>
@@ -94,7 +151,7 @@ function EventView() {
                 <p>- 본 이벤트는 선착순으로, 상황에 따라 조기 종료될 수 있습니다.</p>
             </div>
             <div className="enter">
-                <button disabled={!isOngoing}>응모하기</button>
+                <button disabled={!isOngoing} onClick={clickSubmitEvent}>응모하기</button>
             </div>
         </div>
 
