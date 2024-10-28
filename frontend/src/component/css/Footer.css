@@ -78,6 +78,7 @@ img.logo {
     align-items: center;
     justify-content: center;
     background-color: rgba(128, 128, 128, 0.3);
+    z-index: 1;
 }
 
 .event_move>a{

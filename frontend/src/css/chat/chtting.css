@@ -458,9 +458,26 @@
     background-color: #f0f0f0;
     padding-top: 50px;
     z-index: 3;
-    color: #1C1C20;;
+    color: #1C1C20;
     
 }
+.chatting_room .vote_user_box1{
+    width: 300px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    z-index: 3;
+    color: #1C1C20;
+    padding: 20px;
+}
+
+.chatting_room .vote_user_box1>div:nth-child(1){
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #3132335d;
+}
+
 .chatting_room .vote_user_box>div:nth-child(1){
     padding-bottom: 50px;
     display: flex;

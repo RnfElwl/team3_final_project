@@ -616,7 +616,7 @@ const Chatting = () => {
                 <div className='schedule_list'>
                     <div className={`voteWindow ${voteUserWindow?'show':'hide'}`}>
                         <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
-                        <div className='vote_user_box'>
+                        <div className='vote_user_box1'>
                             <h2>{vote_state==1?'참여 목록':'불참 목록'}</h2>
                             <div className='vote_user_list'>
                             {
@@ -658,7 +658,7 @@ const Chatting = () => {
                         <form className={`schedule_voting ${data.user_vote}`} onSubmit={setScheduleVote}>
                             <div className='voting_box'>
                                 <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id});setVoteState(1);}}>참여</button>
+                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id}); setVoteState(1);}}>참여</button>
                             </div>
                             <div className='voting_box'>
                                 <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
@@ -691,8 +691,8 @@ const Chatting = () => {
                                     <div className='schedule_voting'>
                                         <div className='end_vote'>
                                             <div>
-                                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                                <div className='vote_yes_user vote_user' onClick={()=>{setDefaultVote(data.schedule_id, 1); setVoteState(1); }}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                                <div className='vote_no_user vote_user' onClick={()=>{setDefaultVote(data.schedule_id, 0); setVoteState(2);}}><IoPerson size="15px" ></IoPerson >{data.no}</div>
                                             </div>
                                             <div className='voting_box'>
                                                 <button>투표종료</button>
