@@ -10,6 +10,8 @@ function EventList() {
     const [filteredEvent, setFilteredEvent] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sort, setSort] = useState('');
+    const [status, setStatus] = useState([]);
+    const [cnt, setCnt] = useState(0);
 
     useEffect(() => {
         const fetchNoticeList = async () => {
@@ -57,7 +59,7 @@ function EventList() {
 
     const filterEvents = () => {
         if (!sort) return eventList; // 정렬 기준이 없으면 모든 이벤트 반환
-        return eventList.filter(event => getEventStatus(event.event_startdate, event.event_lastdate) === sort);
+        return eventList.filter((event, index) => status[index]==1?"마감":getEventStatus(event.event_startdate, event.event_lastdate) === sort);
     };
 
     // 선택된 정렬 기준이 변경될 때마다 필터링된 이벤트 업데이트
@@ -78,8 +80,21 @@ function EventList() {
         }
     };
     const currentStatusClass = getStatusClass(sort);
+    useEffect(()=>{
+        setTenCheck();
+    }, [eventList]);
 
-    const ongoingEvents = eventList.filter(event => getEventStatus(event.event_startdate, event.event_lastdate) === "진행중");
+    async function setTenCheck(){
+        eventList.map(async (event, index)=>{
+            const result = await axios.get("http://localhost:9988/event/ten/check", {params:{event_no:event.event_no}})
+            setStatus((p)=>[...p, result.data])
+            if(result.data==1){
+                setCnt(cnt+1)
+            }
+        })
+    }
+
+    const ongoingEvents = eventList.filter((event, index) => status[index]==1?"마감":getEventStatus(event.event_startdate, event.event_lastdate) === "진행중");
 
     const handleSearchInputChange = (e) => {
         const value = e.target.value;
@@ -165,8 +180,8 @@ function EventList() {
                                 <div className="event_info">
                                     <p className="event_title">{eventList.event_title}</p>
                                     <div className="bottom">
-                                        <div className={getStatusClass(getEventStatus(eventList.event_startdate, eventList.event_lastdate))}>
-                                            <p>{getEventStatus(eventList.event_startdate, eventList.event_lastdate)}</p>
+                                        <div className={getStatusClass(status[index]==1?"마감":getEventStatus(eventList.event_startdate, eventList.event_lastdate))}>
+                                            <p>{status[index]==1?"마감":getEventStatus(eventList.event_startdate, eventList.event_lastdate)}</p>
                                         </div>
                                         <p className="status_date">{`${eventList.event_startdate} ~ ${eventList.event_lastdate}`}</p>
                                     </div>
