@@ -31,10 +31,10 @@
   transition: transform 0.2s ease;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   /* background-color: #333; */
-  height: 300px; 
   /* white-space: nowrap;    
   overflow: hidden;    
   text-overflow: ellipsis;   */
+  height: 320p;
 }
 
 .movie-card:hover {
@@ -58,10 +58,15 @@
 }
 
 .movie-title {
-  
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
+  display: -webkit-box; /* 플렉스 박스 대신 사용 */
+  -webkit-box-orient: vertical; /* 세로 방향으로 정렬 */
+  -webkit-line-clamp: 2; /* 최대 두 줄 표시 */
+  overflow: hidden; /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+  white-space: normal; /* 줄바꿈 허용 */
 }
 
 

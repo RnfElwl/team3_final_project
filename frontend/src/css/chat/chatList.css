@@ -312,8 +312,15 @@
   display: flex;
   justify-content: space-between  ;
 }
-.chatList .movie_title{
+.chatList .movie_box .movie_title{
   font-size: 1.2em;
+  height: 60px;
+  display: -webkit-box; /* 플렉스 박스 대신 사용 */
+  -webkit-box-orient: vertical; /* 세로 방향으로 정렬 */
+  -webkit-line-clamp: 2; /* 최대 두 줄 표시 */
+  overflow: hidden; /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+  white-space: normal; /* 줄바꿈 허용 */
 }
 .chatList .room_title{
   color: #c4c4c4;

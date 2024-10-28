@@ -538,7 +538,7 @@ function CommunityView(){
                 </div>  
 
                 <div className="comments_section">
-                    {loggedInUserId !== null && (
+                    {loggedInUserId && (
                         <>
                             {/* <h3>댓글 ({commentCount})</h3> */}
                             <form onSubmit={handleCommentSubmit} className="comment_form">
@@ -586,7 +586,11 @@ function CommunityView(){
                                         </div>
                                     <div className="comment_content">{comment.comment_content}</div>
                                     <div className="comment_info">
+                                    {loggedInUserId && (
+                                        <>
                                         <button onClick={()=>showCommentInput(i, 0)} className="recomment">답글</button>
+                                        </>
+                                    )}
                                         {
                                             comment.reply_cnt!=0&&(
                                                 <button  className="reply_open" onClick={() => {toggleReplies(comment.comment_no); removeShowBtn(i)}} 
@@ -646,7 +650,11 @@ function CommunityView(){
                                                     </div>
                                                     <div className="comment_content"><span className="tag">{reply.tag_usernick!=null?`@${reply.tag_usernick}`:""}</span>{reply.reply_content}</div>
                                                         <div className="comment_info">
-                                                        <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
+                                                        {loggedInUserId && (
+                                                            <>
+                                                                <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
+                                                            </>
+                                                        )}        
                                                     </div>
                                                 </div>
                                                 <form className="comment_input" onSubmit={(e) => {
