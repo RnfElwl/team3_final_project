@@ -15,6 +15,7 @@ function CommunityEdit() {
     const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소 상태
     const [com_img, setCom_Image] = useState(null);
     const [image, setImage] = useState(null); // 업로드된 이미지 상태
+    const [existingImage, setExistingImage] = useState(''); // 기존 이미지 상태
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState(0); // 기본 카테고리 번호
@@ -34,6 +35,7 @@ function CommunityEdit() {
                 // 이전에 작성한 내용 세팅
                 setTitle(postData.community_title || ''); // 제목
                 setContent(postData.community_content || ''); // 내용
+                setExistingImage(postData.community_img || ''); // 기존 이미지
                 setImage(postData.community_img || ''); // 이미지
                 setSelectedPlace({ place_name: postData.loc || '', address_name: postData.address || '' }); // 장소
                 setCategory(postData.category || 0); // 카테고리
@@ -67,13 +69,21 @@ function CommunityEdit() {
     };
 
     // 이미지 업로드 핸들러
+    // const handleImageUpload = (e) => {
+    //     const file = e.target.files[0]; // 선택한 파일 가져오기
+    //     // const reader = new FileReader();
+    //     //const file = Array.from(e.target.files);  FileList를 배열로 변환
+    //     setCom_Image(file);
+    //     const imagePreviews = file.map(file => URL.createObjectURL(file));
+    //     setImage(imagePreviews);
+    // };
     const handleImageUpload = (e) => {
-        // const file = e.target.files[0]; // 선택한 파일 가져오기
-        // const reader = new FileReader();
-        const file = Array.from(e.target.files); // FileList를 배열로 변환
-        setCom_Image(file);
-        const imagePreviews = file.map(file => URL.createObjectURL(file));
-        setImage(imagePreviews);
+        const file = e.target.files[0]; // 선택한 파일 가져오기
+        if (file) {
+            const imageUrl = URL.createObjectURL(file); // 이미지 URL 생성
+            setImage(imageUrl); // 미리보기용 이미지 설정
+            setCom_Image(file); // 실제 파일 상태 업데이트
+        }
     };
 
     useEffect(() => {
@@ -145,6 +155,13 @@ function CommunityEdit() {
             //     postData.append('community_img', existingImage); // 기존 이미지 전송
                 
             // }
+
+            // 기존 이미지가 있으면, 새로운 이미지를 추가하지 않음
+            if (com_img) {
+                postData.append('community_img', com_img);
+            } else if (existingImage) {
+                postData.append('community_img', existingImage); // 기존 이미지 전송
+            }
 
             console.log(postData);
             

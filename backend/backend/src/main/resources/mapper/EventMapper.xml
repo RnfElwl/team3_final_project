@@ -5,7 +5,7 @@
 <mapper namespace="com.ict.backend.dao.EventDAO">
 
     <select id="selectEventList">
-        select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl;
+        select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl
     </select>
     <select id="selectNoticeList">
         select * from event_notice_tbl
