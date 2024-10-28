@@ -89,7 +89,7 @@
   background-color: #48d1cdea;
 }
 
-input::-webkit-calendar-picker-indicator {
+.adminBody input::-webkit-calendar-picker-indicator {
   background: url(../../img/icons8.png);
   background-repeat: no-repeat;
   background-size: 17px;

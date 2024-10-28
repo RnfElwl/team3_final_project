@@ -365,15 +365,34 @@
             #{replyNo}
         </foreach>
     </update>
-    <insert id="insertQnaNotice">
-        insert qna_notice_tbl values(#{qnotice_no},#{qnotice_title},#{qnotice_content},#{userid},now(),#{active_state})
+    <insert id="insertNotice">
+        insert event_notice_tbl(notice_title, notice_content, write_date, active_state,userid)
+        values(#{notice_title},#{notice_content},now(),#{active_state},#{userid})
     </insert>
-    <select id="selectAdminQNoticeList" resultType="com.ict.backend.vo.NoticeVO">
-        select * from qna_notice_tbl
-        <if test="searchKey=='qnotice_title'">
-            where qnotice_title like '%${searchWord}%'
+    <select id="selectAdminNoticeList" resultType="com.ict.backend.vo.NoticeVO">
+        select * from event_notice_tbl
+        <if test="searchKey=='notice_title'">
+            where notice_title like '%${searchWord}%'
+        </if>
+        <if test="searchKey!='notice_title'">
+            where ${searchKey} like '%${searchWord}%'
         </if>
     </select>
+    <select id="getNotice" resultType="com.ict.backend.vo.NoticeVO">
+        select * from event_notice_tbl where notice_no=${no}
+    </select>
+    <update id="updateNotice">
+        update event_notice_tbl set notice_title=#{notice_title}, notice_content=#{notice_content},
+        write_date=#{write_date}, active_state=${active_state} where notice_no=${notice_no}
+    </update>
+    <update id="updateNoticeActive">
+        UPDATE event_notice_tbl
+        SET active_state = ${param1}
+        WHERE notice_no IN
+        <foreach item="no" collection="notice_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </update>
     <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
         select * from movie_data_tbl
         <if test="searchKey=='movie_title'">
@@ -397,5 +416,77 @@
         movie_showtime=${movie_showtime}, opened_year=${opened_year}, movie_directors=#{movie_directors}, movie_grade=#{movie_grade}, movie_synops=#{movie_synops},
         movie_casts=#{movie_casts}, edit_user=#{edit_user}
         where movie_no=${movie_no}
+    </update>
+    <select id="selectAdminEventList" resultType="com.ict.backend.vo.EventVO">
+        SELECT
+        e.event_no,
+        event_title,
+        event_thumnail,
+        event_content,
+        DATE_FORMAT(event_writedate, '%Y-%m-%d %H:%i') AS event_writedate,
+        DATE_FORMAT(event_startdate, '%Y-%m-%d') AS event_startdate,
+        DATE_FORMAT(event_lastdate, '%Y-%m-%d') AS event_lastdate,
+        event_active_state,
+        event_editer,
+        event_point,
+        COUNT(f.userid) AS user_count
+        FROM
+        event_tbl e
+        LEFT JOIN
+        event_first_come f ON e.event_no = f.event_no
+        <where>
+            <if test="searchKey=='event_title'">
+                event_title LIKE '%${searchWord}%'
+            </if>
+            <if test="searchKey!='event_title'">
+                AND ${searchKey} LIKE '%${searchWord}%'
+            </if>
+        </where>
+        GROUP BY
+        e.event_no,
+        event_title,
+        event_thumnail,
+        event_content,
+        event_writedate,
+        event_startdate,
+        event_lastdate,
+        event_active_state,
+        event_editer,
+        event_point
+    </select>
+    <insert id="insertEvent">
+        INSERT INTO event_tbl (
+        event_title, event_thumnail, event_content, event_writedate,
+        event_startdate, event_lastdate, event_active_state, event_editer, event_point
+        ) VALUES (
+        #{event_title}, #{event_thumnail}, #{event_content}, NOW(),
+        #{event_startdate}, #{event_lastdate}, #{event_active_state}, #{event_editer}, #{event_point}
+        )
+    </insert>
+    <select id="getEvent" resultType="com.ict.backend.vo.EventVO">
+        select * from event_tbl where event_no=${no}
+    </select>
+    <update id="updateEventData">
+            UPDATE event_tbl
+            SET
+            event_title = #{event_title},
+            event_thumnail = #{event_thumnail},
+            event_content = #{event_content},
+            event_startdate = #{event_startdate},
+            event_lastdate = #{event_lastdate},
+            event_active_state = #{event_active_state},
+            event_editer = #{event_editer},
+            event_point = #{event_point}
+            WHERE
+            event_no = #{event_no}
+    </update>
+    <update id="updateEventActive">
+        UPDATE event_tbl
+        SET event_active_state = ${param1},
+        event_editer=#{param3}
+        WHERE event_no IN
+        <foreach item="no" collection="event_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
     </update>
 </mapper>

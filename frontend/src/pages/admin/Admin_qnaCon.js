@@ -180,7 +180,6 @@ function QnaCon() {
                                 placeholder="Search..." />
                         </div>
                         <div className="qna_active_edit_form">
-                            <div className="qna_active_title">상태관리:</div>
                             <select
                                 value={editActive_state}
                                 onChange={handleActive_StateChange}

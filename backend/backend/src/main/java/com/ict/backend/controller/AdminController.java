@@ -352,22 +352,41 @@ public class AdminController {
         return updateCnt;
     }
     //Notice Management Part
-    @PostMapping("/qNotice/write")
-    public int qnoticeWrite(@RequestBody NoticeVO qnoVO){
-        System.out.println(qnoVO.toString());
+    @PostMapping("/notice/write")
+    public int noticeWrite(@RequestBody NoticeVO noticeVO){
+        System.out.println(noticeVO.toString());
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        qnoVO.setUserid(userid);
-        qnoVO.setActive_state(1);
+        noticeVO.setUserid(userid);
+        noticeVO.setActive_state(1);
 
-        return adminService.insertQnaNotice(qnoVO);
+        return adminService.insertNotice(noticeVO);
     }
-    @GetMapping("/qNoticeList")
+    @GetMapping("/noticeList")
     public ResponseEntity<List<NoticeVO>> selectAdminNoticeList(NoticeVO qnoVO){
         System.out.println(qnoVO.toString());
-        List<NoticeVO> qNoticeList=adminService.selectAdminQNoticeList(qnoVO);
+        List<NoticeVO> qNoticeList=adminService.selectAdminNoticeList(qnoVO);
         return new ResponseEntity<>(qNoticeList, HttpStatus.OK);
     }
+    @GetMapping("/notice/{no}")
+    public List<NoticeVO> selectNotice(@PathVariable("no") int no){
+        System.out.println(no);
+        return adminService.getNotice(no);
+    }
+    @PostMapping("/notice/edit")
+    public int noticeEdit(@RequestBody NoticeVO noticeVO){
+        System.out.println(noticeVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        noticeVO.setUserid(userid);
+        noticeVO.setActive_state(2);
 
+        return adminService.updateNotice(noticeVO);
+    }
+    @PostMapping("/noticeActiveEdit")
+    public int noticeActiveEdit(@RequestParam Integer active_state, @RequestParam List<Integer> notice_no) {
+        System.out.println("Active State: " + active_state);
+        System.out.println("Mem userid: " + notice_no);
+        return adminService.updateNoticeActive(active_state, notice_no);
+    }
     @GetMapping("/movieList")
     public ResponseEntity<List<MovieVO>> selectAdminMovieList(MovieVO movieVO){
         System.out.println("데이터");
@@ -388,5 +407,40 @@ public class AdminController {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         movieVO.setEdit_user(userid);
         return adminService.updateMovieData(movieVO);
+    }
+    @GetMapping("/eventList")
+    public ResponseEntity<List<EventVO>> selectEventList(EventVO eventVO){
+        List<EventVO> eventList=adminService.selectAdminEventList(eventVO);
+
+        return new ResponseEntity<>(eventList,HttpStatus.OK);
+    }
+    @PostMapping("/event/write")
+    public int eventWrite(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        eventVO.setEvent_editer(userid);
+        eventVO.setEvent_active_state(1);
+
+        return adminService.insertEvent(eventVO);
+    }
+    @GetMapping("/event/{no}")
+    public List<EventVO> selectEvent(@PathVariable("no") int no){
+        System.out.println(no);
+        return adminService.getEvent(no);
+    }
+    @PostMapping("/event/edit")
+    public int eventDataUpdate(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        eventVO.setEvent_editer(userid);
+        eventVO.setEvent_active_state(2);
+        return adminService.updateEventData(eventVO);
+    }
+    @PostMapping("/eventActiveEdit")
+    public int eventActiveEdit(@RequestParam Integer event_active_state, @RequestParam List<Integer> event_no) {
+        System.out.println("Active State: " + event_active_state);
+        System.out.println("event_no: " + event_no);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return adminService.updateEventActive(event_active_state, event_no, userid);
     }
 }
