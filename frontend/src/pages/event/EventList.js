@@ -7,6 +7,8 @@ function EventList() {
 
     const [eventList, setEventList] = useState([]);
     const [noticeList, setNoticeList] = useState([]);
+    const [filteredEvent, setFilteredEvent] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchNoticeList = async () => {
@@ -28,6 +30,7 @@ function EventList() {
                 const response = await axios.get('http://localhost:9988/event/event-list');
                 console.log("이벤트 데이터:", response.data);
                 setEventList(response.data);
+                setFilteredEvent(response.data);
             } catch (error) {
                 console.error("Error fetching event list:", error);
             }
@@ -66,6 +69,21 @@ function EventList() {
 
     const ongoingEvents = eventList.filter(event => getEventStatus(event.event_startdate, event.event_lastdate) === "진행중");
 
+    const handleSearchInputChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value); // 검색어 상태 업데이트
+
+        // 검색어에 따라 필터링
+        if (value.trim() === "") {
+            setFilteredEvent(eventList); // 검색어가 비어있으면 모든 커뮤니티 표시
+        } else {
+            const filtered = eventList.filter(item => 
+                item.event_title.toLowerCase().includes(value.toLowerCase())
+            );
+            setFilteredEvent(filtered); // 필터링된 커뮤니티 업데이트
+        }
+    };
+
     return (
         <div className="event_list">
             <div className="notice">
@@ -86,11 +104,33 @@ function EventList() {
 
             {/* 이벤트 목록 영역 */}
             <p className="event_count">진행중인 이벤트: {ongoingEvents.length}건</p>
+            <div className="search" style={{ position: 'relative', width: '60%', margin:'5px' }}>
+                        <i className="fas fa-search" style={{
+                            position: 'absolute',
+                            left: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#ccc',
+                            pointerEvents: 'none'
+                        }}></i>
+                        <input
+                            type="text"
+                            placeholder="검색어를 입력하세요"
+                            value={searchTerm}
+                            onChange={handleSearchInputChange}
+                            style={{
+                                paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
+                                width: '100%',
+                                background: '#1C1C20',
+                                color: '#f0f0f0'
+                            }}
+                        />
+                    </div>
             <div className="eventItem">
-                {eventList.length === 0 ? (
-                    <p>진행 중인 이벤트가 없습니다.</p>
+                {filteredEvent.length === 0 ? (
+                    <p style={{margin:'15px'}}>진행 중인 이벤트가 없습니다.</p>
                 ) : (
-                    eventList.map((eventList, index) => (
+                    filteredEvent.map((eventList, index) => (
                         <div className="event" key={index}>
                             <Link key={index} to={`/event/${eventList.event_no}`} >
                                 <img src={eventList.event_thumnail} alt={`이벤트 ${eventList.event_title}`} className="eventImg"/>
