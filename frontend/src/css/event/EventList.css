@@ -41,6 +41,31 @@
     margin-left: 15px;
 }
 
+.event_list .list_top{
+    display: flex;
+    justify-content: space-between;
+}
+
+.event_list .sort{
+    margin-right: 40px;
+}
+
+.event_list .sort label {
+    padding: 10px;
+    cursor: pointer;
+    background: none; 
+    margin-right: 5px; 
+    color: #f0f0f0;
+}
+
+.event_list .sort label:hover{
+    color: #48d1cdea;  
+}
+
+.event_list .sort label.selected{
+    color: #48d1cdea; /* 체크된 라벨의 색상 */
+}
+
 .event_list .eventItem{
     display: flex;
     flex-wrap: wrap;

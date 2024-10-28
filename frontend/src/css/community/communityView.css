@@ -95,11 +95,12 @@
     display: none;
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     align-items: center; 
     top: 0px;
     left: 0px;
+    z-index: 999;
 }
 .community_view .report_show{
     display: flex;

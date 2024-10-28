@@ -9,6 +9,7 @@ function EventList() {
     const [noticeList, setNoticeList] = useState([]);
     const [filteredEvent, setFilteredEvent] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [sort, setSort] = useState('');
 
     useEffect(() => {
         const fetchNoticeList = async () => {
@@ -54,6 +55,16 @@ function EventList() {
         }
     };
 
+    const filterEvents = () => {
+        if (!sort) return eventList; // 정렬 기준이 없으면 모든 이벤트 반환
+        return eventList.filter(event => getEventStatus(event.event_startdate, event.event_lastdate) === sort);
+    };
+
+    // 선택된 정렬 기준이 변경될 때마다 필터링된 이벤트 업데이트
+    useEffect(() => {
+        setFilteredEvent(filterEvents());
+    }, [sort, eventList]);
+
     const getStatusClass = (status) => {
         switch (status) {
             case "준비중":
@@ -66,6 +77,7 @@ function EventList() {
                 return "status"; // 기본 클래스
         }
     };
+    const currentStatusClass = getStatusClass(sort);
 
     const ongoingEvents = eventList.filter(event => getEventStatus(event.event_startdate, event.event_lastdate) === "진행중");
 
@@ -104,35 +116,51 @@ function EventList() {
 
             {/* 이벤트 목록 영역 */}
             <p className="event_count">진행중인 이벤트: {ongoingEvents.length}건</p>
-            <div className="search" style={{ position: 'relative', width: '60%', margin:'5px' }}>
-                        <i className="fas fa-search" style={{
-                            position: 'absolute',
-                            left: '10px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            color: '#ccc',
-                            pointerEvents: 'none'
-                        }}></i>
-                        <input
-                            type="text"
-                            placeholder="검색어를 입력하세요"
-                            value={searchTerm}
-                            onChange={handleSearchInputChange}
-                            style={{
-                                paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
-                                width: '100%',
-                                background: '#1C1C20',
-                                color: '#f0f0f0'
-                            }}
-                        />
-                    </div>
+            <div className="list_top">
+                <div className="search" style={{ position: 'relative', width: '60%', margin:'5px' }}>
+                    <i className="fas fa-search" style={{
+                        position: 'absolute',
+                        left: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: '#ccc',
+                        pointerEvents: 'none'
+                    }}></i>
+                    <input
+                        type="text"
+                        placeholder="검색어를 입력하세요"
+                        value={searchTerm}
+                        onChange={handleSearchInputChange}
+                        style={{
+                            paddingLeft: '40px',  // 아이콘이 겹치지 않도록 여백 추가
+                            width: '100%',
+                            background: '#1C1C20',
+                            color: '#f0f0f0'
+                        }}
+                    />
+                </div>
+                <div className="sort">
+                    <label className={sort === '' ? 'selected' : ''} onClick={() => setSort('')}> 전체
+                        {/* <input type="radio" name="sort" value="all" onChange={() => setSort('')} checked={sort === ''} /> 전체 */}
+                    </label>
+                    <label className={sort === '진행중' ? 'selected' : ''} onClick={() => setSort('진행중')}> 진행중
+                        {/* <input type="radio" name="sort" value="ongoing" onChange={() => setSort('진행중')} checked={sort === '진행중'}/> 진행중 */}
+                    </label>
+                    <label className={sort === '준비중' ? 'selected' : ''} onClick={() => setSort('준비중')}> 준비중
+                        {/* <input type="radio" name="sort" value="preparing" onChange={() => setSort('준비중')} checked={sort === '준비중'}/> 준비중 */}
+                    </label>
+                    <label className={sort === '마감' ? 'selected' : ''} onClick={() => setSort('마감')}> 마감
+                        {/* <input type="radio" name="sort" value="closed" onChange={() => setSort('마감')} checked={sort === '마감'}/> 마감 */}
+                    </label>
+                </div>
+            </div>    
             <div className="eventItem">
                 {filteredEvent.length === 0 ? (
                     <p style={{margin:'15px'}}>진행 중인 이벤트가 없습니다.</p>
                 ) : (
                     filteredEvent.map((eventList, index) => (
                         <div className="event" key={index}>
-                            <Link key={index} to={`/event/${eventList.event_no}`} >
+                            <Link to={`/event/${eventList.event_no}`} >
                                 <img src={eventList.event_thumnail} alt={`이벤트 ${eventList.event_title}`} className="eventImg"/>
                                 <div className="event_info">
                                     <p className="event_title">{eventList.event_title}</p>
