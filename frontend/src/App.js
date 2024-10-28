@@ -47,6 +47,7 @@ import ResetPassword from './pages/mypage/ResetPassword.js';
 import EventList from './pages/event/EventList.js';
 import EventView from './pages/event/EventView.js';
 import EventNoticeView from './pages/event/EventNoticeView.js';
+import KakaoSignup from './pages/mypage/KakaoSignup.js'; 
 
 function App() {
   return (
@@ -87,16 +88,17 @@ function App() {
                 <Route path = '/signup' element = {<Signup/>}/>
                 <Route path='/recommend' element={<Recommend/>}/>
                 {/* <Route path = '/mypage/edit' element={<EditInfo/>}/> */}
-                <Route path = "/mypage/:more" element={<More/>}/>
+                {/* <Route path = "/mypage/:more" element={<More/>}/> */}
                 <Route path ="/user/info/:usernick" element={<User/>}/>
                 <Route path ="/user/info/" element={<User/>}/>
-                <Route path = "/mypage/mypost" element={<MyPost/>}/>
+                {/* <Route path = "/mypage/mypost" element={<MyPost/>}/> */}
                 <Route path ="/find/:type" element={<Find/>}/>
                 <Route path ="/success" element={<Success/>}/>
                 <Route path ="/reset-password" element={<ResetPassword/>}/>
                 <Route path ="/event" element={<EventList/>}/>
                 <Route path ="/event/:event_no" element={<EventView/>}/>
                 <Route path ="/event/notice/:notice_no" element={<EventNoticeView/>}/>
+                <Route path="/kakaosignup" element={<KakaoSignup />} />
 
             
               {/* USER 1차 체크 */}
@@ -105,6 +107,8 @@ function App() {
                 <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
+                <Route path = "/mypage/mypost" element={<MyPost/>}/>
+                <Route path = "/mypage/:more" element={<More/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
               </Route>

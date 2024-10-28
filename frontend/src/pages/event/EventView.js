@@ -2,6 +2,7 @@ import "../../css/event/EventView.css";
 import React, { useState, useEffect} from 'react';
 import { useParams, useNavigate  } from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
+import HideEventMove from '../../component/HideEventMove';
 
 function EventView() {
     const [eventView, setEventView] = useState([]);
@@ -153,6 +154,7 @@ function EventView() {
             <div className="enter">
                 <button disabled={!isOngoing} onClick={clickSubmitEvent}>응모하기</button>
             </div>
+            <HideEventMove/>
         </div>
 
     );

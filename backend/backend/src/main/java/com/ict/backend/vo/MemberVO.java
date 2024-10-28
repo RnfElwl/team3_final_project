@@ -29,4 +29,5 @@ public class MemberVO {
     private int reported_count;
     private String lastvisite;
     private int user_point;
+    private String user_social;
 }

@@ -46,7 +46,8 @@ function EditInfo() {
                     useraddr: userData.useraddr || '',
                     zipcode: userData.zipcode || '',
                     addrdetail: userData.addrdetail || '',
-                    gender : userData.gender || ''
+                    gender : userData.gender || '',
+                    user_social : userData.user_social || ''
                 });
 
                 if (userData.imageUrl) {
@@ -234,9 +235,18 @@ function EditInfo() {
                                 <input type="text" name="username" value={formData.username } disabled />
                             </div>
                             <div> 
-                                <span style={{ width: "141.8px" }}>비밀번호</span> 
-                                <span style = {{color : "white"}} onClick={() => {setErrorMessage(''); setIsPasswordModalOpen(true)}}>비밀번호 변경하기{'>'}</span> 
-                            </div>
+                            <span style={{ width: "141.8px" }}>비밀번호</span> 
+                            {formData.user_social === "1" ? (
+                                <span style={{ color: "white" }}>카카오 로그인입니다</span>
+                            ) : (
+                                <span
+                                    style={{ color: "white", cursor: "pointer" }}
+                                    onClick={() => { setErrorMessage(''); setIsPasswordModalOpen(true); }}
+                                >
+                                    비밀번호 변경하기{'>'}
+                                </span>
+                            )}
+                        </div>
                                
                             <div> 
                                 <span>닉네임</span> 

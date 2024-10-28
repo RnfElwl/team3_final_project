@@ -52,16 +52,17 @@ function Mypage() {
         try {
             const response = await axios.get("http://localhost:9988/user/mypageinfo");
             const userInfo = response.data;
-
+            
             const updatedUserInfo = {
             ...userInfo,
+            user_point: userInfo.user_point.toLocaleString()
             };
 
         setUserInfo(updatedUserInfo);
         setProfileImageSrc(updatedUserInfo.userprofile || defaultProfileImage);
-        console.log(profileImageSrc);
+        // console.log(profileImageSrc);
 
-        console.log(updatedUserInfo);
+        // console.log(updatedUserInfo);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 console.log(error.response.data); // "Access denied." 메시지 확인
@@ -77,10 +78,10 @@ function Mypage() {
     const fetchtotaldata = async () => {
         try {
             const response = await axios.get("http://localhost:9988/user/totaldata"); // Change to your bookmarks API
-            console.log(response.data);
-            console.log(response.data.bookmarks);
-            console.log(response.data.history);
-            console.log(response.data.followers);
+            // console.log(response.data);
+            // console.log(response.data.bookmarks);
+            // console.log(response.data.history);
+            // console.log(response.data.followers);
             if (Array.isArray(response.data.bookmarks)) {
                 setBookmarkSlides(response.data.bookmarks);
             }
@@ -330,6 +331,7 @@ function Mypage() {
                             <p className = "fol" onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
                             <p>게시글 : <span>{userInfo.community}</span></p>
                             <p>댓글 : <span>{userInfo.comment}</span></p>
+                            <p>포인트 : <span>{userInfo.user_point}</span></p>
                         </div>
                     </div>
                     <div id = "info_change">

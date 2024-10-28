@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@fortawesome/fontawesome-free/css/all.css';
+import HideEventMove from '../../component/HideEventMove';
 
 function CommunityEdit() {
     const navigate = useNavigate();
@@ -293,6 +294,7 @@ function CommunityEdit() {
                     <button onClick={handleSubmit} className="share-button">수정</button>
                 </div>
             </div>
+            <HideEventMove/>
         </div>
     );
 }

@@ -4,6 +4,7 @@ import {useParams, Link} from 'react-router-dom';
 import axios from '../../component/api/axiosApi';
 import { MdAccessTime } from "react-icons/md";
 import '../../css/event/EventNotice.css';
+import HideEventMove from '../../component/HideEventMove';
 
 function EventNoticeView() {
     const [noticeData, setNoticeData] = useState({}); // 공지사항 상태
@@ -43,6 +44,7 @@ function EventNoticeView() {
                     {noticeData.notice_content}
                 </pre>
             </div>
+            <HideEventMove/>
         </div>
     );
 }

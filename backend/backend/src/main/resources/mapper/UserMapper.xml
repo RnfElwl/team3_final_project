@@ -23,8 +23,21 @@
         SELECT EXISTS(SELECT 1 FROM user_tbl WHERE userid = #{userid})
     </select>
 
+<!--    <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">-->
+<!--        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})-->
+<!--    </insert>-->
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})
+        INSERT INTO user_tbl (
+        userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender
+        <if test="user_social != null">
+            , user_social
+        </if>
+        ) VALUES (
+        #{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender}
+        <if test="user_social != null">
+            , #{user_social}
+        </if>
+        )
     </insert>
 
     <select id="usernickcheck" resultType="int">
@@ -37,7 +50,7 @@
         select userpwd from user_tbl where userid = #{userid};
     </select>
     <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
-        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender, user_point, user_social
         FROM user_tbl
         WHERE userid = #{userid}
     </select>

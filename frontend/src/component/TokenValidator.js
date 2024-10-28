@@ -44,6 +44,22 @@ const TokenValidator = ({ children }) => {
 
   // 로그아웃 함수
   const logout = () => {
+        if (window.Kakao && window.Kakao.Auth) {
+      window.Kakao.Auth.logout(() => {
+        console.log("Logged out from Kakao on client");
+        
+        // SDK 세션 초기화
+        window.Kakao.Auth.setAccessToken(null);
+
+        // localStorage에서 Kakao 관련 세션 삭제
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith("kakao_")) {
+            localStorage.removeItem(key);
+          }
+        });
+      });
+    }
+
     localStorage.clear(); // 모든 항목을 삭제
     setIsAuthenticated(false); // 로그아웃 상태로 설정
   };

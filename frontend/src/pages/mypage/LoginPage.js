@@ -1,4 +1,6 @@
 import axios from '../../component/api/axiosApi';
+import KakaoLoginButton from '../../component/api/KakaoLoginButton';
+import KakaoLogoutButton from '../../component/api/KakaoLogoutButton';
 //import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../css/mypage/loginpage.css';
@@ -244,12 +246,14 @@ function LoginPage() {
             <div id = "social_login">
               <span>다른방법으로 로그인</span>
               <div id = "social_type">
-                <button className = "social_icon" onClick={downloadExcelFile}>
-                  <img src={kakaoIcon} alt="Kakao" />
-                </button>
-                <button className = "social_icon">
+              <KakaoLoginButton
+                    className="social_icon"
+                    imgSrc={kakaoIcon}
+                    altText="Kakao"
+                  />
+                {/* <button className = "social_icon" onClick={downloadExcelFile}>
                   <img src={googleIcon} alt="Google" />
-                </button>
+                </button> */}
               </div>
             </div>
             <div id = "join_button">
