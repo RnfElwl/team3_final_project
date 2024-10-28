@@ -9,11 +9,12 @@ function Layout() {
   const { isAuthenticated } = useAuth();
   const [showHeader, setShowHeader] = useState(true);
 
-  useEffect(() => {
-    // location.pathname 또는 isAuthenticated 변경 시 Header 표시 상태를 토글
-    setShowHeader(false);
-    setTimeout(() => setShowHeader(true), 0); // 바로 다시 표시
-  }, [location.pathname, isAuthenticated]);
+  // useEffect(() => {
+  //   // location.pathname 또는 isAuthenticated 변경 시 Header 표시 상태를 토글
+  //   setShowHeader(false);
+  //   // setShowHeader(true);
+  //   setTimeout(() => setShowHeader(true), 0); // 바로 다시 표시
+  // }, [location.pathname, isAuthenticated]);
 
   // 헤더를 숨길 경로를 배열로 지정
   const hideHeaderRoutes = ['/admin/adminQAns', '/admin/repAns/', '/find', '/success', '/reset-password', '/admin/banEdit'];
