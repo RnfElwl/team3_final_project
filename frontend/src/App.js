@@ -98,9 +98,9 @@ function App() {
 
             
               {/* USER 1차 체크 */}
-              <Route path='/chat' element={<ChatList/>}></Route>
-              <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
               <Route element={<PrivateRoute requiredRole="USER" />}>
+                <Route path='/chat' element={<ChatList/>}></Route>
+                <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
               </Route>
