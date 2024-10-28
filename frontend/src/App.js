@@ -28,6 +28,7 @@ import AdminMovCon from './pages/admin/Admin_movieCon.js'
 import AdminRepCon from './pages/admin/Admin_repCon.js'
 import AdminRepAns from './pages/admin/Admin_repAnsWrite.js'
 import AdminNociceCon from './pages/admin/Admin_noticeCon.js'
+import AdminEventCon from './pages/admin/Admin_eventCon.js'
 import QNA from './pages/qna/QnA'
 import QNAView from './pages/qna/QnAView.js'   
 import MyPage from './pages/mypage/MyPage';
@@ -66,20 +67,21 @@ function App() {
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
                 <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
                 {/* <Route path='/admin' element={<Admin/>}/> */}
-                <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/>
-                <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
-                <Route path='/admin/comCon' element={<AdminComCon/>}/>
-                <Route path='/admin/memCon' element={<AdminMemCon/>}/>
-                <Route path='/admin/banMemCon' element={<AdminBanMemCon/>}/>
+                {/* <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/> */}
+                {/* <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/> */}
+                {/* <Route path='/admin/comCon' element={<AdminComCon/>}/> */}
+                {/* <Route path='/admin/memCon' element={<AdminMemCon/>}/> */}
+                {/* <Route path='/admin/banMemCon' element={<AdminBanMemCon/>}/>
                 <Route path='/admin/banEdit/:userid' element={<AdminBanEdit/>}/>
                 <Route path='/admin/movCon' element={<AdminMovCon/>}/>
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
-                <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/>
+                <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/> */}
+                <Route path='/admin/eventCon' element={<AdminEventCon/>}/>
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
-                <Route path='/qna/write' element={<QNAWrite/>}/> 
-                <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
+                {/* <Route path='/qna/write' element={<QNAWrite/>}/> 
+                <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/> */}
                 {/* <Route path='/mypage' element={<MyPage/>}/> */}
                 <Route path='/signin' element={<LoginPage/>}/>
                 <Route path = '/signup' element = {<Signup/>}/>
@@ -103,12 +105,23 @@ function App() {
                 <Route path='/chatting/:chatlist_url' element={<Chatting/>}></Route>
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path = '/mypage/edit' element={<EditInfo/>}/>
+                <Route path='/qna/write' element={<QNAWrite/>}/> 
+                <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
               </Route>
 
               {/* Admin 1차 체크 */}
               <Route element={<PrivateRoute requiredRole="ADMIN" />}>
                 <Route path="/admin" element={<Admin />} />
-                
+                <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/>
+                <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/>
+                <Route path='/admin/comCon' element={<AdminComCon/>}/>
+                <Route path='/admin/memCon' element={<AdminMemCon/>}/>
+                <Route path='/admin/banMemCon' element={<AdminBanMemCon/>}/>
+                <Route path='/admin/banEdit/:userid' element={<AdminBanEdit/>}/>
+                <Route path='/admin/movCon' element={<AdminMovCon/>}/>
+                <Route path='/admin/repCon' element={<AdminRepCon/>}/>
+                <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
+                <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/>
               </Route>
 
             </Route>
