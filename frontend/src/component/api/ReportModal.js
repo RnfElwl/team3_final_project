@@ -12,8 +12,11 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
     }
     async function submitReport(e){{/* 신고 기능 */}
         e.preventDefault();
+        if(report.report_type=="" || report.report_reason==""){
+            alert("값을 입력해주세요");
+            return;
+        }
         try{
-
             const result = await axios.post("http://localhost:9988/report/submit", report, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -21,7 +24,7 @@ const ReportModal = ({ reportShow, toggleReport, report, setReport, setDefaultLi
             });
             if(result.status==200){
                 toggleReport();
-                setReport();
+                setReport({report_type:'', report_reason:''});
                 setDefaultList();//리스트 다시 조회하여서 비동기처리
             }
         }catch(e){

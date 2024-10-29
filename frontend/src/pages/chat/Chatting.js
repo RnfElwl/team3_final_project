@@ -75,7 +75,7 @@ const Chatting = () => {
                 }
                 if(window.opener==null){
                     navigate("/");
-                    // window.close();
+                    window.close();
                 }
 
                 if(!mqttClient.connected){
@@ -161,8 +161,8 @@ const Chatting = () => {
         setRoomInfo(result.data);
         }catch(e){
             console.log(e);
-            // window.close();
-            // navigate("/");
+            window.close();
+            navigate("/");
         }
       }
       
@@ -199,7 +199,7 @@ const Chatting = () => {
         console.log("___________________")
         if(data==0){
             navigate("/");
-            // window.close();
+            window.close();
         }
         setDefaultChat();
         
@@ -463,13 +463,13 @@ const Chatting = () => {
     function moveUserPage(usernick){
         if (window.opener) {
             window.opener.navigateToPage(`/user/info/${usernick}`);  // 부모 창 이동
-            // window.close();  // 팝업 닫기
+            window.close();  // 팝업 닫기
           }
     }
     function moveMyPage(){
         if (window.opener) {
             window.opener.navigateToPage(`/mypage`);  // 부모 창 이동
-            // window.close();  // 팝업 닫기
+            window.close();  // 팝업 닫기
           }
     }
     async function exitRoom(){
@@ -508,7 +508,7 @@ const Chatting = () => {
     }catch(e){
         console.log(e);
     }
-        // window.close();
+        window.close();
     }
     return (
         <div className='chatting_room'>
