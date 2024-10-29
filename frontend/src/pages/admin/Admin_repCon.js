@@ -50,7 +50,7 @@ function RepCon(){
        //신고처리 팝업 창 열기
     const openAddReportAnsWindow = (report_no) => {
         console.log("넘긴 번호"+report_no);
-        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=400,top=200,left=200');
+        window.open(`/admin/repAns/${report_no}`, '_blank', 'width=600,height=400,top=200,left=200');
     };
     useEffect(() => {
         window.reloadReportList = reloadReportList;  // 전역 함수로 등록

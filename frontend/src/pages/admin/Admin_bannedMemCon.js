@@ -110,7 +110,7 @@ function BanMem(){
         }
         const openEditBanDateWindow = (userid) => {
             console.log("넘긴 아이디"+userid);
-            window.open(`http://localhost:3000/admin/banEdit/${userid}`, '_blank', 'width=600,height=400');
+            window.open(`/admin/banEdit/${userid}`, '_blank', 'width=600,height=400');
         };
         
     return(

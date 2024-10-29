@@ -3,6 +3,7 @@ import styled from './../../css/admin/adminPopup.css';
 import axios from "../../component/api/axiosApi";
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import CustomImage from '../../component/CustomImage';
 
 
 
@@ -37,7 +38,7 @@ function QnaAnsWrite(){
             .then(response => {
                 setQAWView(response.data);     
                 console.log(response.data);
-                setAnsImgSrc("http://localhost:9988/"+response.data[0].qna_img);
+                setAnsImgSrc(`http://${window.location.hostname}:9988/`+response.data[0].qna_img);
                 if(response.data[0].qna_answer!=null){
                     setQna_answer(response.data[0].qna_answer);
                 }      
@@ -110,7 +111,7 @@ function QnaAnsWrite(){
                             <td colSpan="3">
                             {item?.qna_img==null ? <div>이미지가 없습니다</div>:
                                 (<a href={ansImgSrc} target="_blank">
-                                <img src={ansImgSrc}
+                                <CustomImage src={ansImgSrc}
                                 onError={(e) => e.target.style.display = 'none'}
                                     className="ansImg"/></a>)      
                             }
