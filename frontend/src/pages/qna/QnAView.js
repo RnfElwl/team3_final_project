@@ -9,6 +9,7 @@ import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-ic
 import { AiOutlineAlert } from "react-icons/ai";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReportModal from '../../component/api/ReportModal.js';
+import CustomImage from '../../component/CustomImage';
 
 function QnAView() {
     const location = useLocation();
@@ -196,7 +197,7 @@ const toggleReport = () => {
             <tr>
                 <th className="qnaType">첨부파일</th>
                 <td colSpan="4" className="qna-imgArea">
-                    {itemQ.qna_img&&qnaImgSrc ? (<img src={`http://localhost:9988/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
+                    {itemQ.qna_img&&qnaImgSrc ? (<CustomImage src={`http://localhost:9988/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
                 </td>
             </tr>
             </tbody>

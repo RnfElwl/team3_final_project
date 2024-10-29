@@ -185,6 +185,7 @@ function MemCon(){
                         <th>상태</th>
                         <th>가입일</th>
                         <th>신고 누적</th>
+                        <th>유저 pt</th>
                         <th>마지막 로그인</th>
                     </tr>
                 </thead>
@@ -209,6 +210,7 @@ function MemCon(){
                                 </td>
                                 <td>{item.regiserdate}</td>
                                 <td>{item.reported_count}</td>
+                                <td>{item.user_point}</td>
                                 <td>{item.lastvisite}</td>
                             </tr>
                         ))

@@ -37,8 +37,7 @@
 }
 
 .qna-imgArea img {
-    width: 300px;
-    height: 200px;
+    height: 100px;
     border-radius: 8px; /* Rounds image corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
 }

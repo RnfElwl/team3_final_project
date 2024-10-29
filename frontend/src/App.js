@@ -78,7 +78,7 @@ function App() {
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
                 <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/> */}
-                <Route path='/admin/eventCon' element={<AdminEventCon/>}/>
+                {/* <Route path='/admin/eventCon' element={<AdminEventCon/>}/> */}
                 <Route path='/qna' element={<QNA/>}></Route>
                 <Route path='/qna/view/:qna_no' element={<QNAView/>}/>
                 {/* <Route path='/qna/write' element={<QNAWrite/>}/> 
@@ -128,6 +128,7 @@ function App() {
                 <Route path='/admin/repCon' element={<AdminRepCon/>}/>
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
                 <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/>
+                <Route path='/admin/eventCon' element={<AdminEventCon/>}/>
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>

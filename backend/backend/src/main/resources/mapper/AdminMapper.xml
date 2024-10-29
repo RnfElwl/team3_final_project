@@ -149,7 +149,7 @@
     </update>
     <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
         select userid, username, usernick, gender,usertel, u.active_state,
-        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate
+        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate,user_point
         from user_tbl u left join report_tbl r on u.userid=r.reported_userid
         <if test="searchWord!=null and searchWord!=''">
             where ${searchKey} like '%${searchWord}%'
@@ -489,4 +489,11 @@
             #{no}
         </foreach>
     </update>
+    <select id="selectEventMemList" resultType="com.ict.backend.vo.EventFCVO">
+        SELECT efc.userid
+        FROM event_tbl et
+        JOIN event_first_come efc ON et.event_no = efc.event_no
+        WHERE efc.event_no=${event_no}
+        ORDER BY efc.click_date ASC
+    </select>
 </mapper>

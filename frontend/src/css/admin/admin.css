@@ -16,6 +16,7 @@
   color:white; 
 }
 .admin_navList{
+  top:60px;
   width: 200px;
   height: 100vh;
   position:fixed;
@@ -111,10 +112,14 @@
   min-height: 90px;
 }
 .minDataTitle{
-  background-color: gray;
+  background: #29292e;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 10px;
+  outline: 0 none;
+  color: #48d1cdea;
   margin: 0 10px;
   padding:5px;
-  border-radius: 2px;
   width: 300px;
   min-width:160px;
   white-space:nowrap;

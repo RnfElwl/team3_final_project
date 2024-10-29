@@ -271,4 +271,9 @@ public class AdminServiceImpl implements AdminService{
     public int updateEventActive(Integer event_active_state, List<Integer> event_no, String userid) {
         return dao.updateEventActive(event_active_state,event_no,userid);
     }
+
+    @Override
+    public List<EventFCVO> selectEventMemList(int event_no) {
+        return dao.selectEventMemList(event_no);
+    }
 }

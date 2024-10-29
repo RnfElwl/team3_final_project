@@ -19,6 +19,8 @@ function EveCon(){
     const [checkedEvent, setCheckedEvent] = useState(new Array(event.length).fill(false));
     const [editActive_state, setEditActive_state] = useState('1');
     const [isAllEventChecked, setAllEventChecked] = useState(false);
+    const [eventMem, setEventMem]=useState([]);
+    const [visibleEvent, setVisibleEvent] = useState(null);
 
 
 
@@ -214,6 +216,37 @@ function EveCon(){
   
       }
 
+      //참여멤버 구하기
+      async function EventInMember(no) {
+        try {
+          const response = await axios.get(`http://localhost:9988/admin/eventInMem/${no}`);
+          if (response.data) {
+             console.log(response.data);
+             setEventMem(response.data);
+          }
+        } catch (e) {
+            console.log(e);
+        }
+      }
+
+      const toggleEventMembers = async (event_no) => {
+        if (visibleEvent === event_no) {
+            setVisibleEvent(null); // 클릭한 이벤트가 열려있으면 닫기
+        } else {
+            setVisibleEvent(event_no); // 클릭한 이벤트 열기
+            if (!eventMem[event_no]) { // 해당 이벤트 멤버가 없는 경우에만 요청
+                try {
+                    const response = await axios.get(`http://localhost:9988/admin/eventInMem/${event_no}`);
+                    if (response.data) {
+                        setEventMem((prev) => ({ ...prev, [event_no]: response.data }));
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
+    }
+
       
 
     
@@ -241,8 +274,7 @@ function EveCon(){
                         <div>
                             <span>시작일</span>
                             <input type='date' name='event_startdate' value={writeForm.event_startdate} onChange={changeWriteForm}/>         
-                        </div>
-                        <div>
+                            &nbsp;~&nbsp;
                             <span>종료일</span>
                             <input type='date' name='event_lastdate' value={writeForm.event_lastdate} onChange={changeWriteForm}/>         
                         </div>
@@ -384,7 +416,19 @@ function EveCon(){
                             <td>{item.event_active_state==1 ? "활성":
                                  item.event_active_state==2? "수정됨":"비활성"}</td>
                             <td>{item.event_editer}</td>
-                            <td>{item.user_count}</td>
+                            <td>
+                                {item.user_count}
+                                <div onClick={() => toggleEventMembers(item.event_no)} style={{ cursor: "pointer" }}>
+                                    목록확인
+                                    {visibleEvent === item.event_no && eventMem[item.event_no] ? (
+                                        <div className="member-list">
+                                            {eventMem[item.event_no].map((member, idx) => (
+                                                <span key={idx} className="member-item">{member.userid}</span>
+                                            ))}
+                                        </div>
+                                    ) : null}
+                                </div>
+                            </td>
                             <td>{item.event_point}</td>
                             <td><button type="button" onClick={ ()=>editBtnClick(item.event_no)}>
                                 수정하기</button></td>
@@ -392,7 +436,7 @@ function EveCon(){
                        ))
                     ) : (
                         <tr className="no-results">
-                            <td colSpan="13">검색한 내용을 포함한 영화가 존재하지 않습니다.</td>
+                            <td colSpan="13">검색한 내용을 포함한 이벤트가 존재하지 않습니다.</td>
                         </tr>
                     )}
                 

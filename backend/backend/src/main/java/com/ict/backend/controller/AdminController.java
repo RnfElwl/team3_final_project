@@ -414,6 +414,12 @@ public class AdminController {
 
         return new ResponseEntity<>(eventList,HttpStatus.OK);
     }
+    @GetMapping("/eventInMem/{no}")
+    public List<EventFCVO> selectEventMem(@PathVariable("no")int event_no){
+        List<EventFCVO> eventMemList=adminService.selectEventMemList(event_no);
+
+        return eventMemList;
+    }
     @PostMapping("/event/write")
     public int eventWrite(@RequestBody EventVO eventVO){
         System.out.println(eventVO.toString());

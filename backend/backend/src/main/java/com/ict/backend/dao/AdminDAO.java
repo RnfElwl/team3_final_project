@@ -61,4 +61,5 @@ public interface AdminDAO {
     List<EventVO> getEvent(int no);
     int updateEventData(EventVO eventVO);
     int updateEventActive(Integer event_active_state, List<Integer>event_no, String userid);
+    List <EventFCVO> selectEventMemList(int event_no);
 }

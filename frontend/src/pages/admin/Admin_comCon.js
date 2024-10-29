@@ -315,7 +315,7 @@ function ComCon(){
                                         onChange={() => handleComChecked(index)} /></td>
                                     <td>{item.community_no}</td>
                                     <td>{item.userid}</td>
-                                    <td>{item.community_title}</td>
+                                    <td><Link to={`/community/communityView/${item.community_no}`}>{item.community_title}</Link></td>
                                     <td>{item.community_writedate}</td>
                                     <td>{item.hit}</td>
                                     <td>{item.active_state == 1 ? "활성" : "비활성"}</td>
@@ -323,7 +323,7 @@ function ComCon(){
                                     <td>{item.edit_user}</td>
                                     <td>{item.community_like}</td>
                                 </tr>
-                            )) : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
+                            )) : (<tr><td colSpan="10">검색한 내용을 포함한 글이 존재하지 않습니다.</td></tr>)}
                         </tbody>
                     </table>
                 ) : CommunityActivity === 2 ? (
@@ -395,7 +395,7 @@ function ComCon(){
                                     <td>{item.tag_usernick}</td>
                                 </tr>
                             )) 
-                            : (<tr><td colSpan="10">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
+                            : (<tr><td colSpan="10">검색한 내용을 포함한 글이 존재하지 않습니다.</td></tr>)}
                         </tbody>
                     </table>
                 ):

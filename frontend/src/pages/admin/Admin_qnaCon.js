@@ -188,7 +188,7 @@ function QnaCon() {
                                 <option value="1">활성</option>
                                 <option value="0">비활성</option>
                             </select>
-                            <button type="submit">저장</button>
+                            <button className="activeEditbtn" type="submit">저장</button>
                         </div>
                     </div>
                 </div>
