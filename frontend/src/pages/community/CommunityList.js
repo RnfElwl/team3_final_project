@@ -413,7 +413,7 @@ function CommunityList() {
                                             <>
                                                 <input type="button" value={communityItem.follow==1?'following':'follow'} 
                                                 onClick={()=>{toggleFollow(communityItem)}}  
-                                                className="action_button" />
+                                                className={`action_button ${communityItem.follow == 1 ? 'following' : 'follow'}`} />
                                                 {/* {userid && ( */}
                                                 {/* <button 
                                                     className="report_button" 

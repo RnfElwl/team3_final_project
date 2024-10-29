@@ -477,7 +477,7 @@ function CommunityView(){
                             <>
                                 <input type="button" 
                                 value={community.follow==1?'following':'follow'}
-                                 className="action_button" 
+                                 className={`action_button ${community.follow == 1 ? 'following' : 'follow'}`}
                                  onClick={()=>{toggleFollow(community)}}  
                                  />
                                 <button 

@@ -85,6 +85,10 @@
     color: #48d1cdea;
 }
 
+.community_view .action_button.following {
+    color: #48d1cdea;
+}
+
 /* 신고 */
 .community_view .report_button {
     background: none;
