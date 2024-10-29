@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Redirect, Navigate  } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import TokenValidator from './component/TokenValidator.js';
@@ -64,9 +64,9 @@ function App() {
                 <Route path="/categories/:type/:id" element={<MovieList/>} /> {/* 동적 라우트 */}
                 <Route path="/movies/view/:movieCode" element={<MovieView />} />
                 <Route path='/community' element={<CommunityList/>}></Route>
-                <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
                 <Route path='/community/communityView/:community_no' element={<CommunityView/>}></Route>
-                <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
+                {/* <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route> */}
+                {/* <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route> */}
                 {/* <Route path='/admin' element={<Admin/>}/> */}
                 {/* <Route path='/admin/qnaCon' element={<AdminQnaCon/>}/> */}
                 {/* <Route path='/admin/adminQAns/:qna_no' element={<AdminQAns/>}/> */}
@@ -111,6 +111,8 @@ function App() {
                 <Route path = "/mypage/:more" element={<More/>}/>
                 <Route path='/qna/write' element={<QNAWrite/>}/> 
                 <Route path='/qna/edit/:qna_no' element= {<QNAEdit/>}/>
+                <Route path='/community/communityWrite' element={<CommunityWrite/>}></Route>
+                <Route path='/community/communityEdit/:community_no' element={<CommunityEdit/>}></Route>
               </Route>
 
               {/* Admin 1차 체크 */}
@@ -127,7 +129,7 @@ function App() {
                 <Route path='/admin/repAns/:no' element={<AdminRepAns/>}/>
                 <Route path='/admin/noticeCon' element={<AdminNociceCon/>}/>
               </Route>
-
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
         </Routes>
       </TokenValidator>
