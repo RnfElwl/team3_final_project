@@ -17,7 +17,7 @@ const TokenValidator = ({ children }) => {
 
   // Private Routes 목록 정의
   const privateRoutes = {
-    USER: ['/chat', '/chatting', '/mypage', '/mypage/edit', '/mypage/mypost', '/mypage/more', '/qna/write', '/qna/edit', '/community/CommunityWrite', '/community/CommunityEdit'],
+    USER: ['/chat', '/mypage', '/mypage/edit', '/mypage/mypost', '/mypage/more', '/qna/write', '/qna/edit', '/community/CommunityWrite', '/community/CommunityEdit'],
     ADMIN: ['/admin', '/admin/qnaCon', '/admin/adminQAns', '/admin/comCon', '/admin/memCon', '/admin/banMemCon', '/admin/banEdit', '/admin/movCon', '/admin/repCon', '/admin/repAns', '/admin/noticeCon'],
   };
 
