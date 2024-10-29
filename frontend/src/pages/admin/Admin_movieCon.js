@@ -143,7 +143,6 @@ function AdminMovieCon(){
             <h3>영화 관리</h3>
     <hr />
     <div>
-        영화 필터 폼
         <div className="member-filterArea">
             <div className="adminSearchForm">
                 <form onSubmit={submitData}>
@@ -329,7 +328,7 @@ function AdminMovieCon(){
                             <td>{item.edit_date}</td>
                             {/* <td>{item.edit_state}</td> */}
                             <td>{item.edit_user}</td>
-                            <td>{item.active_state}</td>
+                            <td>{item.active_state==1 ? "활성":"비활성"}</td>
                             <td><button type="button" onClick={()=>editBtnClick(item.movie_code)}>수정하기</button></td>
                         </tr>
                        ))

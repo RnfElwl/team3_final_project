@@ -1,0 +1,15 @@
+.noticeBody .member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* 항목 간격 */
+    padding: 8px 0;
+}
+.noticeBody .table>:not(caption)>*>*{
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    cursor: pointer;
+}

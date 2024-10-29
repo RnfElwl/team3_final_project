@@ -45,8 +45,8 @@ public interface UserDAO {
     public int useridcheck(String userid);
 
     // 사용자 관련 정보 업데이트용
-    public List<Map<String, String>> getBookmarks(@Param("userid") String userid, @Param("limit") int limit);
-    public List<Map<String, String>> getHistory(@Param("userid") String userid, @Param("limit") int limit);
+    public List<Map<String, Object>> getBookmarks(@Param("userid") String userid, @Param("limit") int limit);
+    public List<Map<String, Object>> getHistory(@Param("userid") String userid, @Param("limit") int limit);
     public List<Map<String, String>> getfollower(@Param("userid") String userid, @Param("limit") int limit);
 
     public MemberVO getOtherUserInfo(String usernick);
@@ -79,6 +79,11 @@ public interface UserDAO {
     public String getBanEndDate(@Param("userid") String userid);
     public int checkuserstate(@Param("userid") String userid);
     public int updatelastvisite(@Param("userid") String userid);
+    public int userunban(@Param("userid") String userid);
+    public int deletebantbl(@Param("userid") String userid);
+    public String checkwithdraw(@Param("userid") String userid);
+    public int restoreUser(@Param("userid") String userid);
+    public int withdraw(@Param("userid") String userid);
 
 
 }

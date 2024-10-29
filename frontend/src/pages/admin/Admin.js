@@ -1,5 +1,5 @@
 import react, { useEffect,useState } from 'react';
-// import '../App.css';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 import { Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend,Filler } from 'chart.js';
 
@@ -28,7 +28,9 @@ function AdminTest() {
   const [end_qnaDate, setEnd_qnaDate]=useState('');
   const [start_comDate, setStart_comDate]=useState('');
   const [end_comDate, setEnd_comDate]=useState('');
+  const [reportData, setReportData]=useState('');
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
   
   //QnA필터 옵션
   const handleQnaFilterChange = (e) => {
@@ -118,6 +120,7 @@ function AdminTest() {
 
   useEffect(()=>{
     if(error) return;
+
     axios.get(`http://localhost:9988/admin/mem_dashboard`)
     .then(response => {
       console.log(response.data);
@@ -128,6 +131,16 @@ function AdminTest() {
       console.error("검색 중 오류 발생:", err);
       setError(true); // 오류가 발생하면 상태 변경
     });
+
+    axios.get(`http://localhost:9988/admin/repList`)
+            .then(response => {
+                console.log("결과:", response.data.repList);
+                setReportData(response.data.repList);
+            })
+            .catch(error=>{
+              console.error("리스트 생성 중 오류!");
+              setError(true);
+            })
 }, [error]);
 
 
@@ -503,7 +516,7 @@ if(qna_filter ==="년"){
         <div className='simpBoardArea'>
           <div className="simpBoardT">
               멤버 목록
-              <div className="simpBoardL">더보기▷</div>
+              <div className="simpBoardL" onClick={(e)=>navigate('/admin/memCon')}>더보기▷</div>
           </div>
           <table className="memTable">
             <thead>
@@ -586,19 +599,37 @@ if(qna_filter ==="년"){
             <Line data={sComData} options={s_Coptions} width="300px" height="300px" />
           </div>
         </div>
-        <div className="simpBoardArea">
-        <div className="simpBoardT">
-            커뮤니티 게시글
-            <div className="simpBoardL">더보기▷</div>
-            </div>
-              <div className="container">
-                <div className="row">
-                <div className="col-sm-1">No</div>
-                <div className="col-sm-6">제목</div>
-                <div className="col-sm-2">등록일</div>
-                <div className="col-sm-3">조회수</div>
-              </div>
-            </div>
+        <div className='simpBoardArea'>
+          <div className="simpBoardAnotherT">
+              멤버 목록
+              <div className="simpBoardL" onClick={(e)=>navigate('/admin/memCon')}>더보기▷</div>
+          </div>
+            <table className="memTable">
+            <thead>
+              <tr>
+                <th>피신고인 ID</th>
+                <th>신고유형</th>
+                <th>신고시간</th>
+                <th>신고 수리 여부</th>
+              </tr>
+            </thead>
+            <tbody>
+            {reportData.length > 0 ? (
+              reportData.slice(0, 5).map((item, index) => (
+                <tr key={item.userid || index}>
+                  <td>{item.reported_userid}</td>
+                  <td>{item.report_type}</td>
+                  <td>{item.report_date}</td>
+                  <td>{item.active_state === 1 ? "활성화" : "비활성화"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center">Loading...</td>
+              </tr>
+            )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>    

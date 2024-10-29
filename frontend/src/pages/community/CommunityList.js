@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 // import axios from "axios";
 import axios from '../../component/api/axiosApi';
 import { useParams, Link } from 'react-router-dom';
-import ReportModal from '../../component/api/ReportModal.js';
+// import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
+import CustomImage from "../../component/CustomImage.js";
 
 
 function CommunityList() {
@@ -21,13 +22,14 @@ function CommunityList() {
 
     const [categoryCounts, setCategoryCounts] = useState({}); // 카테고리별 게시물 수 상태
 
-    const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
-    const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
+    //const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
+    //const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
     const [loggedInUserId, setLoggedInUserId] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("All Posts");
 
     const [communityList, setCommunityList] = useState([]);
     const [sortType, setSortType] = useState("latest");
+    const [categoryType, setCategoryType] = useState('All Posts');  // 선택된 카테고리 상태
 
     // category 값에 따른 카테고리 이름을 반환하는 함수
     const getCategoryName = (category) => {
@@ -42,16 +44,21 @@ function CommunityList() {
                 return "기타";
         }
     };
-    function communityListSetting(sortType){
+    
+    useEffect(() => {
+        communityListSetting(sortType, categoryType);
+    }, []);
+
+    function communityListSetting(sortType, categoryType){
         axios.get('http://localhost:9988/community/list', {
-            params: { sortType } // sortType을 params로 전달
+            params: { sortType, categoryType } // sortType을 params로 전달
         })
         .then(response => {
                 console.log(response.data);
-                console.log(response.data);
+                setCommunityList(response.data);
+                
                 setCommunity(response.data);
                 setFilteredCommunity(response.data);
-                setCommunityList(response.data);
                 
                 // 카테고리별 게시물 수 계산
                 const counts = response.data.reduce((acc, item) => {
@@ -148,9 +155,9 @@ function CommunityList() {
         setSelectedCategory(category);
 
         if (category === "All Posts") {
-            setFilteredCommunity(community); // 카테고리를 선택할 때 상태 업데이트
+            setFilteredCommunity(communityList); // 카테고리를 선택할 때 상태 업데이트
         } else {
-            setFilteredCommunity(community.filter(item => getCategoryName(item.category) === category));
+            setFilteredCommunity(communityList.filter(item => getCategoryName(item.category) === category));
         }
     };  
 
@@ -175,25 +182,31 @@ function CommunityList() {
         
     };
 
-    function openReport(id, userid, content){{/* 신고 기능 */}
-        if(userid){
-            console.log(id, userid, content);
-            setReport({
-                report_tblname: 2, // 본인 테이블에 따라 다름
-                report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
-                reported_userid: userid, // 피신고자id
-                report_content: content,// 피신고자의 채팅 내용
-            })
-            toggleReport();
-        }else{
-            alert("로그인 후 이용 가능합니다");
-        }
-    }
+    // function openReport(id, userid, content){{/* 신고 기능 */}
+    //     if(userid){
+    //         console.log(id, userid, content);
+    //         setReport({
+    //             report_tblname: 2, // 본인 테이블에 따라 다름
+    //             report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+    //             reported_userid: userid, // 피신고자id
+    //             report_content: content,// 피신고자의 채팅 내용
+    //         });
+    //         toggleReport();
+    //     }else{
+    //         alert("로그인 후 이용 가능합니다");
+    //         window.location.href = "/signin";
+    //     }
+    // }
 
     // 모달창 열고 닫기 함수
-    const toggleReport = () => {
-        setReportShow(!reportShow);
-    };
+    // const toggleReport = () => {
+    //     if (userid) {
+    //         setReportShow(!reportShow);
+    //     }else{
+    //         alert("로그인 후 이용 가능합니다");
+    //         window.location.href = "/signin";
+    //     }
+    // };
 
     useEffect(() => {
         axios.get(`http://localhost:9988/user/userinfo`)
@@ -274,22 +287,39 @@ function CommunityList() {
         setFilteredCommunity(communityList); // communityList가 변경될 때마다 업데이트
     }, [communityList]);
 
-    const sortCommunityList = (type) => {
-        let sortedList;
+    const sortCommunityList = (type, category) => {
+        let filteredList = communityList;
+
+        // 카테고리에 따른 필터링
+        if (category && category !== "All Posts") {
+            filteredList = communityList.filter(item => getCategoryName(item.category) === category);
+        }
+        let sortedList = [...filteredList];
 
         if (type === "latest") {
-            sortedList = [...communityList].sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
+            sortedList.sort((a, b) => new Date(b.community_writedate) - new Date(a.community_writedate));
         } else if (type === "hit") {
-            sortedList = [...communityList].sort((a, b) => b.hit - a.hit);
+            sortedList.sort((a, b) => b.hit - a.hit);
         } else if (type === "like") {
-            sortedList = [...communityList].sort((a, b) => b.community_like - a.community_like);
+            sortedList.sort((a, b) => b.community_like - a.community_like);
         }
 
-        setCommunityList(sortedList);
+        setFilteredCommunity(sortedList);
         setSortType(type);
     };
-    
 
+    // 카테고리 선택 시 호출되는 함수
+    const handleCategoryChange = (category) => {
+        setCategoryType(category);
+        sortCommunityList(sortType, category); // 선택된 정렬 상태를 유지한 채로 카테고리 변경
+    };
+
+    // 정렬 선택 시 호출되는 함수
+    const handleSortChange = (sort) => {
+        setSortType(sort);
+        sortCommunityList(sort, categoryType); // 선택된 카테고리 상태를 유지한 채로 정렬 변경
+    };
+        
     return (
         <div className="community_list">
             <div className="container">
@@ -297,7 +327,7 @@ function CommunityList() {
                     <div className="category_box">
                         <ul className="category_list">
                             {categories.map(category => (
-                                <li key={category} onClick={() => filterByCategory(category)} className={`category_item ${selectedCategory === category ? 'active' : ''}`}>
+                                <li key={category} onClick={() => handleCategoryChange(category)} className={`category_item ${categoryType  === category ? 'active' : ''}`}>
                                     {category}
                                 </li>
                             ))}
@@ -328,26 +358,29 @@ function CommunityList() {
                 </div>
                 <div className="post">
                     <div className="category_counts">
-                        {/* 선택된 카테고리의 게시물 수만 표시 */}
-                        {selectedCategory ? (
+                        {categoryType === "All Posts" ?(
                             <div>
-                                {/* {selectedCategory}*/} {categoryCounts[selectedCategory] || 0} post
-                            </div>
-                         ) : (
-                            <div>
-                                {/* 선택된 카테고리가 없을 때 전체 게시물 수 */}
+                                {/* 전체 카테고리 수만 표시 */}
                                 {categoryCounts["All Posts"] || 0} post
-                            </div>   
+                            </div>
+                        ) : (
+                            <div>
+                                {/* 선택된 카테고리의 게시물 수 */}
+                                {categoryCounts[categoryType] || 0} post
+                            </div>
                         )}
                     </div>
-                    <select onChange={(e) => sortCommunityList(e.target.value)} value={sortType}>
+                    <select onChange={(e) => handleSortChange(e.target.value)} value={sortType}>
                         <option value="latest">최신순</option>
                         <option value="hit">조회순</option>
                         <option value="like">인기순</option>
                     </select>
-                    <Link to="/community/CommunityWrite">
-                        <input className="write" type="button" value="New Post" />
-                    </Link>
+
+                    {userid && (
+                        <Link to="/community/CommunityWrite">
+                            <input className="write" type="button" value="New Post" />
+                        </Link>
+                    )}
                 </div>
 
 
@@ -364,9 +397,9 @@ function CommunityList() {
                             <div className="content"> 
                                 <div className="list_top">
                                     {userid==communityItem.userid?<Link to="/mypage">
-                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                        <CustomImage className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     </Link>:<Link to={`/user/info/${communityItem.usernick}`}>
-                                        <img className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
+                                        <CustomImage className="writer_image" src={`http://localhost:9988/${communityItem.userprofile}`} alt="Writer" />
                                     </Link>}
                                     <div className="writer_info">
                                         <p className="writer_name">{communityItem.usernick}</p>
@@ -380,23 +413,26 @@ function CommunityList() {
                                             <>
                                                 <input type="button" value={communityItem.follow==1?'following':'follow'} 
                                                 onClick={()=>{toggleFollow(communityItem)}}  
-                                                className="action_button" />
-                                                <button 
+                                                className={`action_button ${communityItem.follow == 1 ? 'following' : 'follow'}`} />
+                                                {/* {userid && ( */}
+                                                {/* <button 
                                                     className="report_button" 
                                                     title="신고"
                                                     onClick={() => openReport(communityItem.community_no, communityItem.userid, communityItem.community_title)} 
                                                 >
                                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
-                                                </button>
+                                                </button> */}
+                                                {/* )} */}
                                             </>
                                         )}
                                     </div>
-                                    <ReportModal    
+                                    {/* <ReportModal    
                                         reportShow={reportShow}// 모달창 보이기 여부
                                         toggleReport={toggleReport} // 모달창 열고닫기 함수
                                         report={report}// 신고 데이터 변수
                                         setReport={setReport} // 신고 데이터 변수 세팅
-                                    />
+                                        setDefaultList={()=>{}}
+                                    /> */}
                                 </div>
 
                                 <Link to={`/community/communityView/${communityItem.community_no}`}>

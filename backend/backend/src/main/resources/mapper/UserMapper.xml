@@ -23,8 +23,21 @@
         SELECT EXISTS(SELECT 1 FROM user_tbl WHERE userid = #{userid})
     </select>
 
+<!--    <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">-->
+<!--        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})-->
+<!--    </insert>-->
     <insert id="saveUser" parameterType="com.ict.backend.vo.MemberVO">
-        INSERT INTO user_tbl(userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender) VALUES(#{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender})
+        INSERT INTO user_tbl (
+        userid, userpwd, username, usernick, usertel, useraddr, useremail, zipcode, addrdetail, userbirth, gender
+        <if test="user_social != null">
+            , user_social
+        </if>
+        ) VALUES (
+        #{userid}, #{userpwd}, #{username}, #{usernick}, #{usertel}, #{useraddr}, #{useremail}, #{zipcode}, #{addrdetail}, #{userbirth}, #{gender}
+        <if test="user_social != null">
+            , #{user_social}
+        </if>
+        )
     </insert>
 
     <select id="usernickcheck" resultType="int">
@@ -37,7 +50,7 @@
         select userpwd from user_tbl where userid = #{userid};
     </select>
     <select id = "getUserInfo" resultType="com.ict.backend.vo.MemberVO">
-        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender
+        SELECT userid, usernick, username, DATE_FORMAT(userbirth, '%Y.%m.%d') AS userbirth, usertel, useremail, useraddr, zipcode, addrdetail, gender, user_point, user_social
         FROM user_tbl
         WHERE userid = #{userid}
     </select>
@@ -84,7 +97,8 @@
         UPDATE image_tbl set image_url = #{param1} where image_no = #{param2}
     </update>
     <select id="getBookmarks" resultType="map">
-        SELECT m.movie_kor, m.movie_code, m.movie_link FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        SELECT m.movie_kor, m.movie_code, m.movie_link, bookmartk_date FROM bookmark_tbl b JOIN movie_data_tbl m ON b.movie_no = m.movie_no WHERE b.userid = #{userid}
+        order by bookmartk_date desc
         <if test="limit != null and limit > 0">
             LIMIT #{limit}
         </if>
@@ -93,7 +107,11 @@
         SELECT count(*) FROM bookmark_tbl WHERE userid = #{userid}
     </select>
     <select id="getHistory" resultType="map">
-        select m.movie_kor, m.movie_code, m.movie_link from history_sec_tbl h join movie_data_tbl m on h.movie_no = m.movie_no where h.userid = #{userid}
+        SELECT m.movie_kor, m.movie_code, m.movie_link, MAX(h.history_sec_date) AS history_sec_date
+        FROM history_sec_tbl h JOIN movie_data_tbl m ON h.movie_no = m.movie_no
+        WHERE h.userid = #{userid}
+        GROUP BY m.movie_kor, m.movie_code, m.movie_link
+        ORDER BY MAX(h.history_sec_date) DESC
         <if test="limit != null and limit > 0">
             LIMIT #{limit}
         </if>
@@ -127,10 +145,10 @@
         SELECT count(*) FROM community_tbl where userid = #{userid};
     </select>
     <select id="getCountComment" resultType = "int">
-        SELECT count(*) FROM community_comment_tbl where userid = #{userid};
+        SELECT count(*) FROM community_comment_tbl where userid = #{userid} and active_state = 1;
     </select>
     <select id ="getCountReplyComment" resultType="int">
-        SELECT count(*) FROM reply_comment_tbl where userid = #{userid};
+        SELECT count(*) FROM reply_comment_tbl where userid = #{userid} and active_state = 1;
     </select>
 
     <select id="getFollowData" resultType = "map">
@@ -167,7 +185,8 @@
 
     <insert id="insertFollow">
         INSERT INTO follower_tbl (userid, follower_userid)
-        VALUES (#{loginUser}, #{followerUserId})
+        SELECT #{loginUser}, #{followerUserId}
+        WHERE #{loginUser} != #{followerUserId};
     </insert>
 
     <!-- 팔로우 취소 -->
@@ -263,7 +282,21 @@
     <update id="updatelastvisite">
         UPDATE user_tbl SET lastvisite = CURRENT_TIMESTAMP WHERE userid = #{userid}
     </update>
-
+    <update id="userunban">
+        UPDATE user_tbl SET active_state = 1 WHERE userid = #{userid}
+    </update>
+    <delete id ="deletebantbl">
+        DELETE FROM ban_tbl WHERE userid = #{userid}
+    </delete>
+    <update id = "withdraw">
+        UPDATE user_tbl SET active_state = 0, withdrawdate = NOW()  WHERE userid = #{userid}
+    </update>
+    <select id = "checkwithdraw">
+        select date_format(withdrawdate, '%Y.%m.%d') as withdrawdate from user_tbl where userid = #{userid}
+    </select>
+    <update id="restoreUser">
+        UPDATE user_tbl SET active_state = 1, withdrawdate = null  WHERE userid = #{userid}
+    </update>
 
 
 </mapper>

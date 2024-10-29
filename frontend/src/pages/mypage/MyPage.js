@@ -52,16 +52,17 @@ function Mypage() {
         try {
             const response = await axios.get("http://localhost:9988/user/mypageinfo");
             const userInfo = response.data;
-
+            
             const updatedUserInfo = {
             ...userInfo,
+            user_point: userInfo.user_point.toLocaleString()
             };
 
         setUserInfo(updatedUserInfo);
         setProfileImageSrc(updatedUserInfo.userprofile || defaultProfileImage);
-        console.log(profileImageSrc);
+        // console.log(profileImageSrc);
 
-        console.log(updatedUserInfo);
+        // console.log(updatedUserInfo);
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 console.log(error.response.data); // "Access denied." 메시지 확인
@@ -77,10 +78,10 @@ function Mypage() {
     const fetchtotaldata = async () => {
         try {
             const response = await axios.get("http://localhost:9988/user/totaldata"); // Change to your bookmarks API
-            console.log(response.data);
-            console.log(response.data.bookmarks);
-            console.log(response.data.history);
-            console.log(response.data.followers);
+            // console.log(response.data);
+            // console.log(response.data.bookmarks);
+            // console.log(response.data.history);
+            // console.log(response.data.followers);
             if (Array.isArray(response.data.bookmarks)) {
                 setBookmarkSlides(response.data.bookmarks);
             }
@@ -149,6 +150,16 @@ function Mypage() {
     const handleOpenModal = (type) => {
         fetchUserList(type);
         setIsModalOpen(true);
+    };
+    const handleCloseModal = async () => {
+        try {
+            // 모달을 닫기 전에 사용자 정보를 먼저 업데이트
+            await fetchtotaldata();
+        } catch (error) {
+            console.error("Error fetching user info during modal close:", error);
+        }
+        // 사용자 정보 업데이트가 완료된 후 모달을 닫음
+        setIsModalOpen(false);
     };
     const fetchUserList = async (type) => {
         console.log(userInfo.usernick);
@@ -305,7 +316,7 @@ function Mypage() {
                 {/* 사용자 정보 세션 */}
                 <div className = "info">
                     <div id = "profile">
-                        <CustomImage src = {profileImageSrc} alt = {profile} onError={handleProfileImageError}/>
+                        <CustomImage src = {profileImageSrc} alt = {profile} onError={handleProfileImageError} style={{ cursor: 'default' }}/>
                         <span>{userInfo.usernick}님</span>
                     </div>
                     <div id = "userinfo">
@@ -316,10 +327,11 @@ function Mypage() {
                             <p>이메일 : <span>{userInfo.useremail}</span></p>
                         </div>
                         <div className = "userbottom">
-                            <p onClick={() => handleOpenModal('followers')}>팔로워 : <span>{userInfo.follower}</span></p>
-                            <p onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
+                            <p className = "fol" onClick={() => handleOpenModal('followers')}>팔로워 : <span>{userInfo.follower}</span></p>
+                            <p className = "fol" onClick={() => handleOpenModal('following')}>팔로잉 : <span>{userInfo.following}</span></p>
                             <p>게시글 : <span>{userInfo.community}</span></p>
                             <p>댓글 : <span>{userInfo.comment}</span></p>
+                            <p>포인트 : <span>{userInfo.user_point}</span></p>
                         </div>
                     </div>
                     <div id = "info_change">
@@ -384,7 +396,7 @@ function Mypage() {
                     </div>
                     {/* 즐찾 회원 */}
                     {isModalOpen && (
-                        <Modal onClose={() => setIsModalOpen(false)} title={modalTitle}>
+                        <Modal onClose={handleCloseModal} title={modalTitle}>
                         {currentList.length > 0 ? (
                         <ul className="user-list-ul">
                             {currentList.map((user, index) => {
@@ -444,7 +456,7 @@ function Mypage() {
                                                 <li className="list_title"
                                                     onClick={() => navigate(`/community/communityView/${communitylist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{communitylist.community_title}</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete"); toggledelete(index, communitylist, "community");}}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); toggledelete(index, communitylist, "community");}}/>
                                                 </li>
                                                 <li className="smaller-text">
                                                 <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(communitylist.community_content) }} />
@@ -582,7 +594,7 @@ function Mypage() {
                                                             <span>[{qna.head_title == 1 ? "영화" : (qna.head_title == 2 ? "사이트" : "기타")}] </span>
                                                             {qna.qna_title}
                                                         </div>
-                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("working"); toggledelete(index, qna, "qna");}} />
+                                                        <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); toggledelete(index, qna, "qna");}} />
                                                     </li>
                                                     <li className="smaller-text" style ={{display:'flex', justifyContent: 'space-between'}}>
                                                         <div className = "text-content">{qna.qna_content}</div>

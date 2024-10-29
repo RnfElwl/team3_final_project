@@ -111,6 +111,16 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public int updateBanDateWrite(BanVO banData) {
+        return dao.updateBanDateWrite(banData);
+    }
+
+    @Override
+    public int deleteBanHistory(List<String> userids) {
+        return dao.deleteBanHistory(userids);
+    }
+
+    @Override
     public List<ReportVO> getRepList(PagingVO pagingVO) {
         return dao.getRepList(pagingVO);
     }
@@ -202,6 +212,31 @@ public class AdminServiceImpl implements AdminService{
         return dao.updateReplyState(userid,replyNos, activeState);
     }
 
+    @Override
+    public int insertNotice(NoticeVO noticeVO) {
+        return dao.insertNotice(noticeVO);
+    }
+
+    @Override
+    public List<NoticeVO> selectAdminNoticeList(NoticeVO noticeVO) {
+        return dao.selectAdminNoticeList(noticeVO);
+    }
+
+    @Override
+    public List<NoticeVO> getNotice(int no) {
+        return dao.getNotice(no);
+    }
+
+    @Override
+    public int updateNotice(NoticeVO noticeVO) {
+        return dao.updateNotice(noticeVO);
+    }
+
+    @Override
+    public int updateNoticeActive(Integer active_state, List<Integer> notice_no) {
+        return dao.updateNoticeActive(active_state,notice_no);
+    }
+
 
     @Override
     public List<MovieVO> selectAdminMovieList(com.ict.backend.vo.MovieVO movieVO){return dao.selectAdminMovieList(movieVO);}
@@ -211,4 +246,34 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public int updateMovieData(MovieVO movieVO){return dao.updateMovieData(movieVO);}
+
+    @Override
+    public List<EventVO> selectAdminEventList(EventVO eventVO) {
+        return dao.selectAdminEventList(eventVO);
+    }
+
+    @Override
+    public int insertEvent(EventVO eventVO) {
+        return dao.insertEvent(eventVO);
+    }
+
+    @Override
+    public List<EventVO> getEvent(int no) {
+        return dao.getEvent(no);
+    }
+
+    @Override
+    public int updateEventData(EventVO eventVO) {
+        return dao.updateEventData(eventVO);
+    }
+
+    @Override
+    public int updateEventActive(Integer event_active_state, List<Integer> event_no, String userid) {
+        return dao.updateEventActive(event_active_state,event_no,userid);
+    }
+
+    @Override
+    public List<EventFCVO> selectEventMemList(int event_no) {
+        return dao.selectEventMemList(event_no);
+    }
 }

@@ -25,6 +25,8 @@ public interface AdminDAO {
     int updateQnaActive(Integer activeState, List<Integer>qnaNos);
     List<MemberVO> getMemList(PagingVO pagingVO);
     List<BanVO> getBanMemList(PagingVO pagingVO);
+    int updateBanDateWrite(BanVO banData);
+    int deleteBanHistory(List<String> userids);
     List<ReportVO> getRepList(PagingVO pagingVO);
     List<ReportVO> getRepView(int report_no);
     List<BanVO> getBanData(String reported_userid);
@@ -46,7 +48,18 @@ public interface AdminDAO {
     int updateCommunityState(String userid,List<Integer> communityNos, Integer activeState);
     int updateCommentState(String userid,List<Integer> commentNos, Integer activeState);
     int updateReplyState(String userid,List<Integer> replyNos, Integer activeState);
+    int insertNotice(NoticeVO noticeVO);
+    List <NoticeVO> selectAdminNoticeList(NoticeVO noticeVO);
+    List <NoticeVO> getNotice(int no);
+    int updateNotice(NoticeVO noticeVO);
+    int updateNoticeActive(Integer active_state,List<Integer> notice_no);
     List<MovieVO> selectAdminMovieList(MovieVO movieVO);
     int updateMovieActive(Integer active, List<Integer> movie_no, String userid);
     int updateMovieData(MovieVO movieVO);
+    List<EventVO> selectAdminEventList(EventVO eventVO);
+    int insertEvent(EventVO eventVO);
+    List<EventVO> getEvent(int no);
+    int updateEventData(EventVO eventVO);
+    int updateEventActive(Integer event_active_state, List<Integer>event_no, String userid);
+    List <EventFCVO> selectEventMemList(int event_no);
 }

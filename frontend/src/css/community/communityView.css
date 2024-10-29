@@ -31,7 +31,6 @@
     width: 70px; /* 작성자 이미지 크기 */
     height: 70px; /* 작성자 이미지 크기 */
     border-radius: 50%; /* 둥글게 */
-    border: 1px solid #ddd;
 }
 
 .community_view .writer_info {
@@ -86,6 +85,10 @@
     color: #48d1cdea;
 }
 
+.community_view .action_button.following {
+    color: #48d1cdea;
+}
+
 /* 신고 */
 .community_view .report_button {
     background: none;
@@ -96,11 +99,12 @@
     display: none;
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     align-items: center; 
     top: 0px;
     left: 0px;
+    z-index: 999;
 }
 .community_view .report_show{
     display: flex;
@@ -350,7 +354,6 @@
     width: 40px; /* 댓글 작성자 이미지 너비 */
     height: 40px; /* 댓글 작성자 이미지 높이 */
     border-radius: 50%; /* 둥근 이미지 */
-    border: #54575a 1px solid;
 }
 
 .community_view .comment_writer_name{
@@ -417,6 +420,9 @@
     cursor: pointer; /* 마우스 커서 스타일 */
     height: 35px;
 }
+/* .community_view .replies{
+    border-top: #ccc 1px solid;
+} */
 .community_view .recomment{
     padding: 5px 10px; /* 버튼 안쪽 여백 */
     border: none; /* 기본 테두리 제거 */
@@ -434,9 +440,17 @@
     margin-left: 10px;
 }
 .community_view .reply_item{
-    margin-left: 30px;
+    margin-left: 50px;
 }
 
 .community_view .comment_input{
     display: none;
+}
+
+.community_view .nieun{
+    font-size: 20px;
+}
+
+.community_view .reply_item .comment_content{
+    margin-left: 50px;
 }

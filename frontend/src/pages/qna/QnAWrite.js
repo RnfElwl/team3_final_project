@@ -34,14 +34,11 @@ function QnAWrite() {
                 console.error('데이터 로드 중 오류 발생:', error);
             })
     }
-    //훅 사용: 경고 메시지 전달
-    // useUnsavedChangesWarning(isDirty, '변경사항이 저장되지 않았습니다. 정말 떠나시겠습니까?');
-
-    //비밀글 설정 핸들러
+    //비밀글 설정
     const handleprivacyQChange = (e) => {
         setPrivacyQ(e.target.value);
     };
-    //이미지 설정 핸들러
+    //이미지 설정
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files); // FileList를 배열로 변환
         setQna_img(files); // 상태에 파일 저장
@@ -53,7 +50,7 @@ function QnAWrite() {
             console.log('선택한 파일:', file.name);
         });
     };
-    //이미지 input 대체 핸들러
+    //이미지 input 대체
     const handleImageClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click(); // 숨겨진 input을 클릭하는 동작
@@ -102,8 +99,8 @@ function QnAWrite() {
             alert('카테고리를 선택해주세요.');
             return;
         }
-        if (privacyQ === '1' && (qna_pwd.trim().length < 4)) {
-            alert('비밀번호를 반드시 4자리로 입력하세요.');
+        if (privacyQ === '1' && (qna_pwd.trim().length < 4&&qna_pwd.trim().length > 20)) {
+            alert('비밀번호를 반드시 4자리 이상 20자리 이하로 입력하세요.');
             return;
         }
 
@@ -140,18 +137,7 @@ function QnAWrite() {
                     <input type='hidden'
                         name='userid'
                         value={userid} />
-                    <div>
-                        <input
-                            type='text'
-                            className='qna_title'
-                            value={qna_title}
-                            onChange={(e) => {
-                                setQna_title(e.target.value)
-                                // setIsDirty(true);
-                            }}
-                            placeholder='제목을 입력해 주세요' />
-                    </div>
-                    <div>
+                                    <div>
                         <select
                             className='head_title'
                             name='head_title'
@@ -165,6 +151,16 @@ function QnAWrite() {
                                 </option>
                             })}
                         </select>
+                    </div>
+                    <div>
+                        <input
+                            type='text'
+                            className='qna_title'
+                            value={qna_title}
+                            onChange={(e) => {
+                                setQna_title(e.target.value)
+                            }}
+                            placeholder='제목을 입력해 주세요' />
                     </div>
                 </div>
                 <textarea
@@ -193,18 +189,20 @@ function QnAWrite() {
                             onChange={handleprivacyQChange}
                         /> <span class="qna-custom-radio">비밀글</span>
                     </label>
-                    {privacyQ === '1' && (
+
+                </div>                    
+                {privacyQ === '1' && (
                         <div className="qna_pwd_box">
                             <input
-                                type='text'
-                                placeholder='비밀번호를 설정하세요(숫자 4자리)'
-                                maxLength='4'
+                                type='password'
+                                placeholder='비밀번호를 설정하세요(숫자 4자리~20자리)'
+                                maxLength='20'
+                                minLength='4'
                                 value={qna_pwd}
                                 onChange={(e) => setQna_pwd(e.target.value)}
                             />
                         </div>
                     )}
-                </div>
                 <div className="imgUploader-box">
                     <input
                         type='file'

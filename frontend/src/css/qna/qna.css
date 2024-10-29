@@ -9,6 +9,7 @@
         min-width: 577px;
     }
 }
+
 /* 상단 info css */
 .totalRecord-info{  
     display: flex;
@@ -209,7 +210,7 @@
 }
 
 /* 카테고리 필터 버튼 css */
-.qna-category-filter button{
+.qna-category-filter button {
     background-color: #00ff9d00;
     font-size: 1.2em;
     color: rgb(187, 182, 182);
@@ -217,23 +218,24 @@
     margin-bottom: 10px;
     padding-bottom: 5px;
     border: none;
-    
-}
-
-
-.qna-category-filter button:disabled{
+    cursor: pointer;
+  }
+  
+  /* 선택된 버튼 스타일 */
+  .qna-category-filter button.active {
     color: #f1f1f1;
     border-bottom: 2px solid #48d1cdea;
     font-weight: bold;
-}
-.qna-category-filter button:hover{
-    border-bottom: 2px solid #48d1cdea;
-}
-.qna-category-filter button:hover{
-    color: #f1f1f1;
-    border-bottom: 2px solid #a1adadea;
-}
-.qna-category-filter button:disabled{
+  }
+  
+  /* 비활성화된 버튼 */
+  .qna-category-filter button:disabled {
     color: #f1f1f1;
     border-bottom: 2px solid #51e4dfea;
-}
+  }
+  
+  /* 호버 스타일 */
+  .qna-category-filter button:hover {
+    color: #f1f1f1;
+    border-bottom: 2px solid #a1adadea;
+  }

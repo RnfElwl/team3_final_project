@@ -1,11 +1,11 @@
 // src/components/Footer.js
 import React from 'react';
 import './css/Footer.css';
-import {Link} from 'react-router-dom';
-
 
 function Footer() {
     return (
+        <>
+        
         <footer className='footer'>
             <div className='footer-info'>
                 <div className='logo-container'>
@@ -29,6 +29,7 @@ function Footer() {
                 <p> Privacy Policy | Terms of Service </p>
             </div>
         </footer>
+        </>
         );
     }
     

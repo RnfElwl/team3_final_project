@@ -1,4 +1,6 @@
 import "../../css/qna/qnaView.css";
+import LineBreakText from './../../component/LineBreakText';
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from "../../component/api/axiosApi";
@@ -7,6 +9,7 @@ import { faPen, faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-ic
 import { AiOutlineAlert } from "react-icons/ai";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReportModal from '../../component/api/ReportModal.js';
+import CustomImage from '../../component/CustomImage';
 
 function QnAView() {
     const location = useLocation();
@@ -46,9 +49,10 @@ function QnAView() {
                     setResult(1);
                 }            
             });
-        }else{
+        }else  if (result !== 1) {
             navigate(`/qna`)
             setResult(0);
+            
         }
     }, [params, result, privacyQ]);
 
@@ -111,6 +115,7 @@ function QnAView() {
     function checkid(){
         if(usersid==='' || usersid===null){
             alert("로그인 시 이용 가능한 기능입니다.");
+            return false;
         }
     }
     //뷰페이지 로딩
@@ -173,29 +178,34 @@ const toggleReport = () => {
         <table className="QnaTbl">
             <tbody>
             <tr>
-                <td className="qnaType">제목</td>
-                <td >{itemQ.qna_title}</td>
-                <td>{itemQ.qna_writedate}</td>
+                <th className="qnaType">제목</th>
+                <td colSpan="3">{itemQ.qna_title}</td>
+ 
             </tr>
             <tr>
-                <td className="qnaType">작성자</td>
-                <td colSpan="2">{itemQ.usernick}</td>          
+                <th className="qnaType">작성자</th>
+                <td>{itemQ.usernick}</td> 
+                <th className="qnaType">작성일</th>
+                <td>{itemQ.qna_writedate}</td>        
             </tr>
             <tr>
-                <td colSpan="3"> {itemQ.qna_content}</td>
+                <th className="qnaType">내용</th>
+                <td colSpan="4">
+                    {itemQ.qna_content && <LineBreakText text={itemQ.qna_content}/>}
+                </td>
             </tr>
             <tr>
-                <td className="qnaType">첨부파일</td>
-                <td colSpan="2" className="qna-imgArea">
-                    {itemQ.qna_img&&qnaImgSrc ? (<img src={`http://localhost:9988/qna/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
+                <th className="qnaType">첨부파일</th>
+                <td colSpan="4" className="qna-imgArea">
+                    {itemQ.qna_img&&qnaImgSrc ? (<CustomImage src={`http://localhost:9988/${itemQ.qna_img}`}/>):<div>첨부된 파일이 없습니다.</div>}
                 </td>
             </tr>
             </tbody>
         </table>
         <div className="qnaItems">
-        {usersid !== itemQ.userid ?(
+        {(usersid !== itemQ.userid && usersid !== "") ?(
             <AiOutlineAlert size="35px"
-                onClick={()=>openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content)}
+                onClick={()=>{openReport(itemQ.qna_no, QnAView[0].userid, QnAView[0].qna_content);}}
                 className="qna_alert_icon"/>):null}
         {usersid === itemQ.userid || usersid==='admin1' ? (
                 <div><FontAwesomeIcon icon={faTrashCan} size ="2x"onClick={qnaDelete}/></div>
@@ -216,7 +226,7 @@ const toggleReport = () => {
                     />
         </div>
         <h4>문의 답변</h4>
-        <hr/>
+        <hr className="qna_header"/>
         <div className="ansArea">
             
                 {itemQ.qna_state==0 ? <div></div>:
@@ -226,7 +236,7 @@ const toggleReport = () => {
                     </div>
                     }
                 {itemQ.qna_state == 0  ? <div>답변이 등록되지 않았습니다</div> : <div>{itemQ.qna_answer}</div> }
-        </div><hr/>
+        </div><hr className="qna_header"/>
         <div className="PagingArea">
             <div className="qna-list-btn"><button onClick={(e)=>navigate('/qna')}>목록으로</button></div>
             {itemQ.next_qna_no ?
@@ -238,15 +248,6 @@ const toggleReport = () => {
             {itemQ.qna_no==1 ? <div onClick={(e)=>navigate(`/qna/view/4`)}>다음글 {itemQ.next_Title}</div>:<div></div>}
         </div>
     </div>
-    {/* ):(
-        <div>
-            <form onSubmit={(e)=>handlePassSubmit(e)}>
-                <h3>문의글입니다.</h3>
-                <div>들어가려면 비밀번호를 입력하여주십시오.</div>
-                <input type="password" value={passwordQ} onChange={(e)=>handlePassCheck(e)}/>
-                <button type="submit">확인</button>
-            </form>
-        </div>)} */}
 </div>
     
 

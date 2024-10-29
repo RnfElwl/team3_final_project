@@ -10,6 +10,8 @@ import { FaCalendarCheck } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import ReportModal from '../../component/api/ReportModal.js';
 import { BsExclamationCircle } from "react-icons/bs";
+import CustomImage from '../../component/CustomImage';
+
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -62,7 +64,8 @@ const Chatting = () => {
         
     }, []);
     useEffect(()=>{
-        const mqttClient = mqtt.connect('ws://192.168.1.87:8083');
+        const mqttClient = mqtt.connect(`ws://${window.location.hostname}:8083`);
+        // const mqttClient = mqtt.connect('ws://192.168.1.87:8083');
         //const mqttClient = mqtt.connect('ws://localhost:8083'); // 브로커의 WebSocket 포트로 연결
 
         // 연결 성공 시
@@ -75,7 +78,7 @@ const Chatting = () => {
                 }
                 if(window.opener==null){
                     navigate("/");
-                    // window.close();
+                    window.close();
                 }
 
                 if(!mqttClient.connected){
@@ -161,8 +164,8 @@ const Chatting = () => {
         setRoomInfo(result.data);
         }catch(e){
             console.log(e);
-            // window.close();
-            // navigate("/");
+            window.close();
+            navigate("/");
         }
       }
       
@@ -199,7 +202,7 @@ const Chatting = () => {
         console.log("___________________")
         if(data==0){
             navigate("/");
-            // window.close();
+            window.close();
         }
         setDefaultChat();
         
@@ -463,13 +466,13 @@ const Chatting = () => {
     function moveUserPage(usernick){
         if (window.opener) {
             window.opener.navigateToPage(`/user/info/${usernick}`);  // 부모 창 이동
-            // window.close();  // 팝업 닫기
+            window.close();  // 팝업 닫기
           }
     }
     function moveMyPage(){
         if (window.opener) {
             window.opener.navigateToPage(`/mypage`);  // 부모 창 이동
-            // window.close();  // 팝업 닫기
+            window.close();  // 팝업 닫기
           }
     }
     async function exitRoom(){
@@ -508,7 +511,7 @@ const Chatting = () => {
     }catch(e){
         console.log(e);
     }
-        // window.close();
+        window.close();
     }
     return (
         <div className='chatting_room'>
@@ -527,7 +530,7 @@ const Chatting = () => {
             </div>
             <header className='chat_header'> 
                 <div className='room_box'>
-                <div className='room_img'><img src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
+                <div className='room_img'><CustomImage src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
                     <div className='user_count' title="유저 목록" onClick={userToggle}>
@@ -541,11 +544,11 @@ const Chatting = () => {
                                 {
                                     myid==data.userid?
                                     <div className='user_info'>
-                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                        <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
                                         <div>{data.usernick}</div>
                                     </div>:
                                     <div className='user_info'>
-                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
+                                        <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
                                     }
@@ -616,17 +619,17 @@ const Chatting = () => {
                 <div className='schedule_list'>
                     <div className={`voteWindow ${voteUserWindow?'show':'hide'}`}>
                         <div className='vote_window_close' onClick={()=>setVoteUserWindow(false)}></div>
-                        <div className='vote_user_box'>
+                        <div className='vote_user_box1'>
                             <h2>{vote_state==1?'참여 목록':'불참 목록'}</h2>
                             <div className='vote_user_list'>
                             {
                                 voteList.map((data, index)=>(
                                     myid==data.userid?
                                     <div className='vote_user_info'>
-                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                    <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
                                     <div>{data.usernick}</div>
                                 </div>:<div className='vote_user_info'>
-                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
+                                    <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                     <div>{data.usernick}</div>
                                 </div>
                                 ))
@@ -658,7 +661,7 @@ const Chatting = () => {
                         <form className={`schedule_voting ${data.user_vote}`} onSubmit={setScheduleVote}>
                             <div className='voting_box'>
                                 <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id});setVoteState(1);}}>참여</button>
+                                <button className='yes_btn vote_btn' type='submit' name='vote' onClick={()=>{setVoteForm({vote_value:1, schedule_id: data.schedule_id}); setVoteState(1);}}>참여</button>
                             </div>
                             <div className='voting_box'>
                                 <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
@@ -691,8 +694,8 @@ const Chatting = () => {
                                     <div className='schedule_voting'>
                                         <div className='end_vote'>
                                             <div>
-                                                <div className='vote_yes_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 1)}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
-                                                <div className='vote_no_user vote_user' onClick={()=>setDefaultVote(data.schedule_id, 0)}><IoPerson size="15px" ></IoPerson >{data.no}</div>
+                                                <div className='vote_yes_user vote_user' onClick={()=>{setDefaultVote(data.schedule_id, 1); setVoteState(1); }}><IoPerson size="15px" ></IoPerson >{data.yes}</div>
+                                                <div className='vote_no_user vote_user' onClick={()=>{setDefaultVote(data.schedule_id, 0); setVoteState(2);}}><IoPerson size="15px" ></IoPerson >{data.no}</div>
                                             </div>
                                             <div className='voting_box'>
                                                 <button>투표종료</button>
@@ -728,11 +731,11 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
+                                        <div className='chat_profile'><CustomImage  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><img  src={`http://localhost:9988/${data.image_url}`}/></div>
+                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><CustomImage  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >

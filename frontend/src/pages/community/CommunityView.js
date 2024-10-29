@@ -106,7 +106,9 @@ function CommunityView(){
     const handleEdit = () => {
         navigate(`/community/CommunityEdit/${community_no}`); // 수정 페이지로 이동
     };
-
+    function defaultCommunity(){
+        navigate("/community");
+    }
     useEffect(() => {
         // 페이지가 처음 로드될 때만 실행되도록 조건 설정
         if (isInitialRender.current) {
@@ -274,34 +276,6 @@ function CommunityView(){
         }
     };
 
-    // // 댓글에 좋아요 처리
-    // const handleLikeComment = (comment_no) => {
-    //     axios.post(`http://localhost:9988/community/comments/like/${comment_no}`)
-    //         .then(() => {
-    //             setLikes({ ...likes, [comment_no]: likes[comment_no] + 1 });
-    //         })
-    //         .catch(error => {
-    //             console.error("Error liking comment:", error);
-    //         });
-    // };
-
-    // useEffect(() => {
-
-    //     // 댓글별 대댓글 가져오기
-    //     comments.forEach(comment => {
-    //         axios.get(`http://localhost:9988/community/comments/reply/${comment.comment_no}`)
-    //             .then(response => {
-    //                 setReplies(prevReplies => ({
-    //                     ...prevReplies,
-    //                     [comment.comment_no]: response.data
-    //                 }));
-    //             })
-    //             .catch(error => {
-    //                 console.error(`Error fetching replies for comment ${comment.comment_no}:`, error);    
-    //             });
-    //     });
-    // }, [comments]);
-
     const handleReplyChange = (e) => {
         setReplyText(e.target.value);
     };
@@ -369,13 +343,11 @@ function CommunityView(){
         commentInput.current[x][y].style.display = 'none';
     }
 
-    function openReport(e){{/* 신고 기능 */}
-        const id = e.target.dataset.id;
-        const userid = e.target.dataset.userid;
-        const content = e.target.dataset.content;
+    function openReport(id, userid, content){{/* 신고 기능 */}
+        console.log(id, userid, content);
         setReport({
             report_tblname: 2, // 본인 테이블에 따라 다름
-            report_tblno:  id, // 이건 uuid값이 아니라 id로 수정해야함
+            report_tblno: id, // 이건 uuid값이 아니라 id로 수정해야함
             reported_userid: userid, // 피신고자id
             report_content: content,// 피신고자의 채팅 내용
         })
@@ -505,16 +477,13 @@ function CommunityView(){
                             <>
                                 <input type="button" 
                                 value={community.follow==1?'following':'follow'}
-                                 className="action_button" 
+                                 className={`action_button ${community.follow == 1 ? 'following' : 'follow'}`}
                                  onClick={()=>{toggleFollow(community)}}  
                                  />
                                 <button 
                                     className="report_button" 
                                     title="신고"
-                                    onClick={(e) => openReport(e)} 
-                                    data-id={community.community_no}
-                                    data-userid={community.userid}
-                                    data-content={community.community_title}
+                                    onClick={() => openReport(community.community_no, community.userid, community.community_title)} 
                                 >
                                     <AiOutlineAlert style={{ fontSize: '20px', color: '#f44336' }} />
                                 </button>
@@ -527,6 +496,7 @@ function CommunityView(){
                         toggleReport={toggleReport} // 모달창 열고닫기 함수
                         report={report}// 신고 데이터 변수
                         setReport={setReport} // 신고 데이터 변수 세팅
+                        setDefaultList={defaultCommunity}
                     />
                 </div> 
                 <hr/>
@@ -568,7 +538,7 @@ function CommunityView(){
                 </div>  
 
                 <div className="comments_section">
-                    {loggedInUserId !== null && (
+                    {loggedInUserId && (
                         <>
                             {/* <h3>댓글 ({commentCount})</h3> */}
                             <form onSubmit={handleCommentSubmit} className="comment_form">
@@ -616,7 +586,11 @@ function CommunityView(){
                                         </div>
                                     <div className="comment_content">{comment.comment_content}</div>
                                     <div className="comment_info">
+                                    {loggedInUserId && (
+                                        <>
                                         <button onClick={()=>showCommentInput(i, 0)} className="recomment">답글</button>
+                                        </>
+                                    )}
                                         {
                                             comment.reply_cnt!=0&&(
                                                 <button  className="reply_open" onClick={() => {toggleReplies(comment.comment_no); removeShowBtn(i)}} 
@@ -651,13 +625,14 @@ function CommunityView(){
                                                 <div  className="reply_item">
                                                     <div className="comment_top">
                                                         <div className="comment_user">
+                                                        <span className="nieun">ㄴ </span>
                                                         {myid==reply.userid?
-                                             <Link to="/mypage">
-                                             <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
-                                             </Link>:
-                                            <Link to={`/user/info/${comment.usernick}`}>
-                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
-                                            </Link>
+                                                            <Link to="/mypage">
+                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            </Link>:
+                                                            <Link to={`/user/info/${comment.usernick}`}>
+                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            </Link>
                                         }
                                                             <p className="comment_writer_name">{reply.usernick}</p>
                                                         </div>
@@ -675,8 +650,12 @@ function CommunityView(){
                                                     </div>
                                                     <div className="comment_content"><span className="tag">{reply.tag_usernick!=null?`@${reply.tag_usernick}`:""}</span>{reply.reply_content}</div>
                                                         <div className="comment_info">
-                                                        <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
-                                                        </div>
+                                                        {loggedInUserId && (
+                                                            <>
+                                                                <div onClick={()=>showCommentInput(i, j+1)}>답글</div>
+                                                            </>
+                                                        )}        
+                                                    </div>
                                                 </div>
                                                 <form className="comment_input" onSubmit={(e) => {
                                                     e.preventDefault();

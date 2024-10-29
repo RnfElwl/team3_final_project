@@ -66,8 +66,9 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: default;
 }
-#userinfo>.information input{
+#userinfo>.information input, .leave-button input{
     font-size: 13px;
     padding: 10px;
     /* width: calc(70% - 22px); */
@@ -113,13 +114,31 @@
 .modal-backdrop{
     background-color: rgba(0, 0, 0, 0.7);
 }
-.editInfo .modal-content{
+.leave-button .modal-backdrop{
+    display: flex;
+    align-items: center;
+}
+.editInfo .modal-content, .leave-button .modal-content{
     background-color: #252525;
     max-width: 550px;
     width: 100% !important;
     margin : 0 auto;
     overflow: hidden;
     color : white;
+}
+.leave-button .modal-content{
+    border-radius: 10px;
+    align-items: center;
+    max-width: 350px;
+    padding : 20px;
+}
+.withdrawuser{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.withdrawuser input{
+    margin: 10px 0;
 }
 .changepwd{
     padding: 10px 20px 0;

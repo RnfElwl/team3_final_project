@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ict.backend.dao.EventDAO">
+
+    <select id="selectEventList">
+        select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl
+    </select>
+    <select id="selectNoticeList">
+        select * from event_notice_tbl
+    </select>
+    <select id="selectEventPage">
+        select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl where event_no=${param1}
+    </select>
+    <select id="selectNoticePage">
+        select * from event_notice_tbl where notice_no=${param1}
+    </select>
+    <update id="updatePointMinus">
+        update user_tbl set user_point=user_point-${param2} where userid=#{param1}
+    </update>
+    <update id="updatePointAdd">
+        update user_tbl set user_point=user_point+${param2} where userid=#{param1}
+    </update>
+    <insert id="insertFirstCome">
+        insert into event_first_come(userid, event_no) values(#{param1}, ${param2})
+    </insert>
+    <select id="selectEventTenCheck">
+        select exists (select 1 from event_first_come where event_no=${parma1} group by event_no having count(event_no)&gt;=10)
+    </select>
+    <select id="selectEventUserCheck">
+        select exists(select 1 from event_first_come where userid=#{param2} and event_no=${param1});
+    </select>
+</mapper>

@@ -27,10 +27,11 @@ public class JoinServiceImpl implements JoinService {
 
         MemberVO memberVO = new MemberVO();
         memberVO.setUserid(joinDTO.getUserid());
-
-        // 비밀번호 암호화
-        String encodedPassword = bCryptPasswordEncoder.encode(joinDTO.getUserpwd());
-        memberVO.setUserpwd(encodedPassword);  // 암호화된 비밀번호 저장
+        if(joinDTO.getUser_social() == null) {
+            // 비밀번호 암호화
+            String encodedPassword = bCryptPasswordEncoder.encode(joinDTO.getUserpwd());
+            memberVO.setUserpwd(encodedPassword);  // 암호화된 비밀번호 저장
+        }
         //memberVO.setRole("ROLE_USER");
         memberVO.setUsername(joinDTO.getUsername());
         memberVO.setUsertel(joinDTO.getUsertel());
@@ -42,6 +43,8 @@ public class JoinServiceImpl implements JoinService {
         memberVO.setUserbirth(joinDTO.getUserbirth());
         memberVO.setUseremail(joinDTO.getUseremail());
         memberVO.setGender(joinDTO.getGender());
+
+        memberVO.setUser_social(joinDTO.getUser_social());
 
         System.out.println(memberVO);
         // DAO를 통해 데이터베이스에 저장

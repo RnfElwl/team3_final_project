@@ -149,7 +149,7 @@
     </update>
     <select id="getMemList" resultType="com.ict.backend.vo.MemberVO">
         select userid, username, usernick, gender,usertel, u.active_state,
-        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate
+        count(case when r.active_state = 1 then r.reported_userid end) as 'reported_count',lastvisite,regiserdate,user_point
         from user_tbl u left join report_tbl r on u.userid=r.reported_userid
         <if test="searchWord!=null and searchWord!=''">
             where ${searchKey} like '%${searchWord}%'
@@ -184,12 +184,22 @@
         b.stop_banDate,
         u.active_state;
     </select>
+    <update id="updateBanDateWrite">
+        update ban_tbl set
+        start_banDate = #{start_banDate},
+        stop_banDate = #{stop_banDate},
+        banContent=#{banContent},
+        editBanDate = now()
+        where userid = #{userid}
+    </update>
     <select id="getRepList" resultType="com.ict.backend.vo.ReportVO">
         select report_no,report_userid, reported_userid, report_content, report_tblname,
-        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid from report_tbl
+        report_date, report_type, report_reason, edit_date,edit_state,edit_user,active_state,report_tblno,report_tbluuid
+        from report_tbl
         <if test="searchWord!=null and searchWord!=''">
-            AND ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+            where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
         </if>
+        ORDER BY report_no desc
     </select>
     <select id="getRepView" resultType="com.ict.backend.vo.ReportVO">
         select report_no,report_userid, reported_userid, report_content, report_tblname, report_date,
@@ -197,10 +207,29 @@
         from report_tbl where report_no=${report_no}
     </select>
     <select id="getBanData" resultType="com.ict.backend.vo.BanVO">
-        select userid, start_banDate, stop_banDate, banContent, editBanDate
-        from ban_tbl where userid=#{reported_userid}
+        SELECT
+        b.userid,
+        b.start_banDate,
+        b.stop_banDate,
+        b.banContent,
+        b.editBanDate,
+        GROUP_CONCAT(r.report_type) AS report_types
+        FROM
+        ban_tbl b
+        JOIN
+        report_tbl r ON b.userid = r.reported_userid
+        WHERE
+        r.reported_userid = #{reported_userid}
+        GROUP BY
+        b.userid, b.start_banDate, b.stop_banDate, b.banContent, b.editBanDate;
     </select>
-
+    <update id="deleteBanHistory">
+        delete from ban_tbl
+        WHERE userid IN
+        <foreach item="useridd" collection="userids" open="(" separator="," close=")">
+            #{useridd}
+        </foreach>
+    </update>
     <update id="updateUserReport">
         update report_tbl
         set edit_user = #{edit_user},
@@ -224,7 +253,6 @@
         editBanDate=now()
         where userid=#{userid}
     </update>
-
     <update id="updateMemActive">
         UPDATE user_tbl
         SET active_state = #{activeState}
@@ -244,7 +272,6 @@
         COUNT(cl.community_no) AS community_like, c.community_writedate, c.hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state, c.category, c.privacy
         FROM community_tbl c LEFT JOIN community_like_tbl cl ON c.community_no = cl.community_no
-
         <where>
             <if test="searchKey==null and searchKey=='' and searchWord == null and searchWord == ''">
                 1=1
@@ -253,17 +280,18 @@
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
                 c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
+        </where>
 
 <!--            <if test="activeStateChk != null and activeStateChk != ''">-->
 <!--                ${activeStateChk} like CONCAT('%', #{stateChk}, '%')-->
 <!--            </if>-->
-        </where>
+
 
         GROUP BY c.community_no, c.userid, c.community_title, c.community_content,
         c.community_writedate, c.hit, c.edit_date,
         c.edit_state, c.edit_user, c.active_state,
         c.category, c.privacy
-        LIMIT #{onePageRecord} OFFSET #{offset}
+        LIMIT ${onePageRecord} OFFSET ${offset}
     </select>
 
     <select id="getTotalComRecord" resultType="int">
@@ -276,9 +304,9 @@
         SELECT c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
         COUNT(rc.userid) AS reply_cnt, c.edit_date, c.edit_user, c.active_state
         FROM community_comment_tbl c
-        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no  -- LEFT JOIN을 사용
+        LEFT JOIN reply_comment_tbl rc ON c.comment_no = rc.comment_no
             <if test="searchKey != null and searchKey != '' and searchWord != null and searchWord != ''">
-                where ${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
+                where c.${searchKey} LIKE CONCAT('%', #{searchWord}, '%')
             </if>
         GROUP BY c.comment_no, c.userid, c.community_no, c.comment_content, c.comment_writedate, c.comment_hit,
         c.edit_date, c.edit_state, c.edit_user, c.active_state
@@ -337,6 +365,34 @@
             #{replyNo}
         </foreach>
     </update>
+    <insert id="insertNotice">
+        insert event_notice_tbl(notice_title, notice_content, write_date, active_state,userid)
+        values(#{notice_title},#{notice_content},now(),#{active_state},#{userid})
+    </insert>
+    <select id="selectAdminNoticeList" resultType="com.ict.backend.vo.NoticeVO">
+        select * from event_notice_tbl
+        <if test="searchKey=='notice_title'">
+            where notice_title like '%${searchWord}%'
+        </if>
+        <if test="searchKey!='notice_title'">
+            where ${searchKey} like '%${searchWord}%'
+        </if>
+    </select>
+    <select id="getNotice" resultType="com.ict.backend.vo.NoticeVO">
+        select * from event_notice_tbl where notice_no=${no}
+    </select>
+    <update id="updateNotice">
+        update event_notice_tbl set notice_title=#{notice_title}, notice_content=#{notice_content},
+        write_date=#{write_date}, active_state=${active_state} where notice_no=${notice_no}
+    </update>
+    <update id="updateNoticeActive">
+        UPDATE event_notice_tbl
+        SET active_state = ${param1}
+        WHERE notice_no IN
+        <foreach item="no" collection="notice_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </update>
     <select id="selectAdminMovieList" resultType="com.ict.backend.vo.MovieVO">
         select * from movie_data_tbl
         <if test="searchKey=='movie_title'">
@@ -361,4 +417,83 @@
         movie_casts=#{movie_casts}, edit_user=#{edit_user}
         where movie_no=${movie_no}
     </update>
+    <select id="selectAdminEventList" resultType="com.ict.backend.vo.EventVO">
+        SELECT
+        e.event_no,
+        event_title,
+        event_thumnail,
+        event_content,
+        DATE_FORMAT(event_writedate, '%Y-%m-%d %H:%i') AS event_writedate,
+        DATE_FORMAT(event_startdate, '%Y-%m-%d') AS event_startdate,
+        DATE_FORMAT(event_lastdate, '%Y-%m-%d') AS event_lastdate,
+        event_active_state,
+        event_editer,
+        event_point,
+        COUNT(f.userid) AS user_count
+        FROM
+        event_tbl e
+        LEFT JOIN
+        event_first_come f ON e.event_no = f.event_no
+        <where>
+            <if test="searchKey=='event_title'">
+                event_title LIKE '%${searchWord}%'
+            </if>
+            <if test="searchKey!='event_title'">
+                AND ${searchKey} LIKE '%${searchWord}%'
+            </if>
+        </where>
+        GROUP BY
+        e.event_no,
+        event_title,
+        event_thumnail,
+        event_content,
+        event_writedate,
+        event_startdate,
+        event_lastdate,
+        event_active_state,
+        event_editer,
+        event_point
+    </select>
+    <insert id="insertEvent">
+        INSERT INTO event_tbl (
+        event_title, event_thumnail, event_content, event_writedate,
+        event_startdate, event_lastdate, event_active_state, event_editer, event_point
+        ) VALUES (
+        #{event_title}, #{event_thumnail}, #{event_content}, NOW(),
+        #{event_startdate}, #{event_lastdate}, #{event_active_state}, #{event_editer}, #{event_point}
+        )
+    </insert>
+    <select id="getEvent" resultType="com.ict.backend.vo.EventVO">
+        select * from event_tbl where event_no=${no}
+    </select>
+    <update id="updateEventData">
+            UPDATE event_tbl
+            SET
+            event_title = #{event_title},
+            event_thumnail = #{event_thumnail},
+            event_content = #{event_content},
+            event_startdate = #{event_startdate},
+            event_lastdate = #{event_lastdate},
+            event_active_state = #{event_active_state},
+            event_editer = #{event_editer},
+            event_point = #{event_point}
+            WHERE
+            event_no = #{event_no}
+    </update>
+    <update id="updateEventActive">
+        UPDATE event_tbl
+        SET event_active_state = ${param1},
+        event_editer=#{param3}
+        WHERE event_no IN
+        <foreach item="no" collection="event_no" open="(" separator="," close=")">
+            #{no}
+        </foreach>
+    </update>
+    <select id="selectEventMemList" resultType="com.ict.backend.vo.EventFCVO">
+        SELECT efc.userid
+        FROM event_tbl et
+        JOIN event_first_come efc ON et.event_no = efc.event_no
+        WHERE efc.event_no=${event_no}
+        ORDER BY efc.click_date ASC
+    </select>
 </mapper>

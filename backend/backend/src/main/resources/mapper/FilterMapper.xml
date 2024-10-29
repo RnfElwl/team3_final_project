@@ -45,7 +45,7 @@
                     DESC
                 </otherwise>
             </choose>
-        limit 10 offset ${offset};
+        limit 5 offset ${offset};
     </select>
 
     <select id="CommunityFilterCount" resultType="int">
@@ -107,7 +107,7 @@
                 DESC
             </otherwise>
         </choose>
-        limit 10 offset ${offset};
+        limit 5 offset ${offset};
     </select>
 
     <select id="CommunityLikeFilterCount" resultType="int">
@@ -165,7 +165,7 @@
                 DESC
             </otherwise>
         </choose>
-        limit 10 offset ${offset};
+        limit 5 offset ${offset};
     </select>
     <select id = "MovieFilterCount" resultType="int">
         SELECT count(*)
@@ -219,7 +219,7 @@
                 DESC
             </otherwise>
         </choose>
-        limit 10 offset ${offset};
+        limit 5 offset ${offset};
     </select>
 
     <select id ="QnAFilterCount" resultType="int">

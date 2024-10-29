@@ -6,6 +6,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@fortawesome/fontawesome-free/css/all.css';
+import HideEventMove from '../../component/HideEventMove';
 
 function CommunityWrite() {
     const navigate = useNavigate();
@@ -241,6 +242,7 @@ function CommunityWrite() {
                     <button onClick={handleSubmit} className="share-button">공유</button>
                 </div>
             </div>
+            <HideEventMove/>
         </div>
     );
 }

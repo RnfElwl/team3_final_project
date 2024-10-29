@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ict.backend.dao.OttDAO">
+
+    <!-- movie_code로 movie_no 가져오기-->
+    <select id="getMovieNoByCode" parameterType="String" resultType="int">
+        SELECT movie_no
+        FROM movie_data_tbl
+        WHERE movie_code = #{movieCode}
+    </select>
+
+
+    <select id="getOttInfoByMovieNo" parameterType="int" resultType="OttVO">
+        SELECT
+        mo.movie_no,
+        o.ott_code,
+        o.ott_name,
+        o.ott_url,
+        o.ott_logo_url
+        FROM
+        movie_ott_tbl mo
+        JOIN
+        ott_info_tbl o ON mo.ott_code = o.ott_code
+        WHERE
+        mo.movie_no = #{movieNo}
+    </select>
+</mapper>

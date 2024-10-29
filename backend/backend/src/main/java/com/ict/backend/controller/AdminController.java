@@ -107,7 +107,6 @@ public class AdminController {
         return adminService.comSearch(dateList);
     }
 
-    //멤버목록 확인
     @GetMapping("/mem_dashboard")
     public List<MemberVO> getMemberList() {
         List<MemberVO> result = adminService.selectMemberMin();
@@ -183,6 +182,20 @@ public class AdminController {
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
+    @PostMapping("/banMemActiveEdit")
+    public int banMemActiveEdit(
+            @RequestParam("active_state") Integer activeState,
+            @RequestParam("userid") List<String> userids) {
+        System.out.println("Active State: " + activeState);
+        System.out.println("UserIds: " + userids);
+
+        int updatedCount =  adminService.updateMemActive(activeState, userids);
+
+        if(activeState==1){
+            adminService.deleteBanHistory(userids);
+        }
+        return updatedCount;
+    }
 
     //Report Management Part
     @GetMapping("/repList")
@@ -196,7 +209,6 @@ public class AdminController {
     }
     @GetMapping("/getReport/{report_no}")
     public ResponseEntity<List<ReportVO>> getRep(@PathVariable int report_no){
-
         List<ReportVO> reportList=adminService.getRepView(report_no);
         return new ResponseEntity<>(reportList, HttpStatus.OK);
     }
@@ -205,30 +217,60 @@ public class AdminController {
         List<BanVO> BanList=adminService.getBanData(reported_userid);
         return new ResponseEntity<>(BanList, HttpStatus.OK);
     }
+//    정지 기간 수정
+    @PostMapping("/editBanDate")
+    public int editBanDates(@RequestBody BanVO banData){
+        int updateBanCnt= adminService.updateBanDateWrite(banData);
+
+        return updateBanCnt;
+    }
 
     //Community Management Part
     @GetMapping("/comList")
     public ResponseEntity<Map<String, Object>> ComList(@ModelAttribute PagingVO pagingVO){
-        List<CommunityVO> result=adminService.getComList(pagingVO);
-        List<CommentVO> resultCo=adminService.getComMenList(pagingVO);
-        List<CommentReplyVO> resultre=adminService.getReplyList(pagingVO);
-        int comTotalPages = adminService.getTotalComRecord(pagingVO);
-        int comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
-        int comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
-        System.out.println("Input: " + pagingVO);
-        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
-        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
-
-
-
+        System.out.println(pagingVO.toString());
         Map<String, Object> resultMap = new HashMap<>();
+        int comTotalPages =0;
+        int comMenTotalPages =0;
+        int comReplyTotalPages =0;
+        if(pagingVO.getTabActive()==1){
+        List<CommunityVO> result=adminService.getComList(pagingVO);
         resultMap.put("comList", result);
+            comTotalPages = adminService.getTotalComRecord(pagingVO);
+        }
+        else if(pagingVO.getTabActive()==2) {
+            List<CommentVO> resultCo = adminService.getComMenList(pagingVO);
+            resultMap.put("comMenList", resultCo);
+            comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
+        }
+        else if(pagingVO.getTabActive()==3) {
+            List<CommentReplyVO> resultre = adminService.getReplyList(pagingVO);
+            resultMap.put("replyList", resultre);
+            comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
+        }
+        else{
+            List<CommunityVO> result=adminService.getComList(pagingVO);
+            resultMap.put("comList", result);
+            List<CommentVO> resultCo = adminService.getComMenList(pagingVO);
+            resultMap.put("comMenList", resultCo);
+            List<CommentReplyVO> resultre = adminService.getReplyList(pagingVO);
+            resultMap.put("replyList", resultre);
+            comTotalPages = adminService.getTotalComRecord(pagingVO);
+            comMenTotalPages=adminService.getTotalComMenRecord(pagingVO);
+            comReplyTotalPages=adminService.getTotalComRepRecord(pagingVO);
+        }
+
+//        System.out.println("Input: " + pagingVO);
+//        System.out.println("Search Key: " + pagingVO.getSearchKey());  // Log check
+//        System.out.println("Search Word: " + pagingVO.getSearchWord());  // Log check
+
+
+
+
         resultMap.put("comTotalPages", comTotalPages);
-        resultMap.put("comMenList",resultCo);
         resultMap.put("comMenTotalPages",comMenTotalPages);
-        resultMap.put("replyList",resultre);
         resultMap.put("comRepTotalPages",comReplyTotalPages);
-        System.out.println("Result: " + resultMap);
+//        System.out.println("Result: " + resultMap);
 
         return new ResponseEntity<>(resultMap,HttpStatus.OK);
     }
@@ -309,9 +351,45 @@ public class AdminController {
 
         return updateCnt;
     }
+    //Notice Management Part
+    @PostMapping("/notice/write")
+    public int noticeWrite(@RequestBody NoticeVO noticeVO){
+        System.out.println(noticeVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        noticeVO.setUserid(userid);
+        noticeVO.setActive_state(1);
 
+        return adminService.insertNotice(noticeVO);
+    }
+    @GetMapping("/noticeList")
+    public ResponseEntity<List<NoticeVO>> selectAdminNoticeList(NoticeVO qnoVO){
+        System.out.println(qnoVO.toString());
+        List<NoticeVO> qNoticeList=adminService.selectAdminNoticeList(qnoVO);
+        return new ResponseEntity<>(qNoticeList, HttpStatus.OK);
+    }
+    @GetMapping("/notice/{no}")
+    public List<NoticeVO> selectNotice(@PathVariable("no") int no){
+        System.out.println(no);
+        return adminService.getNotice(no);
+    }
+    @PostMapping("/notice/edit")
+    public int noticeEdit(@RequestBody NoticeVO noticeVO){
+        System.out.println(noticeVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        noticeVO.setUserid(userid);
+        noticeVO.setActive_state(2);
+
+        return adminService.updateNotice(noticeVO);
+    }
+    @PostMapping("/noticeActiveEdit")
+    public int noticeActiveEdit(@RequestParam Integer active_state, @RequestParam List<Integer> notice_no) {
+        System.out.println("Active State: " + active_state);
+        System.out.println("Mem userid: " + notice_no);
+        return adminService.updateNoticeActive(active_state, notice_no);
+    }
     @GetMapping("/movieList")
     public ResponseEntity<List<MovieVO>> selectAdminMovieList(MovieVO movieVO){
+        System.out.println("데이터");
         System.out.println(movieVO.toString());
         List<MovieVO> movieList = adminService.selectAdminMovieList(movieVO);
         return new ResponseEntity<>(movieList, HttpStatus.OK);
@@ -329,5 +407,46 @@ public class AdminController {
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         movieVO.setEdit_user(userid);
         return adminService.updateMovieData(movieVO);
+    }
+    @GetMapping("/eventList")
+    public ResponseEntity<List<EventVO>> selectEventList(EventVO eventVO){
+        List<EventVO> eventList=adminService.selectAdminEventList(eventVO);
+
+        return new ResponseEntity<>(eventList,HttpStatus.OK);
+    }
+    @GetMapping("/eventInMem/{no}")
+    public List<EventFCVO> selectEventMem(@PathVariable("no")int event_no){
+        List<EventFCVO> eventMemList=adminService.selectEventMemList(event_no);
+
+        return eventMemList;
+    }
+    @PostMapping("/event/write")
+    public int eventWrite(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        eventVO.setEvent_editer(userid);
+        eventVO.setEvent_active_state(1);
+
+        return adminService.insertEvent(eventVO);
+    }
+    @GetMapping("/event/{no}")
+    public List<EventVO> selectEvent(@PathVariable("no") int no){
+        System.out.println(no);
+        return adminService.getEvent(no);
+    }
+    @PostMapping("/event/edit")
+    public int eventDataUpdate(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        eventVO.setEvent_editer(userid);
+        eventVO.setEvent_active_state(2);
+        return adminService.updateEventData(eventVO);
+    }
+    @PostMapping("/eventActiveEdit")
+    public int eventActiveEdit(@RequestParam Integer event_active_state, @RequestParam List<Integer> event_no) {
+        System.out.println("Active State: " + event_active_state);
+        System.out.println("event_no: " + event_no);
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return adminService.updateEventActive(event_active_state, event_no, userid);
     }
 }

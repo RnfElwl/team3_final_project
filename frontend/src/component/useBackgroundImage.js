@@ -34,6 +34,8 @@ function useBackgroundImage() {
       // root에 이미지 추가
       const root = document.getElementById('root');
       const img = document.createElement('img');
+      const event = document.querySelector('.event_move');
+      console.log(event);
       img.src = backimage;  // 이미지 경로 설정
       img.className = 'login-background';
       root.appendChild(img);
@@ -43,6 +45,9 @@ function useBackgroundImage() {
       if (headerElement) {
         headerElement.style.transition = 'background-color 0.5s ease, color 0.5s ease';
         headerElement.style.backgroundColor = 'transparent';  // 이미지가 있을 때 투명하게 설정
+      }
+      if (event) {
+        event.style.display = 'none';  // display none 적용
       }
 
       return () => {
@@ -55,6 +60,9 @@ function useBackgroundImage() {
         // 헤더 배경색 복구
         if (headerElement) {
           headerElement.style.backgroundColor = '#1C1C20';  // 이미지가 없을 때 배경색 복구
+        }
+        if (event) {
+          event.style.display = 'flex';  // 원래대로 복구
         }
       };
     }

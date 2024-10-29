@@ -4,6 +4,7 @@ import '../../css/mypage/signup.css';
 import Modal from '../../component/api/Modal';
 import DaumPostcode from "react-daum-postcode";
 import Masonry from "react-masonry-css";
+import HideEventMove from '../../component/HideEventMove';
 
 function Signup() {
     const [step, setStep] = useState(1);
@@ -233,7 +234,7 @@ function Signup() {
                 );
                 //console.log("Processed Images:", processedImages);
                 setImages(processedImages);
-                setLoading(false); // 이미지 로드 완료 후 로딩 상태 변경
+                setLoading(false); // 이미지 로드 완료 후 로딩 상태 변경 바꿔야함
                 // setImages(response.data);
             } catch (error) {
                 console.error('이미지 불러오기 중 오류 발생:', error);
@@ -287,167 +288,176 @@ function Signup() {
     };
 
     return (
-        <div className="signup-background" style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}>
-             {loading ? (
-                <div className="loading-overlay">
-                    <div class="spinner-border text-info"></div>
+        <>
+        <HideEventMove />
+            {/* 로딩 중일 때 보여줄 로딩바 */}
+            {loading && (
+                <div className="loading-overlay" style={{
+                    zIndex: '9999', 
+                    position: 'fixed', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '100%', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                }}>
+                    <div className="spinner-border text-info"></div>
                 </div>
-            ) : (
-                <>
-            {/* Masonry 배경 */}
-            <Masonry
-                breakpointCols={breakpointColumnsObj}
-                className="masonry-grid-background"
-                columnClassName="masonry-grid-column-background"
-            >
-                {images.map((image, index) => (
-                <div key={index} className="background-image-container">
-                    
-                    <img
-                    src={image.srcurl}
-                    alt={`Background ${index}`}
-                    style={{
-                        width: '100%',
-                        height: 'auto',
-                        objectFit: 'cover',
-                        opacity: image.isBright ? 0.6 : 1 // 밝은 이미지의 경우 불투명도 낮춤
-                    }}
-                    />
-                </div>
-                ))}
-            </Masonry>
-             {/* 기존 Masonty */}
-            {/* <Masonry
-                breakpointCols={breakpointColumnsObj}
-                className="masonry-grid-background"
-                columnClassName="masonry-grid-column-background"
-            >
-                {images.map((image, index) => (
-                    <div key={index} className="background-image-container">
-                        <img src={image.src} alt={`Background ${index}`}
-                            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-                        />
-                    </div>
-                ))}
-            </Masonry> */}
-            <div className="signup">
-                <div className="container">
-                    <div className="signupinfo">
-                        <div className={`step-bar ${step === 2 ? 'step2' : step === 3 ? 'step3' : ''}`}>
-                            <span className="gradition-blue">스탭바</span>
-                        </div>
-                        <div id="userinfo">
-                            <form className='information' onSubmit={handleSubmit}>
-                                {step === 1 && (
-                                    <>
-                                        <div>
-                                            <div id="includetext">
-                                                <span>S#에서</span>
-                                                <span>영화를 추천!!</span>
-                                            </div>
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="text" name="userid" value={formData.userid} onChange={handleInputChange} onBlur={handleIdBlur} placeholder='아이디' />
-                                            {idCheckError && ( <div className="error-message" style={{ maxWidth : "208px" }}> {idCheckError} </div> )}
-                                            {idCheckSuccess && ( <div className="success-message" style={{ color: '#398e39' }}>사용 가능한 아이디입니다. </div> )} 
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="password" name="userpwd" value={formData.userpwd} onChange={handleInputChange} placeholder='비밀번호' />
-                                            {errors.userpwd && <div className="error-message">{errors.userpwd}</div>}
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} placeholder='비밀번호 확인' />
-                                            {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
-                                        </div>
-                                    </>
-                                )}
-                                {step === 2 && (
-                                    <>
-                                        <div>
-                                            <div id="includetext">
-                                                <span>개인정보</span>
-                                            </div>
-                                        </div>
-                                        <div className="inputclass" style={{ flexDirection: 'row' }}>
-                                            <input type="text" name="username" value={formData.username} onChange={handleInputChange} placeholder='이름' />
-                                            
-                                            <div className="gen">
-                                                <div className={`gender-option ${formData.gender === '1' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '1' })} >
-                                                    <label>남성</label>
-                                                </div>
-                                                <div className={`gender-option ${formData.gender === '2' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '2' })} >
-                                                    <label>여성</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {errors.username && <div className="error-message">{errors.username}</div>}
-                                        <div className="inputclass">
-                                            <input type="text" name="useremail" value={formData.useremail} onChange={handleInputChange} placeholder='이메일' />
-                                            {errors.useremail && <div className="error-message">{errors.useremail}</div>}
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="text" name="usernick" value={formData.usernick} onChange={handleInputChange} onBlur={handleNicknameBlur} placeholder='닉네임' />
-                                            {nickCheckError && (
-                                                <div className="error-message" style={{ color: '#ff6347', maxWidth : "256px" }}> {nickCheckError} </div>
-                                            )}
-                                            {nickCheckSuccess && (
-                                                <div className="success-message" style={{ color: '#398e39' }}> 사용 가능한 닉네임입니다. </div>
-                                            )}
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="text" name="usertel" value={formData.usertel} onChange={handleInputChange} placeholder='전화번호' />
-                                            {errors.usertel && <div className="error-message">{errors.usertel}</div>}
-                                        </div>
-                                        
-                                        <div hidden> 
-                                            <span>우편번호</span>  
-                                            <input type = "text" name = "zipcode" value = ""/> 
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="text" name="useraddr" value={formData.useraddr} onChange={handleInputChange}
-                                            onClick={() => setIsAddressModalOpen(true)} placeholder='주소' readOnly/>
-                                            {errors.useraddr && <div className="error-message">{errors.useraddr}</div>}
-                                        </div>
-                                        <div> 
-                                            <input  type="text" name="addrdetail" value={formData.addrdetail} onChange={handleInputChange} placeholder='상세주소'/>
-                                        </div>
-                                        <div className="inputclass">
-                                            <input type="text" name="userbirth" value={formData.userbirth} onChange={handleInputChange} placeholder='생년월일' />
-                                            {errors.userbirth && <div className="error-message">{errors.userbirth}</div>}
-                                        </div>
-                                    </>
-                                )}
-                                {step === 3 && (
-                                    <div className="completion-message">
-                                        <span>씬넘버에<br/>오신 걸 환영합니다!</span>
-                                        <div className="sub_button">
-                                            <button className="btn btn-primary" type="button" onClick={() => window.location.href = '/'}>홈으로</button>
-                                        </div>
-                                    </div>
-                                )}
-                                {step < 3 && (
-                                    <div className="sub_button">
-                                        <button className="btn btn-secondary" type="button" onClick={() => {
-                                            if (step === 1) {
-                                                window.history.back();
-                                            } else {
-                                                setStep(1);
-                                            }
-                                        }}>
-                                            {step === 1 ? '취소' : '이전'}
-                                        </button>
-                                        <button className="btn btn-primary" type="submit">
-                                            {step === 1 ? '다음' : '회원가입'}
-                                        </button>
-                                    </div>
-                                )}
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </>
             )}
+    
+            {/* 로딩이 완료된 후 보여줄 콘텐츠 */}
+            <div className="signup-background" style={{ 
+                opacity: loading ? 0 : 1, 
+                transition: 'opacity 1s ease-in-out' 
+            }}>
+                {!loading && (
+                    <>
+                    {/* Masonry 배경 */}
+                    <Masonry
+                        breakpointCols={breakpointColumnsObj}
+                        className="masonry-grid-background"
+                        columnClassName="masonry-grid-column-background"
+                    >
+                        {images.map((image, index) => (
+                        <div key={index} className="background-image-container">
+                            <img
+                            src={image.srcurl}
+                            alt={`Background ${index}`}
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                objectFit: 'cover',
+                                opacity: image.isBright ? 0.6 : 1
+                            }}
+                            />
+                        </div>
+                        ))}
+                    </Masonry>
+    
+                    <div className="signup">
+                        <div className="container">
+                            <div className="signupinfo">
+                                <div className={`step-bar ${step === 2 ? 'step2' : step === 3 ? 'step3' : ''}`}>
+                                    <span className="gradition-blue">스탭바</span>
+                                </div>
+                                <div id="userinfo">
+                                    <form className='information' onSubmit={handleSubmit}>
+                                        {step === 1 && (
+                                            <>
+                                                <div>
+                                                    <div id="includetext">
+                                                        <span>S#에서</span>
+                                                        <span>영화를 추천!!</span>
+                                                    </div>
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="text" name="userid" value={formData.userid} onChange={handleInputChange} onBlur={handleIdBlur} placeholder='아이디' />
+                                                    {idCheckError && ( <div className="error-message" style={{ maxWidth : "208px" }}> {idCheckError} </div> )}
+                                                    {idCheckSuccess && ( <div className="success-message" style={{ color: '#398e39' }}>사용 가능한 아이디입니다. </div> )} 
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="password" name="userpwd" value={formData.userpwd} onChange={handleInputChange} placeholder='비밀번호' />
+                                                    {errors.userpwd && <div className="error-message">{errors.userpwd}</div>}
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} placeholder='비밀번호 확인' />
+                                                    {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
+                                                </div>
+                                            </>
+                                        )}
+                                        {step === 2 && (
+                                            <>
+                                                <div>
+                                                    <div id="includetext">
+                                                        <span>개인정보</span>
+                                                    </div>
+                                                </div>
+                                                <div className="inputclass" style={{ flexDirection: 'row' }}>
+                                                    <input type="text" name="username" value={formData.username} onChange={handleInputChange} placeholder='이름' />
+                                                    
+                                                    <div className="gen">
+                                                        <div className={`gender-option ${formData.gender === '1' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '1' })} >
+                                                            <label>남성</label>
+                                                        </div>
+                                                        <div className={`gender-option ${formData.gender === '2' ? 'active' : ''}`} onClick={() => setFormData({ ...formData, gender: '2' })} >
+                                                            <label>여성</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {errors.username && <div className="error-message">{errors.username}</div>}
+                                                <div className="inputclass">
+                                                    <input type="text" name="useremail" value={formData.useremail} onChange={handleInputChange} placeholder='이메일' />
+                                                    {errors.useremail && <div className="error-message">{errors.useremail}</div>}
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="text" name="usernick" value={formData.usernick} onChange={handleInputChange} onBlur={handleNicknameBlur} placeholder='닉네임' />
+                                                    {nickCheckError && (
+                                                        <div className="error-message" style={{ color: '#ff6347', maxWidth : "256px" }}> {nickCheckError} </div>
+                                                    )}
+                                                    {nickCheckSuccess && (
+                                                        <div className="success-message" style={{ color: '#398e39' }}> 사용 가능한 닉네임입니다. </div>
+                                                    )}
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="text" name="usertel" value={formData.usertel} onChange={handleInputChange} placeholder='전화번호(000-0000-0000)' />
+                                                    {errors.usertel && <div className="error-message">{errors.usertel}</div>}
+                                                </div>
+                                                
+                                                <div hidden> 
+                                                    <span>우편번호</span>  
+                                                    <input type = "text" name = "zipcode" value = ""/> 
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="text" name="useraddr" value={formData.useraddr} onChange={handleInputChange}
+                                                    onClick={() => setIsAddressModalOpen(true)} placeholder='주소' readOnly/>
+                                                    {errors.useraddr && <div className="error-message">{errors.useraddr}</div>}
+                                                </div>
+                                                <div> 
+                                                    <input  type="text" name="addrdetail" value={formData.addrdetail} onChange={handleInputChange} placeholder='상세주소'/>
+                                                </div>
+                                                <div className="inputclass">
+                                                    <input type="text" name="userbirth" value={formData.userbirth} onChange={handleInputChange} placeholder='생년월일(YYYY.MM.DD)' />
+                                                    {errors.userbirth && <div className="error-message">{errors.userbirth}</div>}
+                                                </div>
+                                            </>
+                                        )}
+                                        {step === 3 && (
+                                            <div className="completion-message">
+                                                <span>씬넘버에<br/>오신 걸 환영합니다!</span>
+                                                <div className="sub_button">
+                                                    <button className="btn btn-primary" type="button" onClick={() => window.location.href = '/'}>홈으로</button>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {step < 3 && (
+                                            <div className="sub_button">
+                                                <button className="btn btn-secondary" type="button" onClick={() => {
+                                                    if (step === 1) {
+                                                        window.history.back();
+                                                    } else {
+                                                        setStep(1);
+                                                    }
+                                                }}>
+                                                    {step === 1 ? '취소' : '이전'}
+                                                </button>
+                                                <button className="btn btn-primary" type="submit">
+                                                    {step === 1 ? '다음' : '회원가입'}
+                                                </button>
+                                            </div>
+                                        )}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </>
+                )}
+                
+            </div>
+            
             {isAddressModalOpen && (
                 <Modal onClose={() => setIsAddressModalOpen(false)} title="" className = "addrmodal">
                     <DaumPostcode 
@@ -463,10 +473,11 @@ function Signup() {
                         outlineColor: "#ffffff", // 테두리 색상
                     }}
                         onComplete={handleAddressSelect}/>
-                    </Modal>
-                )}
-        </div>
+                </Modal>
+            )}
+        </>
     );
+    
 }
 
 export default Signup;

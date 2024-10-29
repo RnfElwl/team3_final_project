@@ -37,10 +37,6 @@
     background-color: #212529; /* Default row color */
 }
 
-.AdminRepTable input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-}
 
 .AdminRepTable tbody tr:hover {
     background-color: #495057; /* Hover color */
@@ -67,10 +63,46 @@
     background-color: #343a40;
 }
 .report_con_area{
-    height: 50px;
     max-width: 200px;
-    overflow-y: scroll;
     padding: 5px;
     margin: 0 auto;
     vertical-align: middle;
+}
+.AdminRepBody button{
+    width: 80px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    margin-right: 5px;
+    color: #f1f1f1;
+    text-align: center;
+}
+.AdminRepBody button:hover{
+    background-color: #48d1cdea;
+}
+.AdminRepBody input{
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    padding-left: 5px;
+    color: #f1f1f1;
+}
+.AdminRepBody select{
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    padding: 5px;
+    margin-right: 10px;
+    color: #f1f1f1;
+    appearance: none;
+    text-align: center;
 }

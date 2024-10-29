@@ -16,6 +16,7 @@
   color:white; 
 }
 .admin_navList{
+  top:60px;
   width: 200px;
   height: 100vh;
   position:fixed;
@@ -58,6 +59,42 @@
   color:white;
   text-align: center;
 }
+.adminBody select, .adminBody input{
+  width: 120px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+}
+
+.adminBody button{
+  width: 50px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  margin-left: 5px;
+  color: #f1f1f1;
+  text-align: center;
+}
+.adminBody button:hover{
+  background-color: #48d1cdea;
+}
+
+.adminBody input::-webkit-calendar-picker-indicator {
+  background: url(../../img/icons8.png);
+  background-repeat: no-repeat;
+  background-size: 17px;
+}
 .adminDashboard {
   max-width: 1730px;
   position: relative;
@@ -75,10 +112,14 @@
   min-height: 90px;
 }
 .minDataTitle{
-  background-color: gray;
+  background: #29292e;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 10px;
+  outline: 0 none;
+  color: #48d1cdea;
   margin: 0 10px;
   padding:5px;
-  border-radius: 2px;
   width: 300px;
   min-width:160px;
   white-space:nowrap;
@@ -133,11 +174,18 @@ canvas{
 }
 .simpBoardL{
   text-align: right;
+  cursor: pointer;
+  color:#48d1cdea;
 }
 .simpBoardT{
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+.simpBoardAnotherT{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
 }
 .memListTopBox{
   margin:10px 0;

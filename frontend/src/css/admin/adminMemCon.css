@@ -65,3 +65,48 @@
     color: #f8d7da;
     background-color: #343a40;
 }
+
+.AdminMemBody button{
+    width: 80px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    margin-right: 5px;
+    color: #f1f1f1;
+    text-align: center;
+  }
+  .AdminMemBody button:not(:disabled):hover{
+    background-color: #48d1cdea;
+  }
+  .AdminMemBody button:disabled{
+    background-color: none;
+  }
+
+  .AdminMemBody select{
+    width: 120px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: center;
+    margin-right: 5px;
+  }
+  .AdminMemBody input{
+    padding-left: 10px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+  }

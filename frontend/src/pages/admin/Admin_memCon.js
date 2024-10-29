@@ -34,10 +34,10 @@ function MemCon(){
         };
       };
 
-    const genderChk=(e)=>{
+    const activeChk=(e)=>{
         e.preventDefault();
         const searchValue=e.target.value;
-        setSearchKey('gender');
+        setSearchKey('u.active_state');
         setSearchWord(searchValue);   
     }
     const handlesearchKeyChange = (e) => { //검색키 처리
@@ -131,10 +131,11 @@ function MemCon(){
     <h3>멤버 관리</h3>
     <hr />
     <div>
-        멤버 필터 폼
         <div className="member-filterArea">
-            <button value='1' onClick={genderChk}>남</button>
-            <button value='2' onClick={genderChk}>여</button>
+            <button value={''} onClick={activeChk}>전체</button>
+            <button value={0} onClick={activeChk}>비활성</button>
+            <button value={1} onClick={activeChk}>활성</button>
+            <button value={2} onClick={activeChk}>정지</button>
 
             <div className="adminSearchForm">
                 <form onSubmit={handleSearchSubmit}>
@@ -184,6 +185,7 @@ function MemCon(){
                         <th>상태</th>
                         <th>가입일</th>
                         <th>신고 누적</th>
+                        <th>유저 pt</th>
                         <th>마지막 로그인</th>
                     </tr>
                 </thead>
@@ -208,6 +210,7 @@ function MemCon(){
                                 </td>
                                 <td>{item.regiserdate}</td>
                                 <td>{item.reported_count}</td>
+                                <td>{item.user_point}</td>
                                 <td>{item.lastvisite}</td>
                             </tr>
                         ))

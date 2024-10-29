@@ -61,7 +61,7 @@
 .page-container .nav-tabs .nav-link:hover {
     background-color: #48d1cd5e;
     color: white;
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
 }
 
 /* 활성화된 탭 스타일 */

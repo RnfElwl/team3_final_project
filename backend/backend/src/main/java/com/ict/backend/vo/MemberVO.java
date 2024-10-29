@@ -28,4 +28,6 @@ public class MemberVO {
     private int active_state;
     private int reported_count;
     private String lastvisite;
+    private int user_point;
+    private String user_social;
 }

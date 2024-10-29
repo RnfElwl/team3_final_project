@@ -66,3 +66,45 @@
     color: #f8d7da;
     background-color: #343a40;
 }
+
+.bannedMemBody button{
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    margin-left: 5px;
+    color: #f1f1f1;
+    text-align: center;
+}
+.bannedMemBody button:hover{
+    background-color: #48d1cdea;
+  }
+
+  .bannedMemBody select{
+    width: 120px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    margin-right: 5px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: center;
+  }
+  .bannedMemBody input{
+    padding-left: 10px;
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    margin-right: 5px;
+}

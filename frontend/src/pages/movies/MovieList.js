@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../component/api/axiosApi';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './../../css/movies/MovieList.css'; // CSS 파일을 임포트

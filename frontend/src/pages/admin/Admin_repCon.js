@@ -11,7 +11,24 @@ function RepCon(){
     const [searchKey, setSearchKey]=useState('report_userid');
     const [searchWord, setSearchWord]=useState('');
     const [checkedReps, setCheckedReps] = useState(new Array(report.length).fill(false));
-    //신고리스트 불러오기
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const [isCollapsed, setIsCollapsed] = useState(true); // 초기 상태를 접힌 상태로 설정
+    
+    const toggleCollapse = () => {
+        setIsCollapsed(!isCollapsed); // 버튼 클릭 시 상태 토글
+    };
+
+
+    //검색 처리
+    const handlesearchKeyChange = (e) => { //검색키 처리
+        e.preventDefault();
+        setSearchKey(e.target.value);
+    };
+    const handlesearchWordChange = (e) => { //검색 처리
+        e.preventDefault();
+        setSearchWord(e.target.value);
+    };
 
     //리스트 리로드 함수
     function reloadReportList() {
@@ -33,32 +50,40 @@ function RepCon(){
        //신고처리 팝업 창 열기
     const openAddReportAnsWindow = (report_no) => {
         console.log("넘긴 번호"+report_no);
-        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=300');
+        window.open(`http://localhost:3000/admin/repAns/${report_no}`, '_blank', 'width=600,height=400,top=200,left=200');
     };
     useEffect(() => {
         window.reloadReportList = reloadReportList;  // 전역 함수로 등록
     }, []);
 
-
-
-    //팝업 창으로 데이터 전송
-
-    
     
     return(
 
         <div className="AdminRepBody">
             <h3>신고 목록</h3>
-
+            <div>
+                <form>
+                    <select
+                        className="repSearchSelect"
+                        name="searchKey"
+                        value={searchKey}
+                        onChange={handlesearchKeyChange}>
+                        <option value="report_userid">신고자 ID</option>
+                        <option value="reported_userid">피신고자 ID</option>
+                        <option value="userid">신고된 글</option>
+                        <option value="report_content">신고 사유</option>
+                    </select>
+                    <input
+                        type="text"
+                        name="searchWord"
+                        className="repSearchWord"
+                        onChange={handlesearchWordChange}
+                        placeholder="Search..." />
+                </form>
+            </div>
             <table className="AdminRepTable">
                 <thead>
                     <tr>
-                        {/* <th>
-                            <input
-                            type="checkbox"
-                            checked={isAllRepChecked}
-                            onChange={handleAllRepChecked}/>
-                        </th> */}
                         <th>No.</th>
                         <th>신고자</th>
                         <th>피신고자</th>
@@ -78,19 +103,32 @@ function RepCon(){
                 {report && report.length > 0 ? (
                         report.map((item, index) => (
                     <tr key={index}>
-                        {/* <td>
-                        <input
-                            type="checkbox"
-                            checked={checkedReps[index]}
-                            value={item.report_no || ''}
-                            onChange={() => handleRepChecked(index)}/>
-                        </td> */}
                         <td>{item.report_no}</td>
                         <td>{item.report_userid}</td>
                         <td>{item.reported_userid}</td>
                         <td>
                             <div className="report_con_area">
-                                {item.report_content}
+                            {item.report_content.length > 20 ? (
+                                <>
+                                    <div>
+                                    {item.report_content.substring(0, 20)}
+                                    </div>
+                                    <button 
+                                    type="button" 
+                                    className="btn btn-primary" 
+                                    onClick={toggleCollapse} // 클릭 시 상태 토글
+                                    >
+                                    {isCollapsed ? "더보기" : "접기"} {/* 상태에 따라 버튼 텍스트 변경 */}
+                                    </button>
+                                    {!isCollapsed && ( // 상태가 false일 때만 전체 내용 표시
+                                    <div>
+                                        {item.report_content}
+                                    </div>
+                                    )}
+                                </>
+                                ) : (
+                                <div>{item.report_content}</div> // 20자 이하인 경우
+                                )}
                             </div>
                         </td>
                         <td>{item.report_type == 0? "욕설":
@@ -110,9 +148,9 @@ function RepCon(){
                         <td>{item.edit_state==0?(<button className="repAnswerModify-btn"
                                         onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리</button>)
                                     :(<button className="repAnswerAdd-btn"
-                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 처리 수정</button>)}</td>
+                                        onClick={(e)=>{e.preventDefault(); openAddReportAnsWindow(item.report_no);}}>신고 수정</button>)}</td>
                     </tr>)))
-                    :(<tr>검색한 내용을 포함한 신고내역이 존재하지 않습니다.</tr>)}
+                    :(<tr><td colSpan="13">검색한 내용을 포함한 신고내역이 존재하지 않습니다.</td></tr>)}
                 </tbody>
 
             </table>

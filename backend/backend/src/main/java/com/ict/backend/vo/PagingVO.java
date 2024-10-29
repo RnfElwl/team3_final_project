@@ -15,7 +15,8 @@ public class PagingVO {
     private String searchWord;//검색어
     private String activeStateChk;
     private Integer stateChk;
-
+    private String logId;
+    private int tabActive;
 
     public void setNowPage(int nowPage) {
         this.nowPage = nowPage;

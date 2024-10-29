@@ -1,0 +1,127 @@
+.noticeBody{
+    max-width: 1920px;
+    padding-top: 10px;
+    padding-left: 210px;
+    padding-right: 10px;
+    margin: 0 auto;
+    color:#f1f1f1;
+}
+.noticeBody .insert_form
+,.noticeBody .edit_form{
+    background-color: #1C1C20;
+    border-radius: 5px;
+    margin: 50px auto;
+    padding: 20px;
+    width: 60%;
+    min-width: 600px;
+    max-width: 800px;
+}
+.noticeBody .insert_form input[type="text"]
+,.noticeBody .edit_form input[type="text"]{
+    border-radius: 4px;
+    width: 100%;
+    height: 35px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+}
+.noticeBody .insert_form textarea,
+.noticeBody .edit_form textarea{
+    border-radius: 4px;
+    width: 100%;
+    min-height: 300px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    padding: 5px 30px 5px 10px;
+    border-radius: 4px;
+    outline: 0 none;
+    resize: none;
+    color: #f1f1f1;
+}
+
+.noticeBody .insert_form .formbtns,
+.noticeBody .edit_form .formbtns{
+    text-align: center;
+}
+
+.noticeBody .insert_form .formbtns button,
+.noticeBody .edit_form .formbtns button{
+    border-radius: 4px;
+    width: 150px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+}
+
+.noticeBody .adminSearchForm select,
+.noticeBody .active_box select{
+  width: 120px;
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  margin-left: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+}
+.noticeBody .adminSearchForm button,
+.noticeBody .active_box button{
+  height: 35px;
+  background: #1C1C20;
+  border: 1px solid #48d1cdea;
+  background-size: 20px;
+  border-radius: 4px;
+  outline: 0 none;
+  color: #f1f1f1;
+  margin-left: 10px;
+}
+
+.noticeBody .adminSearchForm input{
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+.noticeBody input[type="date"]{
+    height: 35px;
+    background: #1C1C20;
+    border: 1px solid #48d1cdea;
+    background-size: 20px;
+    border-radius: 4px;
+    outline: 0 none;
+    color: #f1f1f1;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+.noticeBody input::-webkit-calendar-picker-indicator {
+    background: url(../../img/icons8.png);
+    background-repeat: no-repeat;
+    background-size: 17px;
+  }
+
+.active_box{
+    margin-top: 10px;
+}
+
+
+

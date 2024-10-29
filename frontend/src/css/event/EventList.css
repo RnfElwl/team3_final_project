@@ -1,0 +1,151 @@
+.event_list{
+    max-width: 1200px;
+    min-width: 700px; 
+    margin: 0 auto;
+    background-color: #1C1C20; 
+    color: #f0f0f0;
+}
+
+/* notice */
+
+.event_list .notice{
+    max-width: 1200px;
+    min-width: 700px;
+    margin-top: 100px;
+}
+
+.event_list .noticeItem{
+    display: flex;
+    gap: 30px;
+    font-size: 18px;
+    border-bottom: 1px solid #999;
+    padding-top: 15px;
+    align-items: center;
+}
+
+.event_list .title {
+    flex-grow: 1; 
+}
+
+.event_list .write_date{
+    margin-left: auto; 
+    text-align: right;
+    color: #999;
+    font-size: 0.9em;
+}
+
+/* event */
+
+.event_list .event_count{
+    margin-top: 50px;
+    margin-left: 15px;
+}
+
+.event_list .list_top{
+    display: flex;
+    justify-content: space-between;
+}
+
+.event_list .sort{
+    margin-right: 10px;
+}
+
+.event_list .sort label {
+    padding: 10px;
+    cursor: pointer;
+    background: none; 
+    margin-right: 5px; 
+    color: #f0f0f0;
+}
+
+.event_list .sort label:hover{
+    color: #48d1cdea;  
+}
+
+.event_list .sort label.selected{
+    color: #48d1cdea; /* 체크된 라벨의 색상 */
+}
+
+.event_list .eventItem{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.event_list .event{
+    width: calc(33.33% - 10px); /* 전체 너비의 3분의 1에서 여백을 빼기 */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 10px; 
+}
+
+.event_list .event:hover{
+    transform: scale(1.05);
+} 
+
+.event_list .eventImg{
+    width: 100%;
+    height: 200px;
+    display: block;
+    object-fit: cover;
+}
+
+.event_list .event_info{
+    background-color: #f0f0f0;
+    color: #1C1C20;
+    padding: 10px;
+}
+
+.event_list .event_title{
+    font-weight: bold;
+    font-size: 20px;
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block; 
+    max-width: 100%; 
+}
+
+.event_list .bottom{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.event_list .status{
+    border-radius: 15px;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.status.preparing {
+    border: 2px solid tomato; /* 준비중일 때 토마토색 */
+    color: tomato; /* 텍스트 색상 흰색 */
+}
+
+.status.ongoing {
+    border: 2px solid #48d1cdea;
+    color: #48d1cdea; /* 진행중일 때 텍스트 색상 */
+}
+
+.status.closed {
+    border: 2px solid gray; /* 마감일 때 회색 */
+    color: gray; /* 텍스트 색상 흰색 */
+}
+
+.event_list .status_date {
+    color: #999;
+    font-size: 0.9em;
+    margin: 0;
+    padding-top: 5px;
+}
+
+.event_list .status p{
+    margin: 0; 
+    padding: 5px;
+}
