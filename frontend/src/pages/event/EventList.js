@@ -85,33 +85,33 @@ function EventList() {
         setTenCheck();
     }, [eventList]);
 
-    // async function setTenCheck(){
-    //     eventList.map(async (event, index)=>{
-    //         const result = await axios.get("http://localhost:9988/event/ten/check", {params:{event_no:event.event_no}})
-    //         setStatus((p)=>[...p, result.data])
-    //         if(result.data==1){
-    //             setCnt(cnt+1)
-    //         }
-    //     })
-    // }
-    async function setTenCheck() {
-        try {
-            const results = await Promise.all(
-                eventList.map((event) =>
-                    axios.get("http://localhost:9988/event/ten/check", { params: { event_no: event.event_no } })
-                )
-            );
-    
-            const updatedStatus = results.map((result) => result.data);
-            setStatus(updatedStatus); // 상태 업데이트
-    
-            // cnt 업데이트
-            const updatedCnt = updatedStatus.filter((status) => status === 1).length;
-            setCnt(updatedCnt);
-        } catch (error) {
-            console.error("Error in setTenCheck:", error);
-        }
+    async function setTenCheck(){
+        eventList.map(async (event, index)=>{
+            const result = await axios.get("http://localhost:9988/event/ten/check", {params:{event_no:event.event_no}})
+            setStatus((p)=>[...p, result.data])
+            if(result.data==1){
+                setCnt(cnt+1)
+            }
+        })
     }
+    // async function setTenCheck() {
+    //     try {
+    //         const results = await Promise.all(
+    //             eventList.map((event) =>
+    //                 axios.get("http://localhost:9988/event/ten/check", { params: { event_no: event.event_no } })
+    //             )
+    //         );
+    
+    //         const updatedStatus = results.map((result) => result.data);
+    //         setStatus(updatedStatus); // 상태 업데이트
+    
+    //         // cnt 업데이트
+    //         const updatedCnt = updatedStatus.filter((status) => status === 1).length;
+    //         setCnt(updatedCnt);
+    //     } catch (error) {
+    //         console.error("Error in setTenCheck:", error);
+    //     }
+    // }
 
     const ongoingEvents = eventList.filter((event, index) => status[index]==1?"마감":getEventStatus(event.event_startdate, event.event_lastdate) === "진행중");
 
