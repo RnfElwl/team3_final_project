@@ -313,6 +313,7 @@ function MovieView() {
     // 리뷰 입력 초기화
     setInputText(''); // 입력 텍스트 초기화
     setRating(0);
+    await axios.post("http://localhost:9988/event/point/add", {event_point: 5});
   } catch (error) {
     console.error('Error submitting review:', error);
   }

@@ -31,4 +31,7 @@
     <select id="selectEventUserCheck">
         select exists(select 1 from event_first_come where userid=#{param2} and event_no=${param1});
     </select>
+    <update id="updateUserPreferCheck">
+        update user_tbl set user_prefercheck=1 where userid=#{param1};
+    </update>
 </mapper>

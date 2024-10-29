@@ -39,7 +39,7 @@ function EventNoticeView() {
                 <Link className="list_btn" to="/event">목록</Link>
                 </div>
                 <h2 className="notice_title"><div className="notice_icon">공지</div>{noticeData.notice_title}</h2>
-                <div className="notice_date">{((new Date(noticeData.write_date)).toLocaleDateString('ko-KR', options)).substring(0, 12)}<MdAccessTime/>{((new Date(noticeData.write_date)).toLocaleDateString('ko-KR', options)).substring(13)}</div>
+                <div className="notice_date">{(( new Date(noticeData.write_date)).toLocaleDateString('ko-KR', options)).substring(0, 12)}<MdAccessTime/>{((new Date(noticeData.write_date)).toLocaleDateString('ko-KR', options)).substring(13)}</div>
                 <pre className="notice_content">
                     {noticeData.notice_content}
                 </pre>
