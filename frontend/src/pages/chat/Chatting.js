@@ -10,6 +10,8 @@ import { FaCalendarCheck } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import ReportModal from '../../component/api/ReportModal.js';
 import { BsExclamationCircle } from "react-icons/bs";
+import CustomImage from '../../component/CustomImage';
+
 const Chatting = () => {
     const date = new Date(); // 현재 날짜
     const options = {
@@ -527,7 +529,7 @@ const Chatting = () => {
             </div>
             <header className='chat_header'> 
                 <div className='room_box'>
-                <div className='room_img'><img src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
+                <div className='room_img'><CustomImage src={roomInfo.chatlist_type==1?roomInfo.movie_img_url:`http://localhost:9988/${roomInfo.userprofile}`}/></div>
                 <div className='room_info'>
                     <div className='room_title'>{roomInfo.chat_title}</div>
                     <div className='user_count' title="유저 목록" onClick={userToggle}>
@@ -541,11 +543,11 @@ const Chatting = () => {
                                 {
                                     myid==data.userid?
                                     <div className='user_info'>
-                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                        <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
                                         <div>{data.usernick}</div>
                                     </div>:
                                     <div className='user_info'>
-                                        <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
+                                        <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                         <div>{data.usernick}</div>
                                     </div>
                                     }
@@ -623,10 +625,10 @@ const Chatting = () => {
                                 voteList.map((data, index)=>(
                                     myid==data.userid?
                                     <div className='vote_user_info'>
-                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
+                                    <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={moveMyPage}/></div>
                                     <div>{data.usernick}</div>
                                 </div>:<div className='vote_user_info'>
-                                    <div><img src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
+                                    <div><CustomImage src={`http://localhost:9988/${data.userprofile}`} onClick={()=>{moveUserPage(data.usernick)}}/></div>
                                     <div>{data.usernick}</div>
                                 </div>
                                 ))
@@ -728,11 +730,11 @@ const Chatting = () => {
                                                
                                             </div>
                                         </div>
-                                        <div className='chat_profile'><img  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
+                                        <div className='chat_profile'><CustomImage  src={`http://localhost:9988/${data.image_url}`} onClick={moveMyPage}/></div>
                                     </div>
                                     : 
                                     <div className='anotherText' data-id={index}>
-                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><img  src={`http://localhost:9988/${data.image_url}`}/></div>
+                                            <div className='chat_profile' onClick={()=>{moveUserPage(data.usernick)}}><CustomImage  src={`http://localhost:9988/${data.image_url}`}/></div>
                                         <div>
                                             <div className='chat_usernick'>{data.usernick}</div>
                                             <div className='chat_info' >
