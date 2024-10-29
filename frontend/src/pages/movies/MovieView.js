@@ -6,6 +6,7 @@ import axios from '../../component/api/axiosApi';
 import ReportModal from '../../component/api/ReportModal';
 import { AiOutlineAlert } from "react-icons/ai";
 import { Collapse } from 'react-collapse';
+import CustomImage from '../../component/CustomImage';
 
 function MovieView() {
   const { movieCode } = useParams(); // URL 파라미터에서 movie_code 가져옴
@@ -427,10 +428,10 @@ function MovieView() {
           <div className="profile-section">
             {review.userid === userid? 
             <Link to={`/mypage`}>
-              <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
+              <CustomImage src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
             </Link>:
             <Link to={`/user/info/${review.usernick}`}>
-              <img src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
+              <CustomImage src={`http://localhost:9988/${review.userprofile}`} alt="User profile" className="profile-img" />
             </Link>}
           <span className="nickname">{review.usernick}</span>
           </div>
@@ -639,7 +640,7 @@ function MovieView() {
           {userid ? (
           <div className="review-input-section">
             <div className="profile-section">
-              <img src={`http://localhost:9988/${userData.image_url}`} alt="Profile" className="profile-img" />
+              <CustomImage src={`http://localhost:9988/${userData.image_url}`} alt="Profile" className="profile-img" />
               <span className="nickname">{userData.usernick}</span>
             </div>
             <div className="rating-and-review">

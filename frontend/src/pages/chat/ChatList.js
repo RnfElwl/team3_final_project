@@ -5,7 +5,8 @@ import { BsExclamationCircle } from "react-icons/bs";
 import { IoPerson } from "react-icons/io5";
 import { useNavigate  } from 'react-router-dom';
 //import axios from "axios";
-import axios from "../../component/api/axiosApi"
+import axios from "../../component/api/axiosApi";
+import CustomImage from '../../component/CustomImage';
 
 
 function ChantList(){
@@ -244,7 +245,7 @@ function ChantList(){
                         <div className="solochat chat_box">
                             <div onClick={()=>openWindow(val.chatlist_url)}>
                                 <div className="chat_box-img">
-                                    <img src={`http://localhost:9988/${val.image_url}`}/>
+                                    <CustomImage src={`http://localhost:9988/${val.image_url}`}/>
                                 </div>
                                 <div className="chat_box_info">
                                     <div>
