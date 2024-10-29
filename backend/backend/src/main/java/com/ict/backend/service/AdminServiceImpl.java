@@ -213,13 +213,28 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public int insertQnaNotice(NoticeVO qnoVO) {
-        return dao.insertQnaNotice(qnoVO);
+    public int insertNotice(NoticeVO noticeVO) {
+        return dao.insertNotice(noticeVO);
     }
 
     @Override
-    public List<NoticeVO> selectAdminQNoticeList(NoticeVO qnoVO) {
-        return dao.selectAdminQNoticeList(qnoVO);
+    public List<NoticeVO> selectAdminNoticeList(NoticeVO noticeVO) {
+        return dao.selectAdminNoticeList(noticeVO);
+    }
+
+    @Override
+    public List<NoticeVO> getNotice(int no) {
+        return dao.getNotice(no);
+    }
+
+    @Override
+    public int updateNotice(NoticeVO noticeVO) {
+        return dao.updateNotice(noticeVO);
+    }
+
+    @Override
+    public int updateNoticeActive(Integer active_state, List<Integer> notice_no) {
+        return dao.updateNoticeActive(active_state,notice_no);
     }
 
 
@@ -231,4 +246,29 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public int updateMovieData(MovieVO movieVO){return dao.updateMovieData(movieVO);}
+
+    @Override
+    public List<EventVO> selectAdminEventList(EventVO eventVO) {
+        return dao.selectAdminEventList(eventVO);
+    }
+
+    @Override
+    public int insertEvent(EventVO eventVO) {
+        return dao.insertEvent(eventVO);
+    }
+
+    @Override
+    public List<EventVO> getEvent(int no) {
+        return dao.getEvent(no);
+    }
+
+    @Override
+    public int updateEventData(EventVO eventVO) {
+        return dao.updateEventData(eventVO);
+    }
+
+    @Override
+    public int updateEventActive(Integer event_active_state, List<Integer> event_no, String userid) {
+        return dao.updateEventActive(event_active_state,event_no,userid);
+    }
 }

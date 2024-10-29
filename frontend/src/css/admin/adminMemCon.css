@@ -101,6 +101,7 @@
     margin-right: 5px;
   }
   .AdminMemBody input{
+    padding-left: 10px;
     height: 35px;
     background: #1C1C20;
     border: 1px solid #48d1cdea;

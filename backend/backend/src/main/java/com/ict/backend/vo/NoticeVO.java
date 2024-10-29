@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class NoticeVO {
-    private Integer qnotice_no;
-    private String qnotice_title;
-    private String qnotice_content;
+    private Integer notice_no;
+    private String notice_title;
+    private String notice_content;
     private String userid;
     private String write_date;
     private Integer active_state;

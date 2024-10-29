@@ -8,11 +8,14 @@ public class EventVO {
     private String event_title;
     private String event_thumnail;
     private String event_content;
-    private String event_wirtedate;
+    private String event_writedate;
     private String event_startdate;
     private String event_lastdate;
     private int event_active_state;
     private String event_editer;
     private int event_point;
 
+    private String searchKey;
+    private String searchWord;
+    private int user_count;
 }
