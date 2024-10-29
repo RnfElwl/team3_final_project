@@ -58,7 +58,7 @@ function More() {
                             <Link to={`/movies/view/${item.movie_code}`}>
                             <div className="moiveimage">
                                     <img src={item.movie_link} alt="이미지" />
-                                    {more === "bookmarked" && (
+                                    {/* {more === "bookmarked" && (
                                         <button
                                         className="heart"
                                         onClick={(event) => {
@@ -66,7 +66,7 @@ function More() {
                                             alert(`Heart 버튼이 클릭되었습니다! 영화: ${item.title}`);
                                         }}
                                     > <FaRegBookmark style ={{ fontSize: "28px"}}/></button>
-                                        )}
+                                        )} */}
                             </div>
                             <div className="moivetitle">
                                 <span>{item.movie_kor}</span>
