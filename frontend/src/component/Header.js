@@ -70,7 +70,7 @@ function Header() {
   }, [location.pathname]);
   
   // 로그인 여부 판단용
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, userRole } = useAuth();
   function hendleSearchInput(e){
     setSearchWord(e.target.value);
   }
@@ -173,14 +173,19 @@ function Header() {
             <div className={`${index==0?'focus':''}`}><Link to={'/'} onClick={()=>{tabClick(0)}} ref={(el) => (tabList.current[0] = el)} >Home</Link></div>
             <div className={`${index==1?'focus':''}`}><Link to={'/categories'} onClick={()=>{tabClick(1)}} ref={(el) => (tabList.current[1] = el)} >Movie</Link></div>
             {
-              myid!==''&&(<div className={`${index==2?'focus':''}`}><Link to={'/chat'} onClick={()=>{tabClick(2)}} ref={(el) => (tabList.current[2] = el)}>Chat</Link></div>)
+              userRole === 'USER' && myid!==''&&(<div className={`${index==2?'focus':''}`}><Link to={'/chat'} onClick={()=>{tabClick(2)}} ref={(el) => (tabList.current[2] = el)}>Chat</Link></div>)
             }
             <div className={`${index==3?'focus':''}`}><Link to={'/qna'} onClick={()=>{tabClick(3)}} ref={(el) => (tabList.current[3] = el)}>QnA</Link></div>
             <div className={`${index==4?'focus':''}`}><Link to={'/community'} onClick={()=>{tabClick(4)}} ref={(el) => (tabList.current[4] = el)}>Community</Link></div>
             {
-              myid!==''&&(<div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>)
+              userRole === 'USER' && myid!==''&&(<div className={`${index==5?'focus':''}`}><Link to={'/recommend'} onClick={()=>{tabClick(5)}} ref={(el) => (tabList.current[5] = el)}>Recommend</Link></div>)
             }
             <div className={`${index==6?'focus':''}`}><Link to={'/event'} onClick={()=>{tabClick(6)}} ref={(el) => (tabList.current[6] = el)}>event</Link></div>
+            {userRole === 'ADMIN' && (
+            <div className={`${index === 7 ? 'focus' : ''}`}>
+              <Link to={'/admin'} onClick={() => { tabClick(7) }} ref={(el) => (tabList.current[7] = el)}>Admin</Link>
+            </div>
+            )}
           </div>
           <div className='under_line' ref={underLine}></div>
           </div>

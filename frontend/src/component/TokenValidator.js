@@ -13,6 +13,7 @@ const TokenValidator = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
 
   // Private Routes 목록 정의
   const privateRoutes = {
@@ -31,20 +32,24 @@ const TokenValidator = ({ children }) => {
         if (decodedToken.exp > currentTime) {
           // 유효한 토큰일 경우 로그인 상태로 설정
           setIsAuthenticated(true);
+          setUserRole(decodedToken.role);
         } else {
           // 만료된 토큰일 경우 로그아웃 처리
           localStorage.removeItem('token');
           setIsAuthenticated(false);
+          setUserRole(null);
         }
       } catch (error) {
         console.error('Invalid token:', error);
         // 잘못된 토큰일 경우 로그아웃 처리
         localStorage.removeItem('token');
         setIsAuthenticated(false);
+        setUserRole(null);
       }
     } else {
       // 토큰이 없는 경우 로그아웃 상태로 설정
       setIsAuthenticated(false);
+      setUserRole(null);
     }
   }, [location]);
 
@@ -69,6 +74,7 @@ const TokenValidator = ({ children }) => {
 
     localStorage.clear(); // 모든 항목을 삭제
     setIsAuthenticated(false); // 로그아웃 상태로 설정
+    setUserRole(null);
 
     // Private Page 여부 확인 후 리다이렉트
     const isUserPrivatePage = privateRoutes.USER.some(route => location.pathname.startsWith(route));
@@ -81,7 +87,7 @@ const TokenValidator = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, logout, userRole }}>
       {children}
     </AuthContext.Provider>
   );
