@@ -377,6 +377,7 @@
         <if test="searchKey!='notice_title'">
             where ${searchKey} like '%${searchWord}%'
         </if>
+        order by write_date desc
     </select>
     <select id="getNotice" resultType="com.ict.backend.vo.NoticeVO">
         select * from event_notice_tbl where notice_no=${no}
