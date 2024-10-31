@@ -6,6 +6,7 @@ import { useParams, useNavigate, Link} from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
 import ReportModal from '../../component/api/ReportModal.js';
 import { AiOutlineAlert } from "react-icons/ai";
+import CustomImage from "../../component/CustomImage.js";
 
 
 function CommunityView(){
@@ -454,9 +455,9 @@ function CommunityView(){
                 <div className="view_top">
                     {myid==community.userid?
                     <Link to={`/mypage`}>
-                        <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
+                        <CustomImage className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
                     </Link>:<Link to={`/user/info/${community.usernick}`}>
-                        <img className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
+                        <CustomImage className="writer_image" src={`http://localhost:9988/${community.userprofile}`} alt="Writer" />
                     </Link>}
                     
                     <div className="writer_info">
@@ -507,7 +508,7 @@ function CommunityView(){
                         <h3 className="community_title">{community.community_title}</h3>
                     </div>
                     {community.community_img && (
-                        <img className="community_img" src={community.community_img} alt="Uploaded" />
+                        <CustomImage className="community_img" src={community.community_img} alt="Uploaded" />
                     )}
                     <h3 className="community_content" dangerouslySetInnerHTML={{ __html: community.community_content }}></h3>
                 </div>
@@ -562,10 +563,10 @@ function CommunityView(){
                                         <div className="comment_user">
                                             {myid==comment.userid?
                                              <Link to="/mypage">
-                                             <img className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
+                                             <CustomImage className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
                                              </Link>:
                                             <Link to={`/user/info/${comment.usernick}`}>
-                                            <img className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
+                                            <CustomImage className="comment_writer_image" src={`http://localhost:9988/${comment.writerImage}`} alt="작성자" />
                                             </Link>
                                         }
                                            
@@ -628,10 +629,10 @@ function CommunityView(){
                                                         <span className="nieun">ㄴ </span>
                                                         {myid==reply.userid?
                                                             <Link to="/mypage">
-                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            <CustomImage className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
                                                             </Link>:
                                                             <Link to={`/user/info/${comment.usernick}`}>
-                                                            <img className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
+                                                            <CustomImage className="comment_writer_image" src={`http://localhost:9988/${reply.writerImage}`} alt="작성자" />
                                                             </Link>
                                         }
                                                             <p className="comment_writer_name">{reply.usernick}</p>

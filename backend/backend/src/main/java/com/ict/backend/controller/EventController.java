@@ -55,9 +55,10 @@ public class EventController {
         return eventService.updatePointMinus(userid, eventVO.getEvent_point());
     }
     @PostMapping("/point/add")
-    public int updatePointAdd(int point){
+    public int updatePointAdd(@RequestBody EventVO eventVO){
+        System.out.println(eventVO.toString());
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        return eventService.updatePointAdd(userid, point);
+        return eventService.updatePointAdd(userid, eventVO.getEvent_point());
     }
     @GetMapping("/user/check")
     public int selectDupCheck(@RequestParam int event_no){
@@ -68,6 +69,11 @@ public class EventController {
     public int selectTenCheck(@RequestParam int event_no){
         String userid = SecurityContextHolder.getContext().getAuthentication().getName();
         return eventService.selectEventTenCheck(event_no);
+    }
+    @PostMapping("/prefer/check")
+    public int updateUserPreferCheck(){
+        String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+        return eventService.updateUserPreferCheck(userid);
     }
 
 }

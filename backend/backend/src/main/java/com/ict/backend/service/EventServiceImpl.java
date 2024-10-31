@@ -45,5 +45,8 @@ public class EventServiceImpl implements EventService{
     public int selectEventUserCheck(int event_no, String userid){
         return eventDAO.selectEventUserCheck(event_no, userid);
     }
+    public int updateUserPreferCheck(String userid){
+        return eventDAO.updateUserPreferCheck(userid);
+    }
 
 }

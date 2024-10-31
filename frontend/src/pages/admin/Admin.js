@@ -9,6 +9,7 @@ import './../../css/admin/admin.css';
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend, Filler);
 function AdminTest() {
   //DB 데이터
+  const today1 = new Date().toISOString().split('T')[0];
   const today = new Date();
   const todays_month=`${today.getMonth()+1}`;
   const [inputMinData,setInputMinData]=useState([]);
@@ -17,21 +18,24 @@ function AdminTest() {
   const [inputMemData, setInputMemData]=useState([]);
   const [inputS_qnaData, setInputS_qnaData]=useState([]);
   const [inputS_comData, setInputS_comData]=useState([]);
-  const [qna_filter, setQna_filter]=useState('년');
-  const [community_filter, setCommunity_filter]=useState('월');
+  const [qna_filter, setQna_filter]=useState('일');
+  const [community_filter, setCommunity_filter]=useState('일');
   let   qnaData = {};
   let   communityData={};
   let   searchQnaData={};
   let   sQnaData={};
   let   sComData={};
-  const [start_qnaDate, setStart_qnaDate]=useState('');
-  const [end_qnaDate, setEnd_qnaDate]=useState('');
-  const [start_comDate, setStart_comDate]=useState('');
-  const [end_comDate, setEnd_comDate]=useState('');
+  const [start_qnaDate, setStart_qnaDate]=useState('2024-10-10');
+  const [end_qnaDate, setEnd_qnaDate]=useState(today1);
+  const [start_comDate, setStart_comDate]=useState('2024-10-10');
+  const [end_comDate, setEnd_comDate]=useState(today1);
   const [reportData, setReportData]=useState('');
   const [error, setError] = useState(false);
   const navigate = useNavigate();
-  
+  useEffect(() => {
+    handleQnADateSubmit();
+    handleComDateSubmit();
+  }, []);
   //QnA필터 옵션
   const handleQnaFilterChange = (e) => {
     qnaData={}
@@ -146,7 +150,7 @@ function AdminTest() {
 
   //qna 날짜 검색 폼 submit event
   const handleQnADateSubmit=(e)=>{
-    e.preventDefault(); 
+    if (e) e.preventDefault();
     const startQ=new Date(start_qnaDate);
     const endQ=new Date(end_qnaDate);
 
@@ -180,7 +184,7 @@ function AdminTest() {
 
 //커뮤니티 날짜 검색 폼 submit event
 const handleComDateSubmit=(e)=>{
-  e.preventDefault(); 
+  if (e) e.preventDefault();
 
   const startC=new Date(start_comDate);
   const endC=new Date(end_comDate);

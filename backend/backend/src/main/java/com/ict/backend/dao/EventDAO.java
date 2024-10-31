@@ -15,4 +15,5 @@ public interface EventDAO {
     public int insertFirstCome(String userid, int no);
     public int selectEventTenCheck(int event_no);
     public int selectEventUserCheck(int event_no, String userid);
+    public int updateUserPreferCheck(String userid);
 }

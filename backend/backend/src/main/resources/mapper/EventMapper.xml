@@ -8,7 +8,7 @@
         select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl
     </select>
     <select id="selectNoticeList">
-        select * from event_notice_tbl
+        select * from event_notice_tbl order by write_date desc
     </select>
     <select id="selectEventPage">
         select event_no, event_title, event_thumnail, event_content, event_writedate, date_format(event_startdate, '%Y-%m-%d') as event_startdate, date_format(event_lastdate, '%Y-%m-%d') as event_lastdate, event_active_state, event_editer, event_point from event_tbl where event_no=${param1}
@@ -31,4 +31,7 @@
     <select id="selectEventUserCheck">
         select exists(select 1 from event_first_come where userid=#{param2} and event_no=${param1});
     </select>
+    <update id="updateUserPreferCheck">
+        update user_tbl set user_prefercheck=1 where userid=#{param1};
+    </update>
 </mapper>

@@ -121,8 +121,9 @@ function CommunityWrite() {
             });
             console.log(result);
             alert('게시글이 성공적으로 등록되었습니다.');
-
             // 업로드 성공 후 리스트 페이지로 이동
+
+            await axios.post("http://localhost:9988/event/point/add", {event_point: 10});
             navigate('/community'); // 리스트 페이지로 이동
         } catch (error) {
             console.error('게시글 등록 실패: {}', error);

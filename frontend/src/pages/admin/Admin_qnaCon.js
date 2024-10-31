@@ -133,7 +133,7 @@ function QnaCon() {
 
     //Qna 답글 팝업 창 열기
     const openAddQnaAnsWindow = (qna_no) => {
-        window.open(`http://localhost:3000/admin/adminQAns/${qna_no}`, '_blank', 'width=600,height=584');
+        window.open(`/admin/adminQAns/${qna_no}`, '_blank', 'width=600,height=584');
     };
     // //Qna 답글 수정 팝업 창 열기
     // const openEditQnaAnsWindow = (qna_no) => {

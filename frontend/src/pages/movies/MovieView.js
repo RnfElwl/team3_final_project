@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {useParams, useLocation, Link } from 'react-router-dom';
-import { FaStar, FaRegBookmark, FaShareAlt, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
+import { FaStar, FaRegBookmark, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
 import './../../css/movies/MovieView.css';
 import axios from '../../component/api/axiosApi';
 import ReportModal from '../../component/api/ReportModal';
@@ -38,18 +38,7 @@ function MovieView() {
   const [reportShow, setReportShow] = useState(false);// 신고창 보여주기 여부
   const [report, setReport] = useState({});//신고 폼에 있는 값들어있음
 
-  
-
-  
-
-
-
-
-
-
-
-
-
+    
   
   // 1. 영화 정보 가져오기
   useEffect(() => {
@@ -270,33 +259,7 @@ function MovieView() {
     }
   };
   
-  // 공유하기
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}${location.pathname}`;
-    if (navigator.share) {
-      navigator.share({
-        title: movie.movie_kor,
-        text: `${movie.movie_kor} - 지금 바로 확인하세요!`,
-        url: shareUrl,
-      })
-      .then(() => console.log('Successfully shared'))
-      .catch((error) => {
-        console.error('Error sharing', error);
-        alert('공유하기를 지원하지 않는 환경입니다.');
-      });
-    } else {
-      // Web Share API를 지원하지 않는 경우: 클립보드에 링크 복사
-    navigator.clipboard
-    .writeText(shareUrl)
-    .then(() => {
-      alert('링크가 클립보드에 복사되었습니다!');
-    })
-    .catch((error) => {
-      console.error('클립보드 복사 실패:', error);
-      alert('클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
-    });
-}
-  };
+
 
   // Collapse 열기/닫기 핸들러
   const toggleCollapse = () => {
@@ -350,6 +313,7 @@ function MovieView() {
     // 리뷰 입력 초기화
     setInputText(''); // 입력 텍스트 초기화
     setRating(0);
+    await axios.post("http://localhost:9988/event/point/add", {event_point: 5});
   } catch (error) {
     console.error('Error submitting review:', error);
   }
@@ -554,12 +518,7 @@ function MovieView() {
                     onClick={toggleFavorite}
                     title={isFavorite ? '북마크 해제' : '북마크'}
                   />
-                  {/* 공유하기 */}
-                  <FaShareAlt
-                  className="share-icon"
-                  onClick={handleShare}
-                  title="공유하기"
-                />
+
                 </div>
 
                 {/* OTT 보기 버튼과 슬라이드 */}

@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 function Recommend() {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [userid, setUserid] = useState();
     const minSelection = 10; // 최소 선택 가능한 개수
     const [selectedStars, setSelectedStars] = useState({}); // 선택된 별점 상태
     const [hoveredStars, setHoveredStars] = useState({});   // 호버 중인 별점 상태
@@ -26,7 +27,13 @@ function Recommend() {
                 setLoading(false); // 에러 발생 시에도 로딩 종료
             }
         };
-
+        axios.get('http://localhost:9988/user/userinfo')
+            .then(response => {
+                setUserid(response.data);
+            })
+            .catch(error => {
+                console.error("데이터 로드 중 오류 발생:", error);
+            });
         fetchData(); // 컴포넌트가 마운트될 때 데이터 가져옴
     }, []);
 
@@ -78,7 +85,14 @@ function Recommend() {
                     });
                 }
             }
+
             console.log('Sent ratings to the server:', ratings);
+            const {data} = await axios.get("http://localhost:9988/getUserData", {params:{userid}});
+            console.log(data);
+            if(data.user_prefercheck==0){
+                await axios.post("http://localhost:9988/event/prefer/check");
+                await axios.post("http://localhost:9988/event/point/add", {event_point: 15});
+            }
             navigate('/'); // 처리 후 홈으로 이동
         } catch (error) {
             console.error('Error sending ratings:', error);

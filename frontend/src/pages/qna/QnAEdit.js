@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import axios from "../../component/api/axiosApi";
 import { Link, useNavigate } from 'react-router-dom';
 import $ from "jquery";
+import CustomImage from '../../component/CustomImage';
 
 function QnAEdit() {
     const [qnAEdit, setQnAEdit] = useState([]);
@@ -39,7 +40,7 @@ function QnAEdit() {
                 setQnAEdit(response.data);
                 console.log(response.data);
                 setPreQpwd(response.data[0].qna_pwd);
-                setImages(`http://localhost:9988/qna/`+response.data[0].qna_img);
+                setImages(`http://192.168.1.88:9988/`+response.data[0].qna_img);
             });
     }, [params]);
 

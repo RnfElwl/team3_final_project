@@ -30,4 +30,5 @@ public class MemberVO {
     private String lastvisite;
     private int user_point;
     private String user_social;
+    private int user_prefercheck;
 }
