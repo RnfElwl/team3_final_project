@@ -71,7 +71,7 @@ const Chatting = () => {
         // 연결 성공 시
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT Broker');
-            mqttClient.subscribe(`test/topic/${chatlist_url}`, (err) => {
+            mqttClient.subscribe(`test/topic/${chatlist_url}`, { qos: 2 }, (err) => {
                 console.log("누군지 모르겠지만연결됨");
                 if (!err) {
                     console.log('Subscribed to chat/topic');
@@ -286,7 +286,7 @@ const Chatting = () => {
 
                 setReceivedMessages(receivedMessages)
                 
-                mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+                mqttClient.publish(`test/topic/${chatlist_url}`, JSON.stringify(info), { qos: 2 });
             }
             }catch(e){
                 console.log(e);
@@ -336,7 +336,7 @@ const Chatting = () => {
                 console.log("실패");
             }
             
-            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data));
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(data), { qos: 2 });
             setMessageToSend(''); // 메시지 전송 후 입력창 초기화   
         }catch(e){
             console.log(e);
@@ -391,7 +391,7 @@ const Chatting = () => {
             const info = {
                 chat_type: 4
             } 
-            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info), { qos: 2 });
         }
     }catch(e){
         console.log(e);
@@ -441,7 +441,7 @@ const Chatting = () => {
             const info = {
                 chat_type: 4
             } 
-            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+            client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info), { qos: 2 });
         }
     }catch(e){
         console.log(e);
@@ -498,7 +498,7 @@ const Chatting = () => {
                     chat_date: now,
                     chat_type: 3
                 }    
-                client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info));
+                client.publish(`test/topic/${chatlist_url}`, JSON.stringify(info), { qos: 2 });
             }
         }
         if(roomInfo.chatlist_type==2){

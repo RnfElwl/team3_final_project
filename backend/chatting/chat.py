@@ -31,7 +31,7 @@ if __name__ == '__main__':
     mqtt_client = mqtt.Client()
     mqtt_client.on_message = on_message
     mqtt_client.connect('192.168.1.87', 1883, 60)
-    mqtt_client.subscribe('test/topic/#')  # 모든 방의 메시지 수신
+    mqtt_client.subscribe('test/topic/#', qos=2)  # 모든 방의 메시지 수신
     
     mqtt_client.loop_start()
     
