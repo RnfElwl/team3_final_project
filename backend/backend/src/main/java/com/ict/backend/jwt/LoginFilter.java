@@ -32,7 +32,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.jwtUtil = jwtUtil;
         this.refreshService = refreshService;
         refreshExpiredMs = 86400000L;   // 1일로 설정
-        accessExpiredMs = 600000L;   // 10분으로 설정
+        accessExpiredMs = 3600000L;     // 1시간으로 설정
     }
 
     @Override

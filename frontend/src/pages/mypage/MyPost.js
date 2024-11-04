@@ -363,7 +363,7 @@ function MyPost() {
                                                     )
                                                 ) : (
                                                     
-                                                      <FaTrashCan onClick={() => {alert("Delete clicked"); toggledelete(data, tabNames[activeTab], tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)])}} />
+                                                      <FaTrashCan onClick={() => {toggledelete(data, tabNames[activeTab], tabData[activeTab].send[tabData[activeTab].display.indexOf(activeSubButton)])}} />
                                                     
                                                 )}
                                             </td>

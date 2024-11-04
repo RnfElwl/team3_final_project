@@ -19,7 +19,7 @@ function Footer() {
                     <div className='contact'>
                         <p>대표이사 : 차은우</p>
                         <p>tel : 010 - 2222 - 8888 </p>
-                        <p>email : finalproject@scenen.com</p>
+                        <p>email : scenenumber50@gamil.com</p>
                     </div>
                     
                 </div>

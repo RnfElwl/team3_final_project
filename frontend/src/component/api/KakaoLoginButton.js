@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import axios from "./axiosApi";
 import { useNavigate } from 'react-router-dom';
 
 const KakaoLoginButton = ({ className, imgSrc, altText }) => {
@@ -12,7 +13,7 @@ const KakaoLoginButton = ({ className, imgSrc, altText }) => {
     kakaoScript.async = true;
     kakaoScript.onload = () => {
       if (window.Kakao && !window.Kakao.isInitialized()) {
-        window.Kakao.init("c460e115eb38e1dc37e7c2c96827747a");
+        window.Kakao.init("카카오javatoken");
         setIsKakaoInitialized(true);
       }
     };
@@ -62,7 +63,7 @@ const KakaoLoginButton = ({ className, imgSrc, altText }) => {
 
   const sendTokenToBackend = async (token) => {
     try {
-        const response = await axios.post("http://localhost:9988/auth/kakao", {
+        const response = await axios.post("http://192.168.1.88:9988/auth/kakao", {
             token,
         });
 
