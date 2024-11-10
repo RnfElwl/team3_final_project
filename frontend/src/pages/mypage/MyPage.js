@@ -497,7 +497,7 @@ function Mypage() {
                                                 <li className="list_title"
                                                     onClick={() => navigate(`/community/communityView/${commentlist.community_no}`)} style={{ cursor: 'pointer' }}>
                                                     <div>{commentlist.community_title}</div>
-                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); alert("delete"); toggledelete(index, commentlist, "comment");}}/>
+                                                    <FontAwesomeIcon icon={faTrashCan} onClick={(event) => {event.stopPropagation(); toggledelete(index, commentlist, "comment");}}/>
                                                 </li>
                                                 <li className="smaller-text">
                                                     <div className = "text-content" dangerouslySetInnerHTML={{ __html: String(commentlist.community_content) }} />

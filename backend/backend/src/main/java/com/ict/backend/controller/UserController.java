@@ -551,8 +551,7 @@ public MemberVO mypageinfo(@RequestHeader(value = "Host", required = false) Stri
                     String updatedHost = Host.replace(":9988", ":3000");
                     String resetLink = "Http://" + updatedHost + "/reset-password?token="  + resetToken;
                     System.out.println(resetLink);
-                    String testemail = "kimbj829@naver.com";
-                    emailService.sendPasswordResetEmail(testemail, resetLink);  // 이메일 전송
+                    emailService.sendPasswordResetEmail(useremail, resetLink);  // 이메일 전송
                     response.put("message", "비밀번호 재설정 링크가 전송되었습니다.");
                     return ResponseEntity.ok(response);
                 } catch (MessagingException e) {

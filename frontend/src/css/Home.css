@@ -6,8 +6,9 @@
   color: #f0f0f0;
   margin: 0 auto;
   justify-content: center; 
-  align-items: center; 
-  width: 1920px;
+  align-items: center;
+  max-width: 1920px;
+  width: 100%;
 }
 
 .home .banner {
